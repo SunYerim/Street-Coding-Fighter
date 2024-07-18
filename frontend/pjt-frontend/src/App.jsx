@@ -1,11 +1,10 @@
-import "./App.css";
-import Background from "./Background";
-
+import './App.css';
+import Container from './components/Container/Container.jsx';
 function App() {
   return (
-    <>
-      <Background />
-    </>
+    <div >
+      <Container/>
+    </div>
   );
 }
 
