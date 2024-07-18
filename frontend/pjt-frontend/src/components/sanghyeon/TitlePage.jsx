@@ -1,4 +1,5 @@
 import "../../index.css";
+import "../../css/TitlePage.css";
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +15,9 @@ export default function TitlePage() {
           Figther
         </h1>
       </div>
-      <button onClick={() => navigate("/login")}>Start!</button>
+      <button className="start-button" onClick={() => navigate("/login")}>
+        Start!
+      </button>
     </>
   );
 }
