@@ -5,9 +5,15 @@ export default function MainPage() {
     <>
       <h1>Contents</h1>
       <div>
-        <MainSelectModeBox />
-        <MainSelectModeBox />
-        <MainSelectModeBox />
+        <button>
+          <MainSelectModeBox />
+        </button>
+        <button>
+          <MainSelectModeBox />
+        </button>
+        <button>
+          <MainSelectModeBox />
+        </button>
       </div>
     </>
   );

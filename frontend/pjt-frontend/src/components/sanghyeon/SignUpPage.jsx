@@ -8,7 +8,7 @@ export default function SignUpPage() {
       <AccountInputBox />
       <AccountInputBox />
       <AccountInputBox />
-      <AccountButton />
+      <AccountButton buttonType="Create" />
     </>
   );
 }

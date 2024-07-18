@@ -7,12 +7,12 @@ export default function LoginPage() {
       <div>
         <AccountInputBox />
         <AccountInputBox />
-        <AccountButton />
-        <AccountButton />
+        <AccountButton buttonType="Login" />
+        <AccountButton buttonType="Sign Up" />
       </div>
       <div>
-        <p>Forgot username?</p>
-        <p>Forgot password?</p>
+        <button>Forgot username?</button>
+        <button>Forgot password?</button>
       </div>
     </>
   );
