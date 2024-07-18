@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRef } from "react";
 import AccountButton from "./AccountButton.jsx";
+import "../../css/LoginPage.css";
 
 export default function LoginPage() {
   const username = useRef(null);
@@ -27,15 +28,15 @@ export default function LoginPage() {
 
   return (
     <>
-      <div>
+      <div className="login-container">
         <input type="text" ref={username} />
         <input type="password" ref={password} />
         <button onClick={logIn}>Login</button>
         <AccountButton buttonType="Sign Up" />
-      </div>
-      <div>
-        <button>Forgot username?</button>
-        <button>Forgot password?</button>
+        <div>
+          <button>Forgot username?</button>
+          <button>Forgot password?</button>
+        </div>
       </div>
     </>
   );

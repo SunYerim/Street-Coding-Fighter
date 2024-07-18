@@ -1,10 +1,10 @@
 import MainSelectModeBox from "./MainSelectModeBox";
+import "../../css/MainPage.css";
 
 export default function MainPage() {
   return (
     <>
-      <h1>Contents</h1>
-      <div>
+      <div className="mode-container">
         <button>
           <MainSelectModeBox />
         </button>

@@ -8,16 +8,15 @@ export default function TitlePage() {
 
   return (
     <>
-      <div>
-        <h1 className="title">
-          Street Coding
-          <br />
-          Figther
-        </h1>
+      <div className="title-container">
+        <h1 className="title">Street Codding</h1>
+        <h1 className="title">Figther</h1>
       </div>
-      <button className="start-button" onClick={() => navigate("/login")}>
-        Start!
-      </button>
+      <div className="button-container">
+        <button className="start-button" onClick={() => navigate("/login")}>
+          Start!
+        </button>
+      </div>
     </>
   );
 }

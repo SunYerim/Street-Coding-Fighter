@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useRef } from "react";
+import "../../css/SignUpPage.css";
 
 export default function SignUpPage() {
   const username = useRef(null);
@@ -35,11 +36,13 @@ export default function SignUpPage() {
 
   return (
     <>
-      <input type="text" ref={username} />
-      <input type="password" ref={password1} />
-      <input type="password" ref={password2} />
-      <input type="text" ref={birthdate} />
-      <button onClick={signUp}>CREATE</button>
+      <div className="signup-container">
+        <input type="text" ref={username} />
+        <input type="password" ref={password1} />
+        <input type="password" ref={password2} />
+        <input type="text" ref={birthdate} />
+        <button onClick={signUp}>CREATE</button>
+      </div>
     </>
   );
 }
