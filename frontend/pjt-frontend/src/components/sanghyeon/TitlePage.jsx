@@ -1,3 +1,5 @@
+import "../../index.css";
+
 import { useNavigate } from "react-router-dom";
 
 export default function TitlePage() {
@@ -6,7 +8,7 @@ export default function TitlePage() {
   return (
     <>
       <div>
-        <h1>
+        <h1 className="title">
           Street Coding
           <br />
           Figther

@@ -8,6 +8,12 @@
   src: url("./fonts/Galmuri9.ttf");
 }
 
+@font-face {
+  font-family: "Galmuri11-Bold";
+  font-weight: bold;
+  src: url("./fonts/Galmuri11-Bold.ttf");
+}
+
 body {
   margin: 0;
   display: flex;
@@ -20,4 +26,9 @@ body {
 
 body * {
   font-family: "Galmuri9";
+}
+
+.title {
+  font-family: "Galmuri11-Bold";
+  font-size: 5rem;
 }
