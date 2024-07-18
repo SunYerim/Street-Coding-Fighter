@@ -1,9 +1,10 @@
 import './App.css';
-import Container from './components/Container/Container.jsx';
+import SingleMain from './components/single/SingleMain.jsx'
+import SinglePlay from './components/single/single-play/SinglePlay.jsx'
 function App() {
   return (
-    <div >
-      <Container/>
+    <div id='container'>
+      <SinglePlay/>
     </div>
   );
 }

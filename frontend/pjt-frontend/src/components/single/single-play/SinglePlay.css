@@ -1,0 +1,42 @@
+#play-view {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/src/assets/background-single.png");
+  background-size: cover;
+}
+
+#dialogue-box {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 200px;
+  background-color: #1B1A55;
+}
+
+#image-box {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: ;
+
+  background-image: url('/src/assets/single-test.jpg')
+}
+#dialogue-header {
+  display : flex;
+  justify-content: space-between;
+}
+.dialogue-btn {
+}
+.dialogue-body {
+}
+.character{
+  position :fixed;
+  height : 380px;
+  left : 30vw;
+  bottom : 200px;
+}

@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+#root{
+  text-align: center;
+}
 body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
   background-image: url('./background.svg');
