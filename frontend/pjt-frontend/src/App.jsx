@@ -1,10 +1,10 @@
 import "./App.css";
-import Background from "./Background";
+import TitlePage from "./components/sanghyeon/TitlePage.jsx";
 
 function App() {
   return (
     <>
-      <Background />
+      <TitlePage />
     </>
   );
 }
