@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: scf
+  datasource:
+    url: jdbc:mariadb://localhost:3306/scf_db
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: ed9658pi
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
