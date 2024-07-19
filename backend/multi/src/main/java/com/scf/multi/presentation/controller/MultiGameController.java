@@ -20,7 +20,7 @@ public class MultiGameController {
 
     private final MultiGameService multiGameService;
 
-    @GetMapping
+    @GetMapping("/room")
     public ResponseEntity<?> roomList() {
         List<MultiGameRoom> rooms = multiGameService.findAllRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
@@ -38,7 +38,7 @@ public class MultiGameController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/multi/game/{roomId}")
+    @PostMapping("/game/{roomId}")
     public ResponseEntity<?> gameStart(@PathVariable String roomId) {
         List<Problem> problems = multiGameService.startGame(roomId);
         return new ResponseEntity<>(problems, HttpStatus.OK);
