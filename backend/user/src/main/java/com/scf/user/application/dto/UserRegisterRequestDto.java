@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class UserRegisterRequestDto
 {
-    private String id;
+    private String userId;
     private String password;
     private String name;
     private String schoolName;
