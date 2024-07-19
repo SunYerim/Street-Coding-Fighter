@@ -38,4 +38,7 @@ public class MultiGameService {
     public void exitRoom(String roomId, Long userId) {
         multiGameRepository.exitRoom(roomId, userId);
     }
+
+    public void markSolution(String userId, String content) {
+    }
 }
