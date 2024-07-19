@@ -29,9 +29,9 @@ public class MultiGameRepository {
         gameRooms.remove(roomId);
     }
 
-    public void joinRoom(String roomId, Long userId) {
+    public void joinRoom(String roomId, Long userId, String username) {
         MultiGameRoom room = gameRooms.get(roomId);
-        room.add(userId);
+        room.add(userId, username);
     }
 
     public void exitRoom(String roomId, Long userId) {

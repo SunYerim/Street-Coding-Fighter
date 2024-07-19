@@ -2,7 +2,9 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.Player;
+import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,22 +18,28 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
-    private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
-    private final Map<String, Player> sessionPlayers = new ConcurrentHashMap<>();
+    private final Map<String, Player> sessionPlayers = new ConcurrentHashMap<>(); // session ID -> player (player 이름, 아이디 알려고)
+    private final Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
+    private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-        String userId = (String) session.getAttributes().get("userId");
+        String roomId = (String) session.getAttributes().get("roomId");
+        Long userId = (Long) session.getAttributes().get("userId");
         String username = (String) session.getAttributes().get("username");
 
-        if (username != null) {
-            sessionPlayers.put(session.getId(), new Player(userId, username));
-            sessions.put(session.getId(), session);
-            broadcastMessage(username + " 님이 게임에 참가 하였습니다.");
-        } else {
-            session.close();
+        MultiGameRoom room = multiGameService.findOneById(roomId);
+
+        if (room == null) {
+            return;
         }
+
+        sessionPlayers.put(session.getId(), new Player(userId, username));
+        sessionRooms.put(session.getId(), roomId);
+        rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
+
+        broadcastMessageToRoom(room.getRoomId(), username + " 님이 게임에 참가 하였습니다.");
     }
 
     @Override
@@ -39,9 +47,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         Player player = sessionPlayers.get(session.getId());
 
+        String roomId = sessionRooms.get(session.getId());
+
         String content = message.getPayload();
 
-        multiGameService.markSolution(player.getUserId(), content);
+        multiGameService.markSolution(roomId, player.getUserId(), content);
     }
 
     @Override
@@ -49,18 +59,32 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         throws Exception {
 
         Player player = sessionPlayers.remove(session.getId());
-        sessions.remove(session.getId());
 
-        if (player != null) {
-            broadcastMessage(player.getName() + "님이 게임을 나갔습니다.");
+        String roomId = sessionRooms.get(session.getId());
+        if (roomId != null) { //
+            Set<WebSocketSession> roomSessions = rooms.get(roomId);
+            if (roomSessions != null) {
+                roomSessions.remove(session);
+                if (roomSessions.isEmpty()) {
+                    rooms.remove(roomId);
+                }
+            }
+
+            if (player != null) {
+                broadcastMessageToRoom(roomId, player.getName() + "님이 게임을 나갔습니다.");
+            }
         }
     }
 
-    public void broadcastMessage(String message) throws Exception {
+    public void broadcastMessageToRoom(String roomId, String message) throws Exception {
 
-        for (WebSocketSession session : sessions.values()) {
-            if (session.isOpen()) {
-                session.sendMessage(new TextMessage(message));
+        Set<WebSocketSession> roomSessions = rooms.get(roomId);
+
+        if (roomSessions != null) {
+            for (WebSocketSession session : roomSessions) {
+                if (session.isOpen()) {
+                    session.sendMessage(new TextMessage(message));
+                }
             }
         }
     }

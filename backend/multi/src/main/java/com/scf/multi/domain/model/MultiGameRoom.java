@@ -1,27 +1,26 @@
 package com.scf.multi.domain.model;
 
+import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
+@Builder
 @Getter
 public class MultiGameRoom {
 
-    private final Set<Long> participantsIds = Collections.synchronizedSet(new HashSet<>());
     private final List<Problem> problems = new ArrayList<>();
+    private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private String roomId;
     private Long hostId;
     private Boolean isStart;
-
-    public Set<Long> getParticipantsIds() {
-        // 읽기 전용 Set을 반환
-        return Collections.unmodifiableSet(this.participantsIds);
+    
+    public List<Player> getPlayers() {
+        // 읽기 전용 List 반환
+        return Collections.unmodifiableList(players);
     }
 
     public List<Problem> getProblems() {
@@ -29,12 +28,12 @@ public class MultiGameRoom {
         return Collections.unmodifiableList(this.problems);
     }
 
-    public void add(Long userId) {
-        this.participantsIds.add(userId);
+    public void add(Long userId, String username) {
+        this.players.add(new Player(userId, username));
     }
 
     public void remove(Long userId) {
-        this.participantsIds.remove(userId);
+        this.players.removeIf(player -> player.getUserId().equals(userId));
     }
 
     public void gameStart(List<Problem> problems) {

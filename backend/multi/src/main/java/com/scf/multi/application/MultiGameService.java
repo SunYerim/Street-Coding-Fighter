@@ -24,8 +24,16 @@ public class MultiGameService {
     }
 
     public String createRoom(Long userId) {
+
         String roomId = UUID.randomUUID().toString();
-        multiGameRepository.addRoom(new MultiGameRoom(roomId, userId, false));
+
+        MultiGameRoom room = MultiGameRoom.builder()
+            .roomId(roomId)
+            .hostId(userId)
+            .isStart(false)
+            .build();
+
+        multiGameRepository.addRoom(room);
         return roomId;
     }
 
@@ -33,15 +41,15 @@ public class MultiGameService {
         multiGameRepository.deleteRoom(roomId);
     }
 
-    public void joinRoom(String roomId, Long userId) {
-        multiGameRepository.joinRoom(roomId, userId);
+    public void joinRoom(String roomId, Long userId, String username) {
+        multiGameRepository.joinRoom(roomId, userId, username);
     }
 
     public void exitRoom(String roomId, Long userId) {
         multiGameRepository.exitRoom(roomId, userId);
     }
 
-    public void markSolution(String userId, String content) {
+    public void markSolution(String roomId, Long userId, String content) {
     }
 
     public void startGame(String roomId) {
