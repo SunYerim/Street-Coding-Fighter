@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import React, { useState } from 'react';
 const PlayView = styled.div`
   position: fixed;
   top: 0px;
@@ -75,6 +75,7 @@ const CharacterName = styled.div`
 `;
 
 export default function SinglePlay() {
+  const [page, setPage] = useState(0);
   const dialogueList = [
     {
       page_no: 0,
@@ -82,23 +83,29 @@ export default function SinglePlay() {
     },
     {
       page_no: 1,
-      script_content: '<p>첫번째줄 대사입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>'
+      script_content: '<p>두번째페이지입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>'
     },
   ]
-  // const onClick = ()=>{
+  const nextPage = ()=>{
+    if(page < dialogueList.length-1){
+      setPage((prevPage) => prevPage + 1);
+    }
+    else{
+      setPage(0);
+    }
+    console.log(page);
 
-
-  // }
+  }
   return (
     <PlayView>
       <ImageBox>
         <CharacterImage src="/src/assets/character-test-removebg-preview.png" alt="" />
       </ImageBox>
-      <DialogueBox >
+      <DialogueBox onClick ={nextPage}>
         <DialogueHeader>
           <CharacterName>Hoshino Ai</CharacterName>
         </DialogueHeader>
-        <DialogueBody dangerouslySetInnerHTML={{__html:dialogueList[0].script_content}}>
+        <DialogueBody dangerouslySetInnerHTML={{__html:dialogueList[page].script_content}}>
         </DialogueBody>
       </DialogueBox>
     </PlayView>
