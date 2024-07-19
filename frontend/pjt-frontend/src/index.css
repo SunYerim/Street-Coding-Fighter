@@ -2,18 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-#root{
-  text-align: center;
+@font-face {
+  font-family: "Galmuri9";
+  font-weight: normal;
+  src: url("./fonts/Galmuri9.ttf");
 }
-body {
+
+#root {
   margin: 0;
-  display: flex;
-  place-items: center;
-  justify-content: center;
-  min-width: 320px;
+  min-width: 640px;
   min-height: 100vh;
-  background-image: url('./background.svg');
+  background-image: url("./background.svg");
   background-size: cover;
 }
 
+body {
+  margin: 0;
+}
 
+body * {
+  font-family: "Galmuri9";
+}
