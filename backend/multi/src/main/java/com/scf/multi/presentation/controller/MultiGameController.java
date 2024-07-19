@@ -36,4 +36,10 @@ public class MultiGameController {
         multiGameService.joinRoom(roomId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/multi/game/{roomId}")
+    public ResponseEntity<?> gameStart(@PathVariable String roomId) {
+        multiGameService.startGame(roomId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

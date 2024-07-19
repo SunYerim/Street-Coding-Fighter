@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class MultiGameService {
 
     private final MultiGameRepository multiGameRepository;
+    private final ProblemService problemService;
 
     public List<MultiGameRoom> findAllRooms() {
         return multiGameRepository.findAllRooms();
@@ -23,7 +25,7 @@ public class MultiGameService {
 
     public String createRoom(Long userId) {
         String roomId = UUID.randomUUID().toString();
-        multiGameRepository.addRoom(new MultiGameRoom(roomId, userId));
+        multiGameRepository.addRoom(new MultiGameRoom(roomId, userId, false));
         return roomId;
     }
 
@@ -40,5 +42,14 @@ public class MultiGameService {
     }
 
     public void markSolution(String userId, String content) {
+    }
+
+    public void startGame(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        List<Problem> problems = problemService.getProblems();
+
+        room.gameStart(problems);
     }
 }
