@@ -52,12 +52,14 @@ public class MultiGameService {
     public void markSolution(String roomId, Long userId, String content) {
     }
 
-    public void startGame(String roomId) {
+    public List<Problem> startGame(String roomId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         List<Problem> problems = problemService.getProblems();
 
         room.gameStart(problems);
+
+        return problems;
     }
 }

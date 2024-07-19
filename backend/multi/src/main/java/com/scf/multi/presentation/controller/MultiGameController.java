@@ -1,6 +1,7 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class MultiGameController {
 
     @PostMapping("/multi/game/{roomId}")
     public ResponseEntity<?> gameStart(@PathVariable String roomId) {
-        multiGameService.startGame(roomId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        List<Problem> problems = multiGameService.startGame(roomId);
+        return new ResponseEntity<>(problems, HttpStatus.OK);
     }
 }
