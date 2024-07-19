@@ -2,15 +2,15 @@
 FROM openjdk:21 AS base
 
 # 필수 패키지 설치
+USER root
 RUN apt-get update && \
-    apt-get install -y wget unzip && \
-    apt-get install -y tzdata && \
+    apt-get install -y wget unzip tzdata && \
     ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
     echo Asia/Seoul > /etc/timezone && \
     apt-get clean
 
 # Gradle 설치
-ENV GRADLE_VERSION=7.6.0
+ENV GRADLE_VERSION=7.6
 RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
     unzip gradle-${GRADLE_VERSION}-bin.zip && \
     mv gradle-${GRADLE_VERSION} /opt/gradle && \
