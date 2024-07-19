@@ -1,5 +1,5 @@
 # OpenJDK 이미지를 사용하여 애플리케이션을 빌드합니다.
-FROM openjdk:21 AS base
+FROM openjdk:21-jdk AS base
 
 # 필수 패키지 설치
 USER root
