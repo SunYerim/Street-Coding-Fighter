@@ -53,7 +53,7 @@ public class MultiGameService {
         multiGameRepository.exitRoom(roomId, userId);
     }
 
-    public void markSolution(String roomId, Long userId, Content content) {
+    public int markSolution(String roomId, Long userId, Content content) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
         List<Problem> problems = room.getProblems();
@@ -74,7 +74,10 @@ public class MultiGameService {
         if (isCorrect) {
             int score = calculateScore(solved.getSubmitTime());
             room.updateScore(userId, score);
+            return score;
         }
+
+        return 0;
     }
 
     public List<Problem> startGame(String roomId) {

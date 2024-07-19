@@ -57,7 +57,9 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         if(message.getType().equals("solve")) {
 
             Player player = sessionPlayers.get(session.getId());
-            multiGameService.markSolution(roomId, player.getUserId(), message.getContent());
+            int attainedScore = multiGameService.markSolution(roomId, player.getUserId(), message.getContent());
+
+            session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
 
         } else if (message.getType().equals("fin")) {
 
