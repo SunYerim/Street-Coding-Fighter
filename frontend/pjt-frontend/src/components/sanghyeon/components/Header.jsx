@@ -9,14 +9,14 @@ function Header() {
   return (
     <>
       <div className="header-container">
-        <h3
+        <h2
           className="header-title"
           onClick={() => {
             navigate("/main");
           }}
         >
           Street Coding Figther
-        </h3>
+        </h2>
         <div className="header-icon">
           <img
             onClick={() => {

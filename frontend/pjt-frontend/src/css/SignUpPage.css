@@ -1,9 +1,15 @@
 .signup-container {
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(27, 26, 85, 0.8);
+  width: 33vw;
+  max-width: 500px;
+  border-radius: 20px;
+  height: 60vh;
 }
