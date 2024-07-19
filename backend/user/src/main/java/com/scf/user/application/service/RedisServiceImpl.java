@@ -10,25 +10,25 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RedisServiceImpl implements RedisService{
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public void setValues(String key, String value) {
-        ValueOperations<String, Object> values=  redisTemplate.opsForValue();
+        ValueOperations<String, String> values=  redisTemplate.opsForValue();
         values.set(key, value);
     }
 
     @Override
     public void setValues(String key, String value, Duration duration) {
-        ValueOperations<String, Object> values = redisTemplate.opsForValue();
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
         values.set(key, value, duration);
     }
 
     @Override
     public String getValue(String key) {
-        ValueOperations<String, Object> values = redisTemplate.opsForValue();
-        if (values.get(key) != null) return "";
-        return String.valueOf(values.get(key));
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+        String value = values.get(key);
+        return value != null ? value : "";
     }
 
     @Override

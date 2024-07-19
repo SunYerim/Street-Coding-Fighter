@@ -7,10 +7,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserLoginResponseDto {
+public class TokenDto {
+
     private String accessToken;
     private String refreshToken;
-    private String name;
-    private String userId;
 
+    public TokenDto(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }
