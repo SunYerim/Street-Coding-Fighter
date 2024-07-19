@@ -1,5 +1,5 @@
 # Gradle 이미지를 사용하여 애플리케이션을 빌드합니다.
-FROM gradle:7.3.3-jdk21 AS build
+FROM gradle:7.6.0-jdk21 AS build
 
 # 컨테이너 내 작업 디렉토리를 설정합니다.
 WORKDIR /app
