@@ -85,6 +85,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 roomSessions.remove(session);
                 if (roomSessions.isEmpty()) {
                     rooms.remove(roomId);
+                    multiGameService.deleteRoom(roomId);
                 }
             }
 
