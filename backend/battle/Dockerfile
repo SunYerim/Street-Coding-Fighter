@@ -1,5 +1,15 @@
-# Gradle 이미지를 사용하여 애플리케이션을 빌드합니다.
-FROM gradle:7.6.0-jdk21 AS build
+# Gradle과 OpenJDK 21을 설치하여 빌드 환경을 구성합니다.
+FROM openjdk:21 AS build
+
+# Gradle 설치
+ENV GRADLE_VERSION=7.6.0
+RUN apt-get update && \
+    apt-get install -y wget unzip && \
+    wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip gradle-${GRADLE_VERSION}-bin.zip && \
+    mv gradle-${GRADLE_VERSION} /opt/gradle && \
+    ln -s /opt/gradle/bin/gradle /usr/bin/gradle && \
+    rm gradle-${GRADLE_VERSION}-bin.zip
 
 # 컨테이너 내 작업 디렉토리를 설정합니다.
 WORKDIR /app
