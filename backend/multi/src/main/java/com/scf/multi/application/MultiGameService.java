@@ -1,8 +1,11 @@
 package com.scf.multi.application;
 
 import com.scf.multi.domain.dto.Problem;
+import com.scf.multi.domain.dto.Solved;
+import com.scf.multi.domain.dto.message.Content;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
+import com.scf.multi.domain.repository.SolvedRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ public class MultiGameService {
 
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
+    private final SolvedRepository solvedRepository;
 
     public List<MultiGameRoom> findAllRooms() {
         return multiGameRepository.findAllRooms();
@@ -49,7 +53,28 @@ public class MultiGameService {
         multiGameRepository.exitRoom(roomId, userId);
     }
 
-    public void markSolution(String roomId, Long userId, String content) {
+    public void markSolution(String roomId, Long userId, Content content) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        List<Problem> problems = room.getProblems();
+        Problem problem = problems.get(room.getRound());
+
+        Solved solved = Solved
+            .builder()
+            .userId(userId)
+            .problemId(problem.getProblemId())
+            .solve(content.getSolve())
+            .submitTime(content.getSubmitTime())
+            .build();
+
+        solvedRepository.save(userId, solved);
+
+        boolean isCorrect = solved.mark(problem);
+
+        if (isCorrect) {
+            int score = calculateScore(solved.getSubmitTime());
+            room.updateScore(userId, score);
+        }
     }
 
     public List<Problem> startGame(String roomId) {
@@ -61,5 +86,21 @@ public class MultiGameService {
         room.gameStart(problems);
 
         return problems;
+    }
+
+    private int calculateScore(int submitTime) { // TODO: 협의 후 수정
+
+        if (submitTime < 3) {
+            return 500;
+        } else if (submitTime < 6) {
+            return 300;
+        } else if(submitTime < 9) {
+            return 200;
+        } else if(submitTime < 12) {
+            return 150;
+        } else if(submitTime < 15) {
+            return 130;
+        }
+        return 50;
     }
 }

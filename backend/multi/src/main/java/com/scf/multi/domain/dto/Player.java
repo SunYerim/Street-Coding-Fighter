@@ -8,5 +8,5 @@ import lombok.Data;
 public class Player {
 
     Long userId;
-    String name;
+    String username;
 }

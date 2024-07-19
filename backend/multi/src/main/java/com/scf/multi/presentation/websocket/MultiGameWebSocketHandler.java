@@ -2,7 +2,11 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.Player;
+import com.scf.multi.domain.dto.Rank;
+import com.scf.multi.domain.dto.message.Message;
 import com.scf.multi.domain.model.MultiGameRoom;
+import com.scf.multi.global.utils.JsonConverter;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,15 +47,29 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
 
-        Player player = sessionPlayers.get(session.getId());
+        String msg = textMessage.getPayload();
+        Message message = JsonConverter.getInstance().fromJson(msg, Message.class);
 
         String roomId = sessionRooms.get(session.getId());
 
-        String content = message.getPayload();
+        if(message.getType().equals("solve")) {
 
-        multiGameService.markSolution(roomId, player.getUserId(), content);
+            Player player = sessionPlayers.get(session.getId());
+            multiGameService.markSolution(roomId, player.getUserId(), message.getContent());
+
+        } else if (message.getType().equals("fin")) {
+
+            MultiGameRoom room = multiGameService.findOneById(roomId);
+
+            room.nextRound();
+
+            List<Rank> ranks = room.calculateRank();
+            String rankMsg = JsonConverter.getInstance().toString(ranks);
+
+            session.sendMessage(new TextMessage(rankMsg));
+        }
     }
 
     @Override
@@ -71,7 +89,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             }
 
             if (player != null) {
-                broadcastMessageToRoom(roomId, player.getName() + "님이 게임을 나갔습니다.");
+                broadcastMessageToRoom(roomId, player.getUsername() + "님이 게임을 나갔습니다.");
             }
         }
     }
