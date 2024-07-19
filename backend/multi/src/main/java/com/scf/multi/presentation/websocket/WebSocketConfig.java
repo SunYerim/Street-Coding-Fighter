@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new MultiGameWebSocketHandler(multiGameService), "/game/{roomId}/{userId}/{username}")
+        registry.addHandler(new MultiGameWebSocketHandler(multiGameService), "/multi/{roomId}/{userId}/{username}")
             .setAllowedOrigins("*"); // Cross-Origin 설정
     }
 }
