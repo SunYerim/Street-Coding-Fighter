@@ -10,6 +10,7 @@ import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
 import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
 import SingleMain from "./components/single/SingleMain.jsx";
 import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
+
 function App() {
   return (
     <>
@@ -23,8 +24,9 @@ function App() {
           <Route path="/record" element={<RecordPage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/solved" element={<SolvedPage />} />
-          <Route path="/single" element={<SingleMain />} />
-          <Route path="/single/main" element={<SinglePlay />} />
+          <Route path="/single-main" element={<SingleMain />} />
+          <Route path="/single-play" element={<SinglePlay />} />
+          <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
     </>

@@ -4,19 +4,23 @@ import "../../../css/SignUpPage.css";
 import register from "../apis/register.js";
 
 function SignUpPage() {
-  const username = useRef(null);
+  const userId = useRef(null);
+  const name = useRef(null);
   const password1 = useRef(null);
   const password2 = useRef(null);
-  const birthday = useRef(null);
+  const schoolName = useRef(null);
+  const birth = useRef(null);
 
   const signUp = function () {
     if (password1.current.value !== password2.current.value) {
-      console.log("passwords do not match");
+      alert("passwords do not match");
     } else {
       register(
-        username.current.value,
+        userId.current.value,
+        name.current.value,
         password1.current.value,
-        birthday.current.value
+        schoolName.current.value,
+        birth.current.value
       );
     }
   };
@@ -24,10 +28,12 @@ function SignUpPage() {
   return (
     <>
       <div className="signup-container">
-        <input type="text" ref={username} />
+        <input type="text" ref={userId} />
+        <input type="text" ref={name} />
         <input type="password" ref={password1} />
         <input type="password" ref={password2} />
-        <input type="text" ref={birthday} />
+        <input type="text" ref={schoolName} />
+        <input type="text" ref={birth} />
         <button onClick={signUp}>CREATE</button>
       </div>
     </>
