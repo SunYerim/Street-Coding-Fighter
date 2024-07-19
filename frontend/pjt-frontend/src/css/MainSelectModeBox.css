@@ -1,0 +1,18 @@
+.select-box {
+  cursor: pointer;
+  background-color: rgba(27, 26, 85, 0.8);
+  width: 25vw;
+  border-radius: 20px;
+  height: 55vh;
+  z-index: 1;
+  margin: auto;
+  margin-top: 10%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mode {
+  color: white;
+}
