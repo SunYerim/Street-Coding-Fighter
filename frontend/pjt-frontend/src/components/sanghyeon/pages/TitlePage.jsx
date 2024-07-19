@@ -1,9 +1,9 @@
-import "../../index.css";
-import "../../css/TitlePage.css";
+import "../../../index.css";
+import "../../../css/TitlePage.css";
 
 import { useNavigate } from "react-router-dom";
 
-export default function TitlePage() {
+function TitlePage() {
   const navigate = useNavigate();
 
   return (
@@ -20,3 +20,5 @@ export default function TitlePage() {
     </>
   );
 }
+
+export default TitlePage;

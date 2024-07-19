@@ -1,10 +1,13 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import TitlePage from "./components/sanghyeon/TitlePage.jsx";
-import LoginPage from "./components/sanghyeon/LoginPage.jsx";
-import SignUpPage from "./components/sanghyeon/SignUpPage.jsx";
-import MainPage from "./components/sanghyeon/MainPage.jsx";
-import ProfilePage from "./components/sanghyeon2/ProfilePage.jsx";
+import TitlePage from "./components/sanghyeon/pages/TitlePage.jsx";
+import LoginPage from "./components/sanghyeon/pages/LoginPage.jsx";
+import SignUpPage from "./components/sanghyeon/pages/SignUpPage.jsx";
+import MainPage from "./components/sanghyeon/pages/MainPage.jsx";
+import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
+import RecordPage from "./components/sanghyeon/pages/RecordPage.jsx";
+import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
+import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
 
 function App() {
   return (
@@ -15,8 +18,9 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        {/* <Route path="/record" element={<RecordPage />} />
-        <Route path="/report" element={<ReportPage />} /> */}
+        <Route path="/record" element={<RecordPage />} />
+        <Route path="/report" element={<ReportPage />} />
+        <Route path="/solved" element={<SolvedPage />} />
       </Routes>
     </Router>
   );

@@ -1,9 +1,10 @@
-import axios from "axios";
+// import axios from "axios";
 import { useRef } from "react";
-import AccountButton from "./AccountButton.jsx";
-import "../../css/LoginPage.css";
+import AccountButton from "../components/AccountButton.jsx";
+import AccountContainer from "../components/AccountContainer.jsx";
+import "../../../css/LoginPage.css";
 
-export default function LoginPage() {
+function LoginPage() {
   const username = useRef(null);
   const password = useRef(null);
 
@@ -28,6 +29,7 @@ export default function LoginPage() {
 
   return (
     <>
+      <AccountContainer />
       <div className="login-container">
         <input type="text" ref={username} />
         <input type="password" ref={password} />
@@ -41,3 +43,5 @@ export default function LoginPage() {
     </>
   );
 }
+
+export default LoginPage;

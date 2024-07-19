@@ -1,0 +1,21 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.header-title {
+  cursor: pointer;
+}
+
+.header-icon {
+  display: flex;
+}
+
+.user-icon,
+.setting-icon {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  padding: 0 10px;
+}
