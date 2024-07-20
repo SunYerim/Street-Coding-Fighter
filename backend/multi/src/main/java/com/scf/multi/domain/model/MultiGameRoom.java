@@ -35,7 +35,9 @@ public class MultiGameRoom {
     }
 
     public void add(Long userId, String username) {
+
         this.players.add(new Player(userId, username));
+        this.scoreBoard.put(userId, 0);
     }
 
     public void remove(Long userId) {
