@@ -35,6 +35,7 @@ public class MultiGameService {
             .roomId(roomId)
             .hostId(userId)
             .isStart(false)
+            .round(0)
             .build();
 
         multiGameRepository.addRoom(room);
