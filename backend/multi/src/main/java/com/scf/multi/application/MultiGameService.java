@@ -2,11 +2,10 @@ package com.scf.multi.application;
 
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Solved;
-import com.scf.multi.domain.dto.message.Content;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
-import com.scf.multi.domain.repository.SolvedRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ public class MultiGameService {
 
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
-    private final SolvedRepository solvedRepository;
 
     public List<MultiGameRoom> findAllRooms() {
         return multiGameRepository.findAllRooms();
@@ -54,25 +52,32 @@ public class MultiGameService {
         multiGameRepository.exitRoom(roomId, userId);
     }
 
-    public int markSolution(String roomId, Long userId, Content content) {
+    public int markSolution(String roomId, Long userId, Solved solved) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
         List<Problem> problems = room.getProblems();
         Problem problem = problems.get(room.getRound());
 
-        Solved solved = Solved
-            .builder()
-            .userId(userId)
-            .problemId(problem.getProblemId())
-            .solve(content.getSolve())
-            .submitTime(content.getSubmitTime())
-            .build();
+        // 문제의 정답 가져오기
+        Map<Integer, Integer> answer = problem.getAnswer();
 
-        solvedRepository.save(userId, solved);
+        // 점수를 계산할 변수
+        int correctAnswerCount = 0;
 
-        boolean isCorrect = solved.mark(problem);
+        // 제출된 답안과 문제의 정답을 비교
+        Map<Integer, Integer> solve = solved.getSolve();
+        for (Map.Entry<Integer, Integer> entry : solve.entrySet()) {
+            Integer blankNumber = entry.getKey(); // 빈칸 번호
+            Integer submittedOption = entry.getValue(); // 제출된 보기 번호
 
-        if (isCorrect) {
+            // 정답의 빈칸 번호에 해당하는 보기 번호와 비교
+            if (answer.containsKey(blankNumber) && answer.get(blankNumber)
+                .equals(submittedOption)) {
+                correctAnswerCount++;
+            }
+        }
+
+        if (correctAnswerCount > 0) {
             int score = calculateScore(solved.getSubmitTime());
             room.updateScore(userId, score);
             return score;
@@ -98,11 +103,11 @@ public class MultiGameService {
             return 500;
         } else if (submitTime < 6) {
             return 300;
-        } else if(submitTime < 9) {
+        } else if (submitTime < 9) {
             return 200;
-        } else if(submitTime < 12) {
+        } else if (submitTime < 12) {
             return 150;
-        } else if(submitTime < 15) {
+        } else if (submitTime < 15) {
             return 130;
         }
         return 50;

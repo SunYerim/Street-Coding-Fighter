@@ -1,11 +1,18 @@
 package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.application.UserService;
 import com.scf.multi.domain.dto.Player;
+import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Rank;
+import com.scf.multi.domain.dto.Solved;
+import com.scf.multi.domain.dto.message.Content;
 import com.scf.multi.domain.dto.message.Message;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.utils.JsonConverter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,9 +29,11 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
+    private final UserService userService;
     private final Map<String, Player> sessionPlayers = new ConcurrentHashMap<>(); // session ID -> player (player 이름, 아이디 알려고)
     private final Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
+    private final Map<Long, List<Solved>> solveds = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -47,17 +56,22 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
+    public void handleTextMessage(WebSocketSession session, TextMessage textMessage)
+        throws Exception {
 
         String msg = textMessage.getPayload();
         Message message = JsonConverter.getInstance().fromJson(msg, Message.class);
 
         String roomId = sessionRooms.get(session.getId());
 
-        if(message.getType().equals("solve")) {
+        if (message.getType().equals("solve")) {
 
             Player player = sessionPlayers.get(session.getId());
-            int attainedScore = multiGameService.markSolution(roomId, player.getUserId(), message.getContent());
+
+            Solved solved = saveSolved(roomId, player.getUserId(), message.getContent());// 푼 문제 저장
+
+            int attainedScore = multiGameService.markSolution(roomId, player.getUserId(),
+                solved); // 문제 채점
 
             session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
 
@@ -66,6 +80,10 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             MultiGameRoom room = multiGameService.findOneById(roomId);
 
             room.nextRound();
+
+            if (room.getRound() == 10) { // 마지막 라운드이면 TODO: 한 게임 몇 라운드 할 것인지 협의
+                userService.saveUserSolveds(solveds);
+            }
 
             List<Rank> ranks = room.calculateRank();
             String rankMsg = JsonConverter.getInstance().toString(ranks);
@@ -108,5 +126,27 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 }
             }
         }
+    }
+
+    private Solved saveSolved(String roomId, Long userId, Content content) {
+
+        MultiGameRoom room = multiGameService.findOneById(roomId);
+
+        List<Problem> problems = room.getProblems();
+        Problem problem = problems.get(room.getRound());
+
+        Solved solved = Solved
+            .builder()
+            .userId(userId)
+            .problemId(problem.getProblemId())
+            .solve(content.getSolve())
+            .submitTime(content.getSubmitTime())
+            .build();
+
+        // 문제를 해결한 리스트를 가져오거나, 없으면 새로운 리스트를 생성
+        List<Solved> solvedList = solveds.computeIfAbsent(userId, k -> new ArrayList<>());
+        solvedList.add(solved); // 리스트에 문제 추가
+
+        return solved;
     }
 }
