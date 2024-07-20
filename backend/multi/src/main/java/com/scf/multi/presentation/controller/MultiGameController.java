@@ -1,6 +1,7 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.List;
@@ -24,6 +25,19 @@ public class MultiGameController {
     public ResponseEntity<?> roomList() {
         List<MultiGameRoom> rooms = multiGameService.findAllRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
+    }
+
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> findRoom(@PathVariable String roomId) {
+        MultiGameRoom room = multiGameService.findOneById(roomId);
+        return new ResponseEntity<>(room, HttpStatus.OK);
+    }
+
+    @GetMapping("/room/{roomId}/user")
+    public ResponseEntity<?> userInRoom(@PathVariable String roomId) {
+        MultiGameRoom room = multiGameService.findOneById(roomId);
+        List<Player> players = room.getPlayers();
+        return new ResponseEntity<>(players, HttpStatus.OK);
     }
 
     @PostMapping("/room/{userId}")
