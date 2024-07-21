@@ -30,14 +30,19 @@ public class JwtTokenProvider {
     private static final Long ACCESS_TOKEN_EXPIRY = 60*60*1000L; // 60분
     private static final Long REFRESH_TOKEN_EXPIRY = 14*24*60*1000L; // 14일
 
+    public static String getSecret() {
+        return SECRET;
+    }
+
     // 토큰 생성
-    public TokenDto generateToken(Authentication authentication) {
+    public TokenDto generateToken(Authentication authentication, String name) {
         String authority = authentication.getAuthorities().toString();
         long now = new Date().getTime();
 
         String accessToken = Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITY_KEY, authority)
+            .claim("name", name)
             .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRY))
             .signWith(SignatureAlgorithm.HS256, SECRET)
             .compact();

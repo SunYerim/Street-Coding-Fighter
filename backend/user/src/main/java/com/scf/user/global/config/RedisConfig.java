@@ -25,8 +25,8 @@ public class RedisConfig {
 
     // Redis 데이터 처리를 위한 템플릿을 구성
    @Bean
-    public RedisTemplate<String, String> redisTemplate() {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
