@@ -9,7 +9,7 @@ export default function BattleCreate() {
   return (
     <>
       <div className="container">
-        Battle createRoom
+        Battle createRoom!
       </div>
     </>
   );
