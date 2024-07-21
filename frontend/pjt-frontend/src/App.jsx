@@ -10,6 +10,11 @@ import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
 import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
 import SingleMain from "./components/single/SingleMain.jsx";
 import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
+import MultiMain from "./components/multi/MultiMain.jsx";
+import MultiCreate from "./components/multi/MultiCreate.jsx";
+import BattleCreate from "./components/battle/BattleCreate.jsx";
+import BattleMain from "./components/battle/BattleMain.jsx";
+
 function App() {
   return (
     <>
@@ -25,6 +30,10 @@ function App() {
           <Route path="/solved" element={<SolvedPage />} />
           <Route path="/single" element={<SingleMain />} />
           <Route path="/single/main" element={<SinglePlay />} />
+          <Route path="/multi" element={<MultiMain />} />
+          <Route path="/multi-create" element={<MultiCreate />} />
+          <Route path="/battle" element={<BattleMain />} />
+          <Route path="/battle-create" element={<BattleCreate />} />
         </Routes>
       </Router>
     </>
