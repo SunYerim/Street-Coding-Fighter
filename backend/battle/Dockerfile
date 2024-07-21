@@ -10,8 +10,8 @@ VOLUME /tmp
 WORKDIR /app
 
 # JAR 파일을 /app 디렉토리로 복사
-COPY battle-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY build/libs/api-module-0.0.1-SNAPSHOT-plain.jar /app/app-module.jar
 
 # 운영 및 개발에서 사용되는 환경 설정을 분리
 # -Duser.timezone=Asia/Seoul JVM 옵션을 사용하여 애플리케이션 수준에서도 타임존을 설정
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "/app/app-module.jar"]
