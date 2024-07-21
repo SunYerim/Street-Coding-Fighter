@@ -3,6 +3,7 @@ package com.scf.multi.domain.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Rank;
 import java.util.ArrayList;
@@ -23,19 +24,22 @@ class MultiGameRoomTest {
             .hostId(1L)
             .isStart(false)
             .round(0)
+            .password("1234")
+            .maxPlayer(2)
             .build();
     }
 
     @Test
     @DisplayName("방에 플레이어가 정상적으로 추가되어야 한다.")
-    void AddPlayerTest() {
+    void AddPlayerTest1() {
 
         // given
         Long userId = 1L;
         String username = "Player1";
+        String roomPassword = "1234";
 
         // when
-        gameRoom.add(userId, username);
+        joinRoom(userId, username, roomPassword);
 
         // then
         assertEquals(1, gameRoom.getPlayers().size());
@@ -44,13 +48,45 @@ class MultiGameRoomTest {
     }
 
     @Test
+    @DisplayName("방 비밀번호가 틀릴 경우 추가가 되면 안된다.")
+    void AddPlayerTest2() {
+
+        // given
+        Long userId = 1L;
+        String username = "Player1";
+        String roomPassword = "1235";
+
+        // when
+        joinRoom(userId, username, roomPassword);
+
+        // then
+        assertEquals(0, gameRoom.getPlayers().size());
+    }
+
+    @Test
+    @DisplayName("방 인원이 가득 찼을 경우 추가되면 안된다.")
+    void AddPlayerTest3() {
+
+        // given
+        joinRoom(1L, "Player1", "1234");
+        joinRoom(2L, "Player2", "1234");
+
+        // when
+        joinRoom(3L, "Player3", "1234");
+
+        // then
+        assertEquals(2, gameRoom.getPlayers().size());
+    }
+
+    @Test
     @DisplayName("방에서 플레이어가 정상적으로 제거되어야 한다.")
     void RemovePlayerTest() {
 
         // given
         Long userId = 1L;
-        String username = "player1";
-        gameRoom.add(userId, username);
+        String username = "Player1";
+        String roomPassword = "1234";
+        joinRoom(userId, username, roomPassword);
 
         // when
         gameRoom.remove(1L);
@@ -85,7 +121,10 @@ class MultiGameRoomTest {
     @DisplayName("플레이어에 대한 점수가 정상적으로 업데이트 되어야 한다.")
     void UpdateScoreTest() {
         // given
-        gameRoom.add(1L, "Player1");
+        Long userId = 1L;
+        String username = "Player1";
+        String roomPassword = "1234";
+        joinRoom(userId, username, roomPassword);
 
         // when
         gameRoom.updateScore(1L, 10);
@@ -116,8 +155,9 @@ class MultiGameRoomTest {
     void CalculateRankTest() {
 
         // given
-        gameRoom.add(1L, "Player1");
-        gameRoom.add(2L, "Player2");
+
+        joinRoom(1L, "Player1", "1234");
+        joinRoom(2L, "Player2", "1234");
         gameRoom.updateScore(1L, 30);
         gameRoom.updateScore(2L, 20);
 
@@ -129,5 +169,24 @@ class MultiGameRoomTest {
         assertEquals(1L, ranks.get(0).getUserId());
         assertEquals(2L, ranks.get(1).getUserId());
         assertTrue(ranks.get(0).getScore() > ranks.get(1).getScore());
+    }
+
+    private void joinRoom(Long userId, String username, String roomPassword) {
+
+        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
+            .userId(userId)
+            .username(username)
+            .roomPassword(roomPassword)
+            .build();
+
+        if (!gameRoom.getPassword().equals(roomPassword)) {
+            return;
+        }
+
+        if(gameRoom.getMaxPlayer() == gameRoom.getPlayers().size()) {
+            return;
+        }
+
+        gameRoom.add(joinRoomDTO);
     }
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,8 @@ class MultiGameRepositoryTest {
             .hostId(1L)
             .isStart(false)
             .round(0)
+            .maxPlayer(2)
+            .password("1234")
             .build();
     }
 
@@ -51,6 +54,8 @@ class MultiGameRepositoryTest {
             .hostId(2L)
             .isStart(false)
             .round(0)
+            .maxPlayer(2)
+            .password("1234")
             .build();
 
         repository.addRoom(gameRoom);
@@ -101,11 +106,14 @@ class MultiGameRepositoryTest {
 
         // given
         repository.addRoom(gameRoom);
-        Long userId = 1L;
-        String username = "Player1";
+        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
+            .userId(1L)
+            .username("Player1")
+            .roomPassword("1234")
+            .build();
 
         // when
-        repository.joinRoom("abc-def", userId, username);
+        repository.joinRoom("abc-def", joinRoomDTO);
         MultiGameRoom room = repository.findOneById("abc-def");
 
         // then
@@ -119,13 +127,16 @@ class MultiGameRepositoryTest {
     void ExitRoomTest() {
 
         // given
-        Long userId = 2L;
-        String username = "Player1";
         repository.addRoom(gameRoom);
-        repository.joinRoom("abc-def", userId, username);
+        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
+            .userId(1L)
+            .username("Player1")
+            .roomPassword("1234")
+            .build();
+        repository.joinRoom("abc-def", joinRoomDTO);
 
         // when
-        repository.exitRoom("abc-def", userId);
+        repository.exitRoom("abc-def", joinRoomDTO.getUserId());
         MultiGameRoom room = repository.findOneById("abc-def");
 
         // then
