@@ -1,5 +1,6 @@
 package com.scf.multi.domain.model;
 
+import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Rank;
@@ -16,14 +17,18 @@ import lombok.Getter;
 @Getter
 public class MultiGameRoom {
 
+    private String roomId;
+    private Long hostId;
+    private String title;
+    private String password;
+    private Integer maxPlayer;
+
     private final List<Problem> problems = new ArrayList<>();
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>());
-    private String roomId;
-    private Long hostId;
     private Boolean isStart;
     private Integer round;
-    
+
     public List<Player> getPlayers() {
         // 읽기 전용 List 반환
         return Collections.unmodifiableList(players);
@@ -34,7 +39,15 @@ public class MultiGameRoom {
         return Collections.unmodifiableList(this.problems);
     }
 
-    public void add(Long userId, String username) {
+    public void add(JoinRoomDTO joinRoomDTO) {
+
+        String roomPassword = joinRoomDTO.getRoomPassword();
+        if (this.password != null && !this.password.equals(roomPassword)) {
+            return; // TODO: 예외 처리
+        }
+
+        Long userId = joinRoomDTO.getUserId();
+        String username = joinRoomDTO.getUsername();
 
         this.players.add(new Player(userId, username));
         this.scoreBoard.put(userId, 0);

@@ -1,6 +1,7 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,9 +48,10 @@ public class MultiGameController {
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
-    @PostMapping("/room/{roomId}/{userId}/{username}")
-    public ResponseEntity<?> joinRoom(@PathVariable String roomId, @PathVariable Long userId, @PathVariable String username) {
-        multiGameService.joinRoom(roomId, userId, username);
+    @PostMapping("/room/{roomId}")
+    public ResponseEntity<?> joinRoom(@PathVariable String roomId,
+        @RequestBody JoinRoomDTO joinRoomDTO) {
+        multiGameService.joinRoom(roomId, joinRoomDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -44,8 +45,8 @@ public class MultiGameService {
         multiGameRepository.deleteRoom(roomId);
     }
 
-    public void joinRoom(String roomId, Long userId, String username) {
-        multiGameRepository.joinRoom(roomId, userId, username);
+    public void joinRoom(String roomId, JoinRoomDTO joinRoomDTO) {
+        multiGameRepository.joinRoom(roomId, joinRoomDTO);
     }
 
     public void exitRoom(String roomId, Long userId) {
