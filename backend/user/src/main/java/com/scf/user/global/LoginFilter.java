@@ -3,6 +3,7 @@ package com.scf.user.global;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scf.user.application.dto.LoginDto;
 import com.scf.user.application.dto.TokenDto;
+import com.scf.user.application.service.JwtService;
 import com.scf.user.application.service.RedisService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -48,18 +49,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 로그인을 성공했을 시 실행하는 메서드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        // 성공적으로 인증된 경우 토큰을 생성하고 설정합니다.
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-        String username = userDetails.getUsername();
-        String id = ((UserDetails) authResult.getPrincipal()).getUsername();
+        TokenDto tokenDto = jwtTokenProvider.generateToken(authResult, userDetails.getUsername());
 
-        // 토큰 생성 -> 추후 key값 userNo로 변경
-        TokenDto tokenDto = jwtTokenProvider.generateToken(authResult, id);
-
-
-        // refreshToken Redis 저장
-        redisService.setValues(username, tokenDto.getRefreshToken());
         response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-        response.getWriter().write("Refresh Token: " + tokenDto.getRefreshToken());
+        redisService.setValues(userDetails.getUsername(), tokenDto.getRefreshToken());
     }
 
     @Override
