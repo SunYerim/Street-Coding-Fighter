@@ -11,7 +11,7 @@
   max-width: 300px;
   width: 60%;
   max-height: 400px;
-  height: 35%;
+  height: auto;
 }
 
 .overlay {
