@@ -1,9 +1,9 @@
 import axios from "axios";
 
-function getProfile(userId) {
+function getRecord(userId) {
   axios({
     method: "GET",
-    url: `/profile/${userId}`,
+    url: `/profile/record/${userId}`,
     data: {
       userId,
     },
@@ -16,4 +16,4 @@ function getProfile(userId) {
     });
 }
 
-export default getProfile;
+export default getRecord;

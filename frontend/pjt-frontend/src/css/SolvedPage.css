@@ -1,0 +1,54 @@
+#solved-outer-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+#solved-container * {
+  color: white;
+}
+
+#solved-container {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: rgba(27, 26, 85, 0.8);
+  width: 70vw;
+  border-radius: 20px;
+  height: 65vh;
+  z-index: 1;
+}
+
+#solved-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#solved-title-container h2 {
+  margin: 0;
+}
+
+#solved-problem-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#solved-problem-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+
+#solved-problem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

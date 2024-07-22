@@ -2,8 +2,10 @@ import "../../../css/ProfilePage.css";
 import Header from "../components/Header";
 import pinia from "../../../assets/characters/pinia.svg";
 import { useNavigate } from "react-router-dom";
-import getProfile from "../apis/getProfile";
 import { useEffect } from "react";
+import getProfile from "../apis/getProfile";
+import logOut from "../apis/logOut";
+import signOut from "../apis/signOut";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -40,8 +42,8 @@ function ProfilePage() {
                   <p>School: SSAFY</p>
                 </div>
                 <div id="button-container2">
-                  <button>Logout</button>
-                  <button>Sign Out</button>
+                  <button onClick={logOut}>Logout</button>
+                  <button onClick={signOut}>Sign Out</button>
                 </div>
               </div>
               <div id="character-img">

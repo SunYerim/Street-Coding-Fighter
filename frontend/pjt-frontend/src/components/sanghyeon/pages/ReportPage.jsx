@@ -4,7 +4,7 @@ function ReportPage() {
   return (
     <>
       <Header />
-      <h1>ReportPage</h1>
+      <div id="container"></div>
     </>
   );
 }
