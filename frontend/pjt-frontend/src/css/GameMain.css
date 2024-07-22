@@ -26,6 +26,45 @@
   color : white;
 }
 
+.create-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 50, 0.7);
+  width: 80vw;
+  border-radius: 20px;
+  height: 80vh;
+  color: white;
+}
+
+.create-title {
+  width: 40vw;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  margin: 10px 0;
+  color: black;
+  background-color: #eee;
+}
+
+.create-max-number {
+  width: 40vw;
+  padding: 10px;
+  font-size: 18px;
+  text-align: center;
+  border-radius: 5px;
+  margin: 10px 0;
+  color: black;
+  background-color: #eee;
+}
+
+.pink-line {
+  width: 80%;
+  height: 2px;
+  background-color: pink;
+  margin: 10px auto;
+}
+
 .game-list{
   overflow-y: auto;
   overflow-y: scroll;
@@ -33,12 +72,61 @@
   width: 70%;
   height: 75%;
   display: flex;
-  justify-content: left;
+  justify-content: flex-start;
   align-items: center;
   border: 3px solid black;
   border-radius: 10px;
   margin-left: 30px;
   margin-bottom: 30px;
+}
+
+
+.button-container {
+  width: 20%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border: 3px solid black;
+  border-radius: 10px;
+  margin: 0px 30px 30px 30px;
+}
+
+.create-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 7vh;
+  width: 50vw;
+  margin: 10px 20px;
+  font-size: 1.5rem;
+}
+
+.create-button {
+  height: 7vh;
+  width: 22vw;
+  margin: 10px 0px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+
+.create-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.5rem;
 }
 
 /* 스크롤바의 폭 너비 */
@@ -62,24 +150,4 @@
 }
 
 
-.button-container {
-  width: 20%;
-  height: 75%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  border: 3px solid black;
-  border-radius: 10px;
-  margin: 0px 30px 30px 30px;
-}
-
-.game-button {
-  height: 7vh;
-  width: 100%;
-  margin: 10px 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
