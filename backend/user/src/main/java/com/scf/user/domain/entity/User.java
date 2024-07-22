@@ -51,7 +51,7 @@ public class User implements UserDetails {
     private String schoolName;
 
     @Column(name = "birth")
-    private Date birth;
+    private LocalDate birth;
 
     @CreationTimestamp
     @Column(name = "created_at")

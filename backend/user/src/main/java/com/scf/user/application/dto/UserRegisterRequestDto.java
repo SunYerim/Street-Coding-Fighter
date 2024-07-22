@@ -1,5 +1,6 @@
 package com.scf.user.application.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +15,6 @@ public class UserRegisterRequestDto
     private String password;
     private String name;
     private String schoolName;
-    private Date birth;
+    private LocalDate birth;
+
 }
