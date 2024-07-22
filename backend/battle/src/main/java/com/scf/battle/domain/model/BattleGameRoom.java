@@ -18,5 +18,7 @@ public class BattleGameRoom {
     private Boolean isStart;
     private Integer round;
 
-
+    private List<Player> getPlayers(){
+        return Collections.unmodifiableList(players);
+    }
 }
