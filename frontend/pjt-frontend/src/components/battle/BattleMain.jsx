@@ -42,9 +42,6 @@ export default function BattleMain() {
             <div className="game-button">
               <Button text={"Create"} onClick={() => navigate("/battle-create")} />
             </div>
-            <div className="game-button">
-            <Button text={"Battle"} />
-            </div>
           </div>
         </div>
       </div>
