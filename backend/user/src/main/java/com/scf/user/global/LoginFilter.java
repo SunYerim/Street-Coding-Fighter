@@ -50,10 +50,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         String username = userDetails.getUsername();
-        String name = username; // nickname을 추가 정보로 사용할 수 있음
+        String id = ((UserDetails) authResult.getPrincipal()).getUsername();
 
         // 토큰 생성 -> 추후 key값 userNo로 변경
-        TokenDto tokenDto = jwtTokenProvider.generateToken(authResult, name);
+        TokenDto tokenDto = jwtTokenProvider.generateToken(authResult, id);
+
 
         // refreshToken Redis 저장
         redisService.setValues(username, tokenDto.getRefreshToken());

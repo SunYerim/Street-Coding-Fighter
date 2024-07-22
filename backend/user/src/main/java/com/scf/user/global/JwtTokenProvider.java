@@ -8,7 +8,9 @@ import com.scf.user.application.dto.TokenDto;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,26 +32,26 @@ public class JwtTokenProvider {
     private static final Long ACCESS_TOKEN_EXPIRY = 60*60*1000L; // 60분
     private static final Long REFRESH_TOKEN_EXPIRY = 14*24*60*1000L; // 14일
 
-    public static String getSecret() {
-        return SECRET;
+    private Key getSecretKey() {
+        return Keys.hmacShaKeyFor(SECRET.getBytes()); // SECRET을 Key 객체로 변환
     }
 
     // 토큰 생성
-    public TokenDto generateToken(Authentication authentication, String name) {
+    public TokenDto generateToken(Authentication authentication, String id) {
         String authority = authentication.getAuthorities().toString();
         long now = new Date().getTime();
 
         String accessToken = Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITY_KEY, authority)
-            .claim("name", name)
+            .claim("id", id)
             .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRY))
-            .signWith(SignatureAlgorithm.HS256, SECRET)
+            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
             .compact();
 
         String refreshToken = Jwts.builder()
             .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRY))
-            .signWith(SignatureAlgorithm.HS256, SECRET)
+            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
             .compact();
 
         return new TokenDto(accessToken, refreshToken);
@@ -105,6 +107,13 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
+
+    // 추후에 Redis에 Long타입으로 저장하기 위함.
+//    public Long extractUserNo(String token) {
+//        Claims claims = parseClaims(token);
+//        String userNo = claims.get("userNo", String.class);
+//        return Long.parseLong(userNo); // Convert to Long
+//    }
 
 }
 

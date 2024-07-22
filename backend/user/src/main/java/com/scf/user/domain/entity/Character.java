@@ -5,13 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "characters")
 public class Character {
 
     @Id
@@ -25,7 +28,8 @@ public class Character {
     @Column(name = "character_type")
     private int characterType;
 
-    @OneToOne(mappedBy = "character")
+    @OneToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false) // FK 설정
     private User user;
 
 }

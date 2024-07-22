@@ -1,5 +1,6 @@
 package com.scf.user.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,13 +10,21 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.Date;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "member")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "members")
 public class User {
 
     @Id
@@ -23,15 +32,26 @@ public class User {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "user_id", nullable = false, unique = true)
     private String userId;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "school_name")
     private String schoolName;
+
+    @Column(name = "birth")
     private Date birth;
+
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDate createdAt;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Character character;
 
 }
