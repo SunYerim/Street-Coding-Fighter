@@ -1,6 +1,9 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.JoinRoomDTO;
+import com.scf.multi.domain.dto.Player;
+import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,10 +23,23 @@ public class MultiGameController {
 
     private final MultiGameService multiGameService;
 
-    @GetMapping
+    @GetMapping("/room")
     public ResponseEntity<?> roomList() {
         List<MultiGameRoom> rooms = multiGameService.findAllRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
+    }
+
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> findRoom(@PathVariable String roomId) {
+        MultiGameRoom room = multiGameService.findOneById(roomId);
+        return new ResponseEntity<>(room, HttpStatus.OK);
+    }
+
+    @GetMapping("/room/{roomId}/user")
+    public ResponseEntity<?> userInRoom(@PathVariable String roomId) {
+        MultiGameRoom room = multiGameService.findOneById(roomId);
+        List<Player> players = room.getPlayers();
+        return new ResponseEntity<>(players, HttpStatus.OK);
     }
 
     @PostMapping("/room/{userId}")
@@ -31,9 +48,16 @@ public class MultiGameController {
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
-    @PostMapping("/room/{roomId}/{userId}")
-    public ResponseEntity<?> joinRoom(@PathVariable String roomId, @PathVariable Long userId) {
-        multiGameService.joinRoom(roomId, userId);
+    @PostMapping("/room/{roomId}")
+    public ResponseEntity<?> joinRoom(@PathVariable String roomId,
+        @RequestBody JoinRoomDTO joinRoomDTO) {
+        multiGameService.joinRoom(roomId, joinRoomDTO);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/game/start/{roomId}")
+    public ResponseEntity<?> gameStart(@PathVariable String roomId) {
+        List<Problem> problems = multiGameService.startGame(roomId);
+        return new ResponseEntity<>(problems, HttpStatus.OK);
     }
 }
