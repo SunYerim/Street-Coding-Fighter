@@ -7,7 +7,7 @@ import close from "../../../assets/close.png";
 
 Modal.setAppElement("#root");
 
-function Setting() {
+const Setting = () => {
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -57,6 +57,6 @@ function Setting() {
       </Modal>
     </div>
   );
-}
+};
 
 export default Setting;
