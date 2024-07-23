@@ -66,16 +66,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // 사용자 정보를 추가로 가져오는 로직
         User user = (User) memberDetailService.loadUserByUsername(userDetails.getUsername());
-        String userName = user.getName();
         long memberId = user.getId();
 
         // 토큰을 생성하고 발급
-        String accessToken = jwtTokenProvider.generateAccessToken(authResult, memberId);
+        String accessToken = jwtTokenProvider.generateAccessToken(memberId);
         String refreshToken = jwtTokenProvider.createRefreshToken();
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(createCookie("refresh", refreshToken));
-        redisService.setValues(userDetails.getUsername(), refreshToken);
+        redisService.setValues(String.valueOf(memberId), refreshToken);
     }
 
     // 로그인을 실패했을시.
