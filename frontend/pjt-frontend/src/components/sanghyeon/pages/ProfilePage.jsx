@@ -6,17 +6,19 @@ import { useEffect } from "react";
 import getProfile from "../apis/getProfile";
 import logOut from "../apis/logOut";
 import signOut from "../apis/signOut";
+import store from "../../../store/store.js";
 
 function ProfilePage() {
   const navigate = useNavigate();
+  const { userId } = store();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const profile = await getProfile();
+        const profile = await getProfile(userId);
         console.log(profile);
       } catch (error) {
-        console.error("Failed to fetch profile", error);
+        alert("Failed to fetch profile", error);
       }
     };
 
@@ -25,35 +27,38 @@ function ProfilePage() {
 
   return (
     <>
-      <Header />
-      <div id="container">
-        <div id="profile-container">
-          <h2>My Profile</h2>
-          <hr />
-          <div id="character-button-container">
-            <div id="character-container">
-              <div>
-                <div id="status-container">
-                  <p>Name: Jack</p>
-                  <p>BirthDay: 98.03.19</p>
-                  <p>Exp: 302,483 exp</p>
-                  <p>Point: 55,324 point</p>
-                  <p>Pet: Pinia</p>
-                  <p>School: SSAFY</p>
+      <div className="outer-container">
+        <Header />
+        <div className="profile-outer-container">
+          <div className="profile-container">
+            <h2 className="profile-title">My Profile</h2>
+            <hr />
+            <div className="profile-character-container">
+              <div className="profile-character">
+                <div className="profile-status">
+                  <h3>Name : Jack</h3>
+                  <h3>Birth Day : 98.03.19</h3>
+                  <h3>Exp: 302, 483 exp</h3>
+                  <h3>Character : Pinia</h3>
+                  <h3>School : SSAFY</h3>
+                  <div className="profile-status-button">
+                    <button onClick={logOut}>비밀번호 수정</button>
+                    <button onClick={signOut}>회원탈퇴</button>
+                  </div>
                 </div>
-                <div id="button-container2">
-                  <button onClick={logOut}>Logout</button>
-                  <button onClick={signOut}>Sign Out</button>
+                <div className="profile-character-img-container">
+                  <img
+                    className="profile-character-img"
+                    src={pinia}
+                    alt="pinia-character"
+                  />
                 </div>
               </div>
-              <div id="character-img">
-                <img src={pinia} alt="pinia-character" />
+              <div className="profile-button-container">
+                <button onClick={() => navigate("/record")}>RECORD</button>
+                <button onClick={() => navigate("/report")}>REPORT</button>
+                <button onClick={() => navigate("/solved")}>SOLVED</button>
               </div>
-            </div>
-            <div id="button-container2">
-              <button onClick={() => navigate("/record")}>RECORD</button>
-              <button onClick={() => navigate("/report")}>REPORT</button>
-              <button onClick={() => navigate("/solved")}>SOLVED</button>
             </div>
           </div>
         </div>
