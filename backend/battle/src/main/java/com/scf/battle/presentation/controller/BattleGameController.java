@@ -3,6 +3,7 @@ package com.scf.battle.presentation.controller;
 import com.scf.battle.application.BattleGameService;
 import com.scf.battle.domain.dto.CreateRoomDTO;
 import com.scf.battle.domain.dto.JoinRoomDTO;
+import com.scf.battle.domain.dto.Problem;
 import com.scf.battle.domain.model.BattleGameRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,13 +45,13 @@ public class BattleGameController {
 
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long userId, @RequestBody CreateRoomDTO createRoomDto){
-        battleGameService.createRoom(userId, createRoomDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        String roomId = battleGameService.createRoom(userId, createRoomDto);
+        return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
-    @PostMapping("/room/{roomId}")
+    @PostMapping("/room/{roomId}/start")
     public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable String roomId){
-        battleGameService.gameStart(userId, roomId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        List<Problem> problems = battleGameService.startGame(userId, roomId);
+        return new ResponseEntity<>(problems, HttpStatus.OK);
     }
 }
