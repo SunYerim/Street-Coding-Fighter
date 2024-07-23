@@ -21,5 +21,10 @@ public class BattleGameRepository {
         return gameRooms.get(roomId);
     }
 
+    public void joinRoom(String roomId, JoinRoomDTO joinRoomDto) {
+        BattleGameRoom room = gameRooms.get(roomId);
+        room.add(joinRoomDto);
+    }
+
 
 }
