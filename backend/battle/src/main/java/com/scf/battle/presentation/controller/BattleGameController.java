@@ -33,4 +33,9 @@ public class BattleGameController {
         return new ResponseEntity<>(battleGameRoom, HttpStatus.OK);
     }
 
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> joinRoom(PathVariable roomId, @RequestBody JoinRoomDto joinRoomDto) {
+        battleGameService.joinRoom(roomId, joinRoomDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
