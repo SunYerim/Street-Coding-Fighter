@@ -36,7 +36,7 @@ public class BattleGameController {
     }
 
     @PostMapping("/room/{roomId}")
-    public ResponseEntity<?> joinRoom(PathVariable roomId, @RequestBody JoinRoomDto joinRoomDto) {
+    public ResponseEntity<?> joinRoom(@PathVariable Long roomId, @RequestBody JoinRoomDto joinRoomDto) {
         battleGameService.joinRoom(roomId, joinRoomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -44,6 +44,12 @@ public class BattleGameController {
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long userId){
         battleGameService.createRoom(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/room/{roomId}")
+    public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable Long roomId){
+        battleGameService.gameStart(userId, roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
