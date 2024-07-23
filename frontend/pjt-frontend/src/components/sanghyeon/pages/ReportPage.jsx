@@ -19,13 +19,15 @@ function ReportPage() {
 
   return (
     <>
-      <Header />
-      <div className="report-container">
-        <div className="report-title">
-          <h2>Report</h2>
+      <div className="outer-container">
+        <Header />
+        <div className="report-outer-container">
+          <div className="report-container">
+            <h2 className="report-title">Report</h2>
+            <hr />
+            <div className="report">보고서</div>
+          </div>
         </div>
-        <hr />
-        <div className="report">보고서</div>
       </div>
     </>
   );

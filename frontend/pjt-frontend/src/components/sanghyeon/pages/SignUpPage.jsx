@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useRef, useState } from "react";
 import "../../../css/SignUpPage.css";
 import register from "../apis/register.js";
@@ -14,6 +15,8 @@ function SignUpPage() {
   const birth = useRef(null);
   const navigate = useNavigate();
 
+  const [errorMessage, setErrorMessage] =
+    useState("비밀번호가 일치하지 않습니다.");
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
@@ -24,16 +27,39 @@ function SignUpPage() {
     setModalIsOpen(false);
   };
 
-  const isValid = function (pw1, pw2) {
-    if (pw1 !== pw2) {
-      return false;
-    } else {
-      return true;
-    }
+  const idValidation = function (userId) {
+    axios({
+      method: "GET",
+      url: `/user/validate/${userId}`,
+      data: {
+        userId,
+      },
+    })
+      .then((response) => {
+        if (response.data) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        return false;
+      });
   };
 
-  // id 중복 확인
-  // pw1, pw2 비밀번호 일치 확인
+  const isValid = function (pw1, pw2) {
+    if (pw1 !== pw2) {
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      return false;
+    } else {
+      if (idValidation(userId.current.value)) {
+        return true;
+      } else {
+        setErrorMessage("이미 사용중인 아이디입니다.");
+        return false;
+      }
+    }
+  };
 
   const signUp = async function () {
     if (!isValid(password1.current.value, password2.current.value)) {
@@ -81,7 +107,7 @@ function SignUpPage() {
       >
         <div className="modal-container">
           <img className="warning-img" src={warningSign} alt="warning-sign" />
-          <h4 className="warning-text">비밀번호가 일치하지 않습니다 !</h4>
+          <h4 className="warning-text">{errorMessage}</h4>
         </div>
       </Modal>
     </>
