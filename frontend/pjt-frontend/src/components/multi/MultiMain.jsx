@@ -25,7 +25,7 @@ export default function MultiMain() {
   return (
     <>
       <div className="container">
-        <div className="game-container">
+        <div className="list-container">
           <div className="game-list">
             {/* {rooms.map((room) => (
               // room-item 클래스 css 만들어야함
