@@ -1,12 +1,9 @@
 import axios from "axios";
 import { Cookies } from "react-cookie";
-import jwt_decode from "jwt-decode";
-import store from "../../store/store.js";
+import * as jwt_decode from "jwt-decode";
 
-const noAuthLogin = async function (username, password) {
-  const { setUserId, setName } = store();
-
-  await axios({
+const noAuthLogin = function (username, password, setUserId, setName) {
+  axios({
     method: "POST",
     url: "/user/login",
     data: {

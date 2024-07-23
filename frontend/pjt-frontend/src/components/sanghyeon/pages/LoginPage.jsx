@@ -1,14 +1,21 @@
 import { useRef } from "react";
 import AccountButton from "../components/AccountButton.jsx";
 import "../../../css/LoginPage.css";
+import store from "../../../store/store.js";
 import noAuthLogin from "../apis/noAuthLogin.js";
 
 function LoginPage() {
+  const { setUserId, setName } = store();
   const userId = useRef(null);
   const password = useRef(null);
 
   const logIn = function () {
-    noAuthLogin(userId.current.value, password.current.value);
+    noAuthLogin(
+      userId.current.value,
+      password.current.value,
+      setUserId,
+      setName
+    );
   };
 
   return (

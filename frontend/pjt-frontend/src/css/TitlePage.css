@@ -16,6 +16,7 @@
   justify-content: center;
   align-items: center;
   height: 70vh;
+  user-select: none;
 }
 
 .start-button-container {
@@ -37,5 +38,6 @@
   border-radius: 10px;
   background-color: #1b1a55;
   color: white;
+  user-select: none;
   cursor: pointer;
 }
