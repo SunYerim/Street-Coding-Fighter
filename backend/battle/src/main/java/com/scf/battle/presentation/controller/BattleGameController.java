@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,9 +34,11 @@ public class BattleGameController {
         return new ResponseEntity<>(battleGameRoom, HttpStatus.OK);
     }
 
-    @GetMapping("/room/{roomId}")
+    @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(PathVariable roomId, @RequestBody JoinRoomDto joinRoomDto) {
         battleGameService.joinRoom(roomId, joinRoomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @
 }
