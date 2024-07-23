@@ -15,9 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -44,7 +41,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {// AuthenticationManager 생성
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(), jwtTokenProvider,
+            objectMapper(), redisService, memberDetailService);
+        loginFilter.setFilterProcessesUrl("/user/login"); // 로그인 엔드포인트 설정.
 
         httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
@@ -52,21 +52,16 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/user/login", "/", "/user/join", "/reissue").permitAll()
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/user/login", "/", "/user/join").permitAll()
                 .anyRequest().authenticated())
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-            .addFilterAt(new LoginFilter(authenticationManager(),  jwtTokenProvider, objectMapper(), redisService), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter.class)
+            .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class) // 로그인 필터 추가
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return httpSecurity.build();
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new MemberDetailService(); // MemberDetailService 빈 등록
-//    }
 
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
