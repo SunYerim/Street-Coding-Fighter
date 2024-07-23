@@ -1,7 +1,7 @@
 package com.scf.user.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scf.user.application.dto.LoginDto;
+import com.scf.user.domain.dto.LoginDto;
 import com.scf.user.application.service.MemberDetailService;
 import com.scf.user.application.service.RedisService;
 import com.scf.user.domain.entity.User;
@@ -69,7 +69,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         long memberId = user.getId();
 
         // 토큰을 생성하고 발급
-        String accessToken = jwtTokenProvider.generateAccessToken(memberId);
+        String accessToken = jwtTokenProvider.generateAccessToken(authResult, memberId);
         String refreshToken = jwtTokenProvider.createRefreshToken();
 
         response.setHeader("Authorization", "Bearer " + accessToken);
