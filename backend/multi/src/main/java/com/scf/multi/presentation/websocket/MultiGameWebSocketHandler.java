@@ -99,19 +99,18 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         Player player = sessionPlayers.remove(session.getId());
 
         String roomId = sessionRooms.get(session.getId());
-        if (roomId != null) { //
+        if (roomId != null) {
+            multiGameService.exitRoom(roomId, player.getUserId());
             Set<WebSocketSession> roomSessions = rooms.get(roomId);
-            if (roomSessions != null) {
+            if (roomSessions != null) { 
                 roomSessions.remove(session);
-                if (roomSessions.isEmpty()) {
+                if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
                     rooms.remove(roomId);
                     multiGameService.deleteRoom(roomId);
                 }
             }
 
-            if (player != null) {
-                broadcastMessageToRoom(roomId, player.getUsername() + "님이 게임을 나갔습니다.");
-            }
+            broadcastMessageToRoom(roomId, player.getUsername() + "님이 게임을 나갔습니다.");
         }
     }
 
