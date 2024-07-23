@@ -67,7 +67,11 @@ public class MultiGameRoom {
         this.players.removeIf(player -> player.getUserId().equals(userId));
     }
 
-    public void gameStart(List<Problem> problems) {
+    public void gameStart(List<Problem> problems, Long userId) {
+
+        if (!userId.equals(hostId)) { // 방장이 아닐 경우, 게임 시작 불가능
+            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+        }
 
         if (this.players.size() < 2) { // 예를 들어, 최소 2명의 플레이어가 있어야 한다고 가정
             throw new BusinessException(players.size(), "참가자 인원", ErrorCode.INSUFFICIENT_PLAYER);
@@ -77,6 +81,7 @@ public class MultiGameRoom {
             throw new BusinessException(null, "문제", ErrorCode.INVALID_PROBLEM);
         }
 
+        this.problems.clear();
         this.problems.addAll(problems);
         this.isStart = true;
     }

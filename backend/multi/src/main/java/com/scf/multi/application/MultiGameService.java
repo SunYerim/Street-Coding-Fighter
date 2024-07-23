@@ -54,7 +54,7 @@ public class MultiGameService {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        if(room == null) {
+        if (room == null) {
             throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
         }
 
@@ -126,7 +126,7 @@ public class MultiGameService {
         return 0;
     }
 
-    public List<Problem> startGame(String roomId) {
+    public List<Problem> startGame(String roomId, Long userId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
@@ -140,14 +140,14 @@ public class MultiGameService {
             throw new BusinessException(null, "problems", ErrorCode.PROBLEM_NOT_FOUND);
         }
 
-        room.gameStart(problems);
+        room.gameStart(problems, userId);
 
         return problems;
     }
 
     private int calculateScore(int submitTime) { // TODO: 협의 후 수정
 
-        if(submitTime > 30) {
+        if (submitTime > 30) {
             throw new BusinessException(submitTime, "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
 

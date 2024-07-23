@@ -104,7 +104,7 @@ class MultiGameRoomTest {
         problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
 
         // when
-        gameRoom.gameStart(problems);
+        gameRoom.gameStart(problems, 1L);
 
         // then
         assertEquals(1, gameRoom.getProblems().size());
@@ -183,7 +183,7 @@ class MultiGameRoomTest {
             return;
         }
 
-        if(gameRoom.getMaxPlayer() == gameRoom.getPlayers().size()) {
+        if (gameRoom.getMaxPlayer() == gameRoom.getPlayers().size()) {
             return;
         }
 

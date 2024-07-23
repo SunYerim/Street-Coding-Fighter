@@ -12,6 +12,7 @@ public enum ErrorCode {
     INVALID_PROBLEM("추가된 문제가 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
     PASSWORD_MISMATCH("방 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND("방에서 해당 유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    USER_NOT_HOST("방장만 게임을 시작할 수 있습니다.", HttpStatus.BAD_REQUEST),
 
     // MultiGameRoomService
     ROOM_NOT_FOUND("방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

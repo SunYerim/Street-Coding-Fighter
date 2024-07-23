@@ -57,9 +57,9 @@ public class MultiGameController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/game/start/{roomId}")
-    public ResponseEntity<?> gameStart(@PathVariable String roomId) {
-        List<Problem> problems = multiGameService.startGame(roomId);
+    @PostMapping("/game/{roomId}/start")
+    public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long userId) {
+        List<Problem> problems = multiGameService.startGame(roomId, userId);
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }
 }
