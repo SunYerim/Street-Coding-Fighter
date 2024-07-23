@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,8 +44,8 @@ public class MultiGameController {
         return new ResponseEntity<>(players, HttpStatus.OK);
     }
 
-    @PostMapping("/room/{userId}")
-    public ResponseEntity<?> createRoom(@PathVariable Long userId) {
+    @PostMapping("/room")
+    public ResponseEntity<?> createRoom(@RequestHeader Long userId) {
         String roomId = multiGameService.createRoom(userId);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
