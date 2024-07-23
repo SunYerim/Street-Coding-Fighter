@@ -4,6 +4,8 @@ import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Rank;
+import com.scf.multi.global.error.ErrorCode;
+import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +45,7 @@ public class MultiGameRoom {
 
         String roomPassword = joinRoomDTO.getRoomPassword();
         if (this.password != null && !this.password.equals(roomPassword)) {
-            return; // TODO: 예외 처리
+            throw new BusinessException(this.password, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
         }
 
         Long userId = joinRoomDTO.getUserId();
@@ -54,21 +56,50 @@ public class MultiGameRoom {
     }
 
     public void remove(Long userId) {
+
+        boolean hasPlayer = this.players.stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
+            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+        }
+
         this.players.removeIf(player -> player.getUserId().equals(userId));
     }
 
     public void gameStart(List<Problem> problems) {
+
+        if (this.players.size() < 2) { // 예를 들어, 최소 2명의 플레이어가 있어야 한다고 가정
+            throw new BusinessException(players.size(), "참가자 인원", ErrorCode.INSUFFICIENT_PLAYER);
+        }
+
+        if (problems == null || problems.isEmpty()) {
+            throw new BusinessException(null, "문제", ErrorCode.INVALID_PROBLEM);
+        }
+
         this.problems.addAll(problems);
         this.isStart = true;
     }
 
     public void updateScore(Long userId, int score) {
 
+        boolean hasPlayer = this.players.stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
+            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+        }
+
         int newScore = scoreBoard.get(userId) + score;
         this.scoreBoard.put(userId, newScore);
     }
 
     public void nextRound() {
+
+        if (!Boolean.TRUE.equals(this.isStart)) {
+            throw new BusinessException(isStart, "isStart", ErrorCode.GAME_NOT_START);
+        }
+
         this.round += 1;
     }
 

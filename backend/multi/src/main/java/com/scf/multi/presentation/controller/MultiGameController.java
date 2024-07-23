@@ -5,6 +5,7 @@ import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class MultiGameController {
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @RequestBody JoinRoomDTO joinRoomDTO) {
+        @Valid @RequestBody JoinRoomDTO joinRoomDTO) {
         multiGameService.joinRoom(roomId, joinRoomDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
