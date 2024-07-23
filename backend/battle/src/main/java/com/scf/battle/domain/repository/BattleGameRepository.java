@@ -26,5 +26,7 @@ public class BattleGameRepository {
         room.add(joinRoomDto);
     }
 
-
+    public void save(BattleGameRoom gameRoom) {
+        gameRooms.put(gameRoom.getRoomId(), gameRoom);
+    }
 }
