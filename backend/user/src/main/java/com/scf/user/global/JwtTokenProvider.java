@@ -65,6 +65,7 @@ public class JwtTokenProvider {
         return accessToken;
     }
 
+
     // refreshToken 생성
     public String createRefreshToken() {
         long now = new Date().getTime();
@@ -97,6 +98,9 @@ public class JwtTokenProvider {
 
         return new UsernamePasswordAuthenticationToken(subject, token, authorities);
     }
+
+
+
 
 
 
@@ -142,6 +146,15 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
+
+//    // JWT에서 memberId 추출
+//    public String extractMemberId(String token) {
+//        Claims claims = parseClaims(token);
+//        if (claims == null || claims.getSubject() == null) {
+//            throw new IllegalArgumentException("Invalid token or subject is missing");
+//        }
+//        return claims.getSubject();
+//    }
 
 
 }

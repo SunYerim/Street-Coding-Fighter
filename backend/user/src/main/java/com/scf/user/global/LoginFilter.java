@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -74,7 +75,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(createCookie("refresh", refreshToken));
-        redisService.setValues(String.valueOf(memberId), refreshToken);
+
+        // Redis에 Refresh Token 저장 (24시간 유효 시간 설정)
+        Duration expiration = Duration.ofHours(24);
+        redisService.setValues(String.valueOf(memberId), refreshToken, expiration);
     }
 
     // 로그인을 실패했을시.

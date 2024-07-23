@@ -9,4 +9,5 @@ public interface RedisService {
     void setValues(String key, String value, Duration duration);
     String getValue(String key);
     void deleteValue(String key);
+    long ttl(String key);
 }

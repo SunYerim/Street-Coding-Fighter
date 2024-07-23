@@ -1,4 +1,4 @@
-package com.scf.user.application.dto;
+package com.scf.user.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;

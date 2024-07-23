@@ -1,4 +1,4 @@
-package com.scf.user.application.dto;
+package com.scf.user.domain.dto;
 
 import com.scf.user.domain.entity.User;
 import java.util.Date;
