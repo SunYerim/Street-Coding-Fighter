@@ -1,6 +1,5 @@
 package com.scf.multi.domain.model;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Rank;
@@ -41,18 +40,14 @@ public class MultiGameRoom {
         return Collections.unmodifiableList(this.problems);
     }
 
-    public void add(JoinRoomDTO joinRoomDTO) {
+    public void add(String roomPassword, Player player) {
 
-        String roomPassword = joinRoomDTO.getRoomPassword();
         if (this.password != null && !this.password.equals(roomPassword)) {
             throw new BusinessException(this.password, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
         }
 
-        Long userId = joinRoomDTO.getUserId();
-        String username = joinRoomDTO.getUsername();
-
-        this.players.add(new Player(userId, username));
-        this.scoreBoard.put(userId, 0);
+        this.players.add(player);
+        this.scoreBoard.put(player.getUserId(), 0);
     }
 
     public void remove(Long userId) {

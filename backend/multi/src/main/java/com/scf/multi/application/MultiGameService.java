@@ -1,6 +1,6 @@
 package com.scf.multi.application;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
+import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -61,9 +61,9 @@ public class MultiGameService {
         multiGameRepository.deleteRoom(roomId);
     }
 
-    public void joinRoom(String roomId, JoinRoomDTO joinRoomDTO) {
+    public void joinRoom(String roomId, String roomPassword, Long userId, String username) {
 
-        MultiGameRoom room = findOneById(roomId);
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         if (room.getIsStart()) {
             throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
@@ -74,7 +74,8 @@ public class MultiGameService {
                 ErrorCode.MAX_PLAYERS_EXCEEDED);
         }
 
-        multiGameRepository.joinRoom(roomId, joinRoomDTO);
+        Player player = new Player(userId, username);
+        room.add(roomPassword, player);
     }
 
     public void exitRoom(String roomId, Long userId) {
@@ -85,7 +86,7 @@ public class MultiGameService {
             throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
         }
 
-        multiGameRepository.exitRoom(roomId, userId);
+        room.remove(userId);
     }
 
     public int markSolution(String roomId, Long userId, Solved solved) {

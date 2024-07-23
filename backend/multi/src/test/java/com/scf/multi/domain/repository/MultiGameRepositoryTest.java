@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,49 +97,5 @@ class MultiGameRepositoryTest {
 
         // then
         assertNull(room);
-    }
-
-    @Test
-    @DisplayName("유저가 방에 정상적으로 참여가 되어야 한다.")
-    void JoinRoomTest() {
-
-        // given
-        repository.addRoom(gameRoom);
-        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
-            .userId(1L)
-            .username("Player1")
-            .roomPassword("1234")
-            .build();
-
-        // when
-        repository.joinRoom("abc-def", joinRoomDTO);
-        MultiGameRoom room = repository.findOneById("abc-def");
-
-        // then
-        assertNotNull(room);
-        assertEquals(1, room.getPlayers().size());
-        assertEquals("Player1", room.getPlayers().get(0).getUsername());
-    }
-
-    @Test
-    @DisplayName("유저가 방에서 나가면 정상적으로 반영이 되어야 한다.")
-    void ExitRoomTest() {
-
-        // given
-        repository.addRoom(gameRoom);
-        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
-            .userId(1L)
-            .username("Player1")
-            .roomPassword("1234")
-            .build();
-        repository.joinRoom("abc-def", joinRoomDTO);
-
-        // when
-        repository.exitRoom("abc-def", joinRoomDTO.getUserId());
-        MultiGameRoom room = repository.findOneById("abc-def");
-
-        // then
-        assertNotNull(room);
-        assertTrue(room.getPlayers().isEmpty());
     }
 }

@@ -3,7 +3,7 @@ package com.scf.multi.domain.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
+import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.dto.Rank;
 import java.util.ArrayList;
@@ -173,11 +173,7 @@ class MultiGameRoomTest {
 
     private void joinRoom(Long userId, String username, String roomPassword) {
 
-        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
-            .userId(userId)
-            .username(username)
-            .roomPassword(roomPassword)
-            .build();
+        Player player = new Player(userId, username);
 
         if (!gameRoom.getPassword().equals(roomPassword)) {
             return;
@@ -187,6 +183,6 @@ class MultiGameRoomTest {
             return;
         }
 
-        gameRoom.add(joinRoomDTO);
+        gameRoom.add("1234", player);
     }
 }

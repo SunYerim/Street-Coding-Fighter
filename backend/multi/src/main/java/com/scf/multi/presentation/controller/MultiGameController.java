@@ -1,7 +1,6 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.dto.Player;
 import com.scf.multi.domain.dto.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -52,8 +51,9 @@ public class MultiGameController {
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @Valid @RequestBody JoinRoomDTO joinRoomDTO) {
-        multiGameService.joinRoom(roomId, joinRoomDTO);
+        @Valid @RequestBody String roomPassword, @RequestHeader Long userId,
+        @RequestHeader String username) {
+        multiGameService.joinRoom(roomId, roomPassword, userId, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
