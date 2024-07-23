@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 import "../../../css/Setting.css";
 import settingIcon from "../../../assets/settingIcon.png";
 import close from "../../../assets/close.png";

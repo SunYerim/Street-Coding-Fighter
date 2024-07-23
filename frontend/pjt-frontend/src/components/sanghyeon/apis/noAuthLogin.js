@@ -1,7 +1,12 @@
 import axios from "axios";
+import { Cookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+import store from "../../store/store.js";
 
-function noAuthLogin(username, password) {
-  axios({
+const noAuthLogin = async function (username, password) {
+  const { setUserId, setName } = store();
+
+  await axios({
     method: "POST",
     url: "/user/login",
     data: {
@@ -10,11 +15,18 @@ function noAuthLogin(username, password) {
     },
   })
     .then((response) => {
-      console.log(response);
+      const cookie = new Cookies();
+
+      cookie.set("accessToken", response.data.accessToken);
+      cookie.set("refreshToken", response.data.refreshToken);
+
+      const decode = jwt_decode(response.data.accessToken);
+      setUserId(decode.memberId);
+      setName(decode.name);
     })
     .catch((error) => {
-      console.log(error);
+      alert(error);
     });
-}
+};
 
 export default noAuthLogin;
