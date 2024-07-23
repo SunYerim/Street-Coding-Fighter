@@ -10,4 +10,5 @@ public interface UserService {
     public String getName(Long id);
     public boolean quitMember(Long memberId);
 //    public String refreshAccessToken(String refreshToken);
+    public boolean checkUserIdDuplicate(String userId);
 }

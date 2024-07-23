@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long memberId);
-
     Optional<User> findByUserId(String userId);
+    boolean existsByUserId(String userId); // 사용자 ID 존재 여부 확인 메소드
 
 
 }

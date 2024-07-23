@@ -63,6 +63,11 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public boolean checkUserIdDuplicate(String userId) {
+        return userRepository.existsByUserId(userId);
+    }
+
 //    // refreshToken 재발급
 //    @Override
 //    public String refreshAccessToken(String accessToken) {
