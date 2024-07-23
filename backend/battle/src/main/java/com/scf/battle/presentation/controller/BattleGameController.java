@@ -27,4 +27,10 @@ public class BattleGameController {
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> findRoom() {
+        BattleGameRoom battleGameRoom = battleGameService.findById();
+        return new ResponseEntity<>(battleGameRoom, HttpStatus.OK);
+    }
+
 }
