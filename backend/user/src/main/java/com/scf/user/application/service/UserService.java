@@ -9,7 +9,8 @@ import org.springframework.security.core.Authentication;
 
 public interface UserService {
     public UserRegisterResponseDto register(UserRegisterRequestDto registerRequestDto);
-    public UserInfoResponseDto getUserInfo(String userId);
-    public UserLoginResponseDto login(LoginDto loginDto);
-    public String getName(String userId);
+    public UserInfoResponseDto getUserInfo(Long memberId);
+//    public UserLoginResponseDto login(LoginDto loginDto);
+    public String getName(Long id);
+    public boolean quitMember(Long memberId);
 }
