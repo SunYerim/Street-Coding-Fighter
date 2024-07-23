@@ -1,6 +1,5 @@
 package com.scf.multi.domain.repository;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,15 +27,5 @@ public class MultiGameRepository {
 
     public void deleteRoom(String roomId) {
         gameRooms.remove(roomId);
-    }
-
-    public void joinRoom(String roomId, JoinRoomDTO joinRoomDTO) {
-        MultiGameRoom room = gameRooms.get(roomId);
-        room.add(joinRoomDTO);
-    }
-
-    public void exitRoom(String roomId, Long userId) {
-        MultiGameRoom room = gameRooms.get(roomId);
-        room.remove(userId);
     }
 }

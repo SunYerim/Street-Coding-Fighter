@@ -3,9 +3,9 @@ package com.scf.multi.domain.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
-import com.scf.multi.domain.dto.Problem;
-import com.scf.multi.domain.dto.Rank;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.Rank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +104,7 @@ class MultiGameRoomTest {
         problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
 
         // when
-        gameRoom.gameStart(problems);
+        gameRoom.gameStart(problems, 1L);
 
         // then
         assertEquals(1, gameRoom.getProblems().size());
@@ -173,20 +173,16 @@ class MultiGameRoomTest {
 
     private void joinRoom(Long userId, String username, String roomPassword) {
 
-        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
-            .userId(userId)
-            .username(username)
-            .roomPassword(roomPassword)
-            .build();
+        Player player = new Player(userId, username);
 
         if (!gameRoom.getPassword().equals(roomPassword)) {
             return;
         }
 
-        if(gameRoom.getMaxPlayer() == gameRoom.getPlayers().size()) {
+        if (gameRoom.getMaxPlayer() == gameRoom.getPlayers().size()) {
             return;
         }
 
-        gameRoom.add(joinRoomDTO);
+        gameRoom.add("1234", player);
     }
 }

@@ -1,9 +1,8 @@
 package com.scf.multi.domain.model;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
-import com.scf.multi.domain.dto.Player;
-import com.scf.multi.domain.dto.Problem;
-import com.scf.multi.domain.dto.Rank;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
@@ -41,18 +40,14 @@ public class MultiGameRoom {
         return Collections.unmodifiableList(this.problems);
     }
 
-    public void add(JoinRoomDTO joinRoomDTO) {
+    public void add(String roomPassword, Player player) {
 
-        String roomPassword = joinRoomDTO.getRoomPassword();
         if (this.password != null && !this.password.equals(roomPassword)) {
             throw new BusinessException(this.password, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
         }
 
-        Long userId = joinRoomDTO.getUserId();
-        String username = joinRoomDTO.getUsername();
-
-        this.players.add(new Player(userId, username));
-        this.scoreBoard.put(userId, 0);
+        this.players.add(player);
+        this.scoreBoard.put(player.getUserId(), 0);
     }
 
     public void remove(Long userId) {
@@ -67,7 +62,11 @@ public class MultiGameRoom {
         this.players.removeIf(player -> player.getUserId().equals(userId));
     }
 
-    public void gameStart(List<Problem> problems) {
+    public void gameStart(List<Problem> problems, Long userId) {
+
+        if (!userId.equals(hostId)) { // 방장이 아닐 경우, 게임 시작 불가능
+            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+        }
 
         if (this.players.size() < 2) { // 예를 들어, 최소 2명의 플레이어가 있어야 한다고 가정
             throw new BusinessException(players.size(), "참가자 인원", ErrorCode.INSUFFICIENT_PLAYER);
@@ -77,6 +76,7 @@ public class MultiGameRoom {
             throw new BusinessException(null, "문제", ErrorCode.INVALID_PROBLEM);
         }
 
+        this.problems.clear();
         this.problems.addAll(problems);
         this.isStart = true;
     }

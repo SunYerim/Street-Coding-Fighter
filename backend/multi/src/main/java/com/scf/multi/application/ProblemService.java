@@ -1,6 +1,6 @@
 package com.scf.multi.application;
 
-import com.scf.multi.domain.dto.Problem;
+import com.scf.multi.domain.dto.problem.Problem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +22,8 @@ public class ProblemService {
 
         // 예시 문제 반환 코드
         List<Problem> problems = new ArrayList<>();
-        problems.add(new Problem(1L,  0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(2L,  0, "정렬", "삽입 정렬", "삽입 정렬 내용", Map.of(0, 1, 1, 2)));
+        problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
+        problems.add(new Problem(2L, 0, "정렬", "삽입 정렬", "삽입 정렬 내용", Map.of(0, 1, 1, 2)));
         return problems;
 
 //        return webClient.get()

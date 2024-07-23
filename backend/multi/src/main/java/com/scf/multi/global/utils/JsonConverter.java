@@ -7,9 +7,11 @@ public class JsonConverter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private JsonConverter() {}
+    private JsonConverter() {
+    }
 
     private static class SingletonHelper {
+
         private static final JsonConverter INSTANCE = new JsonConverter();
     }
 

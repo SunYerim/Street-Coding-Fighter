@@ -1,9 +1,9 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.JoinRoomDTO;
-import com.scf.multi.domain.dto.Player;
-import com.scf.multi.domain.dto.Problem;
+import com.scf.multi.domain.dto.room.CreateRoomDTO;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,22 +44,24 @@ public class MultiGameController {
         return new ResponseEntity<>(players, HttpStatus.OK);
     }
 
-    @PostMapping("/room/{userId}")
-    public ResponseEntity<?> createRoom(@PathVariable Long userId) {
-        String roomId = multiGameService.createRoom(userId);
+    @PostMapping("/room")
+    public ResponseEntity<?> createRoom(@RequestHeader Long userId,
+        @RequestBody @Valid CreateRoomDTO createRoomDTO) {
+        String roomId = multiGameService.createRoom(userId, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @Valid @RequestBody JoinRoomDTO joinRoomDTO) {
-        multiGameService.joinRoom(roomId, joinRoomDTO);
+        @Valid @RequestBody String roomPassword, @RequestHeader Long userId,
+        @RequestHeader String username) {
+        multiGameService.joinRoom(roomId, roomPassword, userId, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/game/start/{roomId}")
-    public ResponseEntity<?> gameStart(@PathVariable String roomId) {
-        List<Problem> problems = multiGameService.startGame(roomId);
+    @PostMapping("/game/{roomId}/start")
+    public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long userId) {
+        List<Problem> problems = multiGameService.startGame(roomId, userId);
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }
 }

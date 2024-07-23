@@ -1,8 +1,9 @@
 package com.scf.multi.application;
 
-import com.scf.multi.domain.dto.JoinRoomDTO;
-import com.scf.multi.domain.dto.Problem;
-import com.scf.multi.domain.dto.Solved;
+import com.scf.multi.domain.dto.room.CreateRoomDTO;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
 import com.scf.multi.global.error.ErrorCode;
@@ -35,7 +36,7 @@ public class MultiGameService {
         return room;
     }
 
-    public String createRoom(Long userId) {
+    public String createRoom(Long userId, CreateRoomDTO createRoomDTO) {
 
         String roomId = UUID.randomUUID().toString();
 
@@ -44,6 +45,9 @@ public class MultiGameService {
             .hostId(userId)
             .isStart(false)
             .round(0)
+            .title(createRoomDTO.getTitle())
+            .maxPlayer(createRoomDTO.getMaxPlayer())
+            .password(createRoomDTO.getPassword())
             .build();
 
         multiGameRepository.addRoom(room);
@@ -54,16 +58,16 @@ public class MultiGameService {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        if(room == null) {
+        if (room == null) {
             throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
         }
 
         multiGameRepository.deleteRoom(roomId);
     }
 
-    public void joinRoom(String roomId, JoinRoomDTO joinRoomDTO) {
+    public void joinRoom(String roomId, String roomPassword, Long userId, String username) {
 
-        MultiGameRoom room = findOneById(roomId);
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         if (room.getIsStart()) {
             throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
@@ -74,7 +78,8 @@ public class MultiGameService {
                 ErrorCode.MAX_PLAYERS_EXCEEDED);
         }
 
-        multiGameRepository.joinRoom(roomId, joinRoomDTO);
+        Player player = new Player(userId, username);
+        room.add(roomPassword, player);
     }
 
     public void exitRoom(String roomId, Long userId) {
@@ -85,7 +90,7 @@ public class MultiGameService {
             throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
         }
 
-        multiGameRepository.exitRoom(roomId, userId);
+        room.remove(userId);
     }
 
     public int markSolution(String roomId, Long userId, Solved solved) {
@@ -126,7 +131,7 @@ public class MultiGameService {
         return 0;
     }
 
-    public List<Problem> startGame(String roomId) {
+    public List<Problem> startGame(String roomId, Long userId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
@@ -140,14 +145,14 @@ public class MultiGameService {
             throw new BusinessException(null, "problems", ErrorCode.PROBLEM_NOT_FOUND);
         }
 
-        room.gameStart(problems);
+        room.gameStart(problems, userId);
 
         return problems;
     }
 
     private int calculateScore(int submitTime) { // TODO: 협의 후 수정
 
-        if(submitTime > 30) {
+        if (submitTime > 30) {
             throw new BusinessException(submitTime, "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
 
