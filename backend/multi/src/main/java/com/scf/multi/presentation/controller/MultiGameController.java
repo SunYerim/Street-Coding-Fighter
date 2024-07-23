@@ -1,8 +1,8 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.Player;
-import com.scf.multi.domain.dto.Problem;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
 import java.util.List;

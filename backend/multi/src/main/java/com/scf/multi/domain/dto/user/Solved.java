@@ -1,4 +1,4 @@
-package com.scf.multi.domain.dto;
+package com.scf.multi.domain.dto.user;
 
 import java.util.Map;
 import lombok.Builder;

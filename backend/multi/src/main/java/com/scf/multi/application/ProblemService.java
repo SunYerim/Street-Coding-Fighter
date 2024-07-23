@@ -1,6 +1,6 @@
 package com.scf.multi.application;
 
-import com.scf.multi.domain.dto.Problem;
+import com.scf.multi.domain.dto.problem.Problem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

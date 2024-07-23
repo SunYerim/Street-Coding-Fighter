@@ -1,6 +1,6 @@
 package com.scf.multi.application;
 
-import com.scf.multi.domain.dto.Solved;
+import com.scf.multi.domain.dto.user.Solved;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;

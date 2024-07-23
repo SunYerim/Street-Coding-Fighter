@@ -2,12 +2,12 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.application.UserService;
-import com.scf.multi.domain.dto.Player;
-import com.scf.multi.domain.dto.Problem;
-import com.scf.multi.domain.dto.Rank;
-import com.scf.multi.domain.dto.Solved;
-import com.scf.multi.domain.dto.message.Content;
-import com.scf.multi.domain.dto.message.Message;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.Solved;
+import com.scf.multi.domain.dto.socket_message.Content;
+import com.scf.multi.domain.dto.socket_message.Message;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.utils.JsonConverter;
 import java.util.ArrayList;

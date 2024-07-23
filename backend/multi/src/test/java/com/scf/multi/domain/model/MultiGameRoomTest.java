@@ -3,9 +3,9 @@ package com.scf.multi.domain.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.scf.multi.domain.dto.Player;
-import com.scf.multi.domain.dto.Problem;
-import com.scf.multi.domain.dto.Rank;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.Rank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
