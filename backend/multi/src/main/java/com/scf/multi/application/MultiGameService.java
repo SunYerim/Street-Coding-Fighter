@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.user.Solved;
@@ -35,7 +36,7 @@ public class MultiGameService {
         return room;
     }
 
-    public String createRoom(Long userId) {
+    public String createRoom(Long userId, CreateRoomDTO createRoomDTO) {
 
         String roomId = UUID.randomUUID().toString();
 
@@ -44,6 +45,9 @@ public class MultiGameService {
             .hostId(userId)
             .isStart(false)
             .round(0)
+            .title(createRoomDTO.getTitle())
+            .maxPlayer(createRoomDTO.getMaxPlayer())
+            .password(createRoomDTO.getPassword())
             .build();
 
         multiGameRepository.addRoom(room);

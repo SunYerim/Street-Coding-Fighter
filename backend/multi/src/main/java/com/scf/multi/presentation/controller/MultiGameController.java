@@ -1,6 +1,7 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -44,8 +45,8 @@ public class MultiGameController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<?> createRoom(@RequestHeader Long userId) {
-        String roomId = multiGameService.createRoom(userId);
+    public ResponseEntity<?> createRoom(@RequestHeader Long userId, @RequestBody @Valid CreateRoomDTO createRoomDTO) {
+        String roomId = multiGameService.createRoom(userId, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
