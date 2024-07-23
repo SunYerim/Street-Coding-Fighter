@@ -1,7 +1,8 @@
 package com.scf.battle.presentation.controller;
 
 import com.scf.battle.application.BattleGameService;
-import com.scf.battle.domain.dto.JoinRoomDto;
+import com.scf.battle.domain.dto.CreateRoomDTO;
+import com.scf.battle.domain.dto.JoinRoomDTO;
 import com.scf.battle.domain.model.BattleGameRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,25 +31,25 @@ public class BattleGameController {
     }
 
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<?> findRoom() {
-        BattleGameRoom battleGameRoom = battleGameService.findById();
+    public ResponseEntity<?> findRoom(@PathVariable String roomId) {
+        BattleGameRoom battleGameRoom = battleGameService.findById(roomId);
         return new ResponseEntity<>(battleGameRoom, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
-    public ResponseEntity<?> joinRoom(@PathVariable Long roomId, @RequestBody JoinRoomDto joinRoomDto) {
+    public ResponseEntity<?> joinRoom(@PathVariable String roomId, @RequestBody JoinRoomDTO joinRoomDto) {
         battleGameService.joinRoom(roomId, joinRoomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/room")
-    public ResponseEntity<?> createRoom(@RequestHeader Long userId){
-        battleGameService.createRoom(userId);
+    public ResponseEntity<?> createRoom(@RequestHeader Long userId, @RequestBody CreateRoomDTO createRoomDto){
+        battleGameService.createRoom(userId, createRoomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
-    public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable Long roomId){
+    public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable String roomId){
         battleGameService.gameStart(userId, roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
