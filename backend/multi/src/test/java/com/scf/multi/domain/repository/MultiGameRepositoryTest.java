@@ -22,8 +22,7 @@ class MultiGameRepositoryTest {
         gameRoom = MultiGameRoom.builder()
             .roomId("abc-def")
             .hostId(1L)
-            .isStart(false)
-            .round(0)
+            .title("First Room")
             .maxPlayer(2)
             .password("1234")
             .build();
@@ -33,69 +32,72 @@ class MultiGameRepositoryTest {
     @DisplayName("방이 정상적으로 추가되어야 한다.")
     void AddRoomTest() {
 
-        // when
+        // When
         repository.addRoom(gameRoom);
 
         MultiGameRoom room = repository.findOneById("abc-def");
 
-        // then
+        // Then
         assertNotNull(room);
         assertEquals("abc-def", room.getRoomId());
+        assertEquals(1L, room.getHostId());
+        assertEquals("First Room", room.getTitle());
     }
 
     @Test
     @DisplayName("방의 목록을 정상적으로 반환해야 한다.")
     void FindAllRoomsTest() {
 
-        // given
+        // Given
         MultiGameRoom anotherRoom = MultiGameRoom.builder()
             .roomId("room2")
             .hostId(2L)
-            .isStart(false)
-            .round(0)
-            .maxPlayer(2)
-            .password("1234")
+            .title("Second Room")
+            .maxPlayer(4)
+            .password("5678")
             .build();
 
         repository.addRoom(gameRoom);
         repository.addRoom(anotherRoom);
 
-        //when
+        // When
         List<MultiGameRoom> rooms = repository.findAllRooms();
 
-        // then
+        // Then
         assertEquals(2, rooms.size());
         assertTrue(rooms.contains(gameRoom));
         assertTrue(rooms.contains(anotherRoom));
     }
 
+
     @Test
     @DisplayName("roomId에 해당하는 방을 정상적으로 반환해야 한다.")
     void FindOneByIdTest() {
 
-        // given
+        // Given
         repository.addRoom(gameRoom);
 
-        // when
+        // When
         MultiGameRoom room = repository.findOneById("abc-def");
 
-        // then
+        // Then
         assertNotNull(room);
         assertEquals("abc-def", room.getRoomId());
+        assertEquals(1L, room.getHostId());
     }
+
 
     @Test
     @DisplayName("roomId에 해당하는 방을 정상적으로 삭제해야 한다.")
     void DeleteRoomTest() {
-
-        // given
+        // Given
         repository.addRoom(gameRoom);
 
-        // when
+        // When
         repository.deleteRoom("abc-def");
         MultiGameRoom room = repository.findOneById("abc-def");
 
-        // then
+        // Then
         assertNull(room);
     }
 }
