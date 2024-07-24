@@ -1,6 +1,5 @@
 package com.scf.battle.domain.repository;
 
-import com.scf.battle.domain.dto.JoinRoomDTO;
 import com.scf.battle.domain.model.BattleGameRoom;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,9 +21,9 @@ public class BattleGameRepository {
         return gameRooms.get(roomId);
     }
 
-    public void joinRoom(String roomId, JoinRoomDTO joinRoomDto) {
+    public void joinRoom(String roomId, Long userId, String username, String roomPassword) {
         BattleGameRoom room = gameRooms.get(roomId);
-        room.add(joinRoomDto);
+        room.add(userId, username, roomPassword);
     }
 
     public void addRoom(BattleGameRoom gameRoom) {
