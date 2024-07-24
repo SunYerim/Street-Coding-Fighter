@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Problem {
+
     private Long problemId;
     private Integer type;
     private String category;
