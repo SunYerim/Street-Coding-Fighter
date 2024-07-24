@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  service_a:
+    image: zlxldgus123/test:latest
+    container_name: service_a
+    ports:
+      - "5001:8080"
+    networks:
+      - msa_network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/sbb_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=sbblocal
+      - SPRING_DATASOURCE_PASSWORD=1234
+
+#  service_b:
+#    image: zlxldgus123/service_b:latest
+#    container_name: service_b
+#    ports:
+#      - "5002:8080"
+#    networks:
+#      - msa_network
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/sbb_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+#      - SPRING_DATASOURCE_USERNAME=sbblocal
+#      - SPRING_DATASOURCE_PASSWORD=1234
+
+  db:
+    image: mariadb:latest
+    container_name: mariadb_db
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=sbb_db
+      - MYSQL_USER=sbblocal
+      - MYSQL_PASSWORD=1234
+    networks:
+      - msa_network
+
+networks:
+  msa_network:
+    driver: bridge
+
+volumes:
+  db_data:
