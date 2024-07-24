@@ -7,8 +7,9 @@ services:
     ports:
       - "5001:8080"
     networks:
-      - msa_network
+      - deploy_msa_network
     environment:
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb_db:3306/scf_db?characterEncoding=utf8mb4
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=ed9658pi
@@ -36,10 +37,10 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=ed9658pi
     networks:
-      - msa_network
+      - deploy_msa_network
 
 networks:
-  msa_network:
+  deploy_msa_network:
     driver: bridge
 
 volumes:
