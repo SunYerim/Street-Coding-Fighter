@@ -6,6 +6,9 @@ const noAuthLogin = function (username, password, setUserId, setName) {
   axios({
     method: "POST",
     url: "/user/login",
+    headers: {
+      "Content-Type": "application/json",
+    },
     data: {
       userId: username,
       password: password,

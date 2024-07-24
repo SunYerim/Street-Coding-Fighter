@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import getProfile from "../apis/getProfile";
 import logOut from "../apis/logOut";
-import signOut from "../apis/signOut";
 import store from "../../../store/store.js";
+import SignOutButton from "../components/SignOutButton.jsx";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function ProfilePage() {
                   <h3>School : SSAFY</h3>
                   <div className="profile-status-button">
                     <button onClick={logOut}>비밀번호 수정</button>
-                    <button onClick={signOut}>회원탈퇴</button>
+                    <SignOutButton />
                   </div>
                 </div>
                 <div className="profile-character-img-container">
