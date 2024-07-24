@@ -31,7 +31,12 @@ public class BattleGameRoom {
         String roomPassword = joinRoomDto.getRoomPassword();
 
         if (roomPassword.equals(this.password)) {
-            players.add(new Player(userId, username));
+            if(playerA !=null){ // 존재하면
+                playerB = new Player(userId, username, 100);
+            }
+            else{ // 존재하지 않으면
+                playerA = new Player(userId, username, 100);
+            }
         } else {
             // 예외처리
         }
@@ -78,9 +83,6 @@ public class BattleGameRoom {
         } else {
             throw new IllegalArgumentException("Invalid userId");
         }
-
-        int newScore = scoreBoard.get(userId) + score;
-        this.scoreBoard.put(userId, newScore);
         return FightDTO.builder()
             .userId(userId)
             .isAttack(this.isAttack)
