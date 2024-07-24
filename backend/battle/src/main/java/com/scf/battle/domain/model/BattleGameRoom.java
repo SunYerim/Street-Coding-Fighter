@@ -67,5 +67,18 @@ public class BattleGameRoom {
         return roundProblems.get(roundNumber - 1);
     }
 
+    public void updateScore(Long userId, int score) {
+
+        boolean hasPlayer = this.players.stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
+           // TODO : 유저 없는 예외처리
+        }
+
+        int newScore = scoreBoard.get(userId) + score;
+        this.scoreBoard.put(userId, newScore);
+    }
+
 
 }
