@@ -81,4 +81,35 @@ public class BattleGameService {
         return 50;
     }
 
+    public int markSolution(String roomId, Long userId, Solved solved) {
+
+        BattleGameRoom room = battleGameRepository.findById(roomId);
+        //라운드 별 문제 가져오기
+        List<Problem> problems = room.getProblemsForRound(room.getRound());
+        //해당 라운드에서 유저가 선택한 문제 추출
+        Optional<Problem> problemOpt = problems.stream()
+            .filter(p -> p.getProblemId().equals(solved.getProblemId()))
+            .findFirst();
+
+        if (!problemOpt.isPresent()) {
+            // TODO : 문제가 없는 경우
+        }
+        //추출한 문제 : problem
+        Problem problem = problemOpt.get();
+
+        // 문제의 정답 가져오기
+        Map<Integer, Integer> answer = problem.getAnswer();
+
+        // 제출된 답안과 문제의 정답을 비교하기
+        int correctAnswerCount = compareAnswers(answer, solved.getSolve());
+
+        if (correctAnswerCount > 0) {
+            int score = calculateScore(solved.getSubmitTime());
+            room.updateScore(userId, score);
+            return score;
+        }
+
+        return 0;
+    }
+
 }
