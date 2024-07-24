@@ -112,4 +112,18 @@ public class BattleGameService {
         return 0;
     }
 
+    private int compareAnswers(Map<Integer, Integer> answer, Map<Integer, Integer> solve) {
+        int correctAnswerCount = 0;
+        for (Map.Entry<Integer, Integer> entry : solve.entrySet()) {
+            Integer blankNumber = entry.getKey(); // 빈칸 번호
+            Integer submittedOption = entry.getValue(); // 제출된 보기 번호
+
+            // 정답과 비교하여 맞춘 답안 개수 증가
+            if (answer.containsKey(blankNumber) && answer.get(blankNumber)
+                .equals(submittedOption)) {
+                correctAnswerCount++;
+            }
+        }
+        return correctAnswerCount;
+    }
 }
