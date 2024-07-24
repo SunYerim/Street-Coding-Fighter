@@ -7,22 +7,16 @@ import com.scf.user.domain.dto.UserRegisterRequestDto;
 import com.scf.user.domain.dto.UserRegisterResponseDto;
 import com.scf.user.domain.entity.User;
 import com.scf.user.domain.repository.UserRepository;
-import com.scf.user.global.AuthenticationProviderService;
-import com.scf.user.global.JwtTokenProvider;
-import com.scf.user.global.JwtUtil;
+import com.scf.user.infrastructure.security.AuthenticationProviderService;
+import com.scf.user.infrastructure.security.JwtTokenProvider;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,7 +29,9 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserServiceImpl(AuthenticationProviderService authenticationProviderService, UserRepository userRepository, @Lazy JwtTokenProvider jwtTokenProvider, RedisService redisService) {
+    public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
+        UserRepository userRepository, @Lazy JwtTokenProvider jwtTokenProvider,
+        RedisService redisService) {
         this.authenticationProviderService = authenticationProviderService;
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -125,8 +121,6 @@ public class UserServiceImpl implements UserService {
         // 토큰을 새로 생성하고 발급
         String newAccesstoken = jwtTokenProvider.generateAccessToken(Long.valueOf(memberId));
         String newRefreshtoken = jwtTokenProvider.createRefreshToken(Long.valueOf(memberId));
-
-
 
         // redis에 새로운 리프레시 토큰 저장
         Duration expiration = Duration.ofHours(24);

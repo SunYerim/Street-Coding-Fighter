@@ -3,10 +3,10 @@ package com.scf.user.global.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scf.user.application.service.MemberDetailService;
 import com.scf.user.application.service.RedisService;
-import com.scf.user.global.JwtTokenProvider;
-import com.scf.user.global.JwtAuthenticationFilter;
-import com.scf.user.global.JwtUtil;
-import com.scf.user.global.LoginFilter;
+import com.scf.user.infrastructure.security.JwtTokenProvider;
+import com.scf.user.infrastructure.security.JwtAuthenticationFilter;
+import com.scf.user.infrastructure.security.JwtCookieUtil;
+import com.scf.user.infrastructure.security.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
     private final MemberDetailService memberDetailService;
-    private final JwtUtil jwtUtil;
+    private final JwtCookieUtil jwtCookieUtil;
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManager(), jwtTokenProvider,
-            objectMapper(), redisService, memberDetailService, jwtUtil);
+            objectMapper(), redisService, memberDetailService, jwtCookieUtil);
         loginFilter.setFilterProcessesUrl("/user/login"); // 로그인 엔드포인트 설정.
 
         httpSecurity
@@ -54,7 +54,8 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/user/login", "/user/join", "/user/validate/**", "/user/reissue").permitAll()
+                .requestMatchers("/user/login", "/user/join", "/user/validate/**")
+                .permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class)

@@ -1,4 +1,4 @@
-package com.scf.user.global;
+package com.scf.user.infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scf.user.domain.dto.LoginDto;
@@ -7,12 +7,9 @@ import com.scf.user.application.service.RedisService;
 import com.scf.user.domain.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +30,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper; // Jackson ObjectMapper를 사용하여 JSON 파싱
     private final RedisService redisService;
     private final MemberDetailService memberDetailService;
-    private final JwtUtil jwtUtil;
+    private final JwtCookieUtil jwtCookieUtil;
 
 
     @Override
@@ -77,7 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(jwtUtil.createCookie("refresh", refreshToken));
+        response.addCookie(jwtCookieUtil.createCookie("refresh", refreshToken));
 
         // Redis에 Refresh Token 저장 (24시간 유효 시간 설정)
         Duration expiration = Duration.ofHours(24);

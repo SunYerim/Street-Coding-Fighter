@@ -6,15 +6,13 @@ import com.scf.user.domain.dto.TokenDto;
 import com.scf.user.domain.dto.UserInfoResponseDto;
 import com.scf.user.domain.dto.UserRegisterRequestDto;
 import com.scf.user.domain.dto.UserRegisterResponseDto;
-import com.scf.user.global.JwtTokenProvider;
-import com.scf.user.global.JwtUtil;
+import com.scf.user.infrastructure.security.JwtCookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +30,7 @@ public class UserController {
 
     private final UserService userService;
     private final RedisService redisService;
-    private final JwtUtil jwtUtil;
+    private final JwtCookieUtil jwtCookieUtil;
 
     // 회원가입
     @PostMapping("/join")
@@ -96,7 +94,7 @@ public class UserController {
         TokenDto newAccessToken = userService.refreshToken(refresh);
 
         response.setHeader("Authorization", "Bearer " + newAccessToken.getAccessToken());
-        response.addCookie(jwtUtil.createCookie("refresh", newAccessToken.getRefreshToken()));
+        response.addCookie(jwtCookieUtil.createCookie("refresh", newAccessToken.getRefreshToken()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisterResponseDto {
+
     private String userId;
     private String name;
 

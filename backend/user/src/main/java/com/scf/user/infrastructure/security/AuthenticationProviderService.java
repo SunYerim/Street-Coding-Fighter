@@ -1,4 +1,4 @@
-package com.scf.user.global;
+package com.scf.user.infrastructure.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

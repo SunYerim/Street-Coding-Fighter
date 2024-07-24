@@ -1,4 +1,4 @@
-package com.scf.user.global;
+package com.scf.user.infrastructure.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

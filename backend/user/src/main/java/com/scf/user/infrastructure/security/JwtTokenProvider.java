@@ -1,4 +1,4 @@
-package com.scf.user.global;
+package com.scf.user.infrastructure.security;
 
 
 import com.scf.user.application.service.RedisService;
@@ -22,8 +22,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -67,7 +65,6 @@ public class JwtTokenProvider {
 
         return accessToken;
     }
-
 
 
     // refreshToken 생성
@@ -153,7 +150,7 @@ public class JwtTokenProvider {
         }
     }
 
-//    // JWT에서 memberId 추출
+    // JWT에서 memberId 추출
     public String extractMemberId(String token) {
         Claims claims = parseClaims(token);
         if (claims == null || claims.getSubject() == null) {
@@ -161,8 +158,6 @@ public class JwtTokenProvider {
         }
         return claims.getSubject();
     }
-
-
 
 
 }

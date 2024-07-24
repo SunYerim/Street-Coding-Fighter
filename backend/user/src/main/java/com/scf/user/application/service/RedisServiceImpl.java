@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RedisServiceImpl implements RedisService{
+public class RedisServiceImpl implements RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -35,12 +35,6 @@ public class RedisServiceImpl implements RedisService{
     @Override
     public void deleteValue(String key) {
         redisTemplate.delete(key);
-    }
-
-
-    @Override
-    public long ttl(String key) {
-        return redisTemplate.getExpire(key);
     }
 
 }
