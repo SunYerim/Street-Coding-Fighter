@@ -59,4 +59,13 @@ public class BattleGameRoom {
         this.isStart = true;
     }
 
+    // 특정 라운드의 문제를 가져오는 메서드
+    public List<Problem> getProblemsForRound(Integer roundNumber) {
+        if (roundNumber < 1 || roundNumber > roundProblems.size()) {
+            // 예외처리 하기
+        }
+        return roundProblems.get(roundNumber - 1);
+    }
+
+
 }
