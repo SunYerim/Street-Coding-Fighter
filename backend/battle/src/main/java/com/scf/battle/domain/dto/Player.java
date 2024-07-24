@@ -9,4 +9,5 @@ public class Player {
 
     private Long userId;
     private String username;
+    private Integer Hp;
 }
