@@ -26,8 +26,8 @@ align-items: center;
 border-radius: 10%;
 transition: background-color 0.3s;
 cursor: pointer;
-background-color: ${(props) => (props.$completed ? 'rgba(83, 92, 145, 0.7)' : 'gray')};
-
+background-color: ${(props) => (props.$completed ? '#12486B' : 'gray')};
+border: ${(props) => (props.$isNext ? '2px solid white' : null)};
 &:hover {
   background-color: rgba(83, 92, 145, 1);
   }
@@ -36,14 +36,14 @@ background-color: ${(props) => (props.$completed ? 'rgba(83, 92, 145, 0.7)' : 'g
   const Path = styled.div`
   width: 50px;
   height: 10px;
-  background-color: ${(props) => (props.$completed ? 'green' : 'gray')};
+  background-color: ${(props) => (props.$completed ? '#419197' : 'gray')};
   transition: background-color 0.3s;
   `;
   
   const VerticalPath = styled.div`
-    width : 10px;
-    height: 50px;
-    background-color: ${(props) => (props.$completed ? 'green' : 'gray')};
+  width : 10px;
+  height: 50px;
+    background-color: ${(props) => (props.$completed ? '#419197' : 'gray')};
     transition: background-color 0.3s;
     position : absolute;
     top : 100%

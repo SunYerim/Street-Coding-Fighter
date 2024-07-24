@@ -1,5 +1,7 @@
 import React from 'react';
 import S from './styled';
+import { useState } from 'react';
+
 
 const courses = [
   { id: 0, content_type: '변수와 자료형', title: '변수' },
@@ -17,9 +19,15 @@ const courses = [
 ];
 
 const completed = [true, true, true, true, false, false, false, false, false, false, false, false];
+let nIdx = 0;
+completed.forEach((e, i) => {
+  if (e & !completed[i + 1]) {
+    nIdx = i+1;
+  }
+});
 const rowList = [0, 1, 2, 3];
-
 export default function EpisodeList({ rownum }) {
+  const [nextIndex, setNextIndex] = useState(nIdx);
   return (
     <>
       {rowList.map((r) => (
@@ -27,9 +35,10 @@ export default function EpisodeList({ rownum }) {
           <S.Row key={2 * r} $rowidx={r}>
             {courses.slice(rownum * r, rownum * r + rownum).map((e, index, array) => (
               <React.Fragment key={e.id}>
-                <S.CheckPoint key={`checkpoint-${e.id}`} $completed={completed[e.id]}>
+                <S.CheckPoint key={`checkpoint-${e.id}`} $completed={completed[e.id]} $isNext={e.id===nextIndex}>
+                  {nextIndex}
                   {e.id + 1}. {e.title}
-                  {index === array.length-1 && r<3? (
+                  {index === array.length - 1 && r < 3 ? (
                     <S.VerticalPath key={`verticalpath-${e.id}`} $completed={completed[3 * (r + 1)]}></S.VerticalPath>
                   ) : null}
                 </S.CheckPoint>
