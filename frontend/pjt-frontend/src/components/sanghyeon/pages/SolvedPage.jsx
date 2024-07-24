@@ -1,14 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../../../css/SolvedPage.css";
 import getSolved from "../apis/getSolved";
 
 function SolvedPage() {
+  const [solvedData, setSolvedData] = useState([]);
+  const [sortedData, setSortedData] = useState([]);
+  const [sortOption, setSortOption] = useState("");
+
   useEffect(() => {
     const fetchSolved = async () => {
       try {
-        const solved = await getSolved();
-        console.log(solved);
+        // const solved = await getSolved();
+        const solved = [
+          { title: "최대값 구하기", isSolved: false, difficulty: "3" },
+          { title: "A + B 구하기", isSolved: true, difficulty: "4" },
+          { title: "합 구하기", isSolved: false, difficulty: "5" },
+          { title: "문자 출력하기", isSolved: true, difficulty: "2" },
+          { title: "곱셈 구하기", isSolved: true, difficulty: "3" },
+        ];
+        solved.sort((a, b) => a.title.localeCompare(b.title));
+        setSolvedData(solved);
+        setSortedData(solved);
       } catch (error) {
         console.error("Failed to fetch solved", error);
       }
@@ -17,51 +30,58 @@ function SolvedPage() {
     fetchSolved();
   }, []);
 
+  useEffect(() => {
+    if (sortOption) {
+      const sorted = [...solvedData];
+      if (sortOption === "title") {
+        sorted.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortOption === "difficulty") {
+        sorted.sort((a, b) => a.difficulty.localeCompare(b.difficulty));
+      } else if (sortOption === "correctness") {
+        sorted.sort((a, b) =>
+          a.correct === b.correct ? 0 : a.correct ? -1 : 1
+        );
+      }
+      setSortedData(sorted);
+    }
+  }, [sortOption, solvedData]);
+
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
   return (
     <>
-      <Header />
-      <div id="solved-outer-container">
-        <div id="solved-container">
-          <div id="solved-title-container">
-            <h2>문제 모아보기</h2>
-            <select name="" id="">
-              <option value="">제목순 정렬</option>
-            </select>
-          </div>
-          <div id="sovled-problem-container">
-            <div id="solved-problem-title">
-              <h4>제목</h4>
-              <h4>정답 유무</h4>
-              <h4>난이도</h4>
+      <div className="outer-container">
+        <Header />
+        <div className="solved-outer-container">
+          <div className="solved-container">
+            <div className="solved-title-container">
+              <h2 className="solved-title">Player Name : dltkdgus482</h2>
+              <select name="" id="" className="" onChange={handleSortChange}>
+                <option value="title">제목순</option>
+                <option value="difficulty">난이도순</option>
+              </select>
             </div>
-            <div id="solved-problem">
-              <p>최대값 구하기</p>
-              <p>o</p>
-              <p>브론즈 3</p>
+            <hr />
+            <div className="solved-inner-container">
+              <div className="solved-inner-title">
+                <p>제목</p>
+                <p>정답 유무</p>
+                <p>난이도</p>
+              </div>
+              <div className="solved-inner">
+                {sortedData.map((data, index) => {
+                  return (
+                    <div className="solved" key={index}>
+                      <p>{data.title}</p>
+                      <p>{data.isSolved ? "O" : "X"}</p>
+                      <p>{data.difficulty}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div id="solved-problem">
-              <p>최대값 구하기</p>
-              <p>o</p>
-              <p>브론즈 3</p>
-            </div>
-            <div id="solved-problem">
-              <p>최대값 구하기</p>
-              <p>o</p>
-              <p>브론즈 3</p>
-            </div>
-            <div id="solved-problem">
-              <p>최대값 구하기</p>
-              <p>o</p>
-              <p>브론즈 3</p>
-            </div>
-            <div id="solved-problem">
-              <p>최대값 구하기</p>
-              <p>o</p>
-              <p>브론즈 3</p>
-            </div>
-          </div>
-          <div id="solved-button-container">
-            <button>틀린 문제만 보기</button>
           </div>
         </div>
       </div>
