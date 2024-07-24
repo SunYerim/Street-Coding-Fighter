@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  service_a:
+    image: zlxldgus123/test:latest
+    container_name: service_a
+    ports:
+      - "5001:8080"
+    networks:
+      - msa_network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb_db:3306/scf_db?characterEncoding=utf8mb4
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=ed9658pi
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE=UTC
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_DATA_REDIS_HOST=localhost
+      - SPRING_DATA_REDIS_PORT=6379
+      - JWT_SECRET=7d1b1d6d36d8e6a8f1bda6a7f473f87b012b0345a1b5f
+      - JWT_ACCESS_TOKEN_EXPIRY=3600000
+      - JWT_REFRESH_TOKEN_EXPIRY=86400000
+      - LOGGING_LEVEL_ORG_HIBERNATE_SQL=debug
+      - LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER=debug
+      - SERVER_ERROR_INCLUDE_MESSAGE=always
+      - SERVER_ERROR_INCLUDE_BINDING_ERRORS=always
+
+  mariadb_db:
+    image: mariadb:latest
+    container_name: mariadb_db
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=ed9658pi
+      - MYSQL_DATABASE=scf_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=ed9658pi
+    networks:
+      - msa_network
+
+networks:
+  msa_network:
+    driver: bridge
+
+volumes:
+  db_data:
