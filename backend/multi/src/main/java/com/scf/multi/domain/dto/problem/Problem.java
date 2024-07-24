@@ -1,11 +1,11 @@
 package com.scf.multi.domain.dto.problem;
 
 import java.util.Map;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class Problem {
 
     private Long problemId;
