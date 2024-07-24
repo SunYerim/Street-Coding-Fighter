@@ -3,10 +3,13 @@ package com.scf.battle.application;
 import com.scf.battle.domain.dto.CreateRoomDTO;
 import com.scf.battle.domain.dto.JoinRoomDTO;
 import com.scf.battle.domain.dto.Problem;
+import com.scf.battle.domain.dto.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,13 +17,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BattleGameService {
+
     private final BattleGameRepository battleGameRepository;
+    private final ProblemService problemService;
 
     public List<BattleGameRoom> findAllRooms() {
         return battleGameRepository.findAllRooms();
     }
 
     public BattleGameRoom findById(String roomId) {
+        // TODO : room이 null일 때
         return battleGameRepository.findById(roomId);
     }
 
@@ -46,14 +52,33 @@ public class BattleGameService {
 
     public List<Problem> startGame(Long userId, String roomId) {
         BattleGameRoom room = battleGameRepository.findById(roomId);
-        if(room == null){
+
+        if (room == null) {
             // 예외처리
         }
 
-        List<Problem> problems = new ArrayList<>(); // problem service 추가
+        List<Problem> problems = problemService.getProblem();
 
         room.startGame(problems, userId);
 
         return problems;
     }
+
+    private int calculateScore(int submitTime) { // TODO: 협의 후 수정
+
+        if (submitTime > 30) {
+            // TODO : 예외처리 30초 보다 많은 경우
+        }
+
+        int[] times = {3, 6, 9, 12, 15};
+        int[] scores = {500, 300, 200, 150, 130};
+
+        for (int i = 0; i < times.length; i++) {
+            if (submitTime < times[i]) {
+                return scores[i];
+            }
+        }
+        return 50;
+    }
+
 }
