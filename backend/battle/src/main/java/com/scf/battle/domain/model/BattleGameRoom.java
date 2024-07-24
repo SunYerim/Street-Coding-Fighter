@@ -12,14 +12,16 @@ import java.util.*;
 @Builder
 @Getter
 public class BattleGameRoom {
+
     private String roomId;
     private Long hostId;
     private String title;
     private String password;
 
-    private final List<Problem> problems = new ArrayList<>();
+    private final List<List<Problem>> roundProblems = new ArrayList<>(); // 라운드 마다 3문제로 나누기 위함
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
-    private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>()); // player, score
+    private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(
+        new HashMap<>()); // player, score
     private Boolean isStart;
     private Integer round;
 
@@ -28,10 +30,9 @@ public class BattleGameRoom {
         String username = joinRoomDto.getUsername();
         String roomPassword = joinRoomDto.getRoomPassword();
 
-        if(roomPassword.equals(this.password)){
+        if (roomPassword.equals(this.password)) {
             players.add(new Player(userId, username));
-        }
-        else{
+        } else {
             // 예외처리
         }
     }
