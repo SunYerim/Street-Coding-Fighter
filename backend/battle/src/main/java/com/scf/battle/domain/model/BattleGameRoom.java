@@ -73,12 +73,20 @@ public class BattleGameRoom {
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-           // TODO : 유저 없는 예외처리
+            // TODO : 유저 없는 예외처리
         }
 
         int newScore = scoreBoard.get(userId) + score;
         this.scoreBoard.put(userId, newScore);
     }
 
+    public void nextRound() {
+
+        if (!Boolean.TRUE.equals(this.isStart)) {
+            // TODO : 시작 안 된 상황
+        }
+
+        this.round += 1;
+    }
 
 }
