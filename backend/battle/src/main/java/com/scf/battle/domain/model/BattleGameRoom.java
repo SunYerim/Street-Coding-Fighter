@@ -90,6 +90,11 @@ public class BattleGameRoom {
             .build();
     }
 
+    private void updatePlayerHp(Player player, int power) {
+        int adjustedPower = this.isAttack ? power : -power;
+        player.setHp(player.getHp() + adjustedPower);
+    }
+
     public void nextRound() {
 
         if (!Boolean.TRUE.equals(this.isStart)) {
