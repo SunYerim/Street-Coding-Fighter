@@ -43,8 +43,6 @@ public class MultiGameService {
         MultiGameRoom room = MultiGameRoom.builder()
             .roomId(roomId)
             .hostId(userId)
-            .isStart(false)
-            .round(0)
             .title(createRoomDTO.getTitle())
             .maxPlayer(createRoomDTO.getMaxPlayer())
             .password(createRoomDTO.getPassword())
@@ -69,16 +67,13 @@ public class MultiGameService {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        if (room.getIsStart()) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
-        }
+        boolean isHost = room.getHostId().equals(userId);
 
-        if (room.getPlayers().size() >= room.getMaxPlayer()) {
-            throw new BusinessException(room.getMaxPlayer(), "room max player",
-                ErrorCode.MAX_PLAYERS_EXCEEDED);
-        }
-
-        Player player = new Player(userId, username);
+        Player player = Player.builder()
+            .userId(userId)
+            .username(username)
+            .isHost(isHost)
+            .build();
         room.add(roomPassword, player);
     }
 
