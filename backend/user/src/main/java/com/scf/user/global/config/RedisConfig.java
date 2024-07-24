@@ -24,14 +24,14 @@ public class RedisConfig {
     }
 
     // Redis 데이터 처리를 위한 템플릿을 구성
-   @Bean
+    @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
-   }
+    }
 
 
 }

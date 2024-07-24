@@ -1,4 +1,4 @@
-package com.scf.user.application.dto;
+package com.scf.user.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class LoginDto {
+@AllArgsConstructor
+public class TokenDto {
 
-    private String userId;
-    private String password;
-
+    private String accessToken;
+    private String refreshToken;
 }
