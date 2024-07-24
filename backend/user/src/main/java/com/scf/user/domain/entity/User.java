@@ -62,13 +62,12 @@ public class User implements UserDetails {
 
 
     /**
-     *
      * UserDetails
-     *
      */
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() throws UsernameNotFoundException {
+    public Collection<? extends GrantedAuthority> getAuthorities()
+        throws UsernameNotFoundException {
         return List.of(new SimpleGrantedAuthority("USER"));
     }
 

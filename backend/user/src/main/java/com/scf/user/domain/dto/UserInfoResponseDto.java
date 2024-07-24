@@ -1,18 +1,18 @@
-package com.scf.user.application.dto;
+package com.scf.user.domain.dto;
 
 import java.time.LocalDate;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-public class UserRegisterRequestDto
-{
-    private String userId;
-    private String password;
+@Setter
+@ToString
+@AllArgsConstructor
+public class UserInfoResponseDto {
+
     private String name;
     private String schoolName;
     private LocalDate birth;

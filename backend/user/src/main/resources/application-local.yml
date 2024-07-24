@@ -33,8 +33,7 @@ logging:
       scf:
         user:
           global:
-            LoginFilter:
-              debug
+            com.scf.user.infrastructure.security.LoginFilter: debug
 
 server:
   error:

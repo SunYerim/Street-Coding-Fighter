@@ -5,8 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scf.user.application.dto.LoginDto;
-import com.scf.user.application.dto.UserRegisterRequestDto;
+import com.scf.user.domain.dto.UserRegisterRequestDto;
 import com.scf.user.domain.repository.UserRepository;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
