@@ -1,7 +1,6 @@
 package com.scf.user.infrastructure.security;
 
 
-import com.scf.user.application.service.RedisService;
 import com.scf.user.application.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -40,7 +39,6 @@ public class JwtTokenProvider {
 
     private static final String AUTHORITY_KEY = "auth";
     private final UserService userService;
-    private final RedisService redisService;
 
     private Key getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
