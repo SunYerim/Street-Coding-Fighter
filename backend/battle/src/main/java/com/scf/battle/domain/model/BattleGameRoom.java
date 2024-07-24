@@ -67,17 +67,25 @@ public class BattleGameRoom {
         return roundProblems.get(roundNumber - 1);
     }
 
-    public void updateScore(Long userId, int score) {
-
-        boolean hasPlayer = this.players.stream()
-            .anyMatch(player -> player.getUserId().equals(userId));
-
-        if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-            // TODO : 유저 없는 예외처리
+    public FightDTO updateHp(Long userId, int power) {
+        if (playerA == null || playerB == null) {
+            throw new IllegalArgumentException("Player not found");
+        }
+        if (playerA.getUserId().equals(userId)) {
+            updatePlayerHp(playerB, power);
+        } else if (playerB.getUserId().equals(userId)) {
+            updatePlayerHp(playerA, power);
+        } else {
+            throw new IllegalArgumentException("Invalid userId");
         }
 
         int newScore = scoreBoard.get(userId) + score;
         this.scoreBoard.put(userId, newScore);
+        return FightDTO.builder()
+            .userId(userId)
+            .isAttack(this.isAttack)
+            .power(power)
+            .build();
     }
 
     public void nextRound() {
