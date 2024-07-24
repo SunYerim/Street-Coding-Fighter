@@ -33,6 +33,69 @@
   color : white;
 }
 
+
+.game-list {
+  overflow-y: auto;
+  overflow-y: scroll;
+  width: 70%;
+  height: 75%;
+  display: flex;
+  justify-content: center;
+  border: 3px solid black;
+  border-radius: 10px;
+  margin-left: 30px;
+  margin-bottom: 30px;
+}
+
+/* 스크롤바의 폭 너비 */
+.game-list::-webkit-scrollbar {
+  width: 10px;  
+}
+
+/* 스크롤바 막대 */
+.game-list::-webkit-scrollbar-thumb {
+  background: #4a29c2;
+  /* border: 2px solid #a480b9; */
+  border-radius: 10px;
+}
+
+.game-list::-webkit-scrollbar-track {
+  background: rgba(214, 193, 212, 0.1);
+}
+
+.game-list::-webkit-scrollbar-thumb:hover {
+	background-color:#181883;
+}
+
+
+.room-items {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  width: 45vw;
+  height: 80px;
+  margin: 5px 0px;
+  border: 3px solid black;
+  border-radius: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.room-items h3 {
+  justify-self: start;
+  padding-left: 25px;
+  max-width: 80%; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+}
+
+.room-items:hover {
+  background-color: #0056b3;
+}
+
 .create-container {
   display: flex;
   flex-direction: column;
@@ -85,22 +148,6 @@
   background-color: pink;
   margin: 10px auto;
 }
-
-.game-list{
-  overflow-y: auto;
-  overflow-y: scroll;
-  overflow-y: hidden;
-  width: 70%;
-  height: 75%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border: 3px solid black;
-  border-radius: 10px;
-  margin-left: 30px;
-  margin-bottom: 30px;
-}
-
 
 .button-container {
   width: 20%;
@@ -173,6 +220,7 @@
   border-radius: 10px;
 }
 
+
 .rank-table {
   position: absolute;
   top: 2%;
@@ -181,6 +229,7 @@
   border: 3px solid black;
   border-radius: 10px;
 }
+
 
 .game-content {
   position: absolute;
@@ -249,32 +298,6 @@
 
 
 
-
-
-
-
-
-
-
-/* 스크롤바의 폭 너비 */
-.game-list::-webkit-scrollbar {
-  width: 10px;  
-}
-
-/* 스크롤바 막대 */
-.game-list::-webkit-scrollbar-thumb {
-  background: #4a29c2; /* 스크롤바 막대 색상 */
-  border: 2px solid #a480b9; /* 스크롤바 막대 테두리 설정  */
-  border-radius: 10px; /* 스크롤바 둥근 테두리 */
-}
-
-.game-list::-webkit-scrollbar-track {
-  background: rgba(214, 193, 212, 0.1);  /*스크롤바 뒷 배경 색상*/
-}
-
-.game-list::-webkit-scrollbar-thumb:hover {
-	background-color:#181883;
-}
 
 
 
