@@ -1,12 +1,16 @@
 package com.scf.multi.domain.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
-import java.util.ArrayList;
+import com.scf.multi.global.error.ErrorCode;
+import com.scf.multi.global.error.exception.BusinessException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,66 +20,165 @@ import org.junit.jupiter.api.Test;
 class MultiGameRoomTest {
 
     private MultiGameRoom gameRoom;
+    private Player hostPlayer;
+    private Player otherPlayer;
+    private List<Problem> problems;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        hostPlayer = Player.builder()
+            .userId(1L)
+            .username("Host")
+            .isHost(true)
+            .build();
+
+        otherPlayer = Player.builder()
+            .userId(2L)
+            .username("Player2")
+            .isHost(false)
+            .build();
+
+        Problem problem1 = Problem
+            .builder()
+            .problemId(1L)
+            .type(0)
+            .category("정렬")
+            .title("버블 정렬")
+            .content("버블 정렬 내용")
+            .answer(Map.of(0, 1, 1, 2))
+            .build();
+
+        Problem problem2 = Problem
+            .builder()
+            .problemId(2L)
+            .type(0)
+            .category("정렬")
+            .title("삽입 정렬")
+            .content("삽입 정렬 내용")
+            .answer(Map.of(0, 1, 1, 2))
+            .build();
+
+        problems = Arrays.asList(problem1, problem2);
+
         gameRoom = MultiGameRoom.builder()
-            .roomId("room1")
-            .hostId(1L)
-            .isStart(false)
-            .round(0)
-            .password("1234")
-            .maxPlayer(2)
+            .roomId("Room1")
+            .hostId(hostPlayer.getUserId())
+            .title("Test Room")
+            .password("secret")
+            .maxPlayer(3)
             .build();
     }
 
     @Test
-    @DisplayName("방에 플레이어가 정상적으로 추가되어야 한다.")
-    void AddPlayerTest1() {
+    @DisplayName("방 비밀번호가 일치할 경우 방에 플레이어가 정상적으로 추가되어야 한다. (1명)")
+    void AddPlayerWithCorrectPasswordTest() {
 
         // given
-        Long userId = 1L;
-        String username = "Player1";
-        String roomPassword = "1234";
+        String roomPassword = "secret";
 
         // when
-        joinRoom(userId, username, roomPassword);
+        gameRoom.add(roomPassword, hostPlayer);
 
         // then
-        assertEquals(1, gameRoom.getPlayers().size());
-        assertEquals("Player1", gameRoom.getPlayers().get(0).getUsername());
-        assertEquals(0, gameRoom.getScoreBoard().get(userId));
+        List<Player> players = gameRoom.getPlayers();
+
+        assertThat(players).hasSize(1);
+        assertThat(players.get(0)).isEqualTo(hostPlayer);
+        assertEquals("Host", gameRoom.getPlayers().get(0).getUsername());
+        assertEquals(0, gameRoom.getScoreBoard().get(hostPlayer.getUserId()));
     }
 
     @Test
-    @DisplayName("방 비밀번호가 틀릴 경우 추가가 되면 안된다.")
-    void AddPlayerTest2() {
+    @DisplayName("방 비밀번호가 일치할 경우 방에 플레이어가 정상적으로 추가되어야 한다. (2명)")
+    void AddPlayerWithCorrectPasswordTest2() {
 
         // given
-        Long userId = 1L;
-        String username = "Player1";
-        String roomPassword = "1235";
+        String roomPassword = "secret";
 
         // when
-        joinRoom(userId, username, roomPassword);
+        gameRoom.add(roomPassword, hostPlayer);
+        gameRoom.add(roomPassword, otherPlayer);
 
         // then
-        assertEquals(0, gameRoom.getPlayers().size());
+        List<Player> players = gameRoom.getPlayers();
+
+        assertThat(players).hasSize(2);
+        assertThat(players.get(0)).isEqualTo(hostPlayer);
+        assertThat(players.get(1)).isEqualTo(otherPlayer);
+        assertEquals("Player2", gameRoom.getPlayers().get(1).getUsername());
+        assertEquals(0, gameRoom.getScoreBoard().get(hostPlayer.getUserId()));
+        assertEquals(0, gameRoom.getScoreBoard().get(otherPlayer.getUserId()));
     }
 
     @Test
-    @DisplayName("방 인원이 가득 찼을 경우 추가되면 안된다.")
-    void AddPlayerTest3() {
+    @DisplayName("방 비밀번호가 틀릴 경우 정상적으로 예외가 발생해야 한다.")
+    void AddPlayerWithWrongPasswordTest() {
 
         // given
-        joinRoom(1L, "Player1", "1234");
-        joinRoom(2L, "Player2", "1234");
+        String roomPassword = "wrong password";
+        gameRoom.add("secret", hostPlayer);
 
         // when
-        joinRoom(3L, "Player3", "1234");
+        BusinessException businessException = assertThrows(BusinessException.class,
+            () -> gameRoom.add(roomPassword, otherPlayer));
 
         // then
-        assertEquals(2, gameRoom.getPlayers().size());
+        assertThat(businessException.getMessage()).isEqualTo(
+            ErrorCode.PASSWORD_MISMATCH.getMessage());
+    }
+
+    @Test
+    @DisplayName("방 인원이 가득 찼을 경우 정상적으로 예외가 발생해야 한다.")
+    void AddPlayerWithMaxPlayerTest() {
+
+        // given
+        String roomPassword = "secret";
+        gameRoom.add(roomPassword, hostPlayer);
+        gameRoom.add(roomPassword, otherPlayer);
+        Player player3 = Player.builder()
+            .userId(3L)
+            .username("Player3")
+            .isHost(false)
+            .build();
+        gameRoom.add(roomPassword, player3);
+
+        // when
+        Player player4 = Player.builder()
+            .userId(4L)
+            .username("Player4")
+            .isHost(false)
+            .build();
+
+        BusinessException businessException = assertThrows(BusinessException.class,
+            () -> gameRoom.add(roomPassword, player4));
+
+        // then
+        assertThat(businessException.getMessage()).isEqualTo(
+            ErrorCode.MAX_PLAYERS_EXCEEDED.getMessage());
+    }
+
+    @Test
+    @DisplayName("게임이 시작됐을 경우 정상적으로 예외가 발생해야 한다.")
+    void AddPlayerWithAlreadyStartGameTest() {
+
+        // given
+        String roomPassword = "secret";
+        gameRoom.add(roomPassword, hostPlayer);
+        gameRoom.add(roomPassword, otherPlayer);
+        gameRoom.gameStart(problems, hostPlayer.getUserId());
+        Player player3 = Player.builder()
+            .userId(3L)
+            .username("Player3")
+            .isHost(false)
+            .build();
+
+        // when
+        BusinessException businessException = assertThrows(BusinessException.class,
+            () -> gameRoom.add(roomPassword, player3));
+
+        // then
+        assertThat(businessException.getMessage()).isEqualTo(
+            ErrorCode.GAME_ALREADY_STARTED.getMessage());
     }
 
     @Test
@@ -83,10 +186,8 @@ class MultiGameRoomTest {
     void RemovePlayerTest() {
 
         // given
-        Long userId = 1L;
-        String username = "Player1";
-        String roomPassword = "1234";
-        joinRoom(userId, username, roomPassword);
+        String roomPassword = "secret";
+        gameRoom.add(roomPassword, hostPlayer);
 
         // when
         gameRoom.remove(1L);
@@ -96,58 +197,141 @@ class MultiGameRoomTest {
     }
 
     @Test
-    @DisplayName("게임이 시작할 때 게임방에 문제가 정상적으로 추가되어야 한다.")
-    void GameStartTest() {
+    @DisplayName("방에 포함되지 않은 유저를 제거하면 정상적으로 예외가 발생해야 한다.")
+    void RemovePlayerNonExistentTest() {
 
         // given
-        List<Problem> problems = new ArrayList<>();
-        problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
+        String roomPassword = "secret";
+        gameRoom.add(roomPassword, hostPlayer);
 
         // when
-        gameRoom.gameStart(problems, 1L);
+        BusinessException businessException = assertThrows(BusinessException.class,
+            () -> gameRoom.remove(2L));
 
         // then
-        assertEquals(1, gameRoom.getProblems().size());
+        assertThat(businessException.getMessage()).isEqualTo(ErrorCode.USER_NOT_FOUND.getMessage());
+    }
 
-        Problem problem = gameRoom.getProblems().get(0);
-        assertEquals(1, problem.getProblemId());
-        assertEquals("정렬", problem.getCategory());
-        assertEquals(2, problem.getAnswer().get(1));
+    @Test
+    @DisplayName("게임을 시작하기 위한 상태가 갖춰져야 한다.")
+    void GameStartWithValidConditionsTest() {
 
-        assertTrue(gameRoom.getIsStart());
+        // given
+        gameRoom.add("secret", hostPlayer);
+        gameRoom.add("secret", otherPlayer);
+
+        // when
+        gameRoom.gameStart(problems, hostPlayer.getUserId());
+
+        // then
+        assertThat(gameRoom.getProblems()).isNotEmpty();
+        assertThat(gameRoom.getProblems()).hasSize(2);
+        assertThat(gameRoom.getIsStart()).isTrue();
+    }
+
+    @Test
+    @DisplayName("방장이 아닌 유저가 게임을 시작하면 정상적으로 예외가 발생해야 한다.")
+    public void GameStartWithNonHostUserTest() {
+
+        // given
+        gameRoom.add("secret", hostPlayer);
+        gameRoom.add("secret", otherPlayer);
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            gameRoom.gameStart(problems, otherPlayer.getUserId());
+        });
+
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.USER_NOT_HOST.getMessage());
+    }
+
+    @Test
+    @DisplayName("최소 플레이어 수가 충족되지 않을 경우 정상적으로 예외가 발생해야 한다.")
+    public void GameStartWithInsufficientPlayersTest() {
+
+        // given
+        gameRoom.add("secret", hostPlayer);
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            gameRoom.gameStart(problems, hostPlayer.getUserId());
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.INSUFFICIENT_PLAYER.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("게임 시작 후 문제가 준비되지 않을 경우 정상적으로 예외가 발생해야 한다.")
+    public void testGameStartWithNoProblems() {
+
+        // given
+        gameRoom.add("secret", hostPlayer);
+        gameRoom.add("secret", otherPlayer);
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            gameRoom.gameStart(null, hostPlayer.getUserId());
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.INVALID_PROBLEM.getMessage());
     }
 
     @Test
     @DisplayName("플레이어에 대한 점수가 정상적으로 업데이트 되어야 한다.")
     void UpdateScoreTest() {
+
         // given
-        Long userId = 1L;
-        String username = "Player1";
-        String roomPassword = "1234";
-        joinRoom(userId, username, roomPassword);
+        gameRoom.add("secret", hostPlayer);
 
         // when
-        gameRoom.updateScore(1L, 10);
+        gameRoom.updateScore(hostPlayer.getUserId(), 10);
 
         // then
-        assertEquals(10, gameRoom.getScoreBoard().get(1L));
+        assertThat(gameRoom.getScoreBoard().get(hostPlayer.getUserId())).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 유저에 대해 점수를 업데이트 하려고 하면 정상적으로 예외가 발생해야 한다.")
+    public void UpdateScoreForNonExistentPlayerTest() {
 
         // when
-        gameRoom.updateScore(1L, 15);
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            gameRoom.updateScore(otherPlayer.getUserId(), 10);
+        });
 
         // then
-        assertEquals(25, gameRoom.getScoreBoard().get(1L));
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
     @Test
     @DisplayName("라운드가 정상적으로 증가해야 한다.")
     void NextRoundTest() {
 
+        // given
+        gameRoom.add("secret", hostPlayer);
+        gameRoom.add("secret", otherPlayer);
+        gameRoom.gameStart(problems, hostPlayer.getUserId());
+
         // when
         gameRoom.nextRound();
 
         // then
-        assertEquals(1, gameRoom.getRound());
+        assertThat(gameRoom.getRound()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게임이 시작 되기 전에 라운드가 증가되면 정상적으로 예외가 발생해야 한다.")
+    public void testNextRoundBeforeGameStart() {
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            gameRoom.nextRound();
+        });
+
+        assertThat(exception.getMessage()).isEqualTo(ErrorCode.GAME_NOT_START.getMessage());
     }
 
     @Test
@@ -155,34 +339,18 @@ class MultiGameRoomTest {
     void CalculateRankTest() {
 
         // given
+        gameRoom.add("secret", hostPlayer);
+        gameRoom.add("secret", otherPlayer);
 
-        joinRoom(1L, "Player1", "1234");
-        joinRoom(2L, "Player2", "1234");
-        gameRoom.updateScore(1L, 30);
-        gameRoom.updateScore(2L, 20);
+        gameRoom.updateScore(hostPlayer.getUserId(), 10);
+        gameRoom.updateScore(otherPlayer.getUserId(), 15);
 
         // when
         List<Rank> ranks = gameRoom.calculateRank();
 
         // then
-        assertEquals(2, ranks.size());
-        assertEquals(1L, ranks.get(0).getUserId());
-        assertEquals(2L, ranks.get(1).getUserId());
-        assertTrue(ranks.get(0).getScore() > ranks.get(1).getScore());
-    }
-
-    private void joinRoom(Long userId, String username, String roomPassword) {
-
-        Player player = new Player(userId, username);
-
-        if (!gameRoom.getPassword().equals(roomPassword)) {
-            return;
-        }
-
-        if (gameRoom.getMaxPlayer() == gameRoom.getPlayers().size()) {
-            return;
-        }
-
-        gameRoom.add("1234", player);
+        assertThat(ranks).hasSize(2);
+        assertThat(ranks.get(0).getUserId()).isEqualTo(otherPlayer.getUserId());
+        assertThat(ranks.get(1).getUserId()).isEqualTo(hostPlayer.getUserId());
     }
 }
