@@ -14,21 +14,32 @@ import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
 public class MultiGameRoom {
 
-    private String roomId;
-    private Long hostId;
-    private String title;
-    private String password;
-    private Integer maxPlayer;
+    private final String roomId;
+    private final Long hostId;
+    private final String title;
+    private final String password;
+    private final Integer maxPlayer;
 
     private final List<Problem> problems = new ArrayList<>();
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>());
     private Boolean isStart;
     private Integer round;
+
+    @Builder
+    public MultiGameRoom(String roomId, Long hostId, String title, String password, Integer maxPlayer) {
+        this.roomId = roomId;
+        this.hostId = hostId;
+        this.title = title;
+        this.password = password;
+        this.maxPlayer = maxPlayer;
+
+        this.isStart = false;
+        this.round = 0;
+    }
 
     public List<Player> getPlayers() {
         // 읽기 전용 List 반환
@@ -44,6 +55,15 @@ public class MultiGameRoom {
 
         if (this.password != null && !this.password.equals(roomPassword)) {
             throw new BusinessException(this.password, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
+        }
+
+        if (this.isStart) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
+        }
+
+        if (this.players.size() >= this.maxPlayer) {
+            throw new BusinessException(this.players.size(), "room max player: " + this.maxPlayer,
+                ErrorCode.MAX_PLAYERS_EXCEEDED);
         }
 
         this.players.add(player);
@@ -65,7 +85,7 @@ public class MultiGameRoom {
     public void gameStart(List<Problem> problems, Long userId) {
 
         if (!userId.equals(hostId)) { // 방장이 아닐 경우, 게임 시작 불가능
-            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_HOST);
         }
 
         if (this.players.size() < 2) { // 예를 들어, 최소 2명의 플레이어가 있어야 한다고 가정

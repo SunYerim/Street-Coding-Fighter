@@ -2,12 +2,12 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.application.UserService;
-import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.user.Rank;
-import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.dto.socket_message.Content;
 import com.scf.multi.domain.dto.socket_message.Message;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.utils.JsonConverter;
 import java.util.ArrayList;
@@ -44,11 +44,14 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         MultiGameRoom room = multiGameService.findOneById(roomId);
 
-        if (room == null) {
-            return;
-        }
+        boolean isHost = room.getHostId().equals(userId);
 
-        sessionPlayers.put(session.getId(), new Player(userId, username));
+        Player player = Player.builder()
+            .userId(userId)
+            .username(username)
+            .isHost(isHost)
+            .build();
+        sessionPlayers.put(session.getId(), player);
         sessionRooms.put(session.getId(), roomId);
         rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
 
@@ -60,7 +63,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         throws Exception {
 
         String msg = textMessage.getPayload();
-        Message message = JsonConverter.getInstance().fromJson(msg, Message.class);
+        Message message = JsonConverter.getInstance().toObject(msg, Message.class);
 
         String roomId = sessionRooms.get(session.getId());
 
@@ -102,7 +105,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         if (roomId != null) {
             multiGameService.exitRoom(roomId, player.getUserId());
             Set<WebSocketSession> roomSessions = rooms.get(roomId);
-            if (roomSessions != null) { 
+            if (roomSessions != null) {
                 roomSessions.remove(session);
                 if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
                     rooms.remove(roomId);

@@ -25,7 +25,7 @@ public class JsonConverter {
     }
 
     // JSON 문자열을 객체로 변환
-    public <T> T fromJson(String jsonString, Class<T> valueType) throws IOException {
+    public <T> T toObject(String jsonString, Class<T> valueType) throws IOException {
         return objectMapper.readValue(jsonString, valueType);
     }
 }

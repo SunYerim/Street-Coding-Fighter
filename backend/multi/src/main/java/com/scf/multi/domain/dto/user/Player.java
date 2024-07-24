@@ -1,12 +1,13 @@
 package com.scf.multi.domain.dto.user;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class Player {
 
-    Long userId;
-    String username;
+    private Long userId;
+    private String username;
+    private Boolean isHost;
 }

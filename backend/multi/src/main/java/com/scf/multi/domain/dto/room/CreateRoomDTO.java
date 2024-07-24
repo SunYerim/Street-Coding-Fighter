@@ -1,6 +1,9 @@
 package com.scf.multi.domain.dto.room;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +19,8 @@ public class CreateRoomDTO {
     @Size(max = 20, message = "비밀번호는 최대 20자까지 가능합니다.")
     private String password;
 
-    @NotBlank(message = "최대 인원수를 입력해주세요.")
+    @NotNull(message = "최대 인원수를 입력해주세요.")
+    @Min(value = 2, message = "최대 인원수는 최소 2명 이상이어야 합니다.")
+    @Max(value = 100, message = "최대 인원수는 최대 100명 이하여야 합니다.")
     private Integer maxPlayer;
 }
