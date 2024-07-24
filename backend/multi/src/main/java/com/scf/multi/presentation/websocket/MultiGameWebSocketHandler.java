@@ -44,10 +44,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         MultiGameRoom room = multiGameService.findOneById(roomId);
 
-        if (room == null) {
-            return;
-        }
-
         boolean isHost = room.getHostId().equals(userId);
 
         Player player = Player.builder()
@@ -67,7 +63,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         throws Exception {
 
         String msg = textMessage.getPayload();
-        Message message = JsonConverter.getInstance().fromJson(msg, Message.class);
+        Message message = JsonConverter.getInstance().toObject(msg, Message.class);
 
         String roomId = sessionRooms.get(session.getId());
 
