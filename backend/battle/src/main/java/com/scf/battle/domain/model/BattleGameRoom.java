@@ -1,6 +1,6 @@
 package com.scf.battle.domain.model;
 
-import com.scf.battle.domain.dto.JoinRoomDTO;
+import com.scf.battle.domain.dto.FightDTO;
 import com.scf.battle.domain.dto.Player;
 import com.scf.battle.domain.dto.Problem;
 import lombok.Builder;
@@ -19,16 +19,14 @@ public class BattleGameRoom {
     private String password;
 
     private final List<List<Problem>> roundProblems = new ArrayList<>(); // 라운드 마다 3문제로 나누기 위함
-    private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
-    private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(
-        new HashMap<>()); // player, score
+    private Player playerA;
+    private Player playerB;
+    //private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>()); // player, score
+    private Boolean isAttack;
     private Boolean isStart;
     private Integer round;
 
-    public void add(JoinRoomDTO joinRoomDto) {
-        Long userId = joinRoomDto.getUserId();
-        String username = joinRoomDto.getUsername();
-        String roomPassword = joinRoomDto.getRoomPassword();
+    public void add(Long userId, String username, String roomPassword) {
 
         if (roomPassword.equals(this.password)) {
             if(playerA !=null){ // 존재하면
@@ -46,7 +44,7 @@ public class BattleGameRoom {
         if (!this.hostId.equals(userId)) { //방장이 아닐 때
             //예외처리
         }
-        if (this.players.size() < 2) { // 2명보다 작을 때
+        if (playerA != null && playerB != null) { // 2명보다 작을 때
             //예외처리
         }
         if (problems == null || problems.isEmpty()) { // TODO : 문제에 대한 예외처리
@@ -92,6 +90,7 @@ public class BattleGameRoom {
 
     private void updatePlayerHp(Player player, int power) {
         int adjustedPower = this.isAttack ? power : -power;
+        if(!isAttack) this.isAttack = true;
         player.setHp(player.getHp() + adjustedPower);
     }
 
@@ -100,7 +99,7 @@ public class BattleGameRoom {
         if (!Boolean.TRUE.equals(this.isStart)) {
             // TODO : 시작 안 된 상황
         }
-
+        this.isAttack = false;
         this.round += 1;
     }
 
