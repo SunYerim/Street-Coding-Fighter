@@ -10,6 +10,7 @@ import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
 import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
 import SingleMain from "./components/single/SingleMain.jsx";
 import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
+import Ranking from "./components/ranking/Ranking.jsx"
 function App() {
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
           <Route path="/solved" element={<SolvedPage />} />
           <Route path="/single" element={<SingleMain />} />
           <Route path="/single/main" element={<SinglePlay />} />
+          <Route path="/ranking" element={<Ranking />} />
         </Routes>
       </Router>
     </>
