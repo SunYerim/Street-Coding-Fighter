@@ -1,11 +1,19 @@
 import styled from 'styled-components';
 import { LeaderBoardPlayerLayouts as P } from './RankingListItem';
-export default function RankingGraph({data}) {
-  const PodiumPlayer = ({playerInfo}) => {
+import useLeaderboardStore from '../../../stores/LeaderboardStore.jsx';
+
+const RankingGraph = () => {
+  const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
+  const PodiumPlayer = ({rank}) => {
+    const player = rankingList[boardPeriod]?.[rank];
+    // console.log(rankingList[boardPeriod][rank])
+    if(!player){
+      return <div>No player data</div>;
+    }
     return (
       <>
         <P.ProfileImageContainer></P.ProfileImageContainer>
-        <P.NameContainer>name</P.NameContainer>
+        <P.NameContainer>{player.name}</P.NameContainer>
         <P.ScoreContainer>score</P.ScoreContainer>
       </>
     );
@@ -15,23 +23,24 @@ export default function RankingGraph({data}) {
       <GraphContainer>
         <LeaderBoardSecond>
           <PodiumPlayerContainer>
-            <PodiumPlayer playerInfo={data[0]}></PodiumPlayer>
+            <PodiumPlayer rank={2}></PodiumPlayer>
           </PodiumPlayerContainer>
         </LeaderBoardSecond>
         <LeaderBoardFirst>
           <PodiumPlayerContainer>
-            <PodiumPlayer playerInfo={data[0]}></PodiumPlayer>
+            <PodiumPlayer rank={1}></PodiumPlayer>
           </PodiumPlayerContainer>
         </LeaderBoardFirst>
         <LeaderBoardThird>
           <PodiumPlayerContainer>
-            <PodiumPlayer playerInfo={data[0]}></PodiumPlayer>
+            <PodiumPlayer rank={3}></PodiumPlayer>
           </PodiumPlayerContainer>
         </LeaderBoardThird>
       </GraphContainer>
     </>
   );
 }
+export default RankingGraph;
 const GraphContainer = styled.div`
   display: flex;
   background-color: gray;

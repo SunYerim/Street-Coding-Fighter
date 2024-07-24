@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 
-export default function RankingListItem() {
+export default function RankingListItem({rank, player}) {
+  console.log(player)
   return (
     <RankingItemContainer>
-      <h4>4</h4>
+      <h4>{rank}</h4>
       <ProfileImageContainer>
       {/* <img src="..\..\src\assets\single-test.webp" alt="profileImage" /> */}
       
       </ProfileImageContainer>
-      <div>name</div>
-      <div>10000000</div>
+      <div>{player?.name}</div>
+      <div>{player?.exp}</div>
     </RankingItemContainer>
   );
 }
