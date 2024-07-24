@@ -1,12 +1,11 @@
 package com.scf.battle.application;
 
 import com.scf.battle.domain.dto.CreateRoomDTO;
-import com.scf.battle.domain.dto.JoinRoomDTO;
+import com.scf.battle.domain.dto.FightDTO;
 import com.scf.battle.domain.dto.Problem;
 import com.scf.battle.domain.dto.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,8 +29,8 @@ public class BattleGameService {
         return battleGameRepository.findById(roomId);
     }
 
-    public void joinRoom(String roomId, JoinRoomDTO joinRoomDto) {
-        battleGameRepository.joinRoom(roomId, joinRoomDto);
+    public void joinRoom(String roomId, Long userId, String username, String roomPassword) {
+        battleGameRepository.joinRoom(roomId, userId, username, roomPassword);
     }
 
     public String createRoom(Long userId, CreateRoomDTO createRoomDTO) {
@@ -64,7 +63,7 @@ public class BattleGameService {
         return problems;
     }
 
-    private int calculateScore(int submitTime) { // TODO: 협의 후 수정
+    private int calculatePower(int submitTime) { // TODO: 협의 후 수정
 
         if (submitTime > 30) {
             // TODO : 예외처리 30초 보다 많은 경우
@@ -81,7 +80,7 @@ public class BattleGameService {
         return 50;
     }
 
-    public int markSolution(String roomId, Long userId, Solved solved) {
+    public FightDTO markSolution(String roomId, Long userId, Solved solved) {
 
         BattleGameRoom room = battleGameRepository.findById(roomId);
         //라운드 별 문제 가져오기
@@ -104,12 +103,11 @@ public class BattleGameService {
         int correctAnswerCount = compareAnswers(answer, solved.getSolve());
 
         if (correctAnswerCount > 0) {
-            int score = calculateScore(solved.getSubmitTime());
-            room.updateScore(userId, score);
-            return score;
+            int score = calculatePower(solved.getSubmitTime());
+            return room.updateHp(userId, score);
         }
 
-        return 0;
+        return null;
     }
 
     private int compareAnswers(Map<Integer, Integer> answer, Map<Integer, Integer> solve) {
@@ -126,4 +124,6 @@ public class BattleGameService {
         }
         return correctAnswerCount;
     }
+
+
 }
