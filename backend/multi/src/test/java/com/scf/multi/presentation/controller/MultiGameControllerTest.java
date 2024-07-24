@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -177,7 +178,14 @@ class MultiGameControllerTest {
         // Given
         String roomId = "abc-def";
         Long userId = 1L;
-        List<Problem> problems = List.of(problem);
+        ProblemInfo problemInfo = ProblemInfo.builder()
+            .problemId(this.problem.getProblemId())
+            .type(this.problem.getType())
+            .category(this.problem.getCategory())
+            .content(this.problem.getContent())
+            .title(this.problem.getTitle())
+            .build();
+        List<ProblemInfo> problems = List.of(problemInfo);
 
         when(multiGameService.startGame(roomId, userId)).thenReturn(problems);
 

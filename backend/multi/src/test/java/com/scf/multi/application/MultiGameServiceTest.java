@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Solved;
@@ -254,10 +255,18 @@ class MultiGameServiceTest {
         when(problemService.getProblems()).thenReturn(problems);
 
         // When
-        List<Problem> startedProblems = multiGameService.startGame("abc-def", 1L);
+        List<ProblemInfo> startedProblems = multiGameService.startGame("abc-def", 1L);
 
         // Then
-        assertThat(startedProblems).isEqualTo(problems);
+        assertThat(startedProblems).isEqualTo(problems.stream()
+            .map(problem -> ProblemInfo.builder()
+                .problemId(problem.getProblemId())
+                .type(problem.getType())
+                .title(problem.getTitle())
+                .category(problem.getCategory())
+                .content(problem.getContent())
+                .build())
+            .toList());
         assertThat(gameRoom.getProblems()).isEqualTo(problems);
         assertThat(gameRoom.getIsStart()).isTrue();
     }

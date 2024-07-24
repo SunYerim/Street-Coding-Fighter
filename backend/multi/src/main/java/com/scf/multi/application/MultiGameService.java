@@ -1,8 +1,9 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.user.Player;
-import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
@@ -126,7 +127,7 @@ public class MultiGameService {
         return 0;
     }
 
-    public List<Problem> startGame(String roomId, Long userId) {
+    public List<ProblemInfo> startGame(String roomId, Long userId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
@@ -142,7 +143,16 @@ public class MultiGameService {
 
         room.gameStart(problems, userId);
 
-        return problems;
+        // problem -> problem DTO
+       return problems.stream()
+            .map(problem -> ProblemInfo.builder()
+                .problemId(problem.getProblemId())
+                .type(problem.getType())
+                .title(problem.getTitle())
+                .category(problem.getCategory())
+                .content(problem.getContent())
+                .build())
+            .toList();
     }
 
     private int calculateScore(int submitTime) { // TODO: 협의 후 수정
