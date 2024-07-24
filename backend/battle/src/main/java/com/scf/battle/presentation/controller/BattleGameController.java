@@ -38,19 +38,21 @@ public class BattleGameController {
     }
 
     @PostMapping("/room/{roomId}")
-    public ResponseEntity<?> joinRoom(@PathVariable String roomId, @RequestBody JoinRoomDTO joinRoomDto) {
+    public ResponseEntity<?> joinRoom(@PathVariable String roomId,
+        @RequestBody JoinRoomDTO joinRoomDto) { // TODO : userId requestHeader로 받도록 수정
         battleGameService.joinRoom(roomId, joinRoomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/room")
-    public ResponseEntity<?> createRoom(@RequestHeader Long userId, @RequestBody CreateRoomDTO createRoomDto){
+    public ResponseEntity<?> createRoom(@RequestHeader Long userId,
+        @RequestBody CreateRoomDTO createRoomDto) {
         String roomId = battleGameService.createRoom(userId, createRoomDto);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}/start")
-    public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable String roomId){
+    public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable String roomId) {
         List<Problem> problems = battleGameService.startGame(userId, roomId);
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }
