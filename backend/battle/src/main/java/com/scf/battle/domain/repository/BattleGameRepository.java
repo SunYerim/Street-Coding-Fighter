@@ -11,13 +11,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BattleGameRepository {
 
-    private final Map<String, BattleGameRoom> gameRooms = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, BattleGameRoom> gameRooms = Collections.synchronizedMap(
+        new HashMap<>());
 
     public List<BattleGameRoom> findAllRooms() {
         return gameRooms.values().stream().toList();
     }
 
-    public BattleGameRoom findById(String roomId){
+    public BattleGameRoom findById(String roomId) {
         return gameRooms.get(roomId);
     }
 
