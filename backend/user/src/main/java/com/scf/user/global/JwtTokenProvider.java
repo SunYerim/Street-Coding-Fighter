@@ -1,6 +1,7 @@
 package com.scf.user.global;
 
 
+import com.scf.user.application.service.RedisService;
 import com.scf.user.application.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,14 +42,16 @@ public class JwtTokenProvider {
 
     private static final String AUTHORITY_KEY = "auth";
     private final UserService userService;
+    private final RedisService redisService;
 
     private Key getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     // accessToken 생성
-    public String generateAccessToken(Authentication authentication, Long id) {
-        String authority = authentication.getAuthorities().toString();
+    public String generateAccessToken(Long id) {
+//        String authority = authentication.getAuthorities().toString();
+        String authority = "USER";
         String name = userService.getName(id);
         long now = new Date().getTime();
 
@@ -66,11 +69,16 @@ public class JwtTokenProvider {
     }
 
 
+
     // refreshToken 생성
-    public String createRefreshToken() {
+    public String createRefreshToken(Long id) {
+//        String authority = authentication.getAuthorities().toString();
         long now = new Date().getTime();
 
         String refreshToken = Jwts.builder()
+            .setSubject(id.toString())
+            .claim(AUTHORITY_KEY, AUTHORITY_KEY)
+            .claim("id", id)
             .setIssuedAt(new Date(now))
             .setExpiration(new Date(now + refreshTokenExpiry))
             .signWith(getSecretKey(), SignatureAlgorithm.HS256)
@@ -78,6 +86,7 @@ public class JwtTokenProvider {
 
         return refreshToken;
     }
+
 
     // JWT 토큰에서 사용자 정보를 추출하여 Authentication 객체를 생성
     public Authentication getAuthentication(String token) {
@@ -100,10 +109,6 @@ public class JwtTokenProvider {
     }
 
 
-
-
-
-
     // HTTP 요청에서 JWT 토큰을 추출
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -115,6 +120,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰의 유효성을 검증
     public boolean validateToken(String token) {
+
         try {
             Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
@@ -148,13 +154,15 @@ public class JwtTokenProvider {
     }
 
 //    // JWT에서 memberId 추출
-//    public String extractMemberId(String token) {
-//        Claims claims = parseClaims(token);
-//        if (claims == null || claims.getSubject() == null) {
-//            throw new IllegalArgumentException("Invalid token or subject is missing");
-//        }
-//        return claims.getSubject();
-//    }
+    public String extractMemberId(String token) {
+        Claims claims = parseClaims(token);
+        if (claims == null || claims.getSubject() == null) {
+            throw new IllegalArgumentException("Invalid token or subject is missing");
+        }
+        return claims.getSubject();
+    }
+
+
 
 
 }

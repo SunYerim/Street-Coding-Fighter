@@ -11,6 +11,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper; // Jackson ObjectMapper를 사용하여 JSON 파싱
     private final RedisService redisService;
     private final MemberDetailService memberDetailService;
+    private final JwtUtil jwtUtil;
 
 
     @Override
@@ -70,11 +73,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         long memberId = user.getId();
 
         // 토큰을 생성하고 발급
-        String accessToken = jwtTokenProvider.generateAccessToken(authResult, memberId);
-        String refreshToken = jwtTokenProvider.createRefreshToken();
+        String accessToken = jwtTokenProvider.generateAccessToken(memberId);
+        String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(createCookie("refresh", refreshToken));
+        response.addCookie(jwtUtil.createCookie("refresh", refreshToken));
 
         // Redis에 Refresh Token 저장 (24시간 유효 시간 설정)
         Duration expiration = Duration.ofHours(24);
@@ -90,14 +93,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     }
 
-    private Cookie createCookie(String key, String value) {
 
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24 * 60 * 60); // 24시간
-        //cookie.setSecure(true);
-        //cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
 }
