@@ -5,10 +5,9 @@ import lombok.Data;
 
 @Builder
 @Data
-public class JoinRoomDTO {
+public class FightDTO {
 
     private Long userId;
-    private String username;
-    private String roomPassword;
-
+    private Boolean isAttack;
+    private Integer power;
 }
