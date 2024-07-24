@@ -1,9 +1,9 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.user.Player;
-import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -61,7 +61,9 @@ public class MultiGameController {
 
     @PostMapping("/game/{roomId}/start")
     public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long userId) {
-        List<Problem> problems = multiGameService.startGame(roomId, userId);
+
+        List<ProblemInfo> problems = multiGameService.startGame(roomId, userId);
+
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }
 }
