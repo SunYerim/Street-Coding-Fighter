@@ -10,8 +10,7 @@ import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
 import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
 import SingleMain from "./components/single/SingleMain.jsx";
 import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
-import RankingPage from "./components/sanghyeon/pages/RankingPage.jsx";
-
+import Ranking from "./components/ranking/Ranking.jsx"
 function App() {
   return (
     <>

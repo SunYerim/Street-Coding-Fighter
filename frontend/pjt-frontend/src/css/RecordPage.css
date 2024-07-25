@@ -1,47 +1,73 @@
-#outer-container {
+.outer-container {
+  height: 100vh;
+}
+
+.record-outer-container {
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
 }
 
-#record-container {
+.record-container {
   display: flex;
-  /* flex-wrap: wrap; */
   flex-direction: column;
-  padding: 30px;
-  background-color: rgba(27, 26, 85, 0.8);
-  width: 70vw;
+  background-color: rgba(27, 26, 85, 0.7);
+  width: 80vw;
+  max-width: 1200px;
   border-radius: 20px;
-  height: 65vh;
-  z-index: 1;
+  height: 70vh;
+  margin: 50px;
+  padding: 30px;
 }
 
-#records {
-  display: flex;
-  /* flex-wrap: wrap; */
-  flex-direction: column;
-  background-color: rgba(27, 26, 85, 0.8);
-}
-
-#records h4 {
+.record-title {
   margin: 0;
-}
-
-#records hr {
-  margin: 10px 0;
+  padding-left: 40px;
   color: white;
+  letter-spacing: 2px;
 }
 
-#record {
-  background-color: #fff;
-  color: black;
-  font-weight: bold;
+.record-container hr {
+  width: 100%;
   margin: 10px;
-  padding: 10px;
+  border: 1px solid white;
+}
+
+.record-inner-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(27, 26, 85, 0.7);
+  width: 100%;
+  border-radius: 20px;
+  height: 100%;
+}
+
+.record-inner-title {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 40px;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+
+.record-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.record {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 40px;
+  margin: 15px;
+  color: black;
+  background-color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
 }

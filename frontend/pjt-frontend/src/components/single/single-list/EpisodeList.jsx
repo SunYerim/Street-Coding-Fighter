@@ -18,7 +18,7 @@ const courses = [
   { id: 11, content_type: '알고리즘', title: '정렬' },
 ];
 
-const completed = [true, true, true, true, false, false, false, false, false, false, false, false];
+const completed = [true, true, true, true, true, true, true, false, false, false, false, false];
 let nIdx = 0;
 completed.forEach((e, i) => {
   if (e & !completed[i + 1]) {
@@ -36,7 +36,6 @@ export default function EpisodeList({ rownum }) {
             {courses.slice(rownum * r, rownum * r + rownum).map((e, index, array) => (
               <React.Fragment key={e.id}>
                 <S.CheckPoint key={`checkpoint-${e.id}`} $completed={completed[e.id]} $isNext={e.id===nextIndex}>
-                  {nextIndex}
                   {e.id + 1}. {e.title}
                   {index === array.length - 1 && r < 3 ? (
                     <S.VerticalPath key={`verticalpath-${e.id}`} $completed={completed[3 * (r + 1)]}></S.VerticalPath>
