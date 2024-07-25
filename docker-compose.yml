@@ -2,10 +2,6 @@ version: '3.8'
 
 services:
   service_a:
-    build:
-      context: ./user
-      dockerfile: Dockerfile
-
     image: zlxldgus123/test:latest
     container_name: service_a
     ports:
