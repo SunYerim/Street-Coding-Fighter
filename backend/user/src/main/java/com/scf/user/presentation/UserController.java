@@ -52,8 +52,8 @@ public class UserController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping
-    public ResponseEntity<?> quitUser(@RequestHeader("memberId") Long memberId) {
+    @DeleteMapping("/quit/{memberId}")
+    public ResponseEntity<?> quitUser(@PathVariable ("memberId") Long memberId) {
         boolean flag = userService.quitMember(memberId);
 
         if (flag) {
@@ -65,8 +65,8 @@ public class UserController {
     }
 
     // 로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("memberId") Long memberId) {
+    @PostMapping("/logout/{memberId}")
+    public ResponseEntity<?> logout(@PathVariable ("memberId") Long memberId) {
         redisService.deleteValue(String.valueOf(memberId)); // Redis에서 삭제
         return ResponseEntity.ok("로그아웃이 성공적으로 되었습니다.");
     }

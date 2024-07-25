@@ -17,6 +17,7 @@ import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
 
         // User 엔티티를 UserInfoResponseDto로 변환
         return new UserInfoResponseDto(
+            user.getUserId(),
             user.getName(),
             user.getSchoolName(),
             user.getBirth()
@@ -100,6 +102,7 @@ public class UserServiceImpl implements UserService {
         return refreshToken;
     }
 
+
     @Override
     // token 재발급
     public TokenDto refreshToken(String refresh) {
@@ -107,31 +110,31 @@ public class UserServiceImpl implements UserService {
         String memberId = jwtTokenProvider.extractMemberId(refresh);
         log.info("memberId-------- " + memberId);
         String storedRefreshToken = redisService.getValue(memberId);
-        log.info("memberIweafsafdd-------- " + storedRefreshToken);
+        log.info("Stored Refresh Token-------- " + storedRefreshToken);
 
         // 리프레시 토큰이 유효한지 확인
         if (storedRefreshToken == null || !storedRefreshToken.equals(refresh)) {
-            log.debug("정보입니다 ----- " + storedRefreshToken);
-            throw new RuntimeException("Invalid refresh token. " + storedRefreshToken + "~~~~+");
+            log.debug("Invalid refresh token: " + storedRefreshToken);
+            throw new RuntimeException("Invalid refresh token.");
         }
 
         // 토큰 유효성 검사
         jwtTokenProvider.validateToken(refresh);
 
-        // 토큰을 새로 생성하고 발급
-        String newAccesstoken = jwtTokenProvider.generateAccessToken(Long.valueOf(memberId));
-        String newRefreshtoken = jwtTokenProvider.createRefreshToken(Long.valueOf(memberId));
+        // 새로운 액세스 토큰 생성
+        String newAccessToken = jwtTokenProvider.generateAccessToken(Long.valueOf(memberId));
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(Long.valueOf(memberId));
 
-        // redis에 새로운 리프레시 토큰 저장
+        // Redis에 새로운 리프레시 토큰 저장
         Duration expiration = Duration.ofHours(24);
-        redisService.setValues(memberId, newRefreshtoken, expiration);
+        redisService.setValues(memberId, newRefreshToken, expiration);
 
         // 클라이언트에 반환할 TokenDto
-        TokenDto newtoken = new TokenDto();
-        newtoken.setAccessToken(newAccesstoken);
-        newtoken.setRefreshToken(newRefreshtoken);
-        // 새로운 액세스 토큰과 refreshToken 생성
-        return newtoken;
+        TokenDto newToken = new TokenDto();
+        newToken.setAccessToken(newAccessToken);
+        newToken.setRefreshToken(newRefreshToken);
+
+        return newToken; // 새로운 액세스 토큰과 refreshToken 반환
     }
 
 

@@ -13,6 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class UserInfoResponseDto {
 
+    private String userId;
     private String name;
     private String schoolName;
     private LocalDate birth;
