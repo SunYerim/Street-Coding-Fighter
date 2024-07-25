@@ -14,6 +14,8 @@ function SignUpPage() {
   const birth = useRef(null);
   const navigate = useNavigate();
 
+  const idCheckComplete = useRef(false);
+
   const [errorMessage, setErrorMessage] =
     useState("비밀번호가 일치하지 않습니다.");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -26,34 +28,21 @@ function SignUpPage() {
     setModalIsOpen(false);
   };
 
-  const idValidation = function (userId) {
-    axios({
-      method: "GET",
-      url: `/user/validate/${userId}`,
-      data: {
-        userId,
-      },
-    })
-      .then((response) => {
-        if (response.data) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        return false;
-      });
-  };
-
   const signUp = async function () {
-    if (!isValid(password1.current.value, password2.current.value)) {
+    if (!idCheckComplete.current) {
+      setErrorMessage("아이디 중복 확인을 해주세요.");
+      openModal();
+      return;
+    }
+
+    if (password1.current.value !== password2.current.value) {
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
       openModal();
     } else {
       try {
         const res = await axios({
           method: "POST",
-          url: "/user/join",
+          url: "http://localhost:8080/user/join",
           data: {
             userId: userId.current.value,
             name: name.current.value,
@@ -64,8 +53,30 @@ function SignUpPage() {
         });
         navigate("/login");
       } catch (error) {
-        alert("회원가입에 실패했습니다.");
+        setErrorMessage("회원가입에 실패했습니다.");
+        openModal();
       }
+    }
+  };
+
+  const idCheck = async () => {
+    try {
+      const idCheckRes = await axios({
+        method: "GET",
+        url: `http://localhost:8080/user/validate/${userId.current.value}`,
+      });
+
+      if (idCheckRes.status === 200) {
+        setErrorMessage("사용 가능한 아이디입니다.");
+        openModal();
+        idCheckComplete.current = true;
+      } else {
+        setErrorMessage("이미 사용중인 아이디입니다.");
+        openModal();
+      }
+    } catch (error) {
+      setErrorMessage("아이디 중복 확인에 실패했습니다.");
+      openModal();
     }
   };
 
@@ -74,7 +85,12 @@ function SignUpPage() {
       <div className="signup-outer-container">
         <h1 className="signup-title">SIGN UP</h1>
         <div className="signup-container">
-          <input type="text" ref={userId} placeholder="아이디" />
+          <div className="signup-userId">
+            <input type="text" ref={userId} placeholder="아이디" />
+            <div onClick={idCheck} className="duplicate-chk">
+              중복 확인
+            </div>
+          </div>
           <input type="text" ref={name} placeholder="닉네임" />
           <input type="password" ref={password1} placeholder="비밀번호" />
           <input type="password" ref={password2} placeholder="비밀번호 확인" />
