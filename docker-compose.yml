@@ -13,7 +13,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb_db:3306/scf_db?characterEncoding=utf8mb4
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=ed9658pi
+      - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE=UTC
       - SPRING_JPA_SHOW_SQL=true
@@ -33,10 +33,10 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=ed9658pi
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=scf_db
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=ed9658pi
+      - MYSQL_PASSWORD=root
 
     networks:
       - deploy_msa_network
