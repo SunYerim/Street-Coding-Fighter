@@ -84,7 +84,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             room.nextRound();
 
-            if (room.getRound() == 10) { // 마지막 라운드이면
+            if (room.getRound().equals(room.getMaxRound())) { // 마지막 라운드이면
                 userService.saveUserSolveds(solveds);
             }
 

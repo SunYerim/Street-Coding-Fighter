@@ -26,17 +26,19 @@ public class MultiGameRoom {
     private final List<Problem> problems = new ArrayList<>();
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>());
+    private final Integer maxRound;
     private Boolean isStart;
     private Integer round;
 
     @Builder
-    public MultiGameRoom(String roomId, Long hostId, String title, String password, Integer maxPlayer) {
+    public MultiGameRoom(String roomId, Long hostId, String title, String password, Integer maxPlayer, Integer maxRound) {
         this.roomId = roomId;
         this.hostId = hostId;
         this.title = title;
         this.password = password;
         this.maxPlayer = maxPlayer;
 
+        this.maxRound = maxRound;
         this.isStart = false;
         this.round = 0;
     }

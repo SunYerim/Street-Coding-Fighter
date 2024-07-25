@@ -23,4 +23,9 @@ public class CreateRoomDTO {
     @Min(value = 2, message = "최대 인원수는 최소 2명 이상이어야 합니다.")
     @Max(value = 100, message = "최대 인원수는 최대 100명 이하여야 합니다.")
     private Integer maxPlayer;
+
+    @NotNull(message = "게임을 진행할 라운드를 입력해주세요.")
+    @Min(value = 5, message = "최소 5라운드 이상을 선택해야 합니다.")
+    @Max(value = 20, message = "최대 20라운드까지 가능합니다.")
+    private Integer maxRound;
 }

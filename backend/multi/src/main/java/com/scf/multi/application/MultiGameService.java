@@ -47,6 +47,7 @@ public class MultiGameService {
             .title(createRoomDTO.getTitle())
             .maxPlayer(createRoomDTO.getMaxPlayer())
             .password(createRoomDTO.getPassword())
+            .maxRound(createRoomDTO.getMaxRound())
             .build();
 
         multiGameRepository.addRoom(room);
