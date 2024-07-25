@@ -26,7 +26,7 @@ function TitlePage() {
           onClick={() => navigate("/login")}
           disabled={!isVisible} // 비활성화 상태 추가
         >
-          Start!
+          Start
         </button>
       </motion.div>
     </>
