@@ -14,4 +14,4 @@ COPY build/libs/user-0.0.1-SNAPSHOT-plain.jar /app/user.jar
 
 # 운영 및 개발에서 사용되는 환경 설정을 분리
 # -Duser.timezone=Asia/Seoul JVM 옵션을 사용하여 애플리케이션 수준에서도 타임존을 설정
-ENTRYPOINT ["java", "-jar", "-Duser.timezone=Asia/Seoul", "/app/user.jar"]
+ENTRYPOINT ["java", "-jar", "/app/user.jar"]
