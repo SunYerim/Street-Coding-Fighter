@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import "../../../css/SignUpPage.css";
-import register from "../apis/register.js";
 import Modal from "react-modal";
 import warningSign from "../../../assets/warningSign.png";
 import { useNavigate } from "react-router-dom";
@@ -47,39 +46,25 @@ function SignUpPage() {
       });
   };
 
-  const isValid = function (pw1, pw2) {
-    if (pw1 !== pw2) {
-      setErrorMessage("비밀번호가 일치하지 않습니다.");
-      return false;
-    } else {
-      if (idValidation(userId.current.value)) {
-        return true;
-      } else {
-        setErrorMessage("이미 사용중인 아이디입니다.");
-        return false;
-      }
-    }
-  };
-
   const signUp = async function () {
     if (!isValid(password1.current.value, password2.current.value)) {
       openModal();
     } else {
       try {
-        const res = await register(
-          userId.current.value,
-          name.current.value,
-          password1.current.value,
-          schoolName.current.value,
-          birth.current.value
-        );
-        if (res) {
-          navigate("/");
-        } else {
-          alert("회원가입에 실패했습니다.");
-        }
+        const res = await axios({
+          method: "POST",
+          url: "/user/join",
+          data: {
+            userId: userId.current.value,
+            name: name.current.value,
+            password: password1.current.value,
+            schoolName: schoolName.current.value,
+            birth: birth.current.value,
+          },
+        });
+        navigate("/login");
       } catch (error) {
-        alert(error);
+        alert("회원가입에 실패했습니다.");
       }
     }
   };

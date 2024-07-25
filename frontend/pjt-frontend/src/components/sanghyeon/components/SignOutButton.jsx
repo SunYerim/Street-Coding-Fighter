@@ -12,7 +12,7 @@ const SignOutButton = function () {
         method: "DELETE",
         url: `/user/${userId}`,
         headers: {
-          Authorization: `Bearer accessToken`,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
         .then((response) => {
