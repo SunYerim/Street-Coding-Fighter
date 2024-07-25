@@ -4,10 +4,13 @@ import Modal from "react-modal";
 import "../../../css/Setting.css";
 import settingIcon from "../../../assets/settingIcon.png";
 import close from "../../../assets/close.png";
+import axios from "axios";
+import store from "../../../store/store.js";
 
 Modal.setAppElement("#root");
 
 const Setting = () => {
+  const { accessToken, setAccessToken } = store();
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -17,6 +20,23 @@ const Setting = () => {
 
   const closeModal = () => {
     setModalIsOpen(false);
+  };
+
+  const logout = async () => {
+    try {
+      const logoutRes = await axios({
+        method: "POST",
+        url: "http://localhost:8080/user/logout",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setAccessToken(null);
+      alert("로그아웃에 성공했습니다.");
+      navigate("/login");
+    } catch (error) {
+      alert("로그아웃에 실패했습니다.");
+    }
   };
 
   return (
@@ -51,7 +71,9 @@ const Setting = () => {
             <p className="setting" onClick={() => navigate("/")}>
               Back to Title
             </p>
-            <p className="setting">Logout</p>
+            <p onClick={logout} className="setting">
+              Logout
+            </p>
           </div>
         </div>
       </Modal>

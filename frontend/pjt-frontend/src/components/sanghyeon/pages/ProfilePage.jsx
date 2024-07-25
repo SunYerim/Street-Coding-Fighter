@@ -3,20 +3,34 @@ import Header from "../components/Header";
 import pinia from "../../../assets/characters/pinia.svg";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import getProfile from "../apis/getProfile";
-import logOut from "../apis/logOut";
 import store from "../../../store/store.js";
 import SignOutButton from "../components/SignOutButton.jsx";
+import axios from "axios";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { userId } = store();
+  const { userId, accessToken } = store();
+
+  const getProfile = async () => {
+    try {
+      const profileRes = await axios({
+        method: "GET",
+        url: `http://localhost:8080/profile/${userId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log(profileRes);
+    } catch (error) {
+      alert("Failed to fetch profile", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profile = await getProfile(userId);
-        console.log(profile);
       } catch (error) {
         alert("Failed to fetch profile", error);
       }
@@ -42,7 +56,9 @@ function ProfilePage() {
                   <h3>Character : Pinia</h3>
                   <h3>School : SSAFY</h3>
                   <div className="profile-status-button">
-                    <button onClick={logOut}>비밀번호 수정</button>
+                    <button onClick={() => alert("미구현")}>
+                      비밀번호 수정
+                    </button>
                     <SignOutButton />
                   </div>
                 </div>

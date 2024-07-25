@@ -3,14 +3,14 @@ import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 
 const SignOutButton = function () {
-  const { userId } = store();
+  const { userId, accessToken } = store();
   const navigate = useNavigate();
 
   const signOut = function () {
     try {
       axios({
         method: "DELETE",
-        url: `/user/${userId}`,
+        url: `http://localhost:8080/user/${userId}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -29,7 +29,7 @@ const SignOutButton = function () {
 
   return (
     <>
-      <button onClick={() => signOut()}>회원탈퇴</button>
+      <button onClick={signOut}>회원탈퇴</button>
     </>
   );
 };

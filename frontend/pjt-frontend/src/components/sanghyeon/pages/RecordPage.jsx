@@ -5,26 +5,28 @@ import "../../../css/RecordPage.css";
 import store from "../../../store/store.js";
 
 function RecordPage() {
-  const { userId } = store();
+  const { userId, accessToken } = store();
 
-  const getRecord = function () {
-    axios({
-      method: "GET",
-      url: `/profile/record/${userId}`,
-    })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        alert("전적 조회에 실패하였습니다.");
+  const getRecord = async function () {
+    try {
+      const recordRes = await axios({
+        method: "GET",
+        url: `http://localhost:8080/profile/record/${userId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
+
+      console.log(recordRes);
+    } catch (error) {
+      alert("Failed to fetch record", error);
+    }
   };
 
   useEffect(() => {
     const fetchRecord = async function () {
       try {
-        const record = await getRecord();
-        console.log(record);
+        getRecord();
       } catch (error) {
         console.error("Failed to fetch record", error);
       }

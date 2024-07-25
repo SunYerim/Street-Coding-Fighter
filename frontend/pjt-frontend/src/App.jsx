@@ -10,7 +10,7 @@ import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
 import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
 import SingleMain from "./components/single/SingleMain.jsx";
 import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
-import RankingPage from "./components/sanghyeon/pages/RankingPage.jsx";
+import Ranking from "./components/ranking/Ranking.jsx";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<TitlePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/ranking" element={<Ranking />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/record" element={<RecordPage />} />

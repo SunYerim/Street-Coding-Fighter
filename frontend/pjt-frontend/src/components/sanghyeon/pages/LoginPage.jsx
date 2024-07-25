@@ -6,7 +6,7 @@ import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  const { setUserId, setName } = store();
+  const { accessToken, setAccessToken } = store();
   const userId = useRef(null);
   const password = useRef(null);
   const navigate = useNavigate();
@@ -21,9 +21,18 @@ function LoginPage() {
           password: password.current.value,
         },
       });
-      const accessToken = res.headers.Authorization;
-      console.log(accessToken);
-      navigate("/main");
+
+      const authorizationHeader = res.headers["authorization"];
+      const accessToken = authorizationHeader
+        ? authorizationHeader.replace(/^Bearer\s+/i, "")
+        : null;
+
+      if (accessToken) {
+        setAccessToken(accessToken);
+        navigate("/main");
+      } else {
+        alert("로그인 실패");
+      }
     } catch (error) {
       alert("로그인 실패");
     }
