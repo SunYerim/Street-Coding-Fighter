@@ -3,7 +3,7 @@ package com.scf.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = UserApplicationTests.class)
 class UserApplicationTests {
 
 	@Test
