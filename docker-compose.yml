@@ -38,13 +38,13 @@ services:
       LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
-  ports:
-    - "8080:8080"
-  networks:
-    - network
+    ports:
+      - "8080:8080"
+    networks:
+      - network
 
 networks:
   network:
 
 volumes:
-  db_data
+  db_data:
