@@ -2,6 +2,10 @@ version: '3.8'
 
 services:
   service_a:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+
     image: zlxldgus123/test:latest
     container_name: service_a
     ports:
@@ -9,7 +13,7 @@ services:
     depends_on:
       - mariadb_db
     networks:
-      - deploy_msa_network
+      - network
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb_db:3306/scf_db?characterEncoding=utf8mb4
       - SPRING_DATASOURCE_USERNAME=user
@@ -32,18 +36,22 @@ services:
     container_name: mariadb_db
     volumes:
       - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=scf_db
       - MYSQL_USER=user
       - MYSQL_PASSWORD=1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
 
     networks:
-      - deploy_msa_network
+      - network
 
 networks:
-  deploy_msa_network:
-    driver: bridge
+  network:
 
 volumes:
   db_data:
