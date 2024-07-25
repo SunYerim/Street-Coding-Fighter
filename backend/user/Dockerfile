@@ -13,7 +13,6 @@ RUN sed -i 's/\r$//' gradlew
 RUN chmod +x ./gradlew
 RUN ./gradlew clean build --stacktrace
 
-ENV JAR_PATH=/build/libs
-RUN mv ${JAR_PATH}/*.jar /app/app.jar
+RUN mv build/libs/user-0.0.1-SNAPSHOT-plain.jar /app/app.jar
 
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "app.jar"]
