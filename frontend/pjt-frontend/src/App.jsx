@@ -19,14 +19,15 @@ function App() {
           <Route path="/" element={<TitlePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/ranking" element={<RankingPage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/record" element={<RecordPage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/solved" element={<SolvedPage />} />
-          <Route path="/single" element={<SingleMain />} />
-          <Route path="/single/main" element={<SinglePlay />} />
-          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/single-main" element={<SingleMain />} />
+          <Route path="/single-play" element={<SinglePlay />} />
+          <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
     </>

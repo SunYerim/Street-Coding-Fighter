@@ -16,14 +16,28 @@
   justify-content: center;
   align-items: center;
   height: 70vh;
+  user-select: none;
 }
 
-.button-container {
+.start-button-container {
   display: flex;
   justify-content: center;
+  pointer-events: none;
+}
+
+.start-button-container.visible {
+  pointer-events: auto;
 }
 
 .start-button {
-  position: absolute;
-  bottom: 20%;
+  font-family: "Galmuri11-Bold";
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #1b1a55;
+  color: white;
+  user-select: none;
+  cursor: pointer;
 }
