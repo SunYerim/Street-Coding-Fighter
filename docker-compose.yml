@@ -3,7 +3,6 @@ version: '3.8'
 services:
   service_a:
     build:
-      context: ./user/
       dockerfile: Dockerfile
 
     image: zlxldgus123/test:latest
