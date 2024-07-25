@@ -26,8 +26,6 @@ services:
       - LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER=debug
       - SERVER_ERROR_INCLUDE_MESSAGE=always
       - SERVER_ERROR_INCLUDE_BINDING_ERRORS=always
-      - SPRING_PROFILES_ACTIVE=dev
-
 
   mariadb_db:
     image: mariadb:latest
@@ -39,6 +37,7 @@ services:
       - MYSQL_DATABASE=scf_db
       - MYSQL_USER=root
       - MYSQL_PASSWORD=ed9658pi
+
     networks:
       - deploy_msa_network
 
