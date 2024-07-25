@@ -11,6 +11,7 @@
   cursor: pointer;
   background-color: #007bff;
   color: white;
+  overflow: hidden;
 }
 
 .game-button:hover {
@@ -34,8 +35,29 @@
   color:white;
   font-size: 40px;
   text-align: center;
+  overflow: hidden;
 }
 
 .game-start-button:hover {
+  background-color: #0056b3;
+}
+
+.password-button {
+  height: 7vh;
+  width: 20%;
+  margin: 10px 0px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  overflow: hidden;
+}
+
+.password-button:hover {
   background-color: #0056b3;
 }

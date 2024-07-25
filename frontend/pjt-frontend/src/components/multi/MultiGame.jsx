@@ -1,9 +1,10 @@
 import "../../index.css";
 import "../../css/GameMain.css";
 import Button from "./Button.jsx";
+import Timer from "./Timer.jsx";
 import InputField from "./InputField.jsx";
 import MessageContainer from "./MessageContainer.jsx";
-import socket from "./server.js"
+// import socket from "./server.js"
 import { useState, useEffect,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -30,12 +31,12 @@ export default function MultiGame() {
     setStart(1);
   };
 
-  useEffect(() => {
-    socket.on("message", (message) => {
-      setMessageList((prevState) => prevState.concat(message));
-    });
-    askUserName();
-  }, []);
+  // useEffect(() => {
+  //   socket.on("message", (message) => {
+  //     setMessageList((prevState) => prevState.concat(message));
+  //   });
+  //   askUserName();
+  // }, []);
 
 
   const askUserName = () => {
@@ -64,7 +65,9 @@ export default function MultiGame() {
       <div className="game-container">
         <div className="game-main">
           <div className="game-header">
+            <Timer />
             <h2>Waiting for start. . .</h2>
+            <p>~Round~</p>
           </div>
           <div className="game-body">
             <div className="rank-table">
