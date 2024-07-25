@@ -20,26 +20,3 @@ logging:
     org:
       hibernate:
         SQL: debug
-
----
-spring:
-  profiles: dev
-  datasource:
-    url: ${SPRING_DATASOURCE_URL_DEV}
-    username: ${SPRING_DATASOURCE_USERNAME_DEV}
-    password: ${SPRING_DATASOURCE_PASSWORD_DEV}
-    driver-class-name: org.mariadb.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true  # Shows SQL statements in the console
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug
