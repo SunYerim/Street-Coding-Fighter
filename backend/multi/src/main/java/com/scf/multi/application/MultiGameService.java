@@ -89,7 +89,7 @@ public class MultiGameService {
         room.remove(userId);
     }
 
-    public int markSolution(String roomId, Long userId, Solved solved) {
+    public int markSolution(String roomId, Player player, Solved solved) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
         List<Problem> problems = room.getProblems();
@@ -100,27 +100,15 @@ public class MultiGameService {
         }
 
         // 문제의 정답 가져오기
+        Map<Integer, Integer> solve = solved.getSolve();
         Map<Integer, Integer> answer = problem.getAnswer();
 
         // 점수를 계산할 변수
-        int correctAnswerCount = 0;
+        boolean isCorrect = compareWith(solve, answer);
 
-        // 제출된 답안과 문제의 정답을 비교
-        Map<Integer, Integer> solve = solved.getSolve();
-        for (Map.Entry<Integer, Integer> entry : solve.entrySet()) {
-            Integer blankNumber = entry.getKey(); // 빈칸 번호
-            Integer submittedOption = entry.getValue(); // 제출된 보기 번호
-
-            // 정답의 빈칸 번호에 해당하는 보기 번호와 비교
-            if (answer.containsKey(blankNumber) && answer.get(blankNumber)
-                .equals(submittedOption)) {
-                correctAnswerCount++;
-            }
-        }
-
-        if (correctAnswerCount > 0) {
-            int score = calculateScore(solved.getSubmitTime());
-            room.updateScore(userId, score);
+        if (isCorrect) {
+            int score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
+            room.updateScore(player.getUserId(), score);
             return score;
         }
 
@@ -143,8 +131,8 @@ public class MultiGameService {
 
         room.gameStart(problems, userId);
 
-        // problem -> problem DTO
-       return problems.stream()
+        // problem DTO -> problemInfo DTO
+        return problems.stream()
             .map(problem -> ProblemInfo.builder()
                 .problemId(problem.getProblemId())
                 .type(problem.getType())
@@ -155,23 +143,33 @@ public class MultiGameService {
             .toList();
     }
 
-    private int calculateScore(int submitTime) { // TODO: 협의 후 수정
+    private boolean compareWith(Map<Integer, Integer> solve, Map<Integer, Integer> answer) {
+
+        for (int blankNumber : answer.keySet()) {
+
+            if (!solve.containsKey(blankNumber)) {
+                return false;
+            }
+
+            int submitOption = solve.get(blankNumber);
+            int answerOption = answer.get(blankNumber);
+            if (submitOption != answerOption) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private int calculateScore(int streakCount, int submitTime) {
 
         if (submitTime > 30) {
             throw new BusinessException(submitTime, "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
 
-        if (submitTime < 3) {
-            return 500;
-        } else if (submitTime < 6) {
-            return 300;
-        } else if (submitTime < 9) {
-            return 200;
-        } else if (submitTime < 12) {
-            return 150;
-        } else if (submitTime < 15) {
-            return 130;
-        }
-        return 50;
+        int score = 1000 * (submitTime / 30);
+        score += (streakCount * 75);
+
+        return score;
     }
 }

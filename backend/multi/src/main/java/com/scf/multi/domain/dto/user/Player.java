@@ -10,4 +10,5 @@ public class Player {
     private Long userId;
     private String username;
     private Boolean isHost;
+    private Integer streakCount;
 }
