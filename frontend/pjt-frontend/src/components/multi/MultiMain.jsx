@@ -49,9 +49,6 @@ export default function MultiMain() {
             <div className="game-button">
               <Button text={"Create"} onClick={() => navigate("/multi-create")} />
             </div>
-            {/* <div className="game-button">
-              <Button text={"Multi"} />
-            </div> */}
           </div>
         </div>
       </div>

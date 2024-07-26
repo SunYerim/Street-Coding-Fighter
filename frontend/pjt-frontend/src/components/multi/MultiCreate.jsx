@@ -7,13 +7,18 @@ import { useNavigate } from "react-router-dom";
 export default function MultiCreate() {
   const navigate = useNavigate();
 
+    // 방만들기 함수 만들어야됨. (소켓? http?)
+    const createMultiRoom = (data) => {
+      
+    }
+
   return (
     <>
       <div className="container">
         <div className="create-container">
           <h1>Create Room [ Multi Mode ]</h1>
           <div className="pink-line"></div>
-          <div className="create-input">
+          <form className="create-input">
             <div className="create-box">
               <span>방 제목 : </span>
                 <input className="create-title" type="text" placeholder="Enter Room Title" maxLength={30} />
@@ -30,11 +35,11 @@ export default function MultiCreate() {
               <span>최대인원 : </span>
               <input className="create-problems" type="number" min="1" max="10" />
             </div>
-          </div>
-          <div className="create-button-container">
-            <button className="create-button">Create</button>
-            <button className="create-button" onClick={() => navigate("/multi")}>Cancle</button>
-          </div>
+            <div className="create-button-container">
+              <button className="create-button" onSubmit={createMultiRoom}>Create</button>
+              <button className="create-button" onClick={() => navigate("/multi")}>Cancle</button>
+            </div>
+          </form>
         </div>
       </div>
     </>

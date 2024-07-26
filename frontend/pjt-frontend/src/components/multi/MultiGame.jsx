@@ -1,11 +1,10 @@
 import "../../index.css";
 import "../../css/GameMain.css";
-import Button from "./Button.jsx";
-import Timer from "./Timer.jsx";
-import InputField from "./InputField.jsx";
-import MessageContainer from "./MessageContainer.jsx";
-// import socket from "./server.js"
-import { useState, useEffect,useRef } from "react";
+import Timer from "../game/Timer.jsx";
+import InputField from "../game/InputField.jsx";
+import MessageContainer from "../game/MessageContainer.jsx";
+// import socket from "../game/server.js"
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -17,13 +16,13 @@ export default function MultiGame() {
   const [messageList, setMessageList] = useState([]);
 
   const userList = [
-    { id: 1, name: "방장" },
-    { id: 2, name: "B", score: 100 },
-    { id: 3, name: "F", score: 90 },
-    { id: 4, name: "S", score: 80 },
-    { id: 5, name: "H", score: 70 },
-    { id: 6, name: "E", score: 60 },
-    { id: 7, name: "J", score: 30 },
+    { id: 1, rank: 2, name: "방장", score: 97 },
+    { id: 2, rank: 1, name: "B", score: 100 },
+    { id: 3, rank: 3, name: "F", score: 90 },
+    { id: 4, rank: 4, name: "S", score: 80 },
+    { id: 5, rank: 5, name: "H", score: 70 },
+    { id: 6, rank: 6, name: "E", score: 60 },
+    { id: 7, rank: 7, name: "J", score: 30 },
   ];
 
 
@@ -60,6 +59,7 @@ export default function MultiGame() {
     // setMessage('');
   };
 
+
   return (
     <>
       <div className="game-container">
@@ -71,13 +71,11 @@ export default function MultiGame() {
           </div>
           <div className="game-body">
             <div className="rank-table">
-              <div>
                 {
                   userList.map((user, i) => {
-                    return <userRank rank={user.id} name={user.name} score={user.score} key={i} />
+                    return <UserRank rank={user.rank} name={user.name} score={user.score} key={i} />
                   })
                 }
-              </div>
             </div>
               <div className="game-content">
                 {userList.length === 1 ? (
@@ -107,12 +105,15 @@ export default function MultiGame() {
   );
 }
 
-function userRank(props) {
+
+function UserRank(props) {
   return (
-    <div className="rank-item">
-      <span>{props.rank}</span>
-      <span>{props.name}</span>
-      <span>{props.score}</span>
-    </div>
+    <>
+      <div className="rank-items">
+        <h3>{props.rank}</h3>
+        <h3>{props.name}</h3>
+        <h4>{props.score}</h4>
+      </div>
+    </>
   );
 }
