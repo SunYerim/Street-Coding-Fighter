@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -68,10 +70,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 사용자 정보를 추가로 가져오는 로직
         User user = (User) memberDetailService.loadUserByUsername(userDetails.getUsername());
         long memberId = user.getId();
+        log.info("success   memberId: {}", memberId);
 
         // 토큰을 생성하고 발급
         String accessToken = jwtTokenProvider.generateAccessToken(memberId);
         String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
+        log.info("accessToken입니다: {}", accessToken);
+
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(jwtCookieUtil.createCookie("refresh", refreshToken));
@@ -79,6 +84,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // Redis에 Refresh Token 저장 (24시간 유효 시간 설정)
         Duration expiration = Duration.ofHours(24);
         redisService.setValues(String.valueOf(memberId), refreshToken, expiration);
+
+        // 응답 본문에 memberId와 accessToken을 포함
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 응답 본문에 포함할 데이터 생성
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("memberId", memberId);
+
+        // JSON 변환 및 응답 본문에 쓰기
+        String jsonResponse = objectMapper.writeValueAsString(responseBody);
+        response.getWriter().write(jsonResponse);
     }
 
     // 로그인을 실패했을시.

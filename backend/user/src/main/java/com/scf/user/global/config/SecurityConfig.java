@@ -7,6 +7,8 @@ import com.scf.user.infrastructure.security.JwtTokenProvider;
 import com.scf.user.infrastructure.security.JwtAuthenticationFilter;
 import com.scf.user.infrastructure.security.JwtCookieUtil;
 import com.scf.user.infrastructure.security.LoginFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,11 +51,29 @@ public class SecurityConfig {
         loginFilter.setFilterProcessesUrl("/user/login"); // 로그인 엔드포인트 설정.
 
         httpSecurity
+            .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+                @Override
+                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                    CorsConfiguration configuration = new CorsConfiguration();
+
+                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                    configuration.setAllowedMethods(Collections.singletonList("*"));
+                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+                    configuration.setMaxAge(3600L);
+
+                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                    return configuration;
+                }
+            })));
+        httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfigurationSource()))
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth
+            .authorizeHttpRequests(user -> user
                 .requestMatchers("/user/login", "/user/join", "/user/validate/**")
                 .permitAll()
                 .anyRequest().authenticated())
@@ -65,18 +85,4 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    /**
-     * 개발 환경용
-     */
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.setAllowCredentials(false);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 }

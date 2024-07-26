@@ -72,7 +72,7 @@ public class JwtTokenProvider {
 
         String refreshToken = Jwts.builder()
             .setSubject(id.toString())
-            .claim(AUTHORITY_KEY, AUTHORITY_KEY)
+            .claim(AUTHORITY_KEY, "USER")
             .claim("id", id)
             .setIssuedAt(new Date(now))
             .setExpiration(new Date(now + refreshTokenExpiry))
