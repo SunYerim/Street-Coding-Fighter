@@ -130,6 +130,7 @@ class MultiGameControllerTest {
             .title("New Room")
             .maxPlayer(4)
             .password("password")
+            .maxRound(5)
             .build();
 
         String generatedRoomId = "generated-room-id";

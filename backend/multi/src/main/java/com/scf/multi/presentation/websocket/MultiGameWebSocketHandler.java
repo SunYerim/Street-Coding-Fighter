@@ -73,7 +73,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             Solved solved = saveSolved(roomId, player.getUserId(), message.getContent());// 푼 문제 저장
 
-            int attainedScore = multiGameService.markSolution(roomId, player.getUserId(),
+            int attainedScore = multiGameService.markSolution(roomId, player,
                 solved); // 문제 채점
 
             session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
@@ -84,7 +84,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             room.nextRound();
 
-            if (room.getRound() == 10) { // 마지막 라운드이면 TODO: 한 게임 몇 라운드 할 것인지 협의
+            if (room.getRound().equals(room.getMaxRound())) { // 마지막 라운드이면
                 userService.saveUserSolveds(solveds);
             }
 

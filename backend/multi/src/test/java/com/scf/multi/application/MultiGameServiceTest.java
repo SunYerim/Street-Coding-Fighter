@@ -219,8 +219,10 @@ class MultiGameServiceTest {
 
         when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
 
-        gameRoom.add("1234", Player.builder().userId(1L).username("host").isHost(true).build());
-        gameRoom.add("1234", Player.builder().userId(2L).username("player").isHost(false).build());
+        Player player1 = Player.builder().userId(1L).username("host").isHost(true).streakCount(0).build();
+        Player player2 = Player.builder().userId(2L).username("player").isHost(false).streakCount(0).build();
+        gameRoom.add("1234", player1);
+        gameRoom.add("1234", player2);
         gameRoom.gameStart(List.of(problem), 1L);
 
         Solved solved = Solved.builder()
@@ -229,12 +231,13 @@ class MultiGameServiceTest {
             .build();
 
         // When
-        int score = multiGameService.markSolution("abc-def", 1L, solved);
+        int score = multiGameService.markSolution("abc-def", player1, solved);
+        int ans = 1000 * (solved.getSubmitTime() / 30) + (player1.getStreakCount() * 75);
 
         // Then
-        assertThat(score).isEqualTo(300);
+        assertThat(score).isEqualTo(ans);
         verify(multiGameRepository).findOneById("abc-def");
-        assertThat(gameRoom.getScoreBoard().get(1L)).isEqualTo(300);
+        assertThat(gameRoom.getScoreBoard().get(1L)).isEqualTo(ans);
     }
 
     @Test
@@ -277,24 +280,27 @@ class MultiGameServiceTest {
 
         // Given
         List<Problem> problems = List.of(
-            Problem.builder().answer(Map.of(1, 2)).build(),
-            Problem.builder().answer(Map.of(1, 3)).build()
+            Problem.builder().problemId(1L).answer(Map.of(1, 2, 2, 3)).build(),
+            Problem.builder().problemId(2L).answer(Map.of(2, 3)).build()
         );
 
 
-        gameRoom.add("1234", Player.builder().userId(1L).username("host").isHost(true).build());
-        gameRoom.add("1234", Player.builder().userId(2L).username("player").isHost(false).build());
+        Player player1 = Player.builder().userId(1L).username("host").isHost(true).streakCount(0).build();
+        Player player2 = Player.builder().userId(2L).username("player").isHost(false).streakCount(0).build();
+        gameRoom.add("1234", player1);
+        gameRoom.add("1234", player2);
         gameRoom.gameStart(problems, 1L);
 
         when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
 
         Solved solved = Solved.builder()
+            .problemId(1L)
             .solve(Map.of(1, 3, 2, 1))
             .submitTime(5)
             .build();
 
         // When
-        int score = multiGameService.markSolution("abc-def", 1L, solved);
+        int score = multiGameService.markSolution("abc-def", player1, solved);
 
         // Then
         assertThat(score).isEqualTo(0);
