@@ -17,7 +17,6 @@ import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,8 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(Long memberId) {
-        User user = userRepository.findById(memberId)
+    public UserInfoResponseDto getUserInfo(String memberId) {
+        User user = userRepository.findById(Long.parseLong(memberId))
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         // User 엔티티를 UserInfoResponseDto로 변환
@@ -70,9 +69,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean quitMember(Long memberId) {
+    public boolean quitMember(String memberId) {
         // 사용자 확인
-        User user = userRepository.findById(memberId)
+        User user = userRepository.findById(Long.parseLong(memberId))
             .orElseThrow(() -> new EntityNotFoundException("유저를 찾지 못하였습니다."));
 
         // 사용자 삭제

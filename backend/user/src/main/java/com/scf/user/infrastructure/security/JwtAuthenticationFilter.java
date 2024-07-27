@@ -34,12 +34,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = jwtTokenProvider.resolveToken(request);
+        boolean isValidateToken = jwtTokenProvider.validateToken(token);
 
-        boolean flag = jwtTokenProvider.validateToken(token);
-
-        if (token != null && flag) {
+        if (token != null && isValidateToken) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             throw new ServletException("유효성 검사 통과가 안 됐습니다.");
