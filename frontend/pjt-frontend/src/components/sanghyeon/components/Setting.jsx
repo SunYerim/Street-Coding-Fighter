@@ -6,13 +6,27 @@ import settingIcon from "../../../assets/settingIcon.png";
 import close from "../../../assets/close.png";
 import axios from "axios";
 import store from "../../../store/store.js";
+import createAuthClient from "../apis/createAuthClient.js";
 
 Modal.setAppElement("#root");
 
 const Setting = () => {
-  const { accessToken, setAccessToken } = store();
+  const { accessToken, setAccessToken, baseURL, memberId, setMemberId } = store(
+    (state) => ({
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+      baseURL: state.baseURL,
+      memberId: state.memberId,
+      setMemberId: state.setMemberId,
+    })
+  );
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -24,14 +38,15 @@ const Setting = () => {
 
   const logout = async () => {
     try {
-      const logoutRes = await axios({
+      const logoutRes = await authClient({
         method: "POST",
-        url: "http://localhost:8080/user/logout",
+        url: `${baseURL}/user/logout/${memberId}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
       setAccessToken(null);
+      setMemberId(null);
       alert("로그아웃에 성공했습니다.");
       navigate("/login");
     } catch (error) {

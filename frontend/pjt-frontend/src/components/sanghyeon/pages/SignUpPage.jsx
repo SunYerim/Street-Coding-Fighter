@@ -4,8 +4,13 @@ import "../../../css/SignUpPage.css";
 import Modal from "react-modal";
 import warningSign from "../../../assets/warningSign.png";
 import { useNavigate } from "react-router-dom";
+import store from "../../../store/store.js";
 
 function SignUpPage() {
+  const { baseURL } = store((state) => ({
+    baseURL: state.baseURL,
+  }));
+
   const userId = useRef(null);
   const name = useRef(null);
   const password1 = useRef(null);
@@ -42,7 +47,7 @@ function SignUpPage() {
       try {
         const res = await axios({
           method: "POST",
-          url: "http://localhost:8080/user/join",
+          url: `${baseURL}/user/join`,
           data: {
             userId: userId.current.value,
             name: name.current.value,
@@ -63,7 +68,7 @@ function SignUpPage() {
     try {
       const idCheckRes = await axios({
         method: "GET",
-        url: `http://localhost:8080/user/validate/${userId.current.value}`,
+        url: `${baseURL}/user/validate/${userId.current.value}`,
       });
 
       if (idCheckRes.status === 200) {

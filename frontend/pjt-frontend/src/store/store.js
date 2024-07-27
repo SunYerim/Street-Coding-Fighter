@@ -1,17 +1,34 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const store = create((set) => ({
-  memberId: "",
-  setMemberId: (memberId) => set({ memberId }),
+const store = create(
+  persist(
+    (set) => ({
+      baseURL: "http://www.ssafy11s.com:8080",
 
-  userId: "",
-  setUserId: (userId) => set({ userId }),
+      memberId: "",
+      setMemberId: (memberId) => set({ memberId }),
 
-  name: "",
-  setName: (name) => set({ name }),
+      userId: "",
+      setUserId: (userId) => set({ userId }),
 
-  accessToken: null,
-  setAccessToken: (accessToken) => set({ accessToken }),
-}));
+      name: "",
+      setName: (name) => set({ name }),
+
+      schoolName: "",
+      setSchoolName: (schoolName) => set({ schoolName }),
+
+      birth: "",
+      setBirth: (birth) => set({ birth }),
+
+      accessToken: null,
+      setAccessToken: (accessToken) => set({ accessToken }),
+    }),
+    {
+      name: "userStorage",
+      getStorage: () => localStorage,
+    }
+  )
+);
 
 export default store;
