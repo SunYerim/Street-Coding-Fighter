@@ -23,6 +23,12 @@ const store = create(
 
       accessToken: null,
       setAccessToken: (accessToken) => set({ accessToken }),
+
+      exp: 0,
+      setExp: (exp) => set({ exp }),
+
+      character: "",
+      setCharacter: (character) => set({ character }),
     }),
     {
       name: "userStorage",

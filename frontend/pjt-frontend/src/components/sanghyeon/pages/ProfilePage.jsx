@@ -5,38 +5,71 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import store from "../../../store/store.js";
 import SignOutButton from "../components/SignOutButton.jsx";
-import axios from "axios";
+import createAuthClient from "../apis/createAuthClient.js";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { userId, accessToken } = store();
+  const { baseURL, accessToken, setAccessToken, memberId } = store((state) => ({
+    baseURL: state.baseURL,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    memberId: state.memberId,
+  }));
 
-  const getProfile = async () => {
-    try {
-      const profileRes = await axios({
-        method: "GET",
-        url: `http://localhost:8080/profile/${userId}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+  const {
+    name,
+    schoolName,
+    birth,
+    character,
+    exp,
+    setName,
+    setSchoolName,
+    setBirth,
+    setCharacter,
+    setExp,
+  } = store((state) => ({
+    name: state.name,
+    schoolName: state.schoolName,
+    birth: state.birth,
+    character: state.character,
+    exp: state.exp,
+    setName: state.setName,
+    setSchoolName: state.setSchoolName,
+    setBirth: state.setBirth,
+    setCharacter: state.setCharacter,
+    setExp: state.setExp,
+  }));
 
-      console.log(profileRes);
-    } catch (error) {
-      alert("Failed to fetch profile", error);
-    }
-  };
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const getProfile = async () => {
       try {
-        const profile = await getProfile(userId);
+        const profileRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/${memberId}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        console.log(profileRes);
+
+        setName(profileRes.data.name);
+        setSchoolName(profileRes.data.school);
+        setBirth(profileRes.data.birth);
+        setCharacter(profileRes.data.character);
+        setExp(profileRes.data.exp);
       } catch (error) {
-        alert("Failed to fetch profile", error);
+        alert("Failed to get profile", error);
       }
     };
 
-    fetchProfile();
+    getProfile();
   }, []);
 
   return (
@@ -50,11 +83,11 @@ function ProfilePage() {
             <div className="profile-character-container">
               <div className="profile-character">
                 <div className="profile-status">
-                  <h3>Name : Jack</h3>
-                  <h3>Birth Day : 98.03.19</h3>
-                  <h3>Exp: 302, 483 exp</h3>
-                  <h3>Character : Pinia</h3>
-                  <h3>School : SSAFY</h3>
+                  <h3>Name : {name}</h3>
+                  <h3>Birth Day : {birth}</h3>
+                  <h3>Exp: {exp ? exp.toLocaleString() : 0} exp</h3>
+                  <h3>Character : {character}</h3>
+                  <h3>School : {schoolName}</h3>
                   <div className="profile-status-button">
                     <button onClick={() => alert("미구현")}>
                       비밀번호 수정

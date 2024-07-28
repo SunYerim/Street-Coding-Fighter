@@ -1,17 +1,40 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../../../css/SolvedPage.css";
-import getSolved from "../apis/getSolved";
+import createAuthClient from "../apis/createAuthClient";
+import store from "../../../store/store.js";
 
 function SolvedPage() {
   const [solvedData, setSolvedData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
   const [sortOption, setSortOption] = useState("");
 
+  const { accessToken, setAccessToken, baseURL, memberId } = store((state) => ({
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    baseURL: state.baseURL,
+    memberId: state.memberId,
+  }));
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
+
   useEffect(() => {
-    const fetchSolved = async () => {
+    const getSolved = async function () {
       try {
-        // const solved = await getSolved();
+        const solvedRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/solved/${memberId}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        console.log(solvedRes);
+
         const solved = [
           { title: "최대값 구하기", isSolved: false, difficulty: "3" },
           { title: "A + B 구하기", isSolved: true, difficulty: "4" },
@@ -19,15 +42,12 @@ function SolvedPage() {
           { title: "문자 출력하기", isSolved: true, difficulty: "2" },
           { title: "곱셈 구하기", isSolved: true, difficulty: "3" },
         ];
-        solved.sort((a, b) => a.title.localeCompare(b.title));
-        setSolvedData(solved);
-        setSortedData(solved);
       } catch (error) {
-        console.error("Failed to fetch solved", error);
+        console.error("Failed to fetch record", error);
       }
     };
 
-    fetchSolved();
+    getSolved();
   }, []);
 
   useEffect(() => {
