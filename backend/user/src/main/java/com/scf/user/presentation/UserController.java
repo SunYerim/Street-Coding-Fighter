@@ -44,7 +44,7 @@ public class UserController {
 
     // 유저 정보 조회
     @GetMapping
-    public ResponseEntity<UserInfoResponseDto> userinfo(@RequestHeader("memberId") Long memberId) {
+    public ResponseEntity<UserInfoResponseDto> userinfo(@RequestHeader("memberId") String memberId) {
         UserInfoResponseDto userInfo = userService.getUserInfo(memberId);
 
         return ResponseEntity.ok(userInfo);
@@ -52,8 +52,8 @@ public class UserController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/quit/{memberId}")
-    public ResponseEntity<?> quitUser(@PathVariable ("memberId") Long memberId) {
+    @DeleteMapping("/quit")
+    public ResponseEntity<?> quitUser(@RequestHeader("memberId") String memberId) {
         boolean flag = userService.quitMember(memberId);
 
         if (flag) {
@@ -65,9 +65,9 @@ public class UserController {
     }
 
     // 로그아웃
-    @PostMapping("/logout/{memberId}")
-    public ResponseEntity<?> logout(@PathVariable ("memberId") Long memberId) {
-        redisService.deleteValue(String.valueOf(memberId)); // Redis에서 삭제
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("memberId") String memberId) {
+        redisService.deleteValue(memberId); // Redis에서 삭제
         return ResponseEntity.ok("로그아웃이 성공적으로 되었습니다.");
     }
 

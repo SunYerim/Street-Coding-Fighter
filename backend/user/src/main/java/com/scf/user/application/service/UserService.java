@@ -11,11 +11,11 @@ public interface UserService {
 
     public UserRegisterResponseDto register(UserRegisterRequestDto registerRequestDto);
 
-    public UserInfoResponseDto getUserInfo(Long memberId);
+    public UserInfoResponseDto getUserInfo(String memberId);
 
     public String getName(Long id);
 
-    public boolean quitMember(Long memberId);
+    public boolean quitMember(String memberId);
 
     public TokenDto refreshToken(String refreshToken);
 
