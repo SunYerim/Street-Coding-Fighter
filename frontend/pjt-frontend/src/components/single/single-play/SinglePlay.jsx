@@ -3,29 +3,26 @@ import S from './styled';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import { PiMouseRightClick, PiMouseLeftClick } from 'react-icons/pi';
+import { TypeAnimation } from 'react-type-animation';
 
 export default function SinglePlay() {
   const [page, setPage] = useState(0);
   const dialogueList = [
     {
       page_no: 0,
-      script_content: '<p>첫번째줄 대사입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>',
+      script_content: "첫번째 줄 \n 두번째 줄 \n 세번째 줄",
     },
     {
       page_no: 1,
-      script_content: '<p>두번째페이지입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>',
-    },
-    {
-      page_no: 2,
-      script_content: '<p>3번째페이지입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>',
+      script_content: "두번빼 페이지 줄 \n 두번째 줄 \n 세번째 줄",
     },
     {
       page_no: 3,
-      script_content: '<p>4번째페이지입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>',
+      script_content: "세번째 페이지 줄 \n 두번째 줄 \n 세번째 줄",
     },
     {
       page_no: 4,
-      script_content: '<p>5번째페이지입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>',
+      script_content: "네번째 페이지 \n 두번째 줄 \n 세번째 줄",
     },
   ];
   const nextPage = () => {
@@ -66,9 +63,14 @@ export default function SinglePlay() {
               <FaRegCommentDots />
             </p>
           </S.DialogueBodyLeft>
-          <S.DialogueContent
-            dangerouslySetInnerHTML={{ __html: dialogueList[page].script_content }}
-          ></S.DialogueContent>
+          <S.DialogueContent >
+            <TypeAnimation key={page}
+                    style={{
+                      color: "black",
+                      whiteSpace: "pre-line",
+                    }}            
+            sequence={[dialogueList[page].script_content, 500]} wrapper="p" speed={50} />
+          </S.DialogueContent>
         </S.DialogueBody>
         <S.DialogueBodyRight>
           <p>

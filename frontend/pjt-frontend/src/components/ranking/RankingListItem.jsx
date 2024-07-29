@@ -1,46 +1,73 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export default function RankingListItem({ rank, player }) {
-  console.log(player);
+  // console.log(player);
   return (
     <RankingItemContainer>
-      <h4>{rank}</h4>
-      <ProfileImageContainer>
-        {/* <img src="..\..\src\assets\single-test.webp" alt="profileImage" /> */}
-      </ProfileImageContainer>
-      <div>{player?.name}</div>
-      <div>{player?.exp}</div>
+      <Rank>{rank}</Rank>
+      <ProfileImageContainer />
+      <InfoContainer>
+        <Name>{player?.name}</Name>
+        <Exp>{player?.exp}</Exp>
+      </InfoContainer>
     </RankingItemContainer>
   );
 }
 
 const RankingItemContainer = styled.div`
   display: flex;
-  background-color: #d9d9d9;
+  background-color: #f8f9fa;
   border-radius: 10px;
   width: 300px;
-  margin: 10px;
-  padding: 5px;
-  padding-left: 20px;
+  height: 33px;
+  margin: 8px;
+  padding: 10px 20px;
   align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+`;
+
+const Rank = styled.h4`
+  margin: 0 20px 0 0;
+  width : 20px;
+  font-size: 1.5em;
+  color: #495057;
 `;
 
 const ProfileImageContainer = styled.div`
   width: 50px;
   height: 50px;
-  background-image: url("../../../src/assets/single-test.webp");
+  background-image: url('../../../src/assets/single-test.webp');
   background-size: cover;
+  background-position: center;
   border-radius: 50%;
+  margin-right: 20px;
 `;
 
-const NameContainer = styled.div``;
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
-const ScoreContainer = styled.div``;
+const Name = styled.div`
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #343a40;
+`;
+
+const Exp = styled.div`
+  font-size: 1em;
+  color: #868e96;
+`;
 
 const LeaderBoardPlayerLayouts = {
   ProfileImageContainer,
-  NameContainer,
-  ScoreContainer,
+  Name,
+  Exp,
 };
 
 export { LeaderBoardPlayerLayouts };
