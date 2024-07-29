@@ -49,7 +49,7 @@ public class ProblemService {
         return ProblemResponse.ProblemInfoDTO.builder()
             .problemId(problem.getProblemId())
             .title(problem.getTitle())
-            .type(problem.getType())
+            .problemType(problem.getProblemType())
             .category(problem.getCategory())
             .difficulty(problem.getDifficulty())
             .problemContent(contentDTO)

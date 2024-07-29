@@ -1,5 +1,6 @@
 package com.scf.problem.domain.dto;
 
+import com.scf.problem.constant.ProblemType;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ public class ProblemResponse {
 
         private String title;
 
-        private Integer type;
+        private ProblemType problemType;
 
         private String category;
 

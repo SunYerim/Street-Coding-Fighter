@@ -1,8 +1,11 @@
 package com.scf.problem.domain.model;
 
+import com.scf.problem.constant.ProblemType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,10 +24,10 @@ import lombok.NoArgsConstructor;
 public class ProblemInfo {
 
     @Builder
-    public ProblemInfo(String title, Integer type, String category, Integer difficulty,
+    public ProblemInfo(String title, ProblemType problemType, String category, Integer difficulty,
         ProblemContent problemContent, List<ProblemChoice> problemChoices, List<ProblemAnswer> problemAnswers) {
         this.title = title;
-        this.type = type;
+        this.problemType = problemType;
         this.category = category;
         this.difficulty = difficulty;
         this.problemContent = problemContent;
@@ -40,7 +43,8 @@ public class ProblemInfo {
     private String title;
 
     @Column(nullable = false)
-    private Integer type;
+    @Enumerated(EnumType.STRING)
+    private ProblemType problemType;
 
     @Column(nullable = false)
     private String category;
