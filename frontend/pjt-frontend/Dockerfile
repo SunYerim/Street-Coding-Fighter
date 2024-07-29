@@ -19,15 +19,10 @@ COPY . ./
 RUN npm run build
 
 # stage to copy the build output to
-FROM alpine:latest
-WORKDIR /app
-COPY --from=build /app/dist /app/dist
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# expose build directory to the host
-VOLUME /app/dist
+# expose port 80
+EXPOSE 80
 
-# 3000번 포트 노출
-EXPOSE 3000
-
-# npm start 스크립트 실행
-CMD ["npm","run","dev"]
+CMD ["nginx", "-g", "daemon off;"]
