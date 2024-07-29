@@ -2,5 +2,5 @@ services:
   pjt-frontend:
     image: zlxldgus123/frontend
     ports:
-      - "80:80"
+      - "5173:5173"
     restart: always
