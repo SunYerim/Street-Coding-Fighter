@@ -1,106 +1,86 @@
-import styled from 'styled-components';
-
-const PlayView = styled.div`
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('/src/assets/background-single.png');
-  background-size: cover;
-  color: black;
-`;
-
-const ImageBox = styled.div`
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100%;
-`;
-
-const DialogueBox = styled.div`
-  position: fixed;
-  bottom: 10px;
-  left: 5vw;
-  width: 90vw;
-  height: 180px;
-  background-color: rgba(240, 240, 240, 0.9);
-  border-radius: 0.4em;
-  font-size: 1.3em;
-
-  &:after {
-    content: '';
-    position : absolute;
-    left: 0;
-    top: 85%;
-    width: 0;
-    height: 0;
-    border: 20px solid transparent;
-    border-right-color: rgba(240, 240, 240, 0.8);
-    border-left: 0;
-    border-top: 0;
-    margin-top: -10px;
-    margin-left: -20px;
-  }
-`;
-
-const DialogueHeader = styled.div`
-  // display: flex;
-  justify-content: space-between;
-`;
-
-const DialogueButton = styled.button`
-  /* 버튼 스타일을 여기에 추가하세요 */
-`;
-const DialogueBody = styled.div`
-  /* 버튼 스타일을 여기에 추가하세요 */
-`;
-
-const CharacterImage = styled.img`
-  position: fixed;
-  height: 600px;
-  left: 30vw;
-  bottom: 0px;
-`;
-
-const CharacterName = styled.div`
-  position: absolute;
-  top: -10px;
-  left : 20px;
-  height : 20px;
-  font-size :1em;
-  border-radius: 10px;
-  background-color: rgba(240, 240, 240, 0.8);
-`;
+import { useState } from 'react';
+import S from './styled';
+import { FaRegCommentDots } from 'react-icons/fa';
+import { CgProfile } from 'react-icons/cg';
+import { PiMouseRightClick, PiMouseLeftClick } from 'react-icons/pi';
+import { TypeAnimation } from 'react-type-animation';
 
 export default function SinglePlay() {
+  const [page, setPage] = useState(0);
   const dialogueList = [
     {
       page_no: 0,
-      script_content: '<p>첫번째줄 대사입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>'
+      script_content: "첫번째 줄 \n 두번째 줄 \n 세번째 줄",
     },
     {
       page_no: 1,
-      script_content: '<p>첫번째줄 대사입니다.</p><p>두번째줄 대사입니다.</p><p>세번째줄 대사입니다.</p>'
+      script_content: "두번빼 페이지 줄 \n 두번째 줄 \n 세번째 줄",
     },
-  ]
-  // const onClick = ()=>{
-
-
-  // }
+    {
+      page_no: 3,
+      script_content: "세번째 페이지 줄 \n 두번째 줄 \n 세번째 줄",
+    },
+    {
+      page_no: 4,
+      script_content: "네번째 페이지 \n 두번째 줄 \n 세번째 줄",
+    },
+  ];
+  const nextPage = () => {
+    if (page < dialogueList.length - 1) {
+      setPage((prevPage) => prevPage + 1);
+    } else {
+      setPage(dialogueList.length - 1);
+    }
+    console.log(page);
+  };
+  const prevPage = (event) => {
+    event.preventDefault();
+    if (0 < page) {
+      setPage((prevPage) => prevPage - 1);
+    } else {
+      setPage(0);
+    }
+    console.log(page);
+  };
   return (
-    <PlayView>
-      <ImageBox>
-        <CharacterImage src="/src/assets/character-test-removebg-preview.png" alt="" />
-      </ImageBox>
-      <DialogueBox >
-        <DialogueHeader>
-          <CharacterName>Hoshino Ai</CharacterName>
-        </DialogueHeader>
-        <DialogueBody dangerouslySetInnerHTML={{__html:dialogueList[0].script_content}}>
-        </DialogueBody>
-      </DialogueBox>
-    </PlayView>
+    <S.PlayView>
+      <S.ImageBox>
+        <S.CharacterImage src="/src/assets/character-test-removebg-preview.png" alt="" />
+      </S.ImageBox>
+      <S.DialogueBox onClick={nextPage} onContextMenu={prevPage}>
+        <S.DialogueHeader>
+          <S.CharacterName>
+            <span>
+              <CgProfile />
+              <span> Hoshino Ai</span>
+            </span>
+          </S.CharacterName>
+        </S.DialogueHeader>
+
+        <S.DialogueBody>
+          <S.DialogueBodyLeft>
+            <p>
+              <FaRegCommentDots />
+            </p>
+          </S.DialogueBodyLeft>
+          <S.DialogueContent >
+            <TypeAnimation key={page}
+                    style={{
+                      color: "black",
+                      whiteSpace: "pre-line",
+                    }}            
+            sequence={[dialogueList[page].script_content, 500]} wrapper="p" speed={50} />
+          </S.DialogueContent>
+        </S.DialogueBody>
+        <S.DialogueBodyRight>
+          <p>
+            <PiMouseLeftClick /> 클릭 : 다음
+          </p>
+          <p>
+            <PiMouseRightClick /> 우클릭 : 이전
+          </p>
+        </S.DialogueBodyRight>
+      </S.DialogueBox>
+    </S.PlayView>
   );
 }

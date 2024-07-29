@@ -1,7 +1,6 @@
 import "../../../css/Header.css";
-import settingIcon from "../../../assets/settingIcon.png";
 import userIcon from "../../../assets/userIcon.png";
-
+import Setting from "./Setting";
 import { useNavigate } from "react-router-dom";
 
 function Header() {
@@ -26,14 +25,7 @@ function Header() {
             src={userIcon}
             alt="userIcon"
           />
-          <img
-            onClick={() => {
-              alert("설정 팝업창");
-            }}
-            className="setting-icon"
-            src={settingIcon}
-            alt="settingIcon"
-          />
+          <Setting />
         </div>
       </div>
     </>
