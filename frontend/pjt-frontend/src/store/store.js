@@ -27,6 +27,16 @@ const store = create(
       exp: 0,
       setExp: (exp) => set({ exp }),
 
+      registerInfo: {
+        userId: "",
+        name: "",
+        password: "",
+        schoolName: "",
+        birth: "",
+        characterType: "",
+      },
+      setRegisterInfo: (registerInfo) => set({ registerInfo }),
+
       character: "",
       setCharacter: (character) => set({ character }),
     }),

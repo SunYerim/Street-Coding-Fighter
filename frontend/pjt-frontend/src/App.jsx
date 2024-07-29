@@ -16,6 +16,9 @@ import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
+import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
+import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
+
 function App() {
   return (
     <>
@@ -24,6 +27,7 @@ function App() {
           <Route path="/" element={<TitlePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signup-character" element={<CharacterSelection />} />
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
@@ -37,6 +41,7 @@ function App() {
           <Route path="/multi-game" element={<MultiGame />} />
           <Route path="/single-main" element={<SingleMain />} />
           <Route path="/single-play" element={<SinglePlay />} />
+          <Route path="/multi-game-select" element={<SelectProblem />} />
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>

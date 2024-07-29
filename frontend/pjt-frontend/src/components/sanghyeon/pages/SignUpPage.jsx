@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import store from "../../../store/store.js";
 
 function SignUpPage() {
-  const { baseURL } = store((state) => ({
+  const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
   }));
 
@@ -44,23 +44,14 @@ function SignUpPage() {
       setErrorMessage("비밀번호가 일치하지 않습니다.");
       openModal();
     } else {
-      try {
-        const res = await axios({
-          method: "POST",
-          url: `${baseURL}/user/join`,
-          data: {
-            userId: userId.current.value,
-            name: name.current.value,
-            password: password1.current.value,
-            schoolName: schoolName.current.value,
-            birth: birth.current.value,
-          },
-        });
-        navigate("/login");
-      } catch (error) {
-        setErrorMessage("회원가입에 실패했습니다.");
-        openModal();
-      }
+      setRegisterInfo({
+        userId: userId.current.value,
+        name: name.current.value,
+        password: password1.current.value,
+        schoolName: schoolName.current.value,
+        birth: birth.current.value,
+      });
+      navigate("/signup-character");
     }
   };
 
@@ -106,7 +97,7 @@ function SignUpPage() {
             placeholder="생일"
             className="custom-date-input"
           />
-          <button onClick={signUp}>CREATE</button>
+          <button onClick={() => navigate("/signup-character")}>NEXT</button>
         </div>
       </div>
       <Modal

@@ -1,12 +1,11 @@
 import "../../../css/ProfilePage.css";
 import Header from "../components/Header";
-import pinia from "../../../assets/characters/pinia.svg";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import store from "../../../store/store.js";
 import SignOutButton from "../components/SignOutButton.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
-import greenSlime from "../../../assets/characters/greenSlime.gif";
+import greenSlime from "../../../assets/characters/movingGreenSlime.gif";
 
 function ProfilePage() {
   const navigate = useNavigate();
