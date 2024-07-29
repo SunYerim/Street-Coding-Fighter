@@ -36,7 +36,7 @@ function App() {
           <Route path="/battle-create" element={<BattleCreate />} />
           <Route path="/multi-game" element={<MultiGame />} />
           <Route path="/single-main" element={<SingleMain />} />
-          <Route path="/single-play" element={<SinglePlay />} />
+          <Route path="/single-play/:content_id" element={<SinglePlay />} />
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
