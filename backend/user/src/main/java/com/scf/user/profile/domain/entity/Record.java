@@ -26,8 +26,8 @@ public class Record {
     @Column(name = "time", nullable = false)
     private Timestamp time;
 
-    @Column(name = "rank", nullable = false)
-    private int rank;
+    @Column(name = "ranking", nullable = false)
+    private int ranking;
 
     @Column(name = "score", nullable = false)
     private int score;
@@ -39,7 +39,7 @@ public class Record {
     private int gameType;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
 
