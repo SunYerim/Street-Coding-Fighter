@@ -61,21 +61,21 @@ const CharacterSelection = () => {
   };
 
   const signup = async function () {
-    if (!selectedCharacter) {
+    if (!selectedCharacter && !prevCharacter) {
       alert("캐릭터를 선택해주세요.");
       return;
     }
 
-    setRegisterInfo({
+    const updatedRegisterInfo = {
       ...registerInfo,
-      characterType: selectedCharacter,
-    });
+      characterType: selectedCharacter || prevCharacter,
+    };
 
     try {
       const signupRes = await axios({
         method: "POST",
         url: `${baseURL}/user/join`,
-        data: registerInfo,
+        data: updatedRegisterInfo,
       });
 
       alert("회원가입이 완료되었습니다.");

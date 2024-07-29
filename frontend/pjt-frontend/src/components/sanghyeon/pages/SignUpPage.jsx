@@ -9,6 +9,8 @@ import store from "../../../store/store.js";
 function SignUpPage() {
   const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
+    registerInfo: state.registerInfo,
+    setRegisterInfo: state.setRegisterInfo,
   }));
 
   const userId = useRef(null);
@@ -50,6 +52,7 @@ function SignUpPage() {
         password: password1.current.value,
         schoolName: schoolName.current.value,
         birth: birth.current.value,
+        characterType: "",
       });
       navigate("/signup-character");
     }
@@ -97,7 +100,7 @@ function SignUpPage() {
             placeholder="생일"
             className="custom-date-input"
           />
-          <button onClick={() => navigate("/signup-character")}>NEXT</button>
+          <button onClick={signUp}>NEXT</button>
         </div>
       </div>
       <Modal
