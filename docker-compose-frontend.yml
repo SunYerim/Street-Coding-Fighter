@@ -1,5 +1,5 @@
 services:
-  frontend:
+  pjt-frontend:
     ports:
       - "80:80"
     restart: always
