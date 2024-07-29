@@ -1,12 +1,16 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import "../../../css/SignUpPage.css";
-import register from "../apis/register.js";
 import Modal from "react-modal";
 import warningSign from "../../../assets/warningSign.png";
 import { useNavigate } from "react-router-dom";
+import store from "../../../store/store.js";
 
 function SignUpPage() {
+  const { baseURL } = store((state) => ({
+    baseURL: state.baseURL,
+  }));
+
   const userId = useRef(null);
   const name = useRef(null);
   const password1 = useRef(null);
@@ -14,6 +18,8 @@ function SignUpPage() {
   const schoolName = useRef(null);
   const birth = useRef(null);
   const navigate = useNavigate();
+
+  const idCheckComplete = useRef(false);
 
   const [errorMessage, setErrorMessage] =
     useState("비밀번호가 일치하지 않습니다.");
@@ -27,60 +33,55 @@ function SignUpPage() {
     setModalIsOpen(false);
   };
 
-  const idValidation = function (userId) {
-    axios({
-      method: "GET",
-      url: `/user/validate/${userId}`,
-      data: {
-        userId,
-      },
-    })
-      .then((response) => {
-        if (response.data) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        return false;
-      });
-  };
+  const signUp = async function () {
+    if (!idCheckComplete.current) {
+      setErrorMessage("아이디 중복 확인을 해주세요.");
+      openModal();
+      return;
+    }
 
-  const isValid = function (pw1, pw2) {
-    if (pw1 !== pw2) {
+    if (password1.current.value !== password2.current.value) {
       setErrorMessage("비밀번호가 일치하지 않습니다.");
-      return false;
+      openModal();
     } else {
-      if (idValidation(userId.current.value)) {
-        return true;
-      } else {
-        setErrorMessage("이미 사용중인 아이디입니다.");
-        return false;
+      try {
+        const res = await axios({
+          method: "POST",
+          url: `${baseURL}/user/join`,
+          data: {
+            userId: userId.current.value,
+            name: name.current.value,
+            password: password1.current.value,
+            schoolName: schoolName.current.value,
+            birth: birth.current.value,
+          },
+        });
+        navigate("/login");
+      } catch (error) {
+        setErrorMessage("회원가입에 실패했습니다.");
+        openModal();
       }
     }
   };
 
-  const signUp = async function () {
-    if (!isValid(password1.current.value, password2.current.value)) {
-      openModal();
-    } else {
-      try {
-        const res = await register(
-          userId.current.value,
-          name.current.value,
-          password1.current.value,
-          schoolName.current.value,
-          birth.current.value
-        );
-        if (res) {
-          navigate("/");
-        } else {
-          alert("회원가입에 실패했습니다.");
-        }
-      } catch (error) {
-        alert(error);
+  const idCheck = async () => {
+    try {
+      const idCheckRes = await axios({
+        method: "GET",
+        url: `${baseURL}/user/validate/${userId.current.value}`,
+      });
+
+      if (idCheckRes.status === 200) {
+        setErrorMessage("사용 가능한 아이디입니다.");
+        openModal();
+        idCheckComplete.current = true;
+      } else {
+        setErrorMessage("이미 사용중인 아이디입니다.");
+        openModal();
       }
+    } catch (error) {
+      setErrorMessage("아이디 중복 확인에 실패했습니다.");
+      openModal();
     }
   };
 
@@ -89,12 +90,22 @@ function SignUpPage() {
       <div className="signup-outer-container">
         <h1 className="signup-title">SIGN UP</h1>
         <div className="signup-container">
-          <input type="text" ref={userId} placeholder="아이디" />
+          <div className="signup-userId">
+            <input type="text" ref={userId} placeholder="아이디" />
+            <div onClick={idCheck} className="duplicate-chk">
+              중복 확인
+            </div>
+          </div>
           <input type="text" ref={name} placeholder="닉네임" />
           <input type="password" ref={password1} placeholder="비밀번호" />
           <input type="password" ref={password2} placeholder="비밀번호 확인" />
           <input type="text" ref={schoolName} placeholder="학교" />
-          <input type="text" ref={birth} placeholder="생일" />
+          <input
+            type="date"
+            ref={birth}
+            placeholder="생일"
+            className="custom-date-input"
+          />
           <button onClick={signUp}>CREATE</button>
         </div>
       </div>

@@ -1,36 +1,44 @@
-import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../../../css/RecordPage.css";
 import store from "../../../store/store.js";
+import createAuthClient from "../apis/createAuthClient.js";
 
 function RecordPage() {
-  const { userId } = store();
+  const { accessToken, setAccessToken, baseURL, memberId } = store((state) => ({
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    baseURL: state.baseURL,
+    memberId: state.memberId,
+  }));
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
-  const getRecord = function () {
-    axios({
-      method: "GET",
-      url: `/profile/record/${userId}`,
-    })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        alert("전적 조회에 실패하였습니다.");
-      });
-  };
+  const [recordData, setRecordData] = useState([]);
 
   useEffect(() => {
-    const fetchRecord = async function () {
+    const getRecord = async function () {
       try {
-        const record = await getRecord();
-        console.log(record);
+        const recordRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/record/${memberId}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        console.log(recordRes);
+
+        setRecordData(recordRes.data);
       } catch (error) {
         console.error("Failed to fetch record", error);
       }
     };
 
-    fetchRecord();
+    getRecord();
   }, []);
 
   return (
@@ -49,36 +57,18 @@ function RecordPage() {
                 <p>Score</p>
               </div>
               <div className="record-inner">
-                <div className="record">
-                  <p>1 vs 1</p>
-                  <p>2024-07-15</p>
-                  <p>3rd</p>
-                  <p>1557p</p>
-                </div>
-                <div className="record">
-                  <p>1 vs 1</p>
-                  <p>2024-07-15</p>
-                  <p>3rd</p>
-                  <p>1557p</p>
-                </div>
-                <div className="record">
-                  <p>1 vs 1</p>
-                  <p>2024-07-15</p>
-                  <p>3rd</p>
-                  <p>1557p</p>
-                </div>
-                <div className="record">
-                  <p>1 vs 1</p>
-                  <p>2024-07-15</p>
-                  <p>3rd</p>
-                  <p>1557p</p>
-                </div>
-                <div className="record">
-                  <p>1 vs 1</p>
-                  <p>2024-07-15</p>
-                  <p>3rd</p>
-                  <p>1557p</p>
-                </div>
+                {recordData.map((data, index) => {
+                  return (
+                    <div className="record" key={index}>
+                      <p>{data.gameType}</p>
+                      <p>{data.Time}</p>
+                      <p>
+                        {data.rank} / {data.partCnt}
+                      </p>
+                      <p>{data.score}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

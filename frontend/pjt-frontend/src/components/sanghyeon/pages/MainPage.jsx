@@ -2,8 +2,6 @@ import Header from "../components/Header";
 import MainSelectModeBox from "../components/MainSelectModeBox";
 import "../../../css/MainPage.css";
 
-import Container from "../components/Container";
-
 function MainPage() {
   return (
     <>
