@@ -27,6 +27,7 @@
   letter-spacing: 6px;
   font-size: 3rem;
   font-weight: bold;
+  user-select: none;
 }
 
 .character-selection-container {

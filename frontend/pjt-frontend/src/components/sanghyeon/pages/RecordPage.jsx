@@ -24,9 +24,10 @@ function RecordPage() {
       try {
         const recordRes = await authClient({
           method: "GET",
-          url: `${baseURL}/profile/record/${memberId}`,
+          url: `${baseURL}/profile/record`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            memberId: memberId,
           },
         });
 

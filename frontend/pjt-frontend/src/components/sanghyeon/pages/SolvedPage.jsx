@@ -27,9 +27,10 @@ function SolvedPage() {
       try {
         const solvedRes = await authClient({
           method: "GET",
-          url: `${baseURL}/profile/solved/${memberId}`,
+          url: `${baseURL}/profile/solved`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            memberId: memberId,
           },
         });
 

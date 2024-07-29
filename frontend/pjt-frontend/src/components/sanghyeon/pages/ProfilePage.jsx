@@ -47,13 +47,15 @@ function ProfilePage() {
   );
 
   useEffect(() => {
+    console.log(accessToken);
     const getProfile = async () => {
       try {
         const profileRes = await authClient({
           method: "GET",
-          url: `${baseURL}/profile/${memberId}`,
+          url: `${baseURL}/profile`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            memberId: memberId,
           },
         });
 

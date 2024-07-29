@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../../css/CharacterSelection.css";
 import greenSlime from "../../../assets/characters/greenSlime.png";
 import thunderSlime from "../../../assets/characters/thunderSlime.png";
@@ -19,6 +19,7 @@ const CharacterSelection = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [hoveredCharacter, setHoveredCharacter] = useState(null);
   const [prevCharacter, setPrevCharacter] = useState(null);
+  const [hiddenCount, setHiddenCount] = useState(0);
 
   const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
@@ -60,6 +61,18 @@ const CharacterSelection = () => {
     }
   };
 
+  const hiddenSelect = () => {
+    setSelectedCharacter("nyan");
+  };
+
+  useEffect(() => {
+    if (selectedCharacter === "nyan") {
+      alert("Hidden Character Selected");
+      console.log(selectedCharacter);
+      // signup();
+    }
+  }, [selectedCharacter]);
+
   const signup = async function () {
     if (!selectedCharacter && !prevCharacter) {
       alert("캐릭터를 선택해주세요.");
@@ -90,7 +103,16 @@ const CharacterSelection = () => {
       <div className="character-selection-outer-outer-container">
         <div className="character-selection-outer-container">
           <div className="character-selection-title-container">
-            <div className="character-selection-title">CHARACTER SELECT</div>
+            <div
+              onClick={() => {
+                hiddenCount < 10
+                  ? setHiddenCount(hiddenCount + 1)
+                  : hiddenSelect();
+              }}
+              className="character-selection-title"
+            >
+              CHARACTER SELECT
+            </div>
           </div>
           <hr />
           <div className="character-selection-container">
