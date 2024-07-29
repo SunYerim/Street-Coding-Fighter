@@ -100,7 +100,12 @@ function SignUpPage() {
           <input type="password" ref={password1} placeholder="비밀번호" />
           <input type="password" ref={password2} placeholder="비밀번호 확인" />
           <input type="text" ref={schoolName} placeholder="학교" />
-          <input type="text" ref={birth} placeholder="생일" />
+          <input
+            type="date"
+            ref={birth}
+            placeholder="생일"
+            className="custom-date-input"
+          />
           <button onClick={signUp}>CREATE</button>
         </div>
       </div>

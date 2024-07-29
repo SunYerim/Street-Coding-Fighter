@@ -94,3 +94,33 @@
   font-size: 0.9rem;
   cursor: pointer;
 }
+
+/* Hide date input icon for different browsers while keeping the date picker functionality */
+.custom-date-input {
+  position: relative;
+  width: 100%;
+}
+
+.custom-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0; /* Make the icon invisible */
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer; /* Ensures the calendar can still be clicked */
+}
+
+.custom-date-input::-webkit-clear-button,
+.custom-date-input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.custom-date-input::-moz-calendar-picker-indicator {
+  display: none;
+}
+
+.custom-date-input {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: none;
+}

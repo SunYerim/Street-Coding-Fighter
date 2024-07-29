@@ -81,8 +81,8 @@ const Setting = () => {
           </div>
           <hr />
           <div className="settings">
-            <p className="setting">Effect Volume</p>
-            <p className="setting">Background Volume</p>
+            <p className="setting">Volume</p>
+            <p className="setting">Language</p>
             <p className="setting" onClick={() => navigate("/")}>
               Back to Title
             </p>

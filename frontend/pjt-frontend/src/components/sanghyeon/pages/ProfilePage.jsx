@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import store from "../../../store/store.js";
 import SignOutButton from "../components/SignOutButton.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
+import greenSlime from "../../../assets/characters/greenSlime.gif";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ function ProfilePage() {
                 <div className="profile-character-img-container">
                   <img
                     className="profile-character-img"
-                    src={pinia}
+                    src={greenSlime}
                     alt="pinia-character"
                   />
                 </div>
