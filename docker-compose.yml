@@ -2,7 +2,7 @@ version: '3'
 services:
   frontend:
     build:
-      context: ./front/pjt-frontend
+      context: ./frontend/pjt-frontend
       dockerfile: Dockerfile
     ports:
       - "80:80"
