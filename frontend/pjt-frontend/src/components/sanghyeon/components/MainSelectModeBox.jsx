@@ -9,7 +9,7 @@ function MainSelectModeBox(props) {
     if (mode === "싱글플레이") {
       navigate("/single-main");
     } else if (mode === "멀티플레이") {
-      alert(`${mode}`);
+      navigate("/multi");
     } else if (mode === "1 vs 1") {
       alert(`${mode}`);
     }
