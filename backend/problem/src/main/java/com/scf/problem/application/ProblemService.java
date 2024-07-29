@@ -1,6 +1,5 @@
 package com.scf.problem.application;
 
-import com.scf.problem.domain.dto.ProblemRequest;
 import com.scf.problem.domain.dto.ProblemResponse;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemAnswerDTO;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemChoiceDTO;
