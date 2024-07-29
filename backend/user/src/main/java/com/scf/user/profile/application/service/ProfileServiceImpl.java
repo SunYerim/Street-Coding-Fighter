@@ -43,13 +43,12 @@ public class ProfileServiceImpl implements ProfileService {
         List<HistoryResponseDto> historyList = member.getRecords().stream()
             .sorted((r1, r2) -> Integer.compare(r2.getScore(), r1.getScore())) // 우선 점수로 정렬
             .limit(10) // 상위 10개
-            .map(record -> HistoryResponseDto.builder()
-                .time(record.getTime().toString())
-                .rank(record.getRanking())
-                .score(record.getScore())
-                .gametype(record.getGameType())
-                .build())
-            .toList();
+            .map(record -> HistoryResponseDto.from(
+                record.getTime().toLocalDateTime(), // Record의 시간 필드를 LocalDateTime으로 변환
+                record.getRanking(),
+                record.getScore(),
+                record.getGameType()))
+            .collect(Collectors.toList());
         return new HistoryListResponseDto(historyList);
     }
 }
