@@ -10,11 +10,27 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProblemInfo {
+
+    @Builder
+    public ProblemInfo(String title, Integer type, String category, Integer difficulty,
+        ProblemContent problemContent, List<ProblemChoice> problemChoices, List<ProblemAnswer> problemAnswers) {
+        this.title = title;
+        this.type = type;
+        this.category = category;
+        this.difficulty = difficulty;
+        this.problemContent = problemContent;
+        this.problemChoices = problemChoices;
+        this.problemAnswers = problemAnswers;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
