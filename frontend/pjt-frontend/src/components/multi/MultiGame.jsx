@@ -3,12 +3,12 @@ import "../../css/GameMain.css";
 import Timer from "../game/Timer.jsx";
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
-// import socket from "../game/server.js"
+import socket from "../game/server.js"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-export default function MultiGame() {
+export default function MultiGame_flex() {
   const navigate = useNavigate();
   const [start, setStart] = useState(0);
   const [user, setUser] = useState(null);
@@ -23,6 +23,8 @@ export default function MultiGame() {
     { id: 5, rank: 5, name: "H", score: 70 },
     { id: 6, rank: 6, name: "E", score: 60 },
     { id: 7, rank: 7, name: "J", score: 30 },
+    { id: 7, rank: 7, name: "말숙", score: 50 },
+    { id: 7, rank: 7, name: "ai", score: 90 },
   ];
 
 
@@ -30,12 +32,12 @@ export default function MultiGame() {
     setStart(1);
   };
 
-  // useEffect(() => {
-  //   socket.on("message", (message) => {
-  //     setMessageList((prevState) => prevState.concat(message));
-  //   });
-  //   askUserName();
-  // }, []);
+  useEffect(() => {
+    socket.on("message", (message) => {
+      setMessageList((prevState) => prevState.concat(message));
+    });
+    askUserName();
+  }, []);
 
 
   const askUserName = () => {
@@ -64,40 +66,44 @@ export default function MultiGame() {
     <>
       <div className="game-container">
         <div className="game-main">
-          <div className="game-header">
-            <Timer />
-            <h2>Waiting for start. . .</h2>
-            <p>~Round~</p>
-          </div>
-          <div className="game-body">
+          <div className="game-left">
+            <div className="timer">
+              <Timer />
+            </div>
             <div className="rank-table">
-                {
-                  userList.map((user, i) => {
-                    return <UserRank rank={user.rank} name={user.name} score={user.score} key={i} />
-                  })
-                }
+              {
+                userList.map((user, i) => {
+                  return <UserRank rank={user.rank} name={user.name} score={user.score} key={i} />
+                })
+              }
             </div>
-              <div className="game-content">
-                {userList.length === 1 ? (
-                  <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                  . . . Waiting . . .</h1>
-                ) : (
-                  (start === 0 ? (
-                    <button className="game-start-button" onClick={handleStart}>
-                      Start
-                    </button>
-                  ) : (
-                    <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                      . . . Playing . . .</h1>
-                  ))
-                )}
+          </div>
+          <div className="game-center">
+            {userList.length === 1 ? (
+              <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+              . . . Waiting . . .</h1>
+            ) : (
+              (start === 0 ? (
+                <div className="before-start">
+                  <h2>. . . Waiting for start . . .</h2>
+                  <button className="game-start-button" onClick={handleStart}>
+                    Start
+                  </button>
+                </div>
+              ) : (
+                <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                  . . . Playing . . .</h1>
+              ))
+            )}
+          </div>
+          <div className="game-right">
+            <div className="round">
+              <p>~Round~</p>
             </div>
-            <div className="chat-room">
-              <div className="message-room">
-                <MessageContainer messageList={messageList} user={user} />
-              </div>
-                <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
+            <div className="message-room">
+              <MessageContainer messageList={messageList} user={user} />
             </div>
+              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
           </div>
         </div>
       </div>
