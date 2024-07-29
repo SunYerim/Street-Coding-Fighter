@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ProblemContentDTO {
 
-    private Integer problemId;
+    private Long problemId;
 
     private String content;
 

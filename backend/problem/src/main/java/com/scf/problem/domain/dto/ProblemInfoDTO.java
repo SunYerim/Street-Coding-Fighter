@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 public class ProblemInfoDTO {
 
-    private Integer problemId;
+    private Long problemId;
 
     private String title;
 

@@ -18,7 +18,7 @@ public class ProblemInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer problemId;
+    private Long problemId;
 
     @Column(nullable = false)
     private String title;

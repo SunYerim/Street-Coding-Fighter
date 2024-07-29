@@ -14,7 +14,7 @@ import lombok.Getter;
 public class ProblemContent {
 
     @Id
-    private Integer problemId;
+    private Long problemId;
 
     @Column(nullable = false)
     private String content;

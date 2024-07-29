@@ -9,7 +9,7 @@ public class ProblemAnswerDTO {
 
     private Integer answerId;
 
-    private Integer problemId;
+    private Long problemId;
 
     private Integer blankPosition;
 

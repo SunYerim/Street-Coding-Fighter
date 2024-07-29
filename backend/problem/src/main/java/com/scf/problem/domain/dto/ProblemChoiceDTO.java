@@ -9,7 +9,7 @@ public class ProblemChoiceDTO {
 
     private Integer choiceId;
 
-    private Integer problemId;
+    private Long problemId;
 
     private String choiceText;
 }
