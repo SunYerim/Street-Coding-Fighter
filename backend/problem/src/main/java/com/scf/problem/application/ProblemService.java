@@ -1,9 +1,10 @@
 package com.scf.problem.application;
 
-import com.scf.problem.domain.dto.ProblemAnswerDTO;
-import com.scf.problem.domain.dto.ProblemChoiceDTO;
-import com.scf.problem.domain.dto.ProblemContentDTO;
-import com.scf.problem.domain.dto.ProblemInfoDTO;
+import com.scf.problem.domain.dto.ProblemRequest;
+import com.scf.problem.domain.dto.ProblemResponse;
+import com.scf.problem.domain.dto.ProblemResponse.ProblemAnswerDTO;
+import com.scf.problem.domain.dto.ProblemResponse.ProblemChoiceDTO;
+import com.scf.problem.domain.dto.ProblemResponse.ProblemContentDTO;
 import com.scf.problem.domain.model.ProblemAnswer;
 import com.scf.problem.domain.model.ProblemChoice;
 import com.scf.problem.domain.model.ProblemContent;
@@ -23,14 +24,14 @@ public class ProblemService {
 
     private final ProblemInfoRepository problemInfoRepository;
 
-    public ProblemInfoDTO findOneByProblemId(Long problemId) {
+    public ProblemResponse.ProblemInfoDTO findOneByProblemId(Long problemId) {
 
         ProblemInfo problem = problemInfoRepository.findByProblemId(problemId);
 
         return convertToDTO(problem);
     }
 
-    public List<ProblemInfoDTO> getRandomProblems(int limit) {
+    public List<ProblemResponse.ProblemInfoDTO> getRandomProblems(int limit) {
         List<ProblemInfo> problems = problemInfoRepository.findAll();
         Collections.shuffle(problems);
 
@@ -40,13 +41,13 @@ public class ProblemService {
             .collect(Collectors.toList());
     }
 
-    private ProblemInfoDTO convertToDTO(ProblemInfo problem) {
+    private ProblemResponse.ProblemInfoDTO convertToDTO(ProblemInfo problem) {
 
         ProblemContentDTO contentDTO = mapToProblemContentDTO(problem.getProblemContent());
         List<ProblemChoiceDTO> choiceDTOs = mapToProblemChoiceDTOs(problem.getProblemChoices());
         List<ProblemAnswerDTO> answerDTOs = mapToProblemAnswerDTOs(problem.getProblemAnswers());
 
-        return ProblemInfoDTO.builder()
+        return ProblemResponse.ProblemInfoDTO.builder()
             .problemId(problem.getProblemId())
             .title(problem.getTitle())
             .type(problem.getType())
