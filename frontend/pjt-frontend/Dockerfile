@@ -1,5 +1,5 @@
 # base image
-FROM node:20.15.0-alpine as build
+FROM node:20.15.0-alpine AS build
 
 # set working directory
 WORKDIR /app
@@ -18,12 +18,10 @@ COPY . ./
 # build app
 RUN npm run build
 
-# production environment
-FROM nginx:stable-alpine
-COPY --from=build /app/build /usr/share/nginx/html
+# stage to copy the build output to
+FROM alpine:latest
+WORKDIR /app
+COPY --from=build /app/build /app/build
 
-# expose port
-EXPOSE 80
-
-# start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# expose build directory to the host
+VOLUME /app/build
