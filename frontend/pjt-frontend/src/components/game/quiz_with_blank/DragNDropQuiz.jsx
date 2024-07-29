@@ -1,14 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import { DndContext, useDroppable, useDraggable } from '@dnd-kit/core';
-
-// 원본 코드에 %block% 부분을 흰색 div로 바꾸는 함수
-const replaceBlocks = (content) => {
-  return content.replace(
-    /\$blank(\d+)\$/g,
-    (match, p1) => `<Droppable><div class="blank" data-blank-id="${p1}"></div></Droppable>`
-  );
-};
+import reactStringReplace from 'react-string-replace';
 
 const testQuizContent = {
   content:
@@ -27,23 +20,25 @@ const testQuizContent = {
     6: 'print',
   },
 };
-function Droppable(props) {
+
+function Droppable({ id, children }) {
   const { isOver, setNodeRef } = useDroppable({
-    id: 'droppable',
+    id: `droppable-${id}`,
   });
   const style = {
     color: isOver ? 'green' : undefined,
   };
 
   return (
-    <div ref={setNodeRef} style={style}>
-      {props.children}
+    <div ref={setNodeRef} style={style} className="blank">
+      {children}
     </div>
   );
 }
-function Draggable(props) {
+
+function Draggable({ id, children }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: 'draggable',
+    id: `draggable-${id}`,
   });
   const style = transform
     ? {
@@ -52,33 +47,43 @@ function Draggable(props) {
     : undefined;
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {props.children}
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="choice">
+      {children}
     </div>
   );
 }
 
 const DragNDropQuiz = () => {
-  const testQuizInfo = {
-    title: '빈칸 : 버블정렬1',
-    type: '2',
-    category: '정렬',
-  };
+  const [parent, setParent] = useState(null);
 
-  const modifiedContent = replaceBlocks(testQuizContent.content);
-  const choices = [];
-  for (let key in testQuizContent.choices) {
-    choices.push(testQuizContent.choices[key]);
+  const draggable = (choice, idx) => (
+    <Draggable id={idx} key={idx}>
+      {choice}
+    </Draggable>
+  );
+
+  const modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => (
+    <Droppable key={i} id={i}>
+      {parent === `droppable-${i}` ? draggable(testQuizContent.answer[i], i) : 'Drop here'}
+    </Droppable>
+  ));
+
+  const choices = Object.values(testQuizContent.choices);
+
+  function handleDragEnd({ over }) {
+    setParent(over ? over.id : null);
   }
+
   return (
     <>
-      <DndContext>
+      <DndContext onDragEnd={handleDragEnd}>
         <div className="quiz-container">
-          <div className="code-with-blanks" dangerouslySetInnerHTML={{ __html: modifiedContent }} />
-          {choices.map((e, idx) => {
-            return <Draggable>{e}</Draggable>;
-          })}
+          <pre className="code-with-blanks">{modifiedContent}</pre>
         </div>
+
+        {choices.map((choice, idx) => (
+          draggable(choice, idx)
+        ))}
       </DndContext>
       <style jsx>{`
         .blank {
@@ -100,6 +105,8 @@ const DragNDropQuiz = () => {
           text-align: center;
           margin: 0 5px;
           background-color: black;
+          color: white;
+          cursor: pointer;
         }
       `}</style>
     </>
