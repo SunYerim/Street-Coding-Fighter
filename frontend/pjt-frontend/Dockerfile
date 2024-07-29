@@ -21,7 +21,7 @@ RUN npm run build
 # stage to copy the build output to
 FROM alpine:latest
 WORKDIR /app
-COPY --from=build /app/build /app/build
+COPY --from=build /app/dist /app/dist
 
 # expose build directory to the host
-VOLUME /app/build
+VOLUME /app/dist
