@@ -14,7 +14,9 @@ public class BattleGameRepository {
         new HashMap<>());
 
     public List<BattleGameRoom> findAllRooms() {
+        System.out.println(gameRooms);
         return gameRooms.values().stream().toList();
+
     }
 
     public BattleGameRoom findById(String roomId) {

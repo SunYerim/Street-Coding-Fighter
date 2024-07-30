@@ -30,7 +30,7 @@ public class BattleGameService {
     }
 
     public void joinRoom(String roomId, Long userId, String username, String roomPassword) {
-        battleGameRepository.joinRoom(roomId, userId, username, roomPassword);
+
     }
 
     public String createRoom(Long userId, CreateRoomDTO createRoomDTO) {
@@ -81,9 +81,10 @@ public class BattleGameService {
     }
 
     public FightDTO markSolution(String roomId, Long userId, Solved solved) {
-
+        System.out.println(roomId);
         BattleGameRoom room = battleGameRepository.findById(roomId);
-        //라운드 별 문제 가져오기
+        System.out.println(room);
+        //해당 라운드 문제 가져오기
         List<Problem> problems = room.getProblemsForRound(room.getRound());
         //해당 라운드에서 유저가 선택한 문제 추출
         Optional<Problem> problemOpt = problems.stream()
@@ -101,10 +102,11 @@ public class BattleGameService {
 
         // 제출된 답안과 문제의 정답을 비교하기
         int correctAnswerCount = compareAnswers(answer, solved.getSolve());
-
+        int score = 0;
         if (correctAnswerCount > 0) {
-            int score = calculatePower(solved.getSubmitTime());
-            return room.updateHp(userId, score);
+            score = calculatePower(solved.getSubmitTime());
+            room.updateHp(userId, score);
+            return FightDTO.builder().userId(userId).isAttack(true).power(score).build();
         }
 
         return null;
@@ -126,4 +128,6 @@ public class BattleGameService {
     }
 
 
+    public void joinRoom(String roomId) {
+    }
 }

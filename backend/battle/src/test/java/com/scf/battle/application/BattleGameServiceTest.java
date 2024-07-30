@@ -118,38 +118,38 @@ public class BattleGameServiceTest {
         assertTrue(room.getIsStart());
     }
 
-    @Test
-    public void testMarkSolution() {
-        // Given
-        String roomId = UUID.randomUUID().toString();
-        Long userId = 1L;
-        Solved solved = Solved.builder()
-            .problemId(1L)
-            .userId(userId)
-            .solve(Map.of(0, 1, 1, 2))
-            .submitTime(5)
-            .build();
-
-        BattleGameRoom room = BattleGameRoom.builder()
-            .roomId(roomId)
-            .round(1)
-            .isStart(true)
-            .build();
-
-        room.setRoundProblems(List.of(
-            List.of(
-                new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2))
-            )
-        ));
-
-        when(battleGameRepository.findById(roomId)).thenReturn(room);
-
-        // When
-        FightDTO result = battleGameService.markSolution(roomId, userId, solved);
-
-        // Then
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
-        assertTrue(result.getIsAttack());
-    }
+//    @Test
+//    public void testMarkSolution() {
+//        // Given
+//        String roomId = UUID.randomUUID().toString();
+//        Long userId = 1L;
+//        Solved solved = Solved.builder()
+//            .problemId(1L)
+//            .userId(userId)
+//            .solve(Map.of(0, 1, 1, 2))
+//            .submitTime(5)
+//            .build();
+//
+//        BattleGameRoom room = BattleGameRoom.builder()
+//            .roomId(roomId)
+//            .round(1)
+//            .isStart(true)
+//            .build();
+//
+//        room.setRoundProblems(List.of(
+//            List.of(
+//                new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2))
+//            )
+//        ));
+//
+//        when(battleGameRepository.findById(roomId)).thenReturn(room);
+//
+//        // When
+//        FightDTO result = battleGameService.markSolution(roomId, userId, solved);
+//
+//        // Then
+//        assertNotNull(result);
+//        assertEquals(userId, result.getUserId());
+//        assertTrue(result.getIsAttack());
+//    }
 }

@@ -48,6 +48,7 @@ public class BattleGameController {
     public ResponseEntity<?> createRoom(@RequestHeader Long userId,
         @RequestBody CreateRoomDTO createRoomDto) {
         String roomId = battleGameService.createRoom(userId, createRoomDto);
+        System.out.println(roomId);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
