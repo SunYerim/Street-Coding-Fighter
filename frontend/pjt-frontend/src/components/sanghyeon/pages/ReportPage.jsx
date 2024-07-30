@@ -1,8 +1,17 @@
 import Header from "../components/Header";
 import "../../../css/ReportPage.css";
 import greenSlime from "../../../assets/characters/movingGreenSlime.gif";
+import axios from "axios";
+import store from "../../../store/store.js";
+import { useNavigate } from "react-router-dom";
 
 const ReportPage = () => {
+  const navigate = useNavigate();
+
+  const { baseURL } = store((state) => ({
+    baseURL: state.baseURL,
+  }));
+
   return (
     <>
       <div className="report-entire-container">
@@ -33,7 +42,10 @@ const ReportPage = () => {
                   <button className="report-upper-title-button">
                     시도한 문제 수: 26 개
                   </button>
-                  <button className="report-upper-title-button">
+                  <button
+                    onClick={() => alert("미구현")}
+                    className="report-upper-title-button"
+                  >
                     분석 리포트 PDF 다운로드
                   </button>
                 </div>

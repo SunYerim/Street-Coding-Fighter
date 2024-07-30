@@ -95,10 +95,12 @@
 
 .report-upper-title-button-container {
   display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .report-upper-title-button {
-  width: 30%;
+  width: 25%;
   margin: 20px;
   padding: 15px;
   background-color: rgba(255, 255, 255, 0.7);
