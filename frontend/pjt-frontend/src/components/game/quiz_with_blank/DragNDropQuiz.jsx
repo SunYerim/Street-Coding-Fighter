@@ -20,10 +20,6 @@ const testQuizContent = {
 };
 
 const Blank = ({ id, children, onDrop }) => {
-
-  const onDragStart = (e) => {
-    console.log('drag start');
-  }
   const handleDrop = (e) => {
     e.preventDefault();
     const data = e.dataTransfer.getData('text');
@@ -51,53 +47,70 @@ const Blank = ({ id, children, onDrop }) => {
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
     >
-      {children}
+      {children ? <Choice isInBlank={true}>{children}</Choice> : null}
     </div>
   );
 };
 
-const Choice = ({ id, children }) => {
+const Choice = ({ id, children, isInBlank }) => {
   const handleDragStart = (e) => {
     e.dataTransfer.setData('text', children);
   };
 
   return (
-    <div className="choice" key={`choice-${id}`} draggable="true" onDragStart={handleDragStart}>
+    <div className={!isInBlank ? 'choice' : 'choice-inblank'} key={`choice-${id}`} draggable="true" onDragStart={handleDragStart}>
+      {children}
+    </div>
+  );
+};
+
+const ChoiceContainer = ({ onDrop, children }) => {
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData('text');
+    onDrop(null, data);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  return (
+    <div className="choices-container" onDrop={handleDrop} onDragOver={handleDragOver}>
       {children}
     </div>
   );
 };
 
 const DragNDropQuiz = () => {
-  const [dragAndDrop, setDragAndDrop] = useState({
-    draggedFrom : null,
-    draggedTo : null,
-    isDragging : false,
-    originalOrder : [],
-    updatedOrder:[],
-    
-      })
-    
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState(Object.values(testQuizContent.choices));
 
   const handleDrop = (id, data) => {
     setBlanks((prev) => {
-      const newBlanks = { ...prev, [id]: data };
-      console.log(newBlanks);
+      const newBlanks = { ...prev };
 
-      if (prev[id]) {
-        setChoices((prevChoices) => [...prevChoices, prev[id]]);
+      if (id !== null) {
+        // 빈칸에 새로운 선택지가 드롭될 때, 기존 선택지를 choices로 되돌림
+        if (newBlanks[id]) {
+          setChoices((prevChoices) => [...prevChoices, newBlanks[id]]);
+        }
+        newBlanks[id] = data;
       }
 
       return newBlanks;
     });
 
-    setChoices((prevChoices) => prevChoices.filter((choice) => choice !== data));
+    // 새로운 선택지가 choices에서 사라지도록 업데이트
+    setChoices((prevChoices) => {
+      if (id === null) {
+        return [...prevChoices, data];
+      }
+      return prevChoices.filter((choice) => choice !== data);
+    });
   };
 
   const modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => {
-    console.log(`Matched index: ${match}, i: ${i}`);
     return (
       <Blank key={match} id={match} onDrop={handleDrop}>
         {blanks[match]}
@@ -111,11 +124,12 @@ const DragNDropQuiz = () => {
         <pre className="code-with-blanks">{modifiedContent}</pre>
       </div>
 
-      <div className="choices-container">
+      <ChoiceContainer onDrop={handleDrop}>
         {choices.map((choice, idx) => {
-          return <Choice key={`choice-${idx}`}>{choice}</Choice>;
+          return <Choice isInBlank={false} key={`choice-${idx}`}>{choice}</Choice>;
         })}
-      </div>
+      </ChoiceContainer>
+
       <style>{`
         .blank {
           display: inline-block;
@@ -124,7 +138,7 @@ const DragNDropQuiz = () => {
           background-color: white;
           border: 1px solid black;
           margin: 0 2px;
-          padding : 3px;
+          padding: 3px;
           color: black;
           text-align: center;
           transition: all 0.3s ease;
@@ -149,28 +163,31 @@ const DragNDropQuiz = () => {
           background-color: black;
           color: white;
           cursor: move;
-          }
-          .choice:hover{
+        }
+        .choice-inblank {
+          width: 90%;
+          background-color: black;
+          color: white;
+        }
+        .choice:hover {
           background-color: gray;
         }
         .choices-container {
           margin-top: 20px;
-          padding : 10px;
-          height : 50px;
-          background-color : #007BFF;
+          padding: 10px;
+          height: 50px;
+          background-color: #007BFF;
         }
         .draggable.dragging {
-          opacity: 25;
+          opacity: 0.25;
         }
-          
-        .over{
-          background-color:gray;
+        .over {
+          background-color: gray;
           transition: transform 0.3s;
           &:hover {
             transform: translateY(-10px);
           }
         }
-        
       `}</style>
     </>
   );
