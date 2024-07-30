@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { CopyBlock, dracula } from 'react-code-blocks';
-import { DndContext, useDroppable, useDraggable } from '@dnd-kit/core';
+import { useState } from 'react';
 import reactStringReplace from 'react-string-replace';
 
 const testQuizContent = {
@@ -21,71 +19,84 @@ const testQuizContent = {
   },
 };
 
-function Droppable({ id, children }) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: `droppable-${id}`,
-  });
-  const style = {
-    color: isOver ? 'green' : undefined,
+const Blank = ({ id, children, onDrop }) => {
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData('text');
+    onDrop(id, data);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="blank">
+    <div
+      className="blank"
+      key={`blank-${id}`}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+    >
       {children}
     </div>
   );
-}
+};
 
-function Draggable({ id, children }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `draggable-${id}`,
-  });
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
+const Choice = ({ id, children }) => {
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData('text', children);
+  };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="choice">
+    <div
+      className="choice"
+      key={`choice-${id}`}
+      draggable="true"
+      onDragStart={handleDragStart}
+    >
       {children}
     </div>
   );
-}
+};
 
 const DragNDropQuiz = () => {
-  const [parent, setParent] = useState(null);
+  const [blanks, setBlanks] = useState({});
+  const [choices, setChoices] = useState(Object.values(testQuizContent.choices));
+  
+  const handleDrop = (id, data) => {
+    setBlanks((prev) => {
+      const newBlanks = { ...prev, [id]: data };
+      
+      // 드롭된 빈칸에 이미 데이터가 있는 경우 그 데이터를 choices에 추가
+      if (prev[id]) {
+        setChoices((prevChoices) => [...prevChoices, prev[id]]);
+      }
 
-  const draggable = (choice, idx) => (
-    <Draggable id={idx} key={idx}>
-      {choice}
-    </Draggable>
-  );
+      return newBlanks;
+    });
+
+    // 드롭된 데이터를 choices에서 제거
+    setChoices((prevChoices) => prevChoices.filter((choice) => choice !== data));
+  };
 
   const modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => (
-    <Droppable key={i} id={i}>
-      {parent === `droppable-${i}` ? draggable(testQuizContent.answer[i], i) : 'Drop here'}
-    </Droppable>
+    <Blank key={i} id={i} onDrop={handleDrop}>
+      {blanks[i]}
+    </Blank>
   ));
-
-  const choices = Object.values(testQuizContent.choices);
-
-  function handleDragEnd({ over }) {
-    setParent(over ? over.id : null);
-  }
 
   return (
     <>
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="quiz-container">
-          <pre className="code-with-blanks">{modifiedContent}</pre>
-        </div>
+      <div className="quiz-container">
+        <pre className="code-with-blanks">{modifiedContent}</pre>
+      </div>
 
-        {choices.map((choice, idx) => (
-          draggable(choice, idx)
-        ))}
-      </DndContext>
-      <style jsx>{`
+      <div className="choices-container">
+        {choices.map((choice, idx) => {
+          return <Choice key={`choice-${idx}`}>{choice}</Choice>;
+        })}
+      </div>
+      <style>{`
         .blank {
           display: inline-block;
           width: 50px;
@@ -93,6 +104,8 @@ const DragNDropQuiz = () => {
           background-color: white;
           border: 1px solid black;
           margin: 0 2px;
+          color: black;
+          text-align: center;
         }
         .code-with-blanks {
           white-space: pre-wrap;
@@ -106,7 +119,13 @@ const DragNDropQuiz = () => {
           margin: 0 5px;
           background-color: black;
           color: white;
-          cursor: pointer;
+          cursor: move;
+        }
+        .choices-container {
+          margin-top: 20px;
+        }
+        .draggable.dragging {
+          opacity: 0.5;
         }
       `}</style>
     </>

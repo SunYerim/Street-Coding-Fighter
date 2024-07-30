@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.1.0",
     "@emotion/styled": "^11.13.0",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/system": "^5.16.4",
