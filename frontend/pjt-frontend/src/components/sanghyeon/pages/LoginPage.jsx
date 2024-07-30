@@ -34,6 +34,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const noAuthLogin = async () => {
+    console.log(baseURL);
     try {
       const res = await axios({
         method: "POST",
@@ -54,35 +55,6 @@ const LoginPage = () => {
       setAccessToken(accessToken);
       setMemberId(memberID);
       navigate("/main");
-
-      // if (accessToken && memberID) {
-      //   try {
-      //     const infoRes = await axios({
-      //       method: "GET",
-      //       url: `${baseURL}/user/${memberID}`,
-      //       headers: {
-      //         Authorization: `Bearer ${accessToken}`,
-      //       },
-      //     });
-
-      //     const { userId, name, schoolName, birth } = infoRes.data;
-
-      //     if (userId && name && schoolName && birth) {
-      //       setUserId(userId);
-      //       setName(name);
-      //       setSchoolName(schoolName);
-      //       setBirth(birth);
-
-      //       navigate("/main");
-      //     } else {
-      //       alert("로그인 실패");
-      //     }
-      //   } catch (error) {
-      //     alert("로그인 실패");
-      //   }
-      // } else {
-      //   alert("로그인 실패");
-      // }
     } catch (error) {
       alert("로그인 실패");
     }

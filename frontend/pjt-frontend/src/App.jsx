@@ -18,8 +18,14 @@ import MultiGame from "./components/multi/MultiGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
+import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
+import store from "./store/store.js";
 
 function App() {
+  const { accessToken } = store((state) => ({
+    accessToken: state.accessToken,
+  }));
+
   return (
     <>
       <Router>
@@ -28,20 +34,66 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signup-character" element={<CharacterSelection />} />
-          <Route path="/ranking" element={<Ranking />} />
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/record" element={<RecordPage />} />
-          <Route path="/report" element={<ReportPage />} />
-          <Route path="/solved" element={<SolvedPage />} />
-          <Route path="/multi" element={<MultiMain />} />
-          <Route path="/multi-create" element={<MultiCreate />} />
-          <Route path="/battle" element={<BattleMain />} />
-          <Route path="/battle-create" element={<BattleCreate />} />
-          <Route path="/multi-game" element={<MultiGame />} />
-          <Route path="/single-main" element={<SingleMain />} />
-          <Route path="/single-play" element={<SinglePlay />} />
-          <Route path="/multi-game-select" element={<SelectProblem />} />
+          <Route
+            path="/ranking"
+            element={accessToken ? <Ranking /> : <LoginPage />}
+          />
+          <Route
+            path="/main"
+            element={accessToken ? <MainPage /> : <LoginPage />}
+          />
+          <Route
+            path="/profile"
+            element={accessToken ? <ProfilePage /> : <LoginPage />}
+          />
+          <Route
+            path="/record"
+            element={accessToken ? <RecordPage /> : <LoginPage />}
+          />
+          <Route
+            path="/report"
+            element={accessToken ? <ReportPage /> : <LoginPage />}
+          />
+          <Route
+            path="/solved"
+            element={accessToken ? <SolvedPage /> : <LoginPage />}
+          />
+          <Route
+            path="/solved-detail"
+            element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
+          />
+          <Route
+            path="/multi"
+            element={accessToken ? <MultiMain /> : <LoginPage />}
+          />
+          <Route
+            path="/multi-create"
+            element={accessToken ? <MultiCreate /> : <LoginPage />}
+          />
+          <Route
+            path="/battle"
+            element={accessToken ? <BattleMain /> : <LoginPage />}
+          />
+          <Route
+            path="/battle-create"
+            element={accessToken ? <BattleCreate /> : <LoginPage />}
+          />
+          <Route
+            path="/multi-game"
+            element={accessToken ? <MultiGame /> : <LoginPage />}
+          />
+          <Route
+            path="/single-main"
+            element={accessToken ? <SingleMain /> : <LoginPage />}
+          />
+          <Route
+            path="/single-play"
+            element={accessToken ? <SinglePlay /> : <LoginPage />}
+          />
+          <Route
+            path="/multi-game-select"
+            element={accessToken ? <SelectProblem /> : <LoginPage />}
+          />
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>

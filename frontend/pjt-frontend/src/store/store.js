@@ -5,6 +5,7 @@ const store = create(
   persist(
     (set) => ({
       baseURL: "http://www.ssafy11s.com:8080",
+      // baseURL: "localhost:8080",
 
       memberId: "",
       setMemberId: (memberId) => set({ memberId }),
