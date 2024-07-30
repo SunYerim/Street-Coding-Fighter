@@ -2,9 +2,15 @@ package com.scf.user.profile.application.service;
 
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
+import com.scf.user.profile.application.client.ProblemClient;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.HistoryResponseDto;
+import com.scf.user.profile.domain.dto.ProblemResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
+import com.scf.user.profile.domain.dto.ReportResponseDto;
+import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
+import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
+import com.scf.user.profile.domain.entity.Solved;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class ProfileServiceImpl implements ProfileService {
 
     private final UserRepository userRepository;
+    private final ProblemClient problemClient;
 
     // 프로필 정보 조회
     @Override
@@ -33,6 +40,7 @@ public class ProfileServiceImpl implements ProfileService {
             .build();
     }
 
+    // 전체 전적 조회
     @Override
     public HistoryListResponseDto getHistoryList(String memberId) {
         // 멤버 정보 조회
@@ -50,5 +58,64 @@ public class ProfileServiceImpl implements ProfileService {
                 record.getGameType()))
             .collect(Collectors.toList());
         return new HistoryListResponseDto(historyList);
+    }
+
+    // 보고서 조회
+    @Override
+    public ReportResponseDto getReport(String memberId) {
+        return null;
+    }
+
+    // 푼 문제 리스트 조회
+    // 이때, 문제 정보가 필요하므로 문제 서버에서 데이터를 받아서 dto에 넣어준다.
+    @Override
+    public SolvedProblemsListDto getSolvedProblemsList(String memberId) {
+        // 멤버 정보 조회
+        Member member = userRepository.findById(Long.parseLong(memberId))
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        // 유저가 푼 문제 리스트를 가져옴
+        List<Solved> solvedProblems = member.getSolvedProblems();
+
+        // 문제 정보를 가져오고 DTO로 변환
+        List<SolvedProblemResponseDto> solvedProblemResponses = solvedProblems.stream()
+            .map(solvedProblem -> {
+                // 문제 서버에서 문제 정보를 가져옴
+                ProblemResponseDto problemInfo = problemClient.getProblemById(
+                        (long) solvedProblem.getProblemId())
+                    .block(); // Mono를 동기식으로 처리
+
+                if (problemInfo != null) {
+                    return SolvedProblemResponseDto.builder()
+                        .solvedId(solvedProblem.getSolvedId())
+                        .isCorrect(solvedProblem.isCorrect())
+                        .choice(solvedProblem.getChoice())
+                        .title(problemInfo.getTitle())
+                        .type(problemInfo.getProblemType())
+                        .category(problemInfo.getCategory())
+                        .difficulty(problemInfo.getDifficulty())
+                        .build();
+                } else {
+                    // 문제 정보를 가져오지 못했을 때의 처리 (예: 기본값 설정)
+                    return SolvedProblemResponseDto.builder()
+                        .solvedId(solvedProblem.getSolvedId())
+                        .isCorrect(solvedProblem.isCorrect())
+                        .choice(solvedProblem.getChoice())
+                        .title("Unknown")
+                        .type(null)
+                        .category("Unknown")
+                        .difficulty(0)
+                        .build();
+                }
+            })
+            .collect(Collectors.toList());
+
+        return new SolvedProblemsListDto(solvedProblemResponses);
+    }
+
+    // 푼 문제 상세보기
+    @Override
+    public SolvedProblemResponseDto getSolvedProblem(String solvedId) {
+        return null;
     }
 }

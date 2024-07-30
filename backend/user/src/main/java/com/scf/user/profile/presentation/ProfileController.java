@@ -3,6 +3,7 @@ package com.scf.user.profile.presentation;
 import com.scf.user.profile.application.service.ProfileService;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
+import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,20 @@ public class ProfileController {
 
         return ResponseEntity.ok(historyList);
     }
+
+    // 푼 문제 조회
+    @GetMapping("/solved")
+    public ResponseEntity<?> getSolvedHistory(@RequestHeader("memberId") String memberId) {
+        SolvedProblemsListDto solvedList = profileService.getSolvedProblemsList(memberId);
+
+        return ResponseEntity.ok(solvedList);
+    }
+
+    // 보고서 조회
+
+
+    
+
 
 
 }

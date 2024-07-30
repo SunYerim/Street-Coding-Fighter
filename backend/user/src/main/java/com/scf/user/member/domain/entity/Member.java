@@ -2,6 +2,7 @@ package com.scf.user.member.domain.entity;
 
 import com.scf.user.profile.domain.entity.Character;
 import com.scf.user.profile.domain.entity.Record;
+import com.scf.user.profile.domain.entity.Solved;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,8 +63,11 @@ public class Member implements UserDetails {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Character character;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Record> records;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Solved> solvedProblems;
 
 
     /**
