@@ -20,6 +20,10 @@ const testQuizContent = {
 };
 
 const Blank = ({ id, children, onDrop }) => {
+
+  const onDragStart = (e) => {
+    console.log('drag start');
+  }
   const handleDrop = (e) => {
     e.preventDefault();
     const data = e.dataTransfer.getData('text');
@@ -30,11 +34,21 @@ const Blank = ({ id, children, onDrop }) => {
     e.preventDefault();
   };
 
+  const handleDragEnter = (e) => {
+    e.currentTarget.classList.add('over');
+  };
+
+  const handleDragLeave = (e) => {
+    e.currentTarget.classList.remove('over');
+  };
+
   return (
     <div
       className="blank"
       key={`blank-${id}`}
       onDrop={handleDrop}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
     >
       {children}
@@ -48,26 +62,30 @@ const Choice = ({ id, children }) => {
   };
 
   return (
-    <div
-      className="choice"
-      key={`choice-${id}`}
-      draggable="true"
-      onDragStart={handleDragStart}
-    >
+    <div className="choice" key={`choice-${id}`} draggable="true" onDragStart={handleDragStart}>
       {children}
     </div>
   );
 };
 
 const DragNDropQuiz = () => {
+  const [dragAndDrop, setDragAndDrop] = useState({
+    draggedFrom : null,
+    draggedTo : null,
+    isDragging : false,
+    originalOrder : [],
+    updatedOrder:[],
+    
+      })
+    
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState(Object.values(testQuizContent.choices));
-  
+
   const handleDrop = (id, data) => {
     setBlanks((prev) => {
       const newBlanks = { ...prev, [id]: data };
-      
-      // 드롭된 빈칸에 이미 데이터가 있는 경우 그 데이터를 choices에 추가
+      console.log(newBlanks);
+
       if (prev[id]) {
         setChoices((prevChoices) => [...prevChoices, prev[id]]);
       }
@@ -75,15 +93,17 @@ const DragNDropQuiz = () => {
       return newBlanks;
     });
 
-    // 드롭된 데이터를 choices에서 제거
     setChoices((prevChoices) => prevChoices.filter((choice) => choice !== data));
   };
 
-  const modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => (
-    <Blank key={i} id={i} onDrop={handleDrop}>
-      {blanks[i]}
-    </Blank>
-  ));
+  const modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => {
+    console.log(`Matched index: ${match}, i: ${i}`);
+    return (
+      <Blank key={match} id={match} onDrop={handleDrop}>
+        {blanks[match]}
+      </Blank>
+    );
+  });
 
   return (
     <>
@@ -104,8 +124,16 @@ const DragNDropQuiz = () => {
           background-color: white;
           border: 1px solid black;
           margin: 0 2px;
+          padding : 3px;
           color: black;
           text-align: center;
+          transition: all 0.3s ease;
+        }
+        .blank.over {
+          background-color: #007BFF;
+          width: 60px;
+          height: 1.6em;
+          border: 2px dashed #0056b3;
         }
         .code-with-blanks {
           white-space: pre-wrap;
@@ -113,20 +141,36 @@ const DragNDropQuiz = () => {
         }
         .choice {
           display: inline-block;
-          width: 50px;
-          height: 1.5em;
+          width: 80px;
+          height: 2em;
+          align-content: center;
           text-align: center;
           margin: 0 5px;
           background-color: black;
           color: white;
           cursor: move;
+          }
+          .choice:hover{
+          background-color: gray;
         }
         .choices-container {
           margin-top: 20px;
+          padding : 10px;
+          height : 50px;
+          background-color : #007BFF;
         }
         .draggable.dragging {
-          opacity: 0.5;
+          opacity: 25;
         }
+          
+        .over{
+          background-color:gray;
+          transition: transform 0.3s;
+          &:hover {
+            transform: translateY(-10px);
+          }
+        }
+        
       `}</style>
     </>
   );
