@@ -1,6 +1,6 @@
 package com.scf.rank.config;
 
-import com.scf.rank.domain.dto.UserExp;
+import com.scf.rank.domain.model.UserExp;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +40,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.scf.rank.domain.dto.UserExp");
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.scf.rank.domain.model.UserExp");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         return props;
     }

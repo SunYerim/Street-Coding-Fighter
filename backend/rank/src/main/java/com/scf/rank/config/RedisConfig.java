@@ -1,6 +1,6 @@
 package com.scf.rank.config;
 
-import com.scf.rank.domain.dto.UserExp;
+import com.scf.rank.domain.model.UserExp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
