@@ -1,16 +1,15 @@
 import "../../index.css";
 import "../../css/GameMain.css";
-import lock from '/lock.svg'
-import unlock from '/unlock.svg'
+import "../../css/GameCreate.css";
 import Button from "./Button.jsx";
-import PasswordModal from "../game/PasswordModal.jsx";
+import MultiRoom from "../game/MultiRoom.jsx";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 export default function MultiMain() {
   const navigate = useNavigate();
-  const [rooms, setRooms] = useState([]);
+  // const [rooms, setRooms] = useState([]);
 
   // 예시 데이터
   const exampleRooms = [
@@ -37,7 +36,7 @@ export default function MultiMain() {
             <div>
               {
                 exampleRooms.map((room, i) => {
-                  return <Room roomNum={i+1} room={room.title} headerUser={room.headerUser} maxNum={room.userCount} isLock={room.isLock} key={room.id} />
+                  return <MultiRoom roomNum={i+1} room={room.title} headerUser={room.headerUser} maxNum={room.userCount} isLock={room.isLock} key={room.id} />
                 })
               }
             </div>
@@ -57,46 +56,46 @@ export default function MultiMain() {
 }
 
 // 룸 컴포넌트
-function Room(props) {
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+// function Room(props) {
+//   const navigate = useNavigate();
+//   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+//   const handleOpenModal = () => {
+//     setIsModalOpen(true);
+//   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+//   const handleCloseModal = () => {
+//     setIsModalOpen(false);
+//   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    handleCloseModal();
-  };
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     handleCloseModal();
+//   };
 
-  const handleRoomClick = () => {
-    if (props.isLock) {
-      handleOpenModal();
-    } else {
-      navigate("/multi-game");
-    }
-  };
+//   const handleRoomClick = () => {
+//     if (props.isLock) {
+//       handleOpenModal();
+//     } else {
+//       navigate("/multi-game");
+//     }
+//   };
 
 
-  return(
-    <>
-    <div className='room-items' onClick={handleRoomClick}>
-        <h3>{props.roomNum}. {props.room}</h3>
-        <h4>방장: {props.headerUser}</h4>
-        <h4>{props.maxNum}인 방</h4>
-        <img src={props.isLock ? lock : unlock} alt="lock" />
-      </div>
-        {isModalOpen && (
-          <PasswordModal
-            onClose={handleCloseModal}
-            onSubmit={handleSubmit}
-          />
-        )}
-    </>
-  )
-}
+//   return(
+//     <>
+//     <div className='room-items' onClick={handleRoomClick}>
+//         <h3>{props.roomNum}. {props.room}</h3>
+//         <h4>방장: {props.headerUser}</h4>
+//         <h4>{props.maxNum}인 방</h4>
+//         <img src={props.isLock ? lock : unlock} alt="lock" />
+//       </div>
+//         {isModalOpen && (
+//           <PasswordModal
+//             onClose={handleCloseModal}
+//             onSubmit={handleSubmit}
+//           />
+//         )}
+//     </>
+//   )
+// }
