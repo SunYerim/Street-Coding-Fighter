@@ -3,8 +3,6 @@ services:
   pjt-frontend:
     image: zlxldgus123/frontend
     restart: always
-    ports:
-      - "8300:80"
     networks:
       - network
 
