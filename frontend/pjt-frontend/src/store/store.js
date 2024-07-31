@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 const store = create(
   persist(
     (set) => ({
-      baseURL: "https://ssafy11s.com:8080",
+      baseURL: "http://ssafy11s.com:8080",
 
       memberId: "",
       setMemberId: (memberId) => set({ memberId }),
