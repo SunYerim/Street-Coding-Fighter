@@ -129,6 +129,12 @@ public class BattleGameService {
     }
 
 
-    public void joinRoom(String roomId) {
+    public Integer runRound(String roomId) {
+        BattleGameRoom room = findById(roomId);
+        Integer currentRound = room.nextRound();
+        if(currentRound == -1){ // 라운드 끝인 상황
+
+        }
+        return currentRound;
     }
 }
