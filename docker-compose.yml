@@ -12,7 +12,7 @@ services:
     networks:
       - network
     volumes:
-      - db_data_user:/var/lib/mysql
+      - db_data_user:/var/lib/mysql/user
 
   mariadb-problem:
     image: mariadb:latest
@@ -24,7 +24,7 @@ services:
     networks:
       - network
     volumes:
-      - db_data_problem:/var/lib/mysql
+      - db_data_problem:/var/lib/mysql/problem
 
   mariadb-multi:
     image: mariadb:latest
@@ -36,7 +36,7 @@ services:
     networks:
       - network
     volumes:
-      - db_data_multi:/var/lib/mysql
+      - db_data_multi:/var/lib/mysql/multi
 
   redis:
     image: redis:latest
@@ -117,6 +117,7 @@ services:
 networks:
   network:
     external: true
+    driver: bridge
 
 volumes:
   db_data_user:
