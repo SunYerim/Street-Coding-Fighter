@@ -11,6 +11,7 @@ import com.scf.user.profile.domain.dto.ReportResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import com.scf.user.profile.domain.entity.Solved;
+import com.scf.user.profile.global.exception.ProblemNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -94,18 +95,14 @@ public class ProfileServiceImpl implements ProfileService {
                         .type(problemInfo.getProblemType())
                         .category(problemInfo.getCategory())
                         .difficulty(problemInfo.getDifficulty())
+                        .problemContent(problemInfo.getProblemContent())
+                        .problemChoices(problemInfo.getProblemChoices())
+                        .problemAnswers(problemInfo.getProblemAnswers())
                         .build();
                 } else {
-                    // 문제 정보를 가져오지 못했을 때의 처리 (예: 기본값 설정)
-                    return SolvedProblemResponseDto.builder()
-                        .solvedId(solvedProblem.getSolvedId())
-                        .isCorrect(solvedProblem.isCorrect())
-                        .choice(solvedProblem.getChoice())
-                        .title("Unknown")
-                        .type(null)
-                        .category("Unknown")
-                        .difficulty(0)
-                        .build();
+                    // 문제 정보를 가져오지 못했을 때 예외 발생
+                    throw new ProblemNotFoundException(
+                        "문제 정보를 가져올 수 없습니다. 문제 ID: " + solvedProblem.getProblemId());
                 }
             })
             .collect(Collectors.toList());
