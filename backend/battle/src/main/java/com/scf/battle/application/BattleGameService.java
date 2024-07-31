@@ -137,4 +137,10 @@ public class BattleGameService {
         }
         return currentRound;
     }
+
+    public List<Problem> getCurrentRoundProblem(String roomId, Integer currentRound){
+        BattleGameRoom room = findById(roomId);
+        List<Problem> currentRoundProblem = room.getProblemsForRound(currentRound);
+        return currentRoundProblem;
+    }
 }
