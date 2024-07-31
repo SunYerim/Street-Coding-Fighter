@@ -1,6 +1,9 @@
 package com.scf.rank.application;
 
 import com.scf.rank.domain.model.UserExp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -40,5 +43,21 @@ public class RankService {
         ValueOperations<String, UserExp> valueOps = redisTemplate.opsForValue();
 
         return valueOps.get(key);
+    }
+
+    public List<UserExp> findAll() {
+
+        Set<String> keys = redisTemplate.keys("*");
+
+        List<UserExp> ranks = new ArrayList<>();
+
+        if(keys != null) {
+            for(String key : keys) {
+                UserExp userExp = redisTemplate.opsForValue().get(key);
+                ranks.add(userExp);
+            }
+        }
+
+        return ranks;
     }
 }
