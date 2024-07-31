@@ -28,3 +28,7 @@ problem:
 user:
   server:
     url: http://ssafy11s.com/user
+
+server:
+  port: 8082
+
