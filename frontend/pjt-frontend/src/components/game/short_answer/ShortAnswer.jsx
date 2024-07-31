@@ -1,5 +1,6 @@
-import { borderRadius, height, minWidth } from '@mui/system';
+import { borderRadius, height, minWidth, padding, style } from '@mui/system';
 import StyleToPythonCode from '../StyleToPythonCode';
+import { useState } from 'react';
 
 const testQuizContent = {
   content: '# 다음 코드의 출력 결과는 무엇일까요? \n print(15 % 4)',
@@ -27,26 +28,59 @@ const styles = {
     borderRadius: '5px',
     boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
   },
-  input:{
-    width : '100%',
-    height : '100%',
+  answerInput: {
+    width: '200px',
+    height: '30px',
+    padding : '10px',
+    paddingLeft: '20px',
   },
-  inputDiv : {
-    width : '100px',
-    height : '20px',
-  }
+  inputDiv: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '10px',
+    borderRadius: '5px',
+  },
+  submitButton: {
+    display: 'inline-block',
+    padding: '10px 20px',
+    fontSize: '16px',
+    color: '#fff',
+    backgroundColor: '#007bff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    // marginTop: '20px',
+    marginLeft: '20px',
+  },
+
 };
 const ShortAnswer = () => {
+  const [answer, setAnswer] = useState('');
+  
+  const onInputChange = (e) =>{
+    console.log(e.target.value);
+    setAnswer(e.target.value)
+  }
+  const handleKeyDown = (e) => {
+    if(e.key == 'Enter'){
+      handleSubmit();
+    }
+  }
+  const handleSubmit = () => {
+    // 여기 제출하는 함수 작성하시면 됩니다!
+    alert(`${answer}제출됨`)
+  };
   return (
     <>
       <h2>Short Answer</h2>
       <div style={styles.codeContainer}>
         <StyleToPythonCode codeString={testQuizContent.content} />
       </div>
-      <div >
-        <input style={styles.input} type="text" />
+      <div style={styles.inputDiv}>
+        <input style={styles.answerInput} type="text" onChange={onInputChange} onKeyDown={handleKeyDown} />
+        <button style={styles.submitButton} onClick={handleSubmit}>제출</button>
       </div>
-      <button>Submit</button>
     </>
   );
 };
