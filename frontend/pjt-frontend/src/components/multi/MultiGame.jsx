@@ -7,7 +7,7 @@ import DragNDropQuiz from '../game/quiz_with_blank/DragNDropQuiz.jsx';
 // import socket from "../game/server.js"
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import ShortAnswer from '../game/short_answer/ShortAnswer.jsx';
 export default function MultiGame() {
   const navigate = useNavigate();
   const [start, setStart] = useState(0);
@@ -72,7 +72,8 @@ export default function MultiGame() {
               })}
             </div>
             <div className="game-content">
-              <DragNDropQuiz />
+              <ShortAnswer />
+              {/* <DragNDropQuiz /> */}
               {/* {userList.length === 1 ? (
                 <h1
                   style={{
