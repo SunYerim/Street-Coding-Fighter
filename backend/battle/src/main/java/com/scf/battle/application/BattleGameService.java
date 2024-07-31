@@ -30,19 +30,25 @@ public class BattleGameService {
     }
 
     public void joinRoom(String roomId, Long userId, String username, String roomPassword) {
-
+        battleGameRepository.joinRoom(roomId, userId, username, roomPassword);
     }
 
     public String createRoom(Long userId, CreateRoomDTO createRoomDTO) {
         String roomId = UUID.randomUUID().toString();
 
+        Player playerHost = new Player(userId,createRoomDTO.getUsername(),100);
         BattleGameRoom room = BattleGameRoom.builder()
             .roomId(roomId)
             .hostId(userId)
             .isStart(false)
-            .round(0)
+            .finalRound(createRoomDTO.getRound())
             .title(createRoomDTO.getTitle())
             .password(createRoomDTO.getPassword())
+            .playerA(playerHost)
+            .hasPlayerASubmitted(false)
+            .hasPlayerBSubmitted(false)
+            .isAttack(false)
+            .currentRound(0)
             .build();
 
         battleGameRepository.addRoom(room);
