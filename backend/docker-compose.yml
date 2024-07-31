@@ -1,0 +1,124 @@
+version: '3'
+services:
+  mariadb-user:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - network
+    volumes:
+      - db_data_user:/var/lib/mysql
+
+  mariadb-problem:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: problem_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      - network
+    volumes:
+      - db_data_problem:/var/lib/mysql
+
+  mariadb-multi:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: multi_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      - network
+    volumes:
+      - db_data_multi:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - network
+
+  user-server:
+    image: zlxldgus123/user
+    depends_on:
+      - mariadb-user
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      JWT_SECRET: 7d1b1d6d36d8e6a8f1bda6a7f473f87b012b0345a1b5f
+      JWT_ACCESS_TOKEN_EXPIRY: 3600000
+      JWT_REFRESH_TOKEN_EXPIRY: 86400000
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+      LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+    ports:
+      - "8080:8080"
+    networks:
+      - network
+
+  problem-server:
+    image: zlxldgus123/problem
+    depends_on:
+      - mariadb-problem
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-problem:3306/problem_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      JWT_SECRET: 7d1b1d6d36d8e6a8f1bda6a7f473f87b012b0345a1b5f
+      JWT_ACCESS_TOKEN_EXPIRY: 3600000
+      JWT_REFRESH_TOKEN_EXPIRY: 86400000
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+      LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+    ports:
+      - "8081:8081"
+    networks:
+      - network
+
+  multi-server:
+    image: zlxldgus123/multi
+    depends_on:
+      - mariadb-multi
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-multi:3306/multi_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      JWT_SECRET: 7d1b1d6d36d8e6a8f1bda6a7f473f87b012b0345a1b5f
+      JWT_ACCESS_TOKEN_EXPIRY: 3600000
+      JWT_REFRESH_TOKEN_EXPIRY: 86400000
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+      LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+    ports:
+      - "8082:8082"
+    networks:
+      - network
+
+networks:
+  network:
+    external: true
+
+volumes:
+  db_data_user:
+  db_data_problem:
+  db_data_multi:
