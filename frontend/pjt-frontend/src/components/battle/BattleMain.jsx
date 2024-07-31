@@ -27,26 +27,37 @@ export default function BattleMain() {
     window.location.reload();
   }
 
-
   return (
     <>
       <div className="container">
+        <div className="sub-container">
         <div className="list-container">
+          <div className="game-list-header">
+            <div className="game-room-index">
+              <h2>No.</h2>
+              <h2>Title</h2>
+              <h2>King</h2>
+              <h2>Limit</h2>
+              <h2>PW</h2>
+            </div>
+            <div className="white-line"></div>
+          </div>
           <div className="game-list">
             <div>
-            {
-              exampleRooms.map((room, i) => {
-                return <BattleRoom roomNum={i+1} room={room.title} headerUser={room.headerUser} maxNum={room.userCount} isLock={room.isLock} key={room.id} />
-              })
-            }
+              {
+                exampleRooms.map((room, i) => {
+                  return <BattleRoom roomNum={i+1} room={room.title} headerUser={room.headerUser} maxNum={room.userCount} isLock={room.isLock} key={room.id} />
+                })
+              }
             </div>
           </div>
+        </div>
           <div className="button-container">
-            <div className="game-button">
-              <Button text={"Refresh"} />
+            <div>
+              <button className="create-button" onClick={refreshPage}>Refresh</button>
             </div>
-            <div className="game-button">
-              <Button text={"Create"} onClick={() => navigate("/battle-create")} />
+            <div>
+              <button className="create-button" onClick={() => navigate("/multi-create")}>Create</button>
             </div>
           </div>
         </div>

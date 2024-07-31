@@ -6,12 +6,12 @@ import Timer from "../game/Timer.jsx";
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
 import GameResultModal from "../game/GameResultModal.jsx";
-// import socket from "../game/server.js"
+import socket from "../game/server.js"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-export default function MultiGame_flex() {
+export default function MultiGame() {
   const navigate = useNavigate();
   const [start, setStart] = useState(0);
   const [user, setUser] = useState(null);
@@ -37,12 +37,12 @@ export default function MultiGame_flex() {
     setModalOpen(true);
   };
 
-  // useEffect(() => {
-  //   socket.on("message", (message) => {
-  //     setMessageList((prevState) => prevState.concat(message));
-  //   });
-  //   askUserName();
-  // }, []);
+  useEffect(() => {
+    socket.on("message", (message) => {
+      setMessageList((prevState) => prevState.concat(message));
+    });
+    askUserName();
+  }, []);
 
 
   const askUserName = () => {
@@ -73,9 +73,7 @@ export default function MultiGame_flex() {
         <div className="multi-game-main">
           <div className="multi-game-left">
             <div className="multi-timer">
-              <img className="hourglass" src={hourglass} alt="hourglass" />
               <Timer />
-              <img className="hourglass" src={hourglass} alt="hourglass" style={{ filter: 'red' }} />
             </div>
             <div className="multi-rank-table">
               {

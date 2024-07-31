@@ -33,8 +33,9 @@ function BattleRoom(props) {
   return(
     <>
     <div className='room-items' onClick={handleRoomClick}>
-        <h3>{props.roomNum}. {props.room}</h3>
-        <h4>방장: {props.headerUser}</h4>
+        <h3>{props.roomNum}</h3>
+        <h3>{props.room}</h3>
+        <h4>{props.headerUser}</h4>
         <h4>{props.maxNum}인 방</h4>
         <img src={props.isLock ? lock : unlock} alt="lock" />
       </div>

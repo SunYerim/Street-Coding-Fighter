@@ -18,7 +18,7 @@
   height: 80vh;
   border-radius: 20px;
   color: white;
-  border: 3px solid black;
+  /* border: 3px solid black; */
   border-radius: 10px;  
 }
 
@@ -30,7 +30,9 @@
   height: 80vh;
   border-radius: 20px;
   color: white;
-  border: 3px solid black;
+  /* border: 3px solid black; */
+  background-color: rgba(248, 248, 248, 0.7);
+  margin: 1%;
   border-radius: 10px;
 }
 
@@ -42,7 +44,7 @@
   height: 80vh;
   border-radius: 20px;
   color: white;
-  border: 3px solid black;
+  /* border: 3px solid black; */
   border-radius: 10px;
 }
 
@@ -53,10 +55,11 @@
   align-items: center;
   width: 100%;
   height: 20%;
-  border: 3px solid black;
   border-radius: 10px;
   font-size: 400%;
   color: yellow;
+  background-color: rgba(0, 0, 50, 0.7);
+  margin: 1%;
 }
 
 .hourglass {
@@ -74,7 +77,8 @@
   flex-direction: column;
   width: 100%;
   height: 80%;
-  border: 3px solid black;
+  background-color: rgba(0, 0, 50, 0.7);
+  margin: 1%;
   border-radius: 10px;
 }
 
@@ -102,12 +106,13 @@
   grid-template-columns: 1fr 3fr 3fr;
   justify-items: center;
   align-items: center;
-  width: 20vw;
+  width: 95%;
   height: 50px;
-  border: 3px solid black;
-  border-radius: 10px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  border: 3px solid white;
+  border-radius: 10px;
+  margin: 1%;
 }
 
 .multi-rank-items h3, h4 {
@@ -126,7 +131,9 @@
   align-items: center;
   width: 100%;
   height: 20%;
-  border: 3px solid black;
+  /* border: 3px solid black; */
+  background-color: rgba(0, 0, 50, 0.7);
+  margin: 1%;
   border-radius: 10px;
 }
 
@@ -140,6 +147,7 @@
   border-radius: 10px;
 }
 
+
 .multi-message-room {
   overflow-y: auto;
   overflow-y: scroll;
@@ -149,7 +157,9 @@
   align-items: center;
   width: 100%;
   height: 80%;
-  border: 3px solid black;
+  /* border: 3px solid black; */
+  background-color: rgba(0, 0, 50, 0.7);
+  margin: 1%;
   border-radius: 10px;
 }
 
