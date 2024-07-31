@@ -10,6 +10,7 @@ import com.scf.user.profile.domain.dto.ProblemResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
+import com.scf.user.profile.domain.entity.Record;
 import com.scf.user.profile.domain.entity.Solved;
 import com.scf.user.profile.global.exception.ProblemNotFoundException;
 import java.util.List;
@@ -111,8 +112,17 @@ public class ProfileServiceImpl implements ProfileService {
         Member member = userRepository.findById(Long.parseLong(memberId))
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        // 멤버가 푼 문제들 리스트를 가져와서
+        // 멤버가 푼 문제들 리스트를 가져오기
         SolvedProblemsListDto solvedList = getSolvedProblemsList(memberId);
+
+        // 멤버의 게임 기록에서 등수 정보 가져오기
+        List<Record> records = member.getRecords();
+
+        // 평균 랭킹 계산
+        int totalRank = records.stream()
+            .mapToInt(Record::getRanking)
+            .sum();
+        int averageRank = records.isEmpty() ? 0 : totalRank / records.size();
 
         // solvedProblemDto 리스트 생성
         List<DjangoResponseDto.solvedProblemDto> solvedProblemDtoList = solvedList.getSolvedList()
@@ -123,13 +133,6 @@ public class ProfileServiceImpl implements ProfileService {
                 .difficulty(solved.getDifficulty())
                 .build())
             .collect(Collectors.toList());
-
-        // 평균 등수 계산
-        int totalRank = solvedProblemDtoList.stream()
-            .mapToInt(DjangoResponseDto.solvedProblemDto::getRanking)
-            .sum();
-        int averageRank =
-            solvedProblemDtoList.isEmpty() ? 0 : totalRank / solvedProblemDtoList.size();
 
         // DjangoResponseDto 빌드하여 반환
         return DjangoResponseDto.builder()
