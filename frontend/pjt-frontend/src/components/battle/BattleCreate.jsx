@@ -1,16 +1,21 @@
 import "../../index.css";
 import "../../css/GameMain.css";
 import "../../css/GameCreate.css";
+import axios from 'axios';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function BattleCreate() {
   const navigate = useNavigate();
 
-  // 방만들기 함수 만들어야됨. (소켓? http?)
-  const createBattleRoom = (data) => {
-  
-  }
+  // const baseUrl = 'http://ssafy11s.com/api';
+
+  // const createBattleRoom = async (data) => {
+  //   const title = data.target.title.value;
+  //   const password = data.target.password.value;
+  //   const round = data.target.round.value;
+  //   axios.post(baseUrl + '/multi/room', { title, password, round })
+  // }
 
   return (
     <>
@@ -21,15 +26,15 @@ export default function BattleCreate() {
           <form className="battle-create-input">
             <div className="create-box">
               <span>방 제목 : </span>
-                <input className="create-title" type="text" placeholder="Enter Room Title" maxLength={30} />
+                <input name="title" className="create-title" type="text" placeholder="Enter Room Title" maxLength={30} />
             </div>
             <div className="create-box">
               <span>비밀번호 : </span>
-              <input className="create-password" type="password" />
+              <input name="password" className="create-password" type="password" />
             </div>  
             <div className="create-box">
               <span>라운드 : </span>
-              <input className="create-problems" type="number" min="5" max="20" placeholder="5" />
+              <input name="round" className="create-problems" type="number" min="5" max="20" placeholder="5" />
             </div>
             <div className="create-button-container">
               <button className="create-button" onSubmit={createBattleRoom}>Create</button>
