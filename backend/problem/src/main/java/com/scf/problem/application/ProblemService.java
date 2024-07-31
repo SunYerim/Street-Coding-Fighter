@@ -11,6 +11,7 @@ import com.scf.problem.domain.model.ProblemInfo;
 import com.scf.problem.domain.repository.ProblemInfoRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -88,9 +89,11 @@ public class ProblemService {
     private ProblemAnswerDTO mapToProblemAnswerDTO(ProblemAnswer answer) {
 
         ProblemChoiceDTO correctChoiceDTO = ProblemChoiceDTO.builder()
-            .choiceId(answer.getCorrectChoice().getChoiceId())
-            .problemId(answer.getCorrectChoice().getProblemInfo().getProblemId())
-            .choiceText(answer.getCorrectChoice().getChoiceText())
+            .choiceId(Optional.ofNullable(answer.getCorrectChoice())
+                .map(ProblemChoice::getChoiceId)
+                .orElse(null))
+            .problemId(answer.getProblemInfo().getProblemId())
+            .choiceText(answer.getCorrectAnswerText())
             .build();
 
         return ProblemAnswerDTO.builder()
