@@ -5,7 +5,7 @@ import Blank from './Blank';
 import ChoiceContainer from './ChoiceContainer';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-
+import StyleToPythonCode from '../StyleToPythonCode.jsx';
 const testQuizContent = {
   content:
     'def bubble_sort(arr):\n    n = len(arr)  \n    for i in range(n):  \n        for j in range(0, n - i - 1):  \n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[$blank1$], arr[$blank2$]\n\n# 테스트용 리스트\ndata = [64, 34, 25, 12, 22, 11, 90]\n\n# 정렬 함수 호출\nbubble_sort($blank3$)\nprint("정렬된 리스트:", data)',
@@ -33,6 +33,7 @@ const DragNDropQuiz = () => {
       ...prevBlanks,
       [blankId]: choice,
     }));
+    console.log(blanks);
     // setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
 
@@ -50,39 +51,27 @@ const DragNDropQuiz = () => {
       </Blank>
     );
   });
-  modifiedContent = reactStringReplace(
-    modifiedContent,
-    /(def|for|if|else|return|import|from|as|class|try|except|finally|with|yield|raise|assert|del|pass|continue|break)\b/g,
-    (match, i) => {
-      return <span className="keyword">{match}</span>;
-    }
-  );
-  modifiedContent = reactStringReplace(modifiedContent, /('.*?'|".*?")/g, (match, i) => {
-    return <span className="string">{match}</span>;
-  });
-  modifiedContent = reactStringReplace(modifiedContent, /(#.*)/g, (match, i) => {
-    return <span className="comment">{match}</span>;
-  });
-  modifiedContent = reactStringReplace(modifiedContent, /(\b\d+\b)/g, (match, i) => {
-    return <span className="number">{match}</span>;
-  });
+
+  // modifiedContent = reactStringReplace(
+  //   modifiedContent,
+  //   /(def|for|if|else|return|import|from|as|class|try|except|finally|with|yield|raise|assert|del|pass|continue|break)\b/g,
+  //   (match, i) => {
+  //     return <span className="keyword">{match}</span>;
+  //   }
+  // );
+  // modifiedContent = reactStringReplace(modifiedContent, /('.*?'|".*?")/g, (match, i) => {
+  //   return <span className="string">{match}</span>;
+  // });
+  // modifiedContent = reactStringReplace(modifiedContent, /(#.*)/g, (match, i) => {
+  //   return <span className="comment">{match}</span>;
+  // });
+  // modifiedContent = reactStringReplace(modifiedContent, /(\b\d+\b)/g, (match, i) => {
+  //   return <span className="number">{match}</span>;
+  // });
 
   const styles = {
     quizContainer: {
       marginBottom: '20px',
-    },
-    codeWithBlanks: {
-      whiteSpace: 'pre-wrap',
-      fontFamily: "'Courier New', Courier, monospace",
-      fontSize: '15px',
-      backgroundColor: '#2e3440',
-      color: '#d8dee9',
-      padding: '20px',
-      borderRadius: '5px',
-      position: 'relative',
-      lineHeight: '1', // 줄 간격 조정
-      letterSpacing: 'normal', // 자간 조정
-
     },
     submitButton: {
       display: 'inline-block',
@@ -103,47 +92,24 @@ const DragNDropQuiz = () => {
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        <div style={styles.quizContainer}>
-          <pre className="code-with-blanks" style={styles.codeWithBlanks}>{modifiedContent}</pre>
-          <button
-            style={styles.submitButton}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor)}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor)}
-            onClick={handleSubmit}
-          >
-            제출
-          </button>
+        <div>
+          <StyleToPythonCode codeString={modifiedContent}/>
         </div>
+
         <ChoiceContainer>
           {choices.map((choice, idx) => {
             return <Choice key={`choice-${idx}`} choice={choice} />;
           })}
         </ChoiceContainer>
+        <button
+          style={styles.submitButton}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor)}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor)}
+          onClick={handleSubmit}
+        >
+          제출
+        </button>
       </DndProvider>
-
-      <style>{`
-        .code-with-blanks .keyword {
-          color: #81a1c1;
-          font-family: 'Courier New', Courier, monospace;
-          }
-        .code-with-blanks .string {
-          color: #a3be8c;    
-          font-family: 'Courier New', Courier, monospace;
-          }
-        .code-with-blanks .comment {
-          color: #616e88;
-          font-family: 'Courier New', Courier, monospace;
-          font-style: italic; 
-          }
-        .code-with-blanks .number {
-          color: #b48ead;
-          font-family: 'Courier New', Courier, monospace;
-          }
-        .code-with-blanks .function {
-          color: #88c0d0;
-          font-family: 'Courier New', Courier, monospace;
-          }
-      `}</style>
     </>
   );
 };
