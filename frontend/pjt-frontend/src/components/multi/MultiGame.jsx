@@ -62,8 +62,8 @@ export default function MultiGame() {
     socket.emit("sendMessage", message, (res)=> {
       console.log("sendMessage res", res);
     });
+    setMessage('');
     // socket.emit("sendMessage", message);
-    // setMessage('');
   };
 
 

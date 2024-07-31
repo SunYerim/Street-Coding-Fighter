@@ -14,7 +14,7 @@ export default function BattleCreate() {
   //   const title = data.target.title.value;
   //   const password = data.target.password.value;
   //   const round = data.target.round.value;
-  //   axios.post(baseUrl + '/multi/room', { title, password, round })
+  //   axios.post(baseUrl + '/battle/room/{userId}', { title, password, round })
   // }
 
   return (
