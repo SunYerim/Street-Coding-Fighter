@@ -74,16 +74,9 @@ public class BattleGameService {
         if (submitTime > 30) {
             // TODO : 예외처리 30초 보다 많은 경우
         }
-
-        int[] times = {3, 6, 9, 12, 15};
-        int[] scores = {500, 300, 200, 150, 130};
-
-        for (int i = 0; i < times.length; i++) {
-            if (submitTime < times[i]) {
-                return scores[i];
-            }
-        }
-        return 50;
+        int power = 10-submitTime;
+        if(power < 0) power = 0;
+        return power;
     }
 
     public FightDTO markSolution(String roomId, Long userId, Solved solved) {
