@@ -2,6 +2,7 @@ package com.scf.battle.application;
 
 import com.scf.battle.domain.dto.CreateRoomDTO;
 import com.scf.battle.domain.dto.FightDTO;
+import com.scf.battle.domain.dto.Player;
 import com.scf.battle.domain.dto.Problem;
 import com.scf.battle.domain.dto.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
@@ -80,16 +81,13 @@ public class BattleGameService {
     }
 
     public FightDTO markSolution(String roomId, Long userId, Solved solved) {
-        System.out.println(roomId);
         BattleGameRoom room = battleGameRepository.findById(roomId);
-        System.out.println(room);
         //해당 라운드 문제 가져오기
-        List<Problem> problems = room.getProblemsForRound(room.getRound());
+        List<Problem> problems = room.getProblemsForRound(solved.getRound());
         //해당 라운드에서 유저가 선택한 문제 추출
         Optional<Problem> problemOpt = problems.stream()
             .filter(p -> p.getProblemId().equals(solved.getProblemId()))
             .findFirst();
-
         if (!problemOpt.isPresent()) {
             // TODO : 문제가 없는 경우
         }
@@ -102,13 +100,12 @@ public class BattleGameService {
         // 제출된 답안과 문제의 정답을 비교하기
         int correctAnswerCount = compareAnswers(answer, solved.getSolve());
         int score = 0;
-        if (correctAnswerCount > 0) {
+        if (correctAnswerCount > 0) { // 맞추었다면
             score = calculatePower(solved.getSubmitTime());
             room.updateHp(userId, score);
             return FightDTO.builder().userId(userId).isAttack(true).power(score).build();
         }
-
-        return null;
+        return FightDTO.builder().userId(userId).isAttack(false).power(0).build();
     }
 
     private int compareAnswers(Map<Integer, Integer> answer, Map<Integer, Integer> solve) {
