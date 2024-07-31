@@ -17,7 +17,7 @@ public class RankController {
     private final RankService rankingService;
 
     @GetMapping("/{userId}")
-    public UserExp getRank(@PathVariable String userId) {
+    public UserExp getRank(@PathVariable Long userId) {
 
         UserExp userExp = rankingService.getRank(userId);
 

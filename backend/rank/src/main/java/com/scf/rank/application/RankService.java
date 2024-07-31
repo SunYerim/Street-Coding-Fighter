@@ -31,10 +31,9 @@ public class RankService {
         String key = KEY_PREFIX + userExp.getUserId();
 
         redisTemplate.opsForValue().set(key, userExp);
-        System.out.println("Updated ranking for user: " + userExp.getUserId() + " with exp: " + userExp.getExp());
     }
 
-    public UserExp getRank(String userId) {
+    public UserExp getRank(Long userId) {
 
         String key = KEY_PREFIX + userId;
 
