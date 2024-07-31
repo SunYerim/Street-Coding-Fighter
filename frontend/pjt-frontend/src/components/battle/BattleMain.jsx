@@ -8,8 +8,20 @@ import { useNavigate } from "react-router-dom";
 
 export default function BattleMain() {
   const navigate = useNavigate();
-  // const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
+  // const baseUrl = "http://ssafy11s.com/api"
+
+  // const loadData = async () => {
+  //   const response = await axios.get(baseUrl + '/battle')
+  //   setRooms(response.data);
+  // }
+
+  // useEffect(() => {
+  //   loadData();
+  // }, []);
+
+  
   // 예시 데이터
   const exampleRooms = [
     { id: 1, title: "가화만사성", headerUser: "Bernie", userCount: 6, isLock: true, password: 1234 },

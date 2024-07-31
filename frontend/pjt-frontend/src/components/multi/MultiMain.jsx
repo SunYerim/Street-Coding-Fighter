@@ -2,13 +2,25 @@ import "../../index.css";
 import "../../css/GameMain.css";
 import "../../css/GameCreate.css";
 import MultiRoom from "../game/MultiRoom.jsx";
+import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 export default function MultiMain() {
   const navigate = useNavigate();
-  // const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState([]);
+
+  // const baseUrl = "http://ssafy11s.com/api"
+
+  // const loadData = async () => {
+  //   const response = await axios.get(baseUrl + '/multi/room')
+  //   setRooms(response.data);
+  // }
+
+  // useEffect(() => {
+  //   loadData();
+  // }, []);
 
   // 예시 데이터
   const exampleRooms = [
@@ -24,6 +36,7 @@ export default function MultiMain() {
 
   const refreshPage = () => {
     window.location.reload();
+    // loadData();
   }
 
   return (
