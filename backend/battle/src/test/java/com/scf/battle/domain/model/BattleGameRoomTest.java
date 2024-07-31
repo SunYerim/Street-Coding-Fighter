@@ -31,7 +31,7 @@ public class BattleGameRoomTest {
             .password(password)
             .isAttack(false)
             .isStart(false)
-            .round(0)
+            .finalRound(0)
             .build();
     }
 
