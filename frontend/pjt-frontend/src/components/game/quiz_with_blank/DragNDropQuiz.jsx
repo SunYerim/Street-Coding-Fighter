@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import reactStringReplace from 'react-string-replace';
+import Choice from './Choice';
+import Blank from './Blank';
+import ChoiceContainer from './ChoiceContainer';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 const testQuizContent = {
   content:
@@ -19,175 +24,125 @@ const testQuizContent = {
   },
 };
 
-const Blank = ({ id, children, onDrop }) => {
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const data = e.dataTransfer.getData('text');
-    onDrop(id, data);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDragEnter = (e) => {
-    e.currentTarget.classList.add('over');
-  };
-
-  const handleDragLeave = (e) => {
-    e.currentTarget.classList.remove('over');
-  };
-
-  return (
-    <div
-      className="blank"
-      key={`blank-${id}`}
-      onDrop={handleDrop}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragOver={handleDragOver}
-    >
-      {children ? <Choice isInBlank={true}>{children}</Choice> : null}
-    </div>
-  );
-};
-
-const Choice = ({ id, children, isInBlank }) => {
-  const handleDragStart = (e) => {
-    e.dataTransfer.setData('text', children);
-  };
-
-  return (
-    <div className={!isInBlank ? 'choice' : 'choice-inblank'} key={`choice-${id}`} draggable="true" onDragStart={handleDragStart}>
-      {children}
-    </div>
-  );
-};
-
-const ChoiceContainer = ({ onDrop, children }) => {
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const data = e.dataTransfer.getData('text');
-    onDrop(null, data);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  return (
-    <div className="choices-container" onDrop={handleDrop} onDragOver={handleDragOver}>
-      {children}
-    </div>
-  );
-};
-
 const DragNDropQuiz = () => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState(Object.values(testQuizContent.choices));
 
-  const handleDrop = (id, data) => {
-    setBlanks((prev) => {
-      const newBlanks = { ...prev };
-
-      if (id !== null) {
-        // 빈칸에 새로운 선택지가 드롭될 때, 기존 선택지를 choices로 되돌림
-        if (newBlanks[id]) {
-          setChoices((prevChoices) => [...prevChoices, newBlanks[id]]);
-        }
-        newBlanks[id] = data;
-      }
-
-      return newBlanks;
-    });
-
-    // 새로운 선택지가 choices에서 사라지도록 업데이트
-    setChoices((prevChoices) => {
-      if (id === null) {
-        return [...prevChoices, data];
-      }
-      return prevChoices.filter((choice) => choice !== data);
-    });
+  const handleDrop = (blankId, choice) => {
+    setBlanks((prevBlanks) => ({
+      ...prevBlanks,
+      [blankId]: choice,
+    }));
+    setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
 
-  const modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => {
+  const handleSubmit = () => {
+    const isCorrect = Object.keys(testQuizContent.answer).every((key) => {
+      return testQuizContent.answer[key] === blanks[key];
+    });
+    alert(isCorrect ? '정답입니다!' : '틀렸습니다. 다시 시도해보세요.');
+  };
+
+  let modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => {
     return (
       <Blank key={match} id={match} onDrop={handleDrop}>
         {blanks[match]}
       </Blank>
     );
   });
+  modifiedContent = reactStringReplace(
+    modifiedContent,
+    /(def|for|if|else|return|import|from|as|class|try|except|finally|with|yield|raise|assert|del|pass|continue|break)\b/g,
+    (match, i) => {
+      return <span className="keyword">{match}</span>;
+    }
+  );
+  modifiedContent = reactStringReplace(modifiedContent, /('.*?'|".*?")/g, (match, i) => {
+    return <span className="string">{match}</span>;
+  });
+  modifiedContent = reactStringReplace(modifiedContent, /(#.*)/g, (match, i) => {
+    return <span className="comment">{match}</span>;
+  });
+  modifiedContent = reactStringReplace(modifiedContent, /(\b\d+\b)/g, (match, i) => {
+    return <span className="number">{match}</span>;
+  });
+
+  const styles = {
+    quizContainer: {
+      marginBottom: '20px',
+    },
+    codeWithBlanks: {
+      whiteSpace: 'pre-wrap',
+      fontFamily: "'Courier New', Courier, monospace",
+      fontSize: '0.8em',
+      backgroundColor: '#2e3440',
+      color: '#d8dee9',
+      padding: '20px',
+      borderRadius: '5px',
+      position: 'relative',
+      lineHeight: '1', // 줄 간격 조정
+      letterSpacing: 'normal', // 자간 조정
+
+    },
+    submitButton: {
+      display: 'inline-block',
+      padding: '10px 20px',
+      fontSize: '16px',
+      color: '#fff',
+      backgroundColor: '#007bff',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginTop: '20px',
+    },
+    submitButtonHover: {
+      backgroundColor: '#0056b3',
+    },
+  };
 
   return (
     <>
-      <div className="quiz-container">
-        <pre className="code-with-blanks">{modifiedContent}</pre>
-      </div>
-
-      <ChoiceContainer onDrop={handleDrop}>
-        {choices.map((choice, idx) => {
-          return <Choice isInBlank={false} key={`choice-${idx}`}>{choice}</Choice>;
-        })}
-      </ChoiceContainer>
+      <DndProvider backend={HTML5Backend}>
+        <div style={styles.quizContainer}>
+          <pre className="code-with-blanks" style={styles.codeWithBlanks}>{modifiedContent}</pre>
+          <button
+            style={styles.submitButton}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor)}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor)}
+            onClick={handleSubmit}
+          >
+            제출
+          </button>
+        </div>
+        <ChoiceContainer>
+          {choices.map((choice, idx) => {
+            return <Choice key={`choice-${idx}`} choice={choice} />;
+          })}
+        </ChoiceContainer>
+      </DndProvider>
 
       <style>{`
-        .blank {
-          display: inline-block;
-          width: 50px;
-          height: 1.3em;
-          background-color: white;
-          border: 1px solid black;
-          margin: 0 2px;
-          padding: 3px;
-          color: black;
-          text-align: center;
-          transition: all 0.3s ease;
-        }
-        .blank.over {
-          background-color: #007BFF;
-          width: 60px;
-          height: 1.6em;
-          border: 2px dashed #0056b3;
-        }
-        .code-with-blanks {
-          white-space: pre-wrap;
+        .code-with-blanks .keyword {
+          color: #81a1c1;
           font-family: 'Courier New', Courier, monospace;
-        }
-        .choice {
-          display: inline-block;
-          width: 80px;
-          height: 2em;
-          align-content: center;
-          text-align: center;
-          margin: 0 5px;
-          background-color: black;
-          color: white;
-          cursor: move;
-        }
-        .choice-inblank {
-          width: 90%;
-          background-color: black;
-          color: white;
-        }
-        .choice:hover {
-          background-color: gray;
-        }
-        .choices-container {
-          margin-top: 20px;
-          padding: 10px;
-          height: 50px;
-          background-color: #007BFF;
-        }
-        .draggable.dragging {
-          opacity: 0.25;
-        }
-        .over {
-          background-color: gray;
-          transition: transform 0.3s;
-          &:hover {
-            transform: translateY(-10px);
           }
-        }
+        .code-with-blanks .string {
+          color: #a3be8c;    
+          font-family: 'Courier New', Courier, monospace;
+          }
+        .code-with-blanks .comment {
+          color: #616e88;
+          font-family: 'Courier New', Courier, monospace;
+          font-style: italic; 
+          }
+        .code-with-blanks .number {
+          color: #b48ead;
+          font-family: 'Courier New', Courier, monospace;
+          }
+        .code-with-blanks .function {
+          color: #88c0d0;
+          font-family: 'Courier New', Courier, monospace;
+          }
       `}</style>
     </>
   );
