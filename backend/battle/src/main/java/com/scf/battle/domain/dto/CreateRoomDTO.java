@@ -10,4 +10,6 @@ public class CreateRoomDTO {
 
     private String title;
     private String password;
+    private Integer round;
+    private String username;
 }
