@@ -13,7 +13,7 @@ export default function BattleMain() {
   // const baseUrl = "http://ssafy11s.com/api"
 
   // const loadData = async () => {
-  //   const response = await axios.get(baseUrl + '/battle')
+  //   const response = await axios.get(`${baseUrl}/battle`)
   //   setRooms(response.data);
   // }
 

@@ -26,6 +26,7 @@ function MultiRoom(props) {
       handleOpenModal();
     } else {
       navigate("/multi-game");
+      // navigate(`/multi/room/${props.roomNum}`);
     }
   };
 

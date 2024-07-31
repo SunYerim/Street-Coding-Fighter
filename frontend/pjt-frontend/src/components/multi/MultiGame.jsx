@@ -6,7 +6,7 @@ import Timer from "../game/Timer.jsx";
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
 import GameResultModal from "../game/GameResultModal.jsx";
-import socket from "../game/server.js"
+// import socket from "../game/server.js"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -37,12 +37,12 @@ export default function MultiGame() {
     setModalOpen(true);
   };
 
-  useEffect(() => {
-    socket.on("message", (message) => {
-      setMessageList((prevState) => prevState.concat(message));
-    });
-    askUserName();
-  }, []);
+  // useEffect(() => {
+  //   socket.on("message", (message) => {
+  //     setMessageList((prevState) => prevState.concat(message));
+  //   });
+  //   askUserName();
+  // }, []);
 
 
   const askUserName = () => {
@@ -63,7 +63,6 @@ export default function MultiGame() {
       console.log("sendMessage res", res);
     });
     setMessage('');
-    // socket.emit("sendMessage", message);
   };
 
 
@@ -90,7 +89,7 @@ export default function MultiGame() {
             ) : (
               (start === 0 ? (
                 <div className="before-start">
-                  <h2>. . . Waiting for start . . .</h2>
+                  <h1>. . . Waiting for start . . .</h1>
                   <button className="game-start-button" onClick={handleStart}>
                     Start
                   </button>

@@ -26,6 +26,7 @@ function BattleRoom(props) {
       handleOpenModal();
     } else {
       navigate("/battle-game");
+      // navigate(`/battle/room/${props.roomNum}`);
     }
   };
 
