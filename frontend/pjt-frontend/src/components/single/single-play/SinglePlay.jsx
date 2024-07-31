@@ -4,9 +4,11 @@ import { FaRegCommentDots } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import { PiMouseRightClick, PiMouseLeftClick } from 'react-icons/pi';
 import { TypeAnimation } from 'react-type-animation';
+import { useParams } from 'react-router-dom';
 
 export default function SinglePlay() {
   const [page, setPage] = useState(0);
+  const {content_id} = useParams();
   const dialogueList = [
     {
       page_no: 0,
@@ -52,7 +54,7 @@ export default function SinglePlay() {
           <S.CharacterName>
             <span>
               <CgProfile />
-              <span> Hoshino Ai</span>
+              <span> Hoshino Ai {content_id}</span>
             </span>
           </S.CharacterName>
         </S.DialogueHeader>

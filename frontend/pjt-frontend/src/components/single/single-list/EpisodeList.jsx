@@ -1,6 +1,8 @@
 import React from "react";
 import S from "./styled";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const courses = [
   { id: 0, content_type: "변수와 자료형", title: "변수" },
@@ -40,6 +42,8 @@ completed.forEach((e, i) => {
 const rowList = [0, 1, 2, 3];
 export default function EpisodeList({ rownum }) {
   const [nextIndex, setNextIndex] = useState(nIdx);
+  const navigate = useNavigate();
+  
   return (
     <>
       {rowList.map((r) => (
@@ -53,6 +57,7 @@ export default function EpisodeList({ rownum }) {
                     key={`checkpoint-${e.id}`}
                     $completed={completed[e.id]}
                     $isNext={e.id === nextIndex}
+                    onClick = {()=>{navigate(`/single-play/${e.id}`)}}
                   >
                     {e.id + 1}. {e.title}
                     {index === array.length - 1 && r < 3 ? (
