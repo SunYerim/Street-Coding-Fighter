@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 public class UserExp {
 
     @Builder
-    public UserExp(Long userId, Integer exp) {
+    public UserExp(Long userId, String name, Integer exp) {
         this.userId = userId;
+        this.name = name;
         this.exp = exp;
     }
 
     private Long userId;
+    private String name;
     private int exp;
 }
