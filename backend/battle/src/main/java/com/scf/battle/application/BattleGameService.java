@@ -58,7 +58,6 @@ public class BattleGameService {
 
     public List<Problem> startGame(Long userId, String roomId) {
         BattleGameRoom room = battleGameRepository.findById(roomId);
-
         if (room == null) {
             // 예외처리
         }
@@ -121,6 +120,12 @@ public class BattleGameService {
             }
         }
         return correctAnswerCount;
+    }
+
+    public boolean isRoundOver(String roomId) {
+        BattleGameRoom room = findById(roomId);
+        if(room.getHasPlayerASubmitted() && room.getHasPlayerBSubmitted()) return true;
+        return false;
     }
 
 
