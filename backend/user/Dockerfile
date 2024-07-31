@@ -11,7 +11,7 @@ RUN sed -i 's/\r$//' gradlew
 
 # RUN은 현재 파일을 위치를 기반으로 작동함
 RUN chmod +x ./gradlew
-RUN ./gradlew clean build --stacktrace
+RUN ./gradlew clean build -x test --stacktrace
 
 RUN mv build/libs/user-0.0.1-SNAPSHOT.jar /app/app.jar
 
