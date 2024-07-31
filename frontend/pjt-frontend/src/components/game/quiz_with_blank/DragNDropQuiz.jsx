@@ -33,14 +33,14 @@ const DragNDropQuiz = () => {
       ...prevBlanks,
       [blankId]: choice,
     }));
-    setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
+    // setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
 
   const handleSubmit = () => {
     const isCorrect = Object.keys(testQuizContent.answer).every((key) => {
       return testQuizContent.answer[key] === blanks[key];
     });
-    alert(isCorrect ? '정답입니다!' : '틀렸습니다. 다시 시도해보세요.');
+    alert('정답 제출');
   };
 
   let modifiedContent = reactStringReplace(testQuizContent.content, /\$blank(\d+)\$/g, (match, i) => {
@@ -74,7 +74,7 @@ const DragNDropQuiz = () => {
     codeWithBlanks: {
       whiteSpace: 'pre-wrap',
       fontFamily: "'Courier New', Courier, monospace",
-      fontSize: '0.8em',
+      fontSize: '15px',
       backgroundColor: '#2e3440',
       color: '#d8dee9',
       padding: '20px',
