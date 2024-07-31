@@ -1,6 +1,8 @@
+import { borderRadius, height, minWidth } from '@mui/system';
+import StyleToPythonCode from '../StyleToPythonCode';
+
 const testQuizContent = {
-  content:
-    'def bubble_sort(arr):\n    n = len(arr)  \n    for i in range(n):  \n        for j in range(0, n - i - 1):  \n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[$blank1$], arr[$blank2$]\n\n# 테스트용 리스트\ndata = [64, 34, 25, 12, 22, 11, 90]\n\n# 정렬 함수 호출\nbubble_sort($blank3$)\nprint("정렬된 리스트:", data)',
+  content: '# 다음 코드의 출력 결과는 무엇일까요? \n print(15 % 4)',
   answer: {
     1: 'j + 1',
     2: 'j',
@@ -15,15 +17,36 @@ const testQuizContent = {
     6: 'print',
   },
 };
-
+const styles = {
+  codeContainer: {
+    maxWidth: '600px',
+    height: '150px',
+    margin: '0 auto',
+    padding: '1rem',
+    // backgroundColor: '#f9f9f9',
+    borderRadius: '5px',
+    boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
+  },
+  input:{
+    width : '100%',
+    height : '100%',
+  },
+  inputDiv : {
+    width : '100px',
+    height : '20px',
+  }
+};
 const ShortAnswer = () => {
   return (
     <>
-      <div>
-        <h2>Short Answer</h2>
-        <input type="text" />
-        <button>Submit</button>
+      <h2>Short Answer</h2>
+      <div style={styles.codeContainer}>
+        <StyleToPythonCode codeString={testQuizContent.content} />
       </div>
+      <div >
+        <input style={styles.input} type="text" />
+      </div>
+      <button>Submit</button>
     </>
   );
 };

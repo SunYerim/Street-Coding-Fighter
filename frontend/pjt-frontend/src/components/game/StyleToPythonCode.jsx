@@ -1,3 +1,4 @@
+import { height } from '@mui/system';
 import reactStringReplace from 'react-string-replace';
 
 const styles = {
@@ -10,31 +11,37 @@ const styles = {
     color: '#d8dee9',
     padding: '20px',
     borderRadius: '5px',
-    position: 'relative',
+    // position: 'relative',
     lineHeight: '1', // 줄 간격 조정
     letterSpacing: 'normal', // 자간 조정
+    // height : '80%'
   },
 };
 let seq = 0;
-const StyleToPythonCode = ({ codeString }) => {
+const StyleToPythonCode = ({ codeString, quizType }) => {
+  const type = {
+    0: 'MultiChoiceQuiz',
+    1: 'ShortAnswer',
+    2: 'DragNDropQuiz',
+  }
   codeString = reactStringReplace(
     codeString,
     /(def|for|if|else|return|import|from|as|class|try|except|finally|with|yield|raise|assert|del|pass|continue|break)\b/g,
     (match, i) => {
-      console.log("keyword", i, match);
+      // console.log("keyword", i, match);
       return <span className="keyword" key={`keyword-${seq++}`}>{match}</span>;
     }
   );
   codeString = reactStringReplace(codeString, /('.*?'|".*?")/g, (match, i) => {
-    console.log("string", i, match);
+    // console.log("string", i, match);
     return <span className="string" key={`string-${seq++}`}>{match}</span>;
   });
   codeString = reactStringReplace(codeString, /(#.*)/g, (match, i) => {
-    console.log("comment", i, match);
+    // console.log("comment", i, match);
     return <span className="comment" key={`comment-${seq++}`}>{match}</span>;
   });
   codeString = reactStringReplace(codeString, /(\b\d+\b)/g, (match, i) => {
-    console.log("number", i, match);
+    // console.log("number", i, match);
     return <span className="number" key={`number-${seq++}`}>{match}</span>;
   });
 
