@@ -5,7 +5,11 @@ import { useEffect } from "react";
 import store from "../../../store/store.js";
 import SignOutButton from "../components/SignOutButton.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
-import greenSlime from "../../../assets/characters/movingGreenSlime.gif";
+import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
+import movingIceSlime from "../../../assets/characters/movingIceSlime.gif";
+import movingFireSlime from "../../../assets/characters/movingFireSlime.gif";
+import movingThunderSlime from "../../../assets/characters/movingThunderSlime.gif";
+import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -45,6 +49,23 @@ function ProfilePage() {
     () => accessToken,
     setAccessToken
   );
+
+  const profileCharacter = (character) => {
+    switch (character) {
+      case 0:
+        return movingGreenSlime;
+      case 1:
+        return movingIceSlime;
+      case 2:
+        return movingFireSlime;
+      case 3:
+        return movingThunderSlime;
+      case 4:
+        return movingNyanSlime;
+      default:
+        return movingGreenSlime;
+    }
+  };
 
   useEffect(() => {
     console.log(accessToken);
@@ -100,7 +121,7 @@ function ProfilePage() {
                 <div className="profile-character-img-container">
                   <img
                     className="profile-character-img"
-                    src={greenSlime}
+                    src={profileCharacter(character)}
                     alt="pinia-character"
                   />
                 </div>

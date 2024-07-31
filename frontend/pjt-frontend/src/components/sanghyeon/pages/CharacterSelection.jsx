@@ -9,6 +9,7 @@ import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
 import movingThunderSlime from "../../../assets/characters/movingThunderSlime.gif";
 import movingFireSlime from "../../../assets/characters/movingFireSlime.gif";
 import movingIceSlime from "../../../assets/characters/movingIceSlime.gif";
+import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
 
 import axios from "axios";
 import store from "../../../store/store.js";
@@ -73,6 +74,23 @@ const CharacterSelection = () => {
     }
   }, [selectedCharacter]);
 
+  const characterTypeConvert = (characterType) => {
+    switch (characterType) {
+      case "green":
+        return 0;
+      case "ice":
+        return 1;
+      case "fire":
+        return 2;
+      case "thunder":
+        return 3;
+      case "nyan":
+        return 4;
+      default:
+        return 0;
+    }
+  };
+
   const signup = async function () {
     if (!selectedCharacter && !prevCharacter) {
       alert("캐릭터를 선택해주세요.");
@@ -81,7 +99,9 @@ const CharacterSelection = () => {
 
     const updatedRegisterInfo = {
       ...registerInfo,
-      characterType: selectedCharacter || prevCharacter,
+      characterType:
+        characterTypeConvert(selectedCharacter) ||
+        characterTypeConvert(prevCharacter),
     };
 
     try {

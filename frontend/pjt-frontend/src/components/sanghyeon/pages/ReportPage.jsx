@@ -8,6 +8,26 @@ import { useNavigate } from "react-router-dom";
 const ReportPage = () => {
   const navigate = useNavigate();
 
+  const getReport = async () => {
+    try {
+      const reportRes = await axios({
+        method: "GET",
+        url: "https://www.ssafy11th-songsam.site/bots/",
+        responseType: "blob",
+      });
+      const file = new Blob([reportRes.data], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(file);
+      link.download = "analysis_report.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (error) {
+      console.log(error);
+      alert("리포트 다운로드에 실패했습니다.");
+    }
+  };
+
   const { baseURL } = store((state) => ({
     baseURL: state.baseURL,
   }));
@@ -43,7 +63,7 @@ const ReportPage = () => {
                     시도한 문제 수: 26 개
                   </button>
                   <button
-                    onClick={() => alert("미구현")}
+                    onClick={() => getReport()}
                     className="report-upper-title-button"
                   >
                     분석 리포트 PDF 다운로드
