@@ -1,5 +1,6 @@
 package com.scf.user.profile.application.service;
 
+import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.ReportResponseDto;
@@ -11,12 +12,8 @@ public interface ProfileService {
     public ProfileResponseDto getProfileInfo(String memberId);
     // 전체 전적 조회
     public HistoryListResponseDto getHistoryList(String memberId);
-    // 보고서 조회
-    public ReportResponseDto getReport(String memberId);
-
     // 푼 문제 리스트 조회
     public SolvedProblemsListDto getSolvedProblemsList(String memberId);
-
-    // 푼 문제 상세보기
-    public SolvedProblemResponseDto getSolvedProblem(String solvedId);
+    // django에 보고서 생성 시 필요한 data 조회
+    public DjangoResponseDto getDjangoInfo(String memberId);
 }

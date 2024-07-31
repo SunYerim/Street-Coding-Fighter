@@ -1,6 +1,7 @@
 package com.scf.user.profile.presentation;
 
 import com.scf.user.profile.application.service.ProfileService;
+import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
@@ -44,11 +45,12 @@ public class ProfileController {
         return ResponseEntity.ok(solvedList);
     }
 
-    // 보고서 조회
+    // 보고서 발급 (django)
+    @GetMapping("/reportdetail")
+    public ResponseEntity<?> getReportDetail(@RequestHeader("memberId") String memberId) {
+        DjangoResponseDto djangoResponse = profileService.getDjangoInfo(memberId);
 
-
-    
-
-
+        return ResponseEntity.ok(djangoResponse);
+    }
 
 }

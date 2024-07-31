@@ -3,11 +3,11 @@ package com.scf.user.profile.application.service;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
 import com.scf.user.profile.application.client.ProblemClient;
+import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.HistoryResponseDto;
 import com.scf.user.profile.domain.dto.ProblemResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
-import com.scf.user.profile.domain.dto.ReportResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import com.scf.user.profile.domain.entity.Solved;
@@ -61,12 +61,6 @@ public class ProfileServiceImpl implements ProfileService {
         return new HistoryListResponseDto(historyList);
     }
 
-    // 보고서 조회
-    @Override
-    public ReportResponseDto getReport(String memberId) {
-        return null;
-    }
-
     // 푼 문제 리스트 조회
     // 이때, 문제 정보가 필요하므로 문제 서버에서 데이터를 받아서 dto에 넣어준다.
     @Override
@@ -110,9 +104,40 @@ public class ProfileServiceImpl implements ProfileService {
         return new SolvedProblemsListDto(solvedProblemResponses);
     }
 
-    // 푼 문제 상세보기
+    // django 보고서 데이터 요청
     @Override
-    public SolvedProblemResponseDto getSolvedProblem(String solvedId) {
-        return null;
+    public DjangoResponseDto getDjangoInfo(String memberId) {
+        // 멤버 정보 조회
+        Member member = userRepository.findById(Long.parseLong(memberId))
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        // 멤버가 푼 문제들 리스트를 가져와서
+        SolvedProblemsListDto solvedList = getSolvedProblemsList(memberId);
+
+        // solvedProblemDto 리스트 생성
+        List<DjangoResponseDto.solvedProblemDto> solvedProblemDtoList = solvedList.getSolvedList()
+            .stream()
+            .map(solved -> DjangoResponseDto.solvedProblemDto.builder()
+                .isCorrect(solved.isCorrect())
+                .category(solved.getCategory())
+                .difficulty(solved.getDifficulty())
+                .build())
+            .collect(Collectors.toList());
+
+        // 평균 등수 계산
+        int totalRank = solvedProblemDtoList.stream()
+            .mapToInt(DjangoResponseDto.solvedProblemDto::getRanking)
+            .sum();
+        int averageRank =
+            solvedProblemDtoList.isEmpty() ? 0 : totalRank / solvedProblemDtoList.size();
+
+        // DjangoResponseDto 빌드하여 반환
+        return DjangoResponseDto.builder()
+            .averageRank(averageRank)
+            .solvedCount(solvedProblemDtoList.size())
+            .list(solvedProblemDtoList)
+            .build();
+
     }
+
 }
