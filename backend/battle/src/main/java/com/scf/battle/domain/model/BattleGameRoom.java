@@ -24,17 +24,15 @@ public class BattleGameRoom {
     //private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>()); // player, score
     private Boolean isAttack;
     private Boolean isStart;
-    private Integer round;
+    private Integer finalRound;
+    private Integer currentRound;
+    private Boolean hasPlayerASubmitted;
+    private Boolean hasPlayerBSubmitted;
+
 
     public void add(Long userId, String username, String roomPassword) {
-
         if (roomPassword.equals(this.password)) {
-            if(playerA !=null){ // 존재하면
-                playerB = new Player(userId, username, 100);
-            }
-            else{ // 존재하지 않으면
-                playerA = new Player(userId, username, 100);
-            }
+            this.playerB = new Player(userId, username, 100);
         } else {
             // 예외처리
         }
@@ -64,10 +62,10 @@ public class BattleGameRoom {
 
     // 특정 라운드의 문제를 가져오는 메서드
     public List<Problem> getProblemsForRound(Integer roundNumber) {
-        if (roundNumber < 1 || roundNumber > roundProblems.size()) {
+        if (roundNumber < 0 || roundNumber > roundProblems.size()) {
             // 예외처리 하기
         }
-        return roundProblems.get(roundNumber - 1);
+        return roundProblems.get(roundNumber);
     }
 
     public FightDTO updateHp(Long userId, int power) {
@@ -75,8 +73,10 @@ public class BattleGameRoom {
             throw new IllegalArgumentException("Player not found");
         }
         if (playerA.getUserId().equals(userId)) {
+            hasPlayerASubmitted = true;
             updatePlayerHp(playerB, power);
         } else if (playerB.getUserId().equals(userId)) {
+            hasPlayerBSubmitted = true;
             updatePlayerHp(playerA, power);
         } else {
             throw new IllegalArgumentException("Invalid userId");
@@ -89,18 +89,30 @@ public class BattleGameRoom {
     }
 
     private void updatePlayerHp(Player player, int power) {
-        int adjustedPower = this.isAttack ? power : -power;
-        if(!isAttack) this.isAttack = true;
-        player.setHp(player.getHp() + adjustedPower);
+        int adjustedPower = this.isAttack ? -power : power;
+        if(isAttack){
+            if(playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
+            else player = playerA; // 내가 A
+        }
+        if (!isAttack) {
+            this.isAttack = true;
+        }
+        player.setHp(player.getHp() - adjustedPower);
     }
 
-    public void nextRound() {
+    public Integer nextRound() {
 
         if (!Boolean.TRUE.equals(this.isStart)) {
             // TODO : 시작 안 된 상황
         }
+        if(this.finalRound == currentRound){ // 끝난상황
+            return -1;
+        }
+        hasPlayerASubmitted = false;
+        hasPlayerBSubmitted = false;
         this.isAttack = false;
-        this.round += 1;
+        this.currentRound += 1;
+        return currentRound;
     }
 
 }
