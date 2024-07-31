@@ -17,4 +17,5 @@ public class Solved {
     private Map<Integer, Integer> solve;
     private Integer submitTime;
     private String roomId;
+    private Integer round;
 }
