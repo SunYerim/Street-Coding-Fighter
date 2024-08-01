@@ -3,15 +3,15 @@ import S from './styled.jsx';
 import RankingListItem from './RankingListItem.jsx';
 import RankingGraph from './RankingGraph.jsx';
 import { useState } from 'react';
-import useLeaderboardStore from '../../../stores/LeaderboardStore.jsx';
+import useLeaderboardStore from '../../stores/LeaderboardStore.jsx';
 import styled from 'styled-components';
 
 export default function Ranking() {
-  const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
+  const { rankingList, setRankingList, boardPeriod, setBoardPeriod, rankingLength, setRankingLength } = useLeaderboardStore();
+
   const handleTabClick = (tab) => {
     setBoardPeriod(tab);
   };
-  const restRankings = [4, 5, 6, 7, 8, 9, 10];
   return (
     <>
       <Header></Header>
@@ -22,8 +22,11 @@ export default function Ranking() {
             <S.PeriodButton
               onClick={() => {
                 handleTabClick('total');
-                console.log(boardPeriod);
-                console.log(boardPeriod === 'total');
+                // console.log(boardPeriod);
+                // console.log(rankingList[boardPeriod].length);
+                // console.log(boardPeriod === 'total');
+                console.log(rankingList[boardPeriod]);
+                console.log(Object.keys(rankingList[boardPeriod]).length-3);
               }}
               $isSelected={boardPeriod === 'total'}
             >
@@ -43,10 +46,15 @@ export default function Ranking() {
               </S.GraphContainer>
             </S.RankingInfoSection>
             <S.RankingListSection>
-              {restRankings.map((e, idx) => {
-                // console.log(rankingList[boardPeriod]);
-                return <RankingListItem key={idx} rank={e} player={rankingList[boardPeriod]?.[e]}></RankingListItem>;
-              })}
+              {new Array(Object.keys(rankingList[boardPeriod]).length-3)
+                .fill(0)
+                .map((_, i) => {
+                  return i + 4;
+                })
+                .map((e, idx) => {
+                  // console.log(rankingList[boardPeriod]);
+                  return <RankingListItem key={idx} rank={e} player={rankingList[boardPeriod]?.[e]}></RankingListItem>;
+                })}
             </S.RankingListSection>
           </S.FlexContainer>
         </S.Container>
