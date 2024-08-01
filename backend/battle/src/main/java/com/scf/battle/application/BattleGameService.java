@@ -140,19 +140,49 @@ public class BattleGameService {
         return FightDTO.builder().userId(userId).isAttack(false).power(0).build();
     }
 
-    private int compareAnswers(Map<Integer, Integer> answer, Map<Integer, Integer> solve) {
-        int correctAnswerCount = 0;
-        for (Map.Entry<Integer, Integer> entry : solve.entrySet()) {
-            Integer blankNumber = entry.getKey(); // 빈칸 번호
-            Integer submittedOption = entry.getValue(); // 제출된 보기 번호
+    private boolean compareAnswers(ProblemType problemType, Solved solved, List<ProblemAnswer> answers) {
+        switch (problemType) {
+            case ProblemType.MULTIPLE_CHOICE -> { // 객관식
 
-            // 정답과 비교하여 맞춘 답안 개수 증가
-            if (answer.containsKey(blankNumber) && answer.get(blankNumber)
-                .equals(submittedOption)) {
-                correctAnswerCount++;
+                Map<Integer, Integer> solve = solved.getSolve();
+
+                ProblemChoice correctChoice = answers.getFirst().getCorrectChoice();
+
+                if (!correctChoice.getChoiceId().equals(solve.get(1))) {
+                    return false;
+                }
+            }
+            case ProblemType.SHORT_ANSWER_QUESTION -> { // 주관식
+
+                String correctAnswerText = answers.getFirst().getCorrectAnswerText();
+
+                if (!correctAnswerText.equals(solved.getSolveText())) {
+                    return false;
+                }
+            }
+            case ProblemType.FILL_IN_THE_BLANK -> { // 빈칸 채우기
+
+                Map<Integer, Integer> solve = solved.getSolve();
+
+                for (ProblemAnswer answer : answers) {
+
+                    int blankNum = answer.getBlankPosition();
+
+                    if (!solve.containsKey(blankNum)) {
+                        return false;
+                    }
+
+                    int selectedChoiceId = solve.get(blankNum);
+                    int correctChoiceId = answer.getCorrectChoice().getChoiceId();
+
+                    if (selectedChoiceId != correctChoiceId) {
+                        return false;
+                    }
+                }
             }
         }
-        return correctAnswerCount;
+
+        return true;
     }
 
     public boolean isRoundOver(String roomId) {
