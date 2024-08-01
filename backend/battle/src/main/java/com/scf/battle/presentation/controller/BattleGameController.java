@@ -71,11 +71,14 @@ public class BattleGameController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<?> createRoom(@RequestHeader Long userId,
-        @RequestBody CreateRoomDTO createRoomDto) {
-        String roomId = battleGameService.createRoom(userId, createRoomDto);
-        System.out.println(roomId);
-        return new ResponseEntity<>(roomId, HttpStatus.OK);
+    public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
+                                        @Valid @RequestBody CreateRoomDTO createRoomDto) {
+        try {
+            String roomId = battleGameService.createRoom(memberId, username, createRoomDto);
+            return new ResponseEntity<>(roomId, HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
     }
 
     @PostMapping("/room/{roomId}/start")
