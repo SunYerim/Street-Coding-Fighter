@@ -82,8 +82,12 @@ public class BattleGameController {
     }
 
     @PostMapping("/room/{roomId}/start")
-    public ResponseEntity<?> gameStart(@RequestHeader Long userId, @PathVariable String roomId) {
-        List<Problem> problems = battleGameService.startGame(userId, roomId);
-        return new ResponseEntity<>(problems, HttpStatus.OK);
+    public ResponseEntity<?> gameStart(@RequestHeader Long memberId, @PathVariable String roomId) {
+        try {
+            List<Problem> problems = battleGameService.startGame(memberId, roomId);
+            return new ResponseEntity<>(problems, HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
     }
 }
