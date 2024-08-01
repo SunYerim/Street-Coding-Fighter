@@ -1,7 +1,10 @@
 package com.scf.multi.application;
 
 import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.problem.ProblemInfo;
+import com.scf.multi.domain.dto.problem.ProblemAnswer;
+import com.scf.multi.domain.dto.problem.ProblemChoice;
+import com.scf.multi.domain.dto.problem.ProblemResponse;
+import com.scf.multi.domain.dto.problem.ProblemType;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.room.RoomRequest.ListDTO;
@@ -26,7 +29,7 @@ public class MultiGameService {
 
     public List<RoomRequest.ListDTO> findAllRooms() {
         List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
-        
+
         return rooms.stream().map(room ->
             ListDTO.builder()
                 .roomId(room.getRoomId())
@@ -115,11 +118,11 @@ public class MultiGameService {
         }
 
         // 문제의 정답 가져오기
-        Map<Integer, Integer> solve = solved.getSolve();
-        Map<Integer, Integer> answer = problem.getAnswer();
+        List<ProblemAnswer> answers = problem.getProblemAnswers();
+        ProblemType problemType = problem.getProblemType();
 
         // 점수를 계산할 변수
-        boolean isCorrect = compareWith(solve, answer);
+        boolean isCorrect = compareWith(problemType, solved, answers);
 
         if (isCorrect) {
             int score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
@@ -130,7 +133,7 @@ public class MultiGameService {
         return 0;
     }
 
-    public List<ProblemInfo> startGame(String roomId, Long userId) {
+    public List<ProblemResponse.ListDTO> startGame(String roomId, Long userId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
@@ -138,7 +141,7 @@ public class MultiGameService {
             throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
         }
 
-        List<Problem> problems = problemService.getProblems();
+        List<Problem> problems = problemService.getProblems(room.getPlayRound());
 
         if (problems == null || problems.isEmpty()) {
             throw new BusinessException(null, "problems", ErrorCode.PROBLEM_NOT_FOUND);
@@ -146,30 +149,61 @@ public class MultiGameService {
 
         room.gameStart(problems, userId);
 
-        // problem DTO -> problemInfo DTO
+        // problem -> problemList
         return problems.stream()
-            .map(problem -> ProblemInfo.builder()
+            .map(problem -> ProblemResponse.ListDTO.builder()
                 .problemId(problem.getProblemId())
-                .type(problem.getType())
                 .title(problem.getTitle())
+                .problemType(problem.getProblemType())
                 .category(problem.getCategory())
-                .content(problem.getContent())
+                .difficulty(problem.getDifficulty())
+                .problemContent(problem.getProblemContent())
+                .problemChoices(problem.getProblemChoices())
                 .build())
             .toList();
     }
 
-    private boolean compareWith(Map<Integer, Integer> solve, Map<Integer, Integer> answer) {
+    private boolean compareWith(ProblemType problemType, Solved solved,
+        List<ProblemAnswer> answers) {
 
-        for (int blankNumber : answer.keySet()) {
+        switch (problemType) {
+            case ProblemType.MULTIPLE_CHOICE -> { // 객관식
 
-            if (!solve.containsKey(blankNumber)) {
-                return false;
+                Map<Integer, Integer> solve = solved.getSolve();
+
+                ProblemChoice correctChoice = answers.getFirst().getCorrectChoice();
+
+                if (!correctChoice.getChoiceId().equals(solve.get(1))) {
+                    return false;
+                }
             }
+            case ProblemType.SHORT_ANSWER_QUESTION -> { // 주관식
 
-            int submitOption = solve.get(blankNumber);
-            int answerOption = answer.get(blankNumber);
-            if (submitOption != answerOption) {
-                return false;
+                String correctAnswerText = answers.getFirst().getCorrectAnswerText();
+
+                if (!correctAnswerText.equals(solved.getSolveText())) {
+                    return false;
+                }
+            }
+            case ProblemType.FILL_IN_THE_BLANK -> { // 빈칸 채우기
+
+                Map<Integer, Integer> solve = solved.getSolve();
+
+                for (ProblemAnswer answer : answers) {
+
+                    int blankNum = answer.getBlankPosition();
+
+                    if (!solve.containsKey(blankNum)) {
+                        return false;
+                    }
+
+                    int selectedChoiceId = solve.get(blankNum);
+                    int correctChoiceId = answer.getCorrectChoice().getChoiceId();
+
+                    if (selectedChoiceId != correctChoiceId) {
+                        return false;
+                    }
+                }
             }
         }
 
