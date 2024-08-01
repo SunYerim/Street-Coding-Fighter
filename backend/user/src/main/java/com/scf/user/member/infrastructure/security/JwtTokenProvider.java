@@ -55,7 +55,7 @@ public class JwtTokenProvider {
             .setSubject(id.toString())
             .claim(AUTHORITY_KEY, authority)
             .claim("memberId", id)
-            .claim("name", name)
+            .claim("username", name)
             .setIssuedAt(new Date(now))
             .setExpiration(new Date(now + accessTokenExpiry))
             .signWith(getSecretKey(), SignatureAlgorithm.HS256)
