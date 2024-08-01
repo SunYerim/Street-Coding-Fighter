@@ -2,6 +2,7 @@ package com.scf.multi.presentation.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,6 +66,7 @@ class MultiGameControllerTest {
         gameRoom = MultiGameRoom.builder()
             .roomId(UUID.randomUUID().toString())
             .hostId(1L)
+            .hostname("testUser")
             .title("Test Room")
             .maxPlayer(4)
             .password("1234")
@@ -130,22 +132,23 @@ class MultiGameControllerTest {
             .title("New Room")
             .maxPlayer(4)
             .password("password")
-            .maxRound(5)
+            .gameRound(5)
             .build();
 
         String generatedRoomId = "generated-room-id";
-        when(multiGameService.createRoom(anyLong(), eq(createRoomDTO))).thenReturn(generatedRoomId);
+        when(multiGameService.createRoom(anyLong(), anyString(), eq(createRoomDTO))).thenReturn(generatedRoomId);
 
         // When & Then
         MvcResult result = mockMvc.perform(post("/multi/room")
-                .header("userId", 1L)
+                .header("memberId", 1L)
+                .header("username", "testUser")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createRoomDTO)))
             .andExpect(status().isOk())
             .andReturn();
 
         // Then
-        verify(multiGameService, times(1)).createRoom(1L, createRoomDTO);
+        verify(multiGameService, times(1)).createRoom(1L, "testUser", createRoomDTO);
         String responseBody = result.getResponse().getContentAsString();
         assertThat(responseBody).isEqualTo(generatedRoomId);
     }
@@ -164,7 +167,7 @@ class MultiGameControllerTest {
         mockMvc.perform(post("/multi/room/{roomId}", roomId)
                 .content(roomPassword)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("userId", userId)
+                .header("memberId", userId)
                 .header("username", username))
             .andExpect(status().isOk());
 
@@ -192,7 +195,7 @@ class MultiGameControllerTest {
 
         // When & Then
         mockMvc.perform(post("/multi/game/{roomId}/start", roomId)
-                .header("userId", userId))
+                .header("memberId", userId))
             .andExpect(status().isOk())
             .andExpect(content().json(objectMapper.writeValueAsString(problems)));
 

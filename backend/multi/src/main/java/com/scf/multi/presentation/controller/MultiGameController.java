@@ -45,24 +45,24 @@ public class MultiGameController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<?> createRoom(@RequestHeader Long userId,
+    public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
         @RequestBody @Valid CreateRoomDTO createRoomDTO) {
-        String roomId = multiGameService.createRoom(userId, createRoomDTO);
+        String roomId = multiGameService.createRoom(memberId, username, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @Valid @RequestBody String roomPassword, @RequestHeader Long userId,
+        @Valid @RequestBody String roomPassword, @RequestHeader Long memberId,
         @RequestHeader String username) {
-        multiGameService.joinRoom(roomId, roomPassword, userId, username);
+        multiGameService.joinRoom(roomId, roomPassword, memberId, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/game/{roomId}/start")
-    public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long userId) {
+    public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
 
-        List<ProblemInfo> problems = multiGameService.startGame(roomId, userId);
+        List<ProblemInfo> problems = multiGameService.startGame(roomId, memberId);
 
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }

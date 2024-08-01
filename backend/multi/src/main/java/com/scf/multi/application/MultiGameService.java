@@ -37,17 +37,18 @@ public class MultiGameService {
         return room;
     }
 
-    public String createRoom(Long userId, CreateRoomDTO createRoomDTO) {
+    public String createRoom(Long userId, String username, CreateRoomDTO createRoomDTO) {
 
         String roomId = UUID.randomUUID().toString();
 
         MultiGameRoom room = MultiGameRoom.builder()
             .roomId(roomId)
             .hostId(userId)
+            .hostname(username)
             .title(createRoomDTO.getTitle())
             .maxPlayer(createRoomDTO.getMaxPlayer())
             .password(createRoomDTO.getPassword())
-            .maxRound(createRoomDTO.getMaxRound())
+            .playRound(createRoomDTO.getGameRound())
             .build();
 
         multiGameRepository.addRoom(room);

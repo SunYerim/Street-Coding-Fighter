@@ -47,6 +47,7 @@ class MultiGameServiceTest {
         gameRoom = MultiGameRoom.builder()
             .roomId("abc-def")
             .hostId(1L)
+            .hostname("testUser")
             .title("First Room")
             .maxPlayer(2)
             .password("1234")
@@ -110,9 +111,10 @@ class MultiGameServiceTest {
 
         // Given
         Long userId = 1L;
+        String username = "hongKD";
 
         // When
-        String roomId = multiGameService.createRoom(userId, createRoomDTO);
+        String roomId = multiGameService.createRoom(userId, username, createRoomDTO);
 
         // Then
         assertThat(roomId).isNotNull();
