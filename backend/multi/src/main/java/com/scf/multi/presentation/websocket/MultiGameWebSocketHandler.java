@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -35,6 +36,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     private final Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
     private final Map<Long, List<Solved>> solveds = Collections.synchronizedMap(new HashMap<>());
+    private final AtomicInteger curAtomicSubmitCount = new AtomicInteger(0);
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -79,20 +81,24 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
 
-        } else if (message.getType().equals("fin")) {
-
             MultiGameRoom room = multiGameService.findOneById(roomId);
 
-            room.nextRound();
+            int curSubmitCount = curAtomicSubmitCount.incrementAndGet();// 제출된 풀이 수 증가
 
-            if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
-                userService.saveUserSolveds(solveds);
+            if(curSubmitCount == room.getPlayers().size()) { // 모든 플레이어가 풀이를 제출했으면
+                
+                room.nextRound(); // 다음 라운드 진행
+
+                if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
+                    userService.saveUserSolveds(solveds); // 푼 문제 저장
+                    curAtomicSubmitCount.set(0);
+                }
+
+                List<Rank> ranks = room.calculateRank();
+                String rankMsg = JsonConverter.getInstance().toString(ranks);
+
+                session.sendMessage(new TextMessage(rankMsg));
             }
-
-            List<Rank> ranks = room.calculateRank();
-            String rankMsg = JsonConverter.getInstance().toString(ranks);
-
-            session.sendMessage(new TextMessage(rankMsg));
         }
     }
 
