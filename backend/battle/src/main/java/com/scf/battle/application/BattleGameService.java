@@ -79,11 +79,15 @@ public class BattleGameService {
     public List<Problem> startGame(Long userId, String roomId) {
         BattleGameRoom room = battleGameRepository.findById(roomId);
         if (room == null) {
-            // 예외처리
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
         }
-
-        List<Problem> problems = problemService.getProblem();
-
+        if (room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
+        }
+        List<Problem> problems = problemService.getProblems(room.getFinalRound() * 3);
+        if (problems.isEmpty()) {
+            throw new BusinessException(room, "roomId", ErrorCode.PROBLEM_NOT_FOUND);
+        }
         room.startGame(problems, userId);
 
         return problems;
