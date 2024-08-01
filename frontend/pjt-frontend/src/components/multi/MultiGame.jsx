@@ -9,6 +9,10 @@ import socket from "../game/server.js"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import FillInTheBlank from "../game/FillInTheBlank";
+import ShortAnswerQuestion from "../game/ShortAnswerQuestion";
+import MultipleChoice from "../game/MultipleChoice";
+
 
 export default function MultiGame() {
   const navigate = useNavigate();
@@ -24,6 +28,9 @@ export default function MultiGame() {
 
   const [round, setRound] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  const [timerEnded, setTimerEnded] = useState(false);
+
 
   // const userList = [
   //   { id: 1, rank: 2, name: "방장", score: 97 },
@@ -41,17 +48,19 @@ export default function MultiGame() {
   const handleStart = () => {
     setStart(1);
     socket.emit("start");
-  };  
-  
+  };
 
-  // useEffect(() => {
-  //   setModalOpen(true)
-  // }, [round])
-
-
-  // useEffect(() => {
-  //   socket.emit("start");
-  // }, [start]);
+  // 문제요청 함수
+  const requestProblems = (gameRound) => {
+    socket.emit('requestProblems', gameRound, (response) => {
+      if (response.ok) {
+        setProblems(response.problems);
+        console.log(response.problems);
+      } else {
+        console.error(response.err);
+      }
+    });
+  };
 
 
   useEffect(() => {
@@ -70,22 +79,39 @@ export default function MultiGame() {
 
     socket.on('headerUser', (headerUser) => {
       setHeaderUser(headerUser);
-      console.log(headerUser);
     });
 
-    socket.on('gameStart', (start) => {
+    socket.on('gameStart', () => {
+      console.log('start!!!');
       setStart(1);
+      requestProblems(3);
     })
+
+    socket.on('roundEnd', () => {
+      setModalOpen(true); // 라운드 종료 시 모달 창 열기
+      setTimeout(() => {
+        setModalOpen(false);  // 5초 후 모달 창 닫기
+        if (currentProblemIndex < problems.length - 1) {
+          setCurrentProblemIndex(currentProblemIndex + 1); // 다음 문제로 인덱스 증가
+          setTimerEnded(false); // 타이머 상태 리셋
+        } else {
+          setStart(0); // 모든 라운드가 끝났다면 게임 대기 상태로 전환
+        }  
+      }, 5000);
+    });
+
 
     // 컴포넌트가 언마운트될 때 이벤트 수신 해제
     return () => {
       socket.off('message');
       socket.off('userList');
       socket.off('headerUser');
+      socket.off('gameStart');
+      socket.off('roundEnd');
     };
-  }, []);
+  }, [currentProblemIndex, problems.length]);
 
-  // // 문제요청 함수
+  // 문제요청 함수
   // const requestProblems = (limit) => {
   //   socket.emit('requestProblems', limit, (response) => {
   //     if (response.ok) {
@@ -96,12 +122,6 @@ export default function MultiGame() {
   //   });
   // };
 
-  // // 게임 시작 시 요청
-  // useEffect(() => {
-  //   // 예시로 문제 3개를 요청
-  //   requestProblems(3);
-  // }, [start]);
-
 
   const askUserName = () => {
     const userName = prompt("이름입력ㄱㄱ");
@@ -109,8 +129,6 @@ export default function MultiGame() {
     socket.emit("login", userName, (res) => {
       if(res?.ok) {
         setUser(res.data);
-        console.log(res.data);
-        console.log(user.name);
       }
     });
   };
@@ -124,6 +142,30 @@ export default function MultiGame() {
     setMessage('');
   };
 
+  const submitAnswer = (answer) => {
+    socket.emit("submitAnswer", answer, (res) => {
+      if (res.ok) {
+        console.log("Answer submitted successfully");
+      } else {
+        console.error(res.err);
+      }
+    });
+  };
+
+  const renderProblem = () => {
+    const problem = problems[currentProblemIndex];
+    switch (problem.problemType) {
+      case "FILL_IN_THE_BLANK":
+        return <FillInTheBlank problem={problem} />;
+      case "SHORT_ANSWER_QUESTION":
+        return <ShortAnswerQuestion problem={problem} />;
+      case "MULTIPLE_CHOICE":
+        return <MultipleChoice problem={problem} />;
+      default:
+        return <div>Unknown problem type</div>;
+    }
+  };
+
 
   return (
     <>
@@ -131,7 +173,10 @@ export default function MultiGame() {
         <div className="multi-game-main">
           <div className="multi-game-left">
             <div className="multi-timer">
-              <Timer />
+              {/* start가 1이고 모달이 열려 있지 않으며 타이머가 종료되지 않은 경우에만 타이머를 렌더링 */}
+              {start === 1 && !modalOpen && !timerEnded && (
+                <Timer setTimerEnded={setTimerEnded} />
+              )}
             </div>
             <div className="multi-rank-table">
               {
@@ -169,15 +214,20 @@ export default function MultiGame() {
                   {/* <div>
                     <GameResultModal  />
                   </div> */}
-                  <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                  . . . Playing . . .</h1>
+                  {/* <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                  . . . Playing . . .</h1> */}
+
+                  {/* Playing Games! */}
+                  {problems.length > 0 && renderProblem()}
+                  {timerEnded && submitAnswer(null)}
                 </div>
               ))
             )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              <p>~Round~</p>
+              <h1>Round</h1>
+              <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
             </div>
             <div className="multi-message-room">
               <MessageContainer messageList={messageList} user={user} />
@@ -186,6 +236,7 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
+      {modalOpen && <GameResultModal />}
     </>
   );
 }

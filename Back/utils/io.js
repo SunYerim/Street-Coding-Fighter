@@ -65,9 +65,11 @@ module.exports = function (io) {
       io.emit("gameStart");
     });
 
-    socket.on("requestProblems", async(limit, cb) => {
+    socket.on("requestProblems", async (gameRound, cb) => {
       try {
-        const problems = await problemController.getProblems(limit);
+        const problems = await problemController.getProblems(gameRound);
+        // io.emit("problems", problems)
+        // console.log(problems);
         cb({ ok: true, problems });
       } catch (err) {
         cb({ ok: false, err: err.message });

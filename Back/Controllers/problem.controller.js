@@ -6,8 +6,8 @@ problemController.createProblems = async (problems) => {
   return await Problem.insertMany(problems);
 };
 
-problemController.getProblems = async (limit) => {
-  return await Problem.find().limit(limit);
+problemController.getProblems = async (gameRound) => {
+  return await Problem.find().limit(gameRound);
 };
 
 module.exports = problemController;
