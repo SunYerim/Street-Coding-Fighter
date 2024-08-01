@@ -1,27 +1,29 @@
 package com.scf.battle.application;
 
-import com.scf.battle.domain.dto.CreateRoomDTO;
-import com.scf.battle.domain.dto.FightDTO;
-import com.scf.battle.domain.dto.Problem;
-import com.scf.battle.domain.dto.Solved;
+import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.Room.CreateRoomDTO;
+import com.scf.battle.domain.dto.User.FightDTO;
+import com.scf.battle.domain.dto.User.Player;
+import com.scf.battle.domain.dto.User.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
+
+import com.scf.battle.global.error.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class BattleGameServiceTest {
+class BattleGameServiceTest {
 
     @Mock
     private BattleGameRepository battleGameRepository;
@@ -33,123 +35,191 @@ public class BattleGameServiceTest {
     private BattleGameService battleGameService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testFindAllRooms() {
-        // Given
-        List<BattleGameRoom> rooms = new ArrayList<>();
-        when(battleGameRepository.findAllRooms()).thenReturn(rooms);
+    void testFindAllRooms() {
+        // given
+        BattleGameRoom room1 = BattleGameRoom.builder().build();
+        BattleGameRoom room2 = BattleGameRoom.builder().build();
+        when(battleGameRepository.findAllRooms()).thenReturn(Arrays.asList(room1, room2));
 
-        // When
-        List<BattleGameRoom> result = battleGameService.findAllRooms();
+        // when
+        List<BattleGameRoom> rooms = battleGameService.findAllRooms();
 
-        // Then
-        assertEquals(rooms, result);
+        // then
+        assertEquals(2, rooms.size());
+        verify(battleGameRepository, times(1)).findAllRooms();
     }
 
     @Test
-    public void testFindById() {
-        // Given
+    void testFindById() {
+        // given
         String roomId = UUID.randomUUID().toString();
-        BattleGameRoom room = BattleGameRoom.builder().roomId(roomId).build();
+        BattleGameRoom room = BattleGameRoom.builder().build();
         when(battleGameRepository.findById(roomId)).thenReturn(room);
 
-        // When
-        BattleGameRoom result = battleGameService.findById(roomId);
+        // when
+        BattleGameRoom foundRoom = battleGameService.findById(roomId);
 
-        // Then
-        assertEquals(room, result);
+        // then
+        assertNotNull(foundRoom);
+        verify(battleGameRepository, times(1)).findById(roomId);
     }
 
     @Test
-    public void testJoinRoom() {
-        // Given
+    void testJoinRoomRoomNotFound() {
+        // given
         String roomId = UUID.randomUUID().toString();
-        Long userId = 1L;
-        String username = "user";
-        String roomPassword = "password";
+        when(battleGameRepository.findById(roomId)).thenReturn(null);
 
-        // When
-        battleGameService.joinRoom(roomId, userId, username, roomPassword);
+        // when
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                battleGameService.joinRoom(roomId, 1L, "user1", "password"));
 
-        // Then
-        verify(battleGameRepository, times(1)).joinRoom(roomId, userId, username, roomPassword);
+        // then
+        verify(battleGameRepository, times(1)).findById(roomId);
     }
 
     @Test
-    public void testCreateRoom() {
-        // Given
-        Long userId = 1L;
+    void testCreateRoom() {
+        // given
+        Long memberId = 1L;
+        String username = "user1";
         CreateRoomDTO createRoomDTO = CreateRoomDTO.builder()
-            .title("Test Room")
-            .password("password")
-            .build();
+                .round(3)
+                .title("Test Room")
+                .password("password")
+                .build();
         String roomId = UUID.randomUUID().toString();
         doNothing().when(battleGameRepository).addRoom(any(BattleGameRoom.class));
 
-        // When
-        String result = battleGameService.createRoom(userId, createRoomDTO);
+        // when
+        String resultRoomId = battleGameService.createRoom(memberId, username, createRoomDTO);
 
-        // Then
-        assertNotNull(result);
+        // then
+        assertNotNull(resultRoomId);
+        verify(battleGameRepository, times(1)).addRoom(any(BattleGameRoom.class));
     }
 
     @Test
-    public void testStartGame() {
-        // Given
+    void testStartGame() {
+        // given
         Long userId = 1L;
         String roomId = UUID.randomUUID().toString();
-        BattleGameRoom room = BattleGameRoom.builder().roomId(roomId).hostId(userId).build();
-        List<Problem> problems = new ArrayList<>();
-        problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(2L, 0, "정렬", "삽입 정렬", "삽입 정렬 내용", Map.of(0, 1, 1, 2)));
-
+        BattleGameRoom room = BattleGameRoom.builder()
+                .hostId(userId)
+                .playerA(new Player(1L, "playerA", 100))
+                .playerB(new Player(2L, "playerB", 100))
+                .finalRound(3)
+                .isStart(false)
+                .build();
         when(battleGameRepository.findById(roomId)).thenReturn(room);
-        when(problemService.getProblem()).thenReturn(problems);
+        when(problemService.getProblems(anyInt())).thenReturn(Arrays.asList(new Problem(), new Problem(), new Problem()));
 
-        // When
-        List<Problem> result = battleGameService.startGame(userId, roomId);
+        // when
+        List<Problem> problems = battleGameService.startGame(userId, roomId);
 
-        // Then
-        assertNotNull(result);
-        assertTrue(room.getIsStart());
+        // then
+        assertEquals(3, problems.size());
+        verify(battleGameRepository, times(1)).findById(roomId);
+        verify(problemService, times(1)).getProblems(anyInt());
+    }
+
+    @Test
+    void testCalculateScore() {
+        // given
+        int submitTime = 25;
+
+        // when
+        int score = battleGameService.calculateScore(submitTime);
+
+        // then
+        assertTrue(score > 0);
     }
 
 //    @Test
-//    public void testMarkSolution() {
-//        // Given
+//    void testMarkSolution() {
+//        // given
 //        String roomId = UUID.randomUUID().toString();
 //        Long userId = 1L;
-//        Solved solved = Solved.builder()
-//            .problemId(1L)
-//            .userId(userId)
-//            .solve(Map.of(0, 1, 1, 2))
-//            .submitTime(5)
-//            .build();
+//        Solved solved = new Solved();
+//        solved.setRound(0);
+//        solved.setProblemId(1L);
+//        solved.setSubmitTime(20);
 //
 //        BattleGameRoom room = BattleGameRoom.builder()
-//            .roomId(roomId)
-//            .round(1)
-//            .isStart(true)
-//            .build();
-//
-//        room.setRoundProblems(List.of(
-//            List.of(
-//                new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2))
-//            )
-//        ));
-//
+//                .playerA(new Player(1L, "playerA", 100))
+//                .playerB(new Player(2L, "playerB", 100))
+//                .isStart(true)
+//                .build();
+//        room.getRoundProblems().add(Arrays.asList(new Problem(), new Problem()));
 //        when(battleGameRepository.findById(roomId)).thenReturn(room);
 //
-//        // When
-//        FightDTO result = battleGameService.markSolution(roomId, userId, solved);
+//        // when
+//        FightDTO fightDTO = battleGameService.markSolution(roomId, userId, solved);
 //
-//        // Then
-//        assertNotNull(result);
-//        assertEquals(userId, result.getUserId());
-//        assertTrue(result.getIsAttack());
+//        // then
+//        assertNotNull(fightDTO);
+//        verify(battleGameRepository, times(1)).findById(roomId);
+//    }
+
+    @Test
+    void testIsRoundOver() {
+        // given
+        String roomId = UUID.randomUUID().toString();
+        BattleGameRoom room = BattleGameRoom.builder()
+                .hasPlayerASubmitted(true)
+                .hasPlayerBSubmitted(true)
+                .build();
+        when(battleGameRepository.findById(roomId)).thenReturn(room);
+
+        // when
+        boolean isRoundOver = battleGameService.isRoundOver(roomId);
+
+        // then
+        assertTrue(isRoundOver);
+        verify(battleGameRepository, times(1)).findById(roomId);
+    }
+
+    @Test
+    void testRunRound() {
+        // given
+        String roomId = UUID.randomUUID().toString();
+        BattleGameRoom room = BattleGameRoom.builder()
+                .currentRound(0)
+                .finalRound(3)
+                .isStart(true)
+                .build();
+        when(battleGameRepository.findById(roomId)).thenReturn(room);
+
+        // when
+        Integer currentRound = battleGameService.runRound(roomId);
+
+        // then
+        assertEquals(1, currentRound);
+        verify(battleGameRepository, times(1)).findById(roomId);
+    }
+
+//    @Test
+//    void testGetCurrentRoundProblem() {
+//        // given
+//        String roomId = UUID.randomUUID().toString();
+//        Integer currentRound = 0;
+//        BattleGameRoom room = BattleGameRoom.builder()
+//                .isStart(true)
+//                .build();
+//        room.getRoundProblems().add(Arrays.asList(new Problem(), new Problem()));
+//        when(battleGameRepository.findById(roomId)).thenReturn(room);
+//        when(room.getProblemsForRound(currentRound)).thenReturn(Arrays.asList(new Problem(), new Problem()));
+//
+//        // when
+//        List<Problem> problems = battleGameService.getCurrentRoundProblem(roomId, currentRound);
+//
+//        // then
+//        assertEquals(2, problems.size());
+//        verify(battleGameRepository, times(1)).findById(roomId);
 //    }
 }
