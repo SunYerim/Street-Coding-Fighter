@@ -119,7 +119,8 @@ public class UserController {
 
     // 인증번호 전송
     @PostMapping("/request-verification-code")
-    public ResponseEntity<?> sendVerificationCode(@RequestBody UserPasswordRequestDto passwordRequestDto) {
+    public ResponseEntity<?> sendVerificationCode(
+        @RequestBody UserPasswordRequestDto passwordRequestDto) {
         try {
             String userId = passwordRequestDto.getUserId();
             passwordResetService.sendResetUUID(userId);
@@ -134,7 +135,8 @@ public class UserController {
     // 인증번호 일치 확인
     @GetMapping("/request-verification")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeRequestDto verifyrequest) {
-        boolean isValid = passwordResetService.validateAuthCode(verifyrequest.getUserId(), verifyrequest.getCode());
+        boolean isValid = passwordResetService.validateAuthCode(verifyrequest.getUserId(),
+            verifyrequest.getCode());
 
         if (isValid) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -142,6 +144,4 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }
