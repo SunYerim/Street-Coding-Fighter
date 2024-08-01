@@ -40,15 +40,15 @@ public class BattleGameRoom {
         }
     }
 
-    public void startGame(List<Problem> problems, Long userId) {
-        if (!this.hostId.equals(userId)) { //방장이 아닐 때
-            //예외처리
+    public void startGame(List<Problem> problems, Long memberId) {
+        if (!this.hostId.equals(memberId)) { //방장이 아닐 때
+            throw new BusinessException(memberId, "memberId", ErrorCode.USER_NOT_HOST);
         }
-        if (playerA != null && playerB != null) { // 2명보다 작을 때
-            //예외처리
+        if (playerA.getUserId() == null || playerB.getUserId() == null) { // 2명보다 작을 때
+            throw new BusinessException(roomId, "roomId", ErrorCode.INSUFFICIENT_PLAYER);
         }
         if (problems == null || problems.isEmpty()) { // TODO : 문제에 대한 예외처리
-            //예외처리
+            throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
         }
         // 문제를 가져와서 3개씩 나누어 담도록 함
         // TODO : 3개가 아닌 여러개로 바꿀 수 있도록 수정
