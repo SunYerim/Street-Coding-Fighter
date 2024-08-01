@@ -21,10 +21,14 @@ import SoundStore from "./stores/SoundStore.jsx";
 import React, {useEffect} from 'react';
 function App() {
 
-  const { setSound, play } = SoundStore();
+  const { setSound, play, isPlaying } = SoundStore();
   useEffect(() => {
     setSound("/BGM-1.mp3");
-    play();
+    console.log("effect called")
+    if(!isPlaying){
+      console.log('play');
+      play();
+    }
   }, [setSound]);
 
   return (

@@ -7,6 +7,7 @@ import close from "../../../assets/close.png";
 import axios from "axios";
 import store from "../../../store/store.js";
 import createAuthClient from "../apis/createAuthClient.js";
+import SoundStore from "../../../stores/SoundStore.jsx";
 
 Modal.setAppElement("#root");
 const settingIcon = "/settingIcon.png"
@@ -27,7 +28,7 @@ const Setting = () => {
     () => accessToken,
     setAccessToken
   );
-
+  const {setVolume, sound} = SoundStore(); // sound store import
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -51,6 +52,16 @@ const Setting = () => {
       navigate("/login");
     } catch (error) {
       alert("로그아웃에 실패했습니다.");
+    }
+  };
+  const handleVolume = () => {
+    console.log(sound);
+    if (sound && sound.volume) {
+      console.log('volume off');
+      setVolume(0);
+    } else {
+      console.log('volume on');
+      setVolume(0.3);
     }
   };
 
@@ -81,7 +92,7 @@ const Setting = () => {
           </div>
           <hr />
           <div className="settings">
-            <p className="setting">Volume</p>
+            <p className="setting" onClick={handleVolume}>{sound&&sound.volume ? 'Music Off': 'Music On'}</p>
             <p className="setting">Language</p>
             <p className="setting" onClick={() => navigate("/")}>
               Back to Title
