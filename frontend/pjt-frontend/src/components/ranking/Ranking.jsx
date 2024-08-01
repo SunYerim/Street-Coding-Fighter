@@ -5,10 +5,20 @@ import RankingGraph from './RankingGraph.jsx';
 import { useState } from 'react';
 import useLeaderboardStore from '../../stores/LeaderboardStore.jsx';
 import styled from 'styled-components';
+import axios from 'axios';
+import store from '../../store/store.js';
 
 export default function Ranking() {
-  const { rankingList, setRankingList, boardPeriod, setBoardPeriod, rankingLength, setRankingLength } = useLeaderboardStore();
+  const { rankingList, setRankingList, boardPeriod, setBoardPeriod } =
+    useLeaderboardStore();
 
+  // axios({
+  //   method: 'get',
+  //   url: `${store.baseURL}/rank`,
+  // }).then((res) => {
+  //   console.log(res.data);
+  //   setRankingList(res.data);
+  // });
   const handleTabClick = (tab) => {
     setBoardPeriod(tab);
   };
@@ -26,7 +36,7 @@ export default function Ranking() {
                 // console.log(rankingList[boardPeriod].length);
                 // console.log(boardPeriod === 'total');
                 console.log(rankingList[boardPeriod]);
-                console.log(Object.keys(rankingList[boardPeriod]).length-3);
+                console.log(Object.keys(rankingList[boardPeriod]).length - 3);
               }}
               $isSelected={boardPeriod === 'total'}
             >
@@ -46,7 +56,7 @@ export default function Ranking() {
               </S.GraphContainer>
             </S.RankingInfoSection>
             <S.RankingListSection>
-              {new Array(Object.keys(rankingList[boardPeriod]).length-3)
+              {new Array(Object.keys(rankingList[boardPeriod]).length - 3)
                 .fill(0)
                 .map((_, i) => {
                   return i + 4;
@@ -59,6 +69,9 @@ export default function Ranking() {
           </S.FlexContainer>
         </S.Container>
       </S.PageBody>
+      <style>
+        
+      </style>
     </>
   );
 }

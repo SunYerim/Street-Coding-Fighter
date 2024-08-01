@@ -59,10 +59,7 @@ const useLeaderboardStore = create((set) => ({
   setRankingList: (rankingList) => set({ rankingList }),
   boardPeriod: "total",
   setBoardPeriod: (period) => set({ boardPeriod: period }),
-  rankingLength: testRanking.total.length,
-  setRankingLength: (period)=>{
-    console.log(period);
-    set({ rankingLength : rankingList.total.length})},
 }));
 
 export default useLeaderboardStore;
+  
