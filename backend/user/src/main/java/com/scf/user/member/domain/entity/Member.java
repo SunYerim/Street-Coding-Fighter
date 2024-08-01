@@ -50,6 +50,9 @@ public class Member implements UserDetails {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @Column(name = "school_name")
     private String schoolName;
 

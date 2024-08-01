@@ -33,7 +33,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
-        UserRepository userRepository, CharacterRepository characterRepository, @Lazy JwtTokenProvider jwtTokenProvider,
+        UserRepository userRepository, CharacterRepository characterRepository,
+        @Lazy JwtTokenProvider jwtTokenProvider,
         RedisService redisService) {
         this.authenticationProviderService = authenticationProviderService;
         this.userRepository = userRepository;
@@ -46,13 +47,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserRegisterResponseDto register(UserRegisterRequestDto registerRequestDto) {
         Member member = Member.builder()
-                .userId(registerRequestDto.getUserId())
-                .password(authenticationProviderService.passwordEncoder()
-                    .encode(registerRequestDto.getPassword()))
-                .name(registerRequestDto.getName())
-                .schoolName(registerRequestDto.getSchoolName())
-                .birth(registerRequestDto.getBirth())
-                .build();
+            .userId(registerRequestDto.getUserId())
+            .password(authenticationProviderService.passwordEncoder()
+                .encode(registerRequestDto.getPassword()))
+            .name(registerRequestDto.getName())
+            .email(registerRequestDto.getEmail())
+            .schoolName(registerRequestDto.getSchoolName())
+            .birth(registerRequestDto.getBirth())
+            .build();
 
         // Member 엔티티 저장
         Member savedMember = userRepository.save(member);
