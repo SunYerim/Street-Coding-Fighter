@@ -23,7 +23,7 @@ function App() {
 
   const { setSound, play } = SoundStore();
   useEffect(() => {
-    setSound("/BGM.mp3");
+    setSound("/BGM-1.mp3");
     play();
   }, [setSound]);
 
