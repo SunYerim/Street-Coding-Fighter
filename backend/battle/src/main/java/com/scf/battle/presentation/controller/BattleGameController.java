@@ -1,9 +1,12 @@
 package com.scf.battle.presentation.controller;
 
 import com.scf.battle.application.BattleGameService;
-import com.scf.battle.domain.dto.CreateRoomDTO;
-import com.scf.battle.domain.dto.Problem;
+import com.scf.battle.domain.dto.Room.CreateRoomDTO;
+import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.Room.RoomResponseDTO;
 import com.scf.battle.domain.model.BattleGameRoom;
+import com.scf.battle.global.error.exception.BusinessException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,9 +45,17 @@ public class BattleGameController {
     }
 
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<?> findRoom(@PathVariable String roomId) {
-        BattleGameRoom battleGameRoom = battleGameService.findById(roomId);
-        return new ResponseEntity<>(battleGameRoom, HttpStatus.OK);
+    public ResponseEntity<?> findRoom(@PathVariable String roomId) { // room 하나만 return
+        BattleGameRoom room = battleGameService.findById(roomId);
+        RoomResponseDTO roomResponseDTO = RoomResponseDTO.builder()
+                .roomId(room.getRoomId())
+                .hostId(room.getHostId())
+                .title(room.getTitle())
+                .maxPlayer(2)
+                .curPlayer(room.getPlayerB() != null && room.getPlayerB().getUserId() != null ? 2 : 1)
+                .isLock(room.getPassword() != null)
+                .build();
+        return new ResponseEntity<>(roomResponseDTO, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
