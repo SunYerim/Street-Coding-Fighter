@@ -50,22 +50,19 @@ public class BattleGameRoom {
         if (problems == null || problems.isEmpty()) { // TODO : 문제에 대한 예외처리
             throw new BusinessException(roomId, "roomId", ErrorCode.GAME_ALREADY_STARTED);
         }
-        // 문제를 가져와서 3개씩 나누어 담도록 함
-        // TODO : 3개가 아닌 여러개로 바꿀 수 있도록 수정
         int numberOfRounds = (int) Math.ceil((double) problems.size() / 3); // 안 나눠떨어질 때 예외처리
         for (int i = 0; i < numberOfRounds; i++) {
             int startIndex = i * 3;
             int endIndex = Math.min(startIndex + 3, problems.size());
             roundProblems.add(problems.subList(startIndex, endIndex));
         }
-
         this.isStart = true;
     }
 
     // 특정 라운드의 문제를 가져오는 메서드
     public List<Problem> getProblemsForRound(Integer roundNumber) {
-        if (roundNumber < 0 || roundNumber > roundProblems.size()) {
-            // 예외처리 하기
+        if (roundNumber < 0 || roundNumber >= roundProblems.size()) {
+            throw new IndexOutOfBoundsException("Invalid round number: " + roundNumber);
         }
         return roundProblems.get(roundNumber);
     }
