@@ -17,7 +17,16 @@ import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
+import SoundStore from "./stores/SoundStore.jsx";
+import React, {useEffect} from 'react';
 function App() {
+
+  const { setSound, play } = SoundStore();
+  useEffect(() => {
+    setSound("/BGM.mp3");
+    play();
+  }, [setSound]);
+
   return (
     <>
       <Router>

@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import "../../../css/Setting.css";
-import settingIcon from "../../../assets/settingIcon.png";
+// import settingIcon from "../../../../public/settingIcon.png";
 import close from "../../../assets/close.png";
 import axios from "axios";
 import store from "../../../store/store.js";
 import createAuthClient from "../apis/createAuthClient.js";
 
 Modal.setAppElement("#root");
-
+const settingIcon = "/settingIcon.png"
 const Setting = () => {
   const { accessToken, setAccessToken, baseURL, memberId, setMemberId } = store(
     (state) => ({
