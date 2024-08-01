@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { LeaderBoardPlayerLayouts as P } from './RankingListItem';
-import useLeaderboardStore from '../../stores/LeaderboardStore.jsx';
+import useLeaderboardStore from '../../../stores/LeaderboardStore.jsx';
 
 const RankingGraph = () => {
   const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();

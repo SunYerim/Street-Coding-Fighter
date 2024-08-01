@@ -1,16 +1,16 @@
-import "../../index.css";
-import "../../css/GameMain.css";
+import '../../index.css';
+import '../../css/GameMain.css';
 import "../../css/MultiGame.css";
 import hourglass from '/hourglass.svg'
-import Timer from "../game/Timer.jsx";
-import InputField from "../game/InputField.jsx";
-import MessageContainer from "../game/MessageContainer.jsx";
+import Timer from '../game/Timer.jsx';
+import InputField from '../game/InputField.jsx';
+import MessageContainer from '../game/MessageContainer.jsx';
+import DragNDropQuiz from '../game/quiz_with_blank/DragNDropQuiz.jsx';
 import GameResultModal from "../game/GameResultModal.jsx";
 // import socket from "../game/server.js"
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ShortAnswer from '../game/short_answer/ShortAnswer.jsx';
 export default function MultiGame() {
   const navigate = useNavigate();
   const [start, setStart] = useState(0);
@@ -31,7 +31,6 @@ export default function MultiGame() {
     { id: 7, rank: 7, name: "ai", score: 90 },
   ];
 
-
   const handleStart = () => {
     setStart(1);
     setModalOpen(true);
@@ -44,27 +43,24 @@ export default function MultiGame() {
   //   askUserName();
   // }, []);
 
-
   const askUserName = () => {
-    const userName = prompt("이름입력ㄱㄱ");
+    const userName = prompt('이름입력ㄱㄱ');
 
-    socket.emit("login", userName, (res) => {
+    socket.emit('login', userName, (res) => {
       // res가 왔는데(?), ok정보가 true이다.
-      if(res?.ok) {
+      if (res?.ok) {
         setUser(res.data);
       }
     });
   };
 
-  
   const sendMessage = (event) => {
     event.preventDefault();
-    socket.emit("sendMessage", message, (res)=> {
-      console.log("sendMessage res", res);
+    socket.emit('sendMessage', message, (res) => {
+      console.log('sendMessage res', res);
     });
     setMessage('');
   };
-
 
   return (
     <>
@@ -119,7 +115,6 @@ export default function MultiGame() {
     </>
   );
 }
-
 
 function UserRank(props) {
   return (

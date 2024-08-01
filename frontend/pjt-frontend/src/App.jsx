@@ -16,7 +16,7 @@ import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGame from "./components/battle/BattleGame.jsx";
-
+import Ranking from "./components/ranking/Ranking.jsx";
 function App() {
   return (
     <>
@@ -25,19 +25,21 @@ function App() {
           <Route path="/" element={<TitlePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/ranking" element={<Ranking />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/record" element={<RecordPage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/solved" element={<SolvedPage />} />
-          <Route path="/single" element={<SingleMain />} />
-          <Route path="/single/main" element={<SinglePlay />} />
           <Route path="/multi" element={<MultiMain />} />
           <Route path="/multi-create" element={<MultiCreate />} />
           <Route path="/battle" element={<BattleMain />} />
           <Route path="/battle-create" element={<BattleCreate />} />
           <Route path="/multi-game" element={<MultiGame />} />
           <Route path="/battle-game" element={<BattleGame />} />
+          <Route path="/single-main" element={<SingleMain />} />
+          <Route path="/single-play/:content_id" element={<SinglePlay />} />
+          <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
     </>
