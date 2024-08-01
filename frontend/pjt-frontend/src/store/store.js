@@ -42,6 +42,9 @@ const store = create(
       },
       setRegisterInfo: (registerInfo) => set({ registerInfo }),
 
+      code: "",
+      setCode: (code) => set({ code }),
+
       character: "",
       setCharacter: (character) => set({ character }),
     }),

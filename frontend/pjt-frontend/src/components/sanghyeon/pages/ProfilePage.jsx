@@ -108,7 +108,7 @@ function ProfilePage() {
                   <h3>Character : {character}</h3>
                   <h3>School : {schoolName}</h3>
                   <div className="profile-status-button">
-                    <button onClick={() => alert("미구현")}>
+                    <button onClick={() => navigate("/reset-password")}>
                       비밀번호 수정
                     </button>
                     <SignOutButton />

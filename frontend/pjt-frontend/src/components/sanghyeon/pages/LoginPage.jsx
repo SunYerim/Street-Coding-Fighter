@@ -105,7 +105,10 @@ const LoginPage = () => {
           <button onClick={noAuthLogin}>Login</button>
           <AccountButton buttonType="Sign Up" />
           <div className="find-and-kakao">
-            <div className="find-password" onClick={() => alert("미구현")}>
+            <div
+              className="find-password"
+              onClick={() => navigate("/find-password")}
+            >
               비밀번호 찾기
             </div>
           </div>

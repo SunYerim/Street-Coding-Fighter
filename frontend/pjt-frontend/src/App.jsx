@@ -2,6 +2,8 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TitlePage from "./components/sanghyeon/pages/TitlePage.jsx";
 import LoginPage from "./components/sanghyeon/pages/LoginPage.jsx";
+import FindPasswordPage from "./components/sanghyeon/pages/FindPasswordPage.jsx";
+import ChangePasswordPage from "./components/sanghyeon/pages/ChangePasswordPage.jsx";
 import SignUpPage from "./components/sanghyeon/pages/SignUpPage.jsx";
 import MainPage from "./components/sanghyeon/pages/MainPage.jsx";
 import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
@@ -32,6 +34,8 @@ function App() {
         <Routes>
           <Route path="/" element={<TitlePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/find-password" element={<FindPasswordPage />} />
+          <Route path="/reset-password" element={<ChangePasswordPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signup-character" element={<CharacterSelection />} />
           <Route
