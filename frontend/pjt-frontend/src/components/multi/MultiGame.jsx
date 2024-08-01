@@ -49,9 +49,9 @@ export default function MultiGame() {
   // }, [round])
 
 
-  useEffect(() => {
-    socket.emit("start");
-  }, [start]);
+  // useEffect(() => {
+  //   socket.emit("start");
+  // }, [start]);
 
 
   useEffect(() => {
@@ -72,6 +72,10 @@ export default function MultiGame() {
       setHeaderUser(headerUser);
       console.log(headerUser);
     });
+
+    socket.on('gameStart', (start) => {
+      setStart(1);
+    })
 
     // 컴포넌트가 언마운트될 때 이벤트 수신 해제
     return () => {
