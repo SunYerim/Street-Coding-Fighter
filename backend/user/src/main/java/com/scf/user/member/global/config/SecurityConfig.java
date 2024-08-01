@@ -51,12 +51,13 @@ public class SecurityConfig {
         loginFilter.setFilterProcessesUrl("/user/login"); // 로그인 엔드포인트 설정.
 
         httpSecurity
-            .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+            .cors((corsCustomizer -> corsCustomizer.configurationSource(
+                new CorsConfigurationSource() {
 
-                @Override
-                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
-                    CorsConfiguration configuration = new CorsConfiguration();
+                        CorsConfiguration configuration = new CorsConfiguration();
 
                     configuration.setAllowedOrigins(
                         Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
@@ -65,18 +66,21 @@ public class SecurityConfig {
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
                     configuration.setMaxAge(3600L);
 
-                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
-                    return configuration;
-                }
-            })));
+                        return configuration;
+                    }
+                })));
         httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(user -> user
-                .requestMatchers("/user/login", "/user/join", "/user/validate/**")
+                .requestMatchers("/user/login", "/user/join",
+                    "/user/validate/**", "/user/request-verification-code",
+                    "/user/request-verification", "/user/change-password")
                 .permitAll()
+
                 .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class)

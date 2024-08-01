@@ -57,7 +57,8 @@ public class ProfileServiceImpl implements ProfileService {
                 record.getTime().toLocalDateTime(), // Record의 시간 필드를 LocalDateTime으로 변환
                 record.getRanking(),
                 record.getScore(),
-                record.getGameType()))
+                record.getGameType(),
+                record.getPartCnt()))
             .collect(Collectors.toList());
         return new HistoryListResponseDto(historyList);
     }
