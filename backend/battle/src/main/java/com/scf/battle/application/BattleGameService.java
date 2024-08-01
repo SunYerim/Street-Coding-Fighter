@@ -38,6 +38,19 @@ public class BattleGameService {
     }
 
     public void joinRoom(String roomId, Long userId, String username, String roomPassword) {
+        BattleGameRoom room = battleGameRepository.findById(roomId);
+
+        if (room == null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
+        }
+
+        if (room.getPlayerB() != null && room.getPlayerB().getUserId() != null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.MAX_PLAYERS_EXCEEDED);
+        }
+
+        if (room.getPassword() != null && !room.getPassword().equals(roomPassword)) {
+            throw new BusinessException(roomPassword, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
+        }
         battleGameRepository.joinRoom(roomId, userId, username, roomPassword);
     }
 
