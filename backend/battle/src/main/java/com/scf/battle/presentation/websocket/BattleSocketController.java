@@ -1,10 +1,10 @@
-package com.scf.battle.presentation.controller;
+package com.scf.battle.presentation.websocket;
 
 import com.scf.battle.application.BattleGameService;
-import com.scf.battle.domain.dto.FightDTO;
-import com.scf.battle.domain.dto.JoinRoomDTO;
-import com.scf.battle.domain.dto.Problem;
-import com.scf.battle.domain.dto.Solved;
+import com.scf.battle.domain.dto.User.FightDTO;
+import com.scf.battle.domain.dto.Room.JoinRoomDTO;
+import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.User.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
