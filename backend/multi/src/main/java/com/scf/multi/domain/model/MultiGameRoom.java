@@ -142,6 +142,10 @@ public class MultiGameRoom {
             .sorted((rank1, rank2) -> Integer.compare(rank2.getScore(), rank1.getScore()))
             .collect(Collectors.toList());
 
+        for(int i=1; i<=ranks.size(); i++) {
+            ranks.get(i).setRank(i);
+        }
+
         return ranks;
     }
 }
