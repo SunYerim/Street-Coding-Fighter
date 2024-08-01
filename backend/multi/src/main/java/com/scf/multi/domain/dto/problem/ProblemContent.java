@@ -3,13 +3,11 @@ package com.scf.multi.domain.dto.problem;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
 @Builder
-public class ProblemInfo {
+@Data
+public class ProblemContent {
 
     private Long problemId;
-    private Integer type;
-    private String category;
-    private String title;
     private String content;
+    private Integer numberOfBlank;
 }

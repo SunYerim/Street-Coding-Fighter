@@ -18,7 +18,8 @@ import lombok.Getter;
 public class MultiGameRoom {
 
     private final String roomId;
-    private final Long hostId;
+    private Long hostId;
+    private String hostname;
     private final String title;
     private final String password;
     private final Integer maxPlayer;
@@ -26,19 +27,20 @@ public class MultiGameRoom {
     private final List<Problem> problems = new ArrayList<>();
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>());
-    private final Integer maxRound;
+    private final Integer playRound;
     private Boolean isStart;
     private Integer round;
 
     @Builder
-    public MultiGameRoom(String roomId, Long hostId, String title, String password, Integer maxPlayer, Integer maxRound) {
+    public MultiGameRoom(String roomId, Long hostId, String hostname, String title, String password, Integer maxPlayer, Integer playRound) {
         this.roomId = roomId;
         this.hostId = hostId;
+        this.hostname = hostname;
         this.title = title;
         this.password = password;
         this.maxPlayer = maxPlayer;
 
-        this.maxRound = maxRound;
+        this.playRound = playRound;
         this.isStart = false;
         this.round = 0;
     }
