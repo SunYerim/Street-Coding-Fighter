@@ -25,9 +25,19 @@ public class BattleGameController {
     private final BattleGameService battleGameService;
 
     @GetMapping("/room")
-    public ResponseEntity<?> roomList() {
+    public ResponseEntity<?> roomList() { // room list로 묶어서 return
         List<BattleGameRoom> rooms = battleGameService.findAllRooms();
-        return new ResponseEntity<>(rooms, HttpStatus.OK);
+        List<RoomResponseDTO> roomResponseDTOS = rooms.stream()
+                .map(room -> RoomResponseDTO.builder()
+                        .roomId(room.getRoomId())
+                        .hostId(room.getHostId())
+                        .title(room.getTitle())
+                        .maxPlayer(2)
+                        .curPlayer(room.getPlayerB() != null && room.getPlayerB().getUserId() != null ? 2 : 1)
+                        .isLock(room.getPassword() != null)
+                        .build())
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(roomResponseDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/room/{roomId}")
