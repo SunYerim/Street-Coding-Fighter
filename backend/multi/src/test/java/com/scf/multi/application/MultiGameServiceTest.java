@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
+import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -68,11 +69,12 @@ class MultiGameServiceTest {
         when(multiGameRepository.findAllRooms()).thenReturn(List.of(gameRoom));
 
         // When
-        List<MultiGameRoom> rooms = multiGameService.findAllRooms();
+        List<RoomRequest.ListDTO> rooms = multiGameService.findAllRooms();
 
         // Then
         assertThat(rooms).hasSize(1);
-        assertThat(rooms).contains(gameRoom);
+        assertThat(rooms.getFirst().getCurPlayer()).isEqualTo(0);
+        assertThat(rooms.getFirst().getIsLock()).isEqualTo(true);
     }
 
     @Test
@@ -111,7 +113,7 @@ class MultiGameServiceTest {
 
         // Given
         Long userId = 1L;
-        String username = "hongKD";
+        String username = "testUser";
 
         // When
         String roomId = multiGameService.createRoom(userId, username, createRoomDTO);

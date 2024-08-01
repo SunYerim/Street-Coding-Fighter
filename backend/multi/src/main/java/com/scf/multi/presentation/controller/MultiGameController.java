@@ -3,6 +3,7 @@ package com.scf.multi.presentation.controller;
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
+import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
@@ -26,8 +27,8 @@ public class MultiGameController {
     private final MultiGameService multiGameService;
 
     @GetMapping("/room")
-    public ResponseEntity<?> roomList() {
-        List<MultiGameRoom> rooms = multiGameService.findAllRooms();
+    public ResponseEntity<List<RoomRequest.ListDTO>> roomList() {
+        List<RoomRequest.ListDTO> rooms = multiGameService.findAllRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 

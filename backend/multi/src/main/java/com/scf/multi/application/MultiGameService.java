@@ -3,6 +3,8 @@ package com.scf.multi.application;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.problem.ProblemInfo;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
+import com.scf.multi.domain.dto.room.RoomRequest;
+import com.scf.multi.domain.dto.room.RoomRequest.ListDTO;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
@@ -22,8 +24,19 @@ public class MultiGameService {
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
 
-    public List<MultiGameRoom> findAllRooms() {
-        return multiGameRepository.findAllRooms();
+    public List<RoomRequest.ListDTO> findAllRooms() {
+        List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
+        
+        return rooms.stream().map(room ->
+            ListDTO.builder()
+                .roomId(room.getRoomId())
+                .title(room.getTitle())
+                .hostname(room.getHostname())
+                .maxPlayer(room.getMaxPlayer())
+                .curPlayer(room.getPlayers().size())
+                .isLock(room.getPassword() != null)
+                .build()
+        ).toList();
     }
 
     public MultiGameRoom findOneById(String roomId) {
