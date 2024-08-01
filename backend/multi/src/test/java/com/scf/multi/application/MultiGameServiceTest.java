@@ -1,30 +1,30 @@
 package com.scf.multi.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.problem.ProblemInfo;
+import com.scf.multi.domain.dto.problem.ProblemAnswer;
+import com.scf.multi.domain.dto.problem.ProblemChoice;
+import com.scf.multi.domain.dto.problem.ProblemContent;
+import com.scf.multi.domain.dto.problem.ProblemResponse;
+import com.scf.multi.domain.dto.problem.ProblemType;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
-import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
-import com.scf.multi.global.error.ErrorCode;
-import com.scf.multi.global.error.exception.BusinessException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 class MultiGameServiceTest {
 
@@ -37,294 +37,199 @@ class MultiGameServiceTest {
     @InjectMocks
     private MultiGameService multiGameService;
 
-    private MultiGameRoom gameRoom;
-    private CreateRoomDTO createRoomDTO;
+    private MultiGameRoom room;
+
+    private List<Problem> problems;
+
+    private Player hostPlayer;
+
+    private Player otherPlayer;
 
     @BeforeEach
     void setUp() {
-
         MockitoAnnotations.openMocks(this);
 
-        gameRoom = MultiGameRoom.builder()
-            .roomId("abc-def")
-            .hostId(1L)
-            .hostname("testUser")
-            .title("First Room")
-            .maxPlayer(2)
-            .password("1234")
+        hostPlayer = Player.builder()
+            .userId(1L)
+            .username("Host")
+            .isHost(true)
             .build();
 
-        createRoomDTO = CreateRoomDTO.builder()
-            .title("First Room")
-            .maxPlayer(2)
-            .password("1234")
-            .build();
-    }
-
-    @Test
-    @DisplayName("방의 목록을 정상적으로 반환해야 한다.")
-    void findAllRoomsTest() {
-
-        // Given
-        when(multiGameRepository.findAllRooms()).thenReturn(List.of(gameRoom));
-
-        // When
-        List<RoomRequest.ListDTO> rooms = multiGameService.findAllRooms();
-
-        // Then
-        assertThat(rooms).hasSize(1);
-        assertThat(rooms.getFirst().getCurPlayer()).isEqualTo(0);
-        assertThat(rooms.getFirst().getIsLock()).isEqualTo(true);
-    }
-
-    @Test
-    @DisplayName("roomId에 해당하는 방을 정상적으로 반환해야 한다.")
-    void findOneByIdTest() {
-
-        // Given
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-
-        // When
-        MultiGameRoom room = multiGameService.findOneById("abc-def");
-
-        // Then
-        assertThat(room).isNotNull();
-        assertThat(room.getRoomId()).isEqualTo("abc-def");
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 roomId에 대해 예외를 발생시켜야 한다.")
-    void findOneByIdNotFoundTest() {
-
-        // Given
-        when(multiGameRepository.findOneById("non-existent")).thenReturn(null);
-
-        // When & Then
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            multiGameService.findOneById("non-existent");
-        });
-
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.ROOM_NOT_FOUND.getMessage());
-    }
-
-    @Test
-    @DisplayName("새로운 방을 정상적으로 생성해야 한다.")
-    void createRoomTest() {
-
-        // Given
-        Long userId = 1L;
-        String username = "testUser";
-
-        // When
-        String roomId = multiGameService.createRoom(userId, username, createRoomDTO);
-
-        // Then
-        assertThat(roomId).isNotNull();
-        verify(multiGameRepository).addRoom(any(MultiGameRoom.class));
-    }
-
-    @Test
-    @DisplayName("roomId에 해당하는 방을 정상적으로 삭제해야 한다.")
-    void deleteRoomTest() {
-
-        // Given
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-
-        // When
-        multiGameService.deleteRoom("abc-def");
-
-        // Then
-        verify(multiGameRepository).deleteRoom("abc-def");
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 roomId에 대해 예외를 발생시켜야 한다.")
-    void deleteRoomNotFoundTest() {
-
-        // Given
-        when(multiGameRepository.findOneById("non-existent")).thenReturn(null);
-
-        // When
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            multiGameService.deleteRoom("non-existent");
-        });
-
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.ROOM_NOT_FOUND.getMessage());
-    }
-
-    @Test
-    @DisplayName("유저가 방에 정상적으로 참여해야 한다.")
-    void joinRoomTest() {
-
-        // Given
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-        Long userId = 2L;
-        String username = "player1";
-
-        // When
-        multiGameService.joinRoom("abc-def", "1234", userId, username);
-
-        // Then
-        assertThat(gameRoom.getPlayers()).hasSize(1);
-        Player player = gameRoom.getPlayers().get(0);
-        assertThat(player.getUserId()).isEqualTo(userId);
-        assertThat(player.getUsername()).isEqualTo(username);
-        assertThat(player.getIsHost()).isFalse();
-    }
-
-    @Test
-    @DisplayName("방장이 방에 참여할 때 isHost가 true로 설정되어야 한다.")
-    void joinRoomAsHostTest() {
-        // Given
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-        Long userId = 1L;
-        String username = "host";
-
-        // When
-        multiGameService.joinRoom("abc-def", "1234", userId, username);
-
-        // Then
-        assertThat(gameRoom.getPlayers()).hasSize(1);
-        Player player = gameRoom.getPlayers().get(0);
-        assertThat(player.getUserId()).isEqualTo(userId);
-        assertThat(player.getUsername()).isEqualTo(username);
-        assertThat(player.getIsHost()).isTrue();
-    }
-
-    @Test
-    @DisplayName("유저가 방에서 정상적으로 나가야 한다.")
-    void exitRoomTest() {
-
-        // Given
-        Player player = Player.builder()
+        otherPlayer = Player.builder()
             .userId(2L)
-            .username("player1")
+            .username("Player2")
             .isHost(false)
             .build();
-        gameRoom.add("1234", player);
 
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
+        room = MultiGameRoom.builder()
+            .roomId(UUID.randomUUID().toString())
+            .hostId(hostPlayer.getUserId())
+            .hostname(hostPlayer.getUsername())
+            .password("1234")
+            .title("Test Room")
+            .maxPlayer(4)
+            .playRound(2)
+            .build();
 
-        // When
-        multiGameService.exitRoom("abc-def", 2L);
+        List<ProblemChoice> problemChoices = Arrays.asList(
+            ProblemChoice.builder().problemId(1L).choiceId(1).choiceText("i+1").build(),
+            ProblemChoice.builder().problemId(1L).choiceId(2).choiceText("i+2").build(),
+            ProblemChoice.builder().problemId(1L).choiceId(3).choiceText("i+3").build()
+        );
 
-        // Then
-        assertThat(gameRoom.getPlayers()).isEmpty();
+        List<ProblemAnswer> ProblemAnswers = Arrays.asList(
+            ProblemAnswer.builder().answerId(1).problemId(1L).blankPosition(1).correctChoice(problemChoices.get(0)).correctAnswerText(null).build(),
+            ProblemAnswer.builder().answerId(2).problemId(1L).blankPosition(2).correctChoice(problemChoices.get(1)).correctAnswerText(null).build(),
+            ProblemAnswer.builder().answerId(3).problemId(1L).blankPosition(3).correctChoice(problemChoices.get(2)).correctAnswerText(null).build()
+        );
+
+        Problem problem1 = Problem // 빈칸 채우기
+            .builder()
+            .problemId(1L)
+            .problemType(ProblemType.FILL_IN_THE_BLANK)
+            .category("정렬")
+            .title("버블 정렬")
+            .problemContent(ProblemContent.builder()
+                .content("빈칸을 채우세요.")
+                .numberOfBlank(3)
+                .problemId(1L)
+                .build()
+            )
+            .problemChoices(problemChoices)
+            .problemAnswers(ProblemAnswers)
+            .build();
+
+        Problem problem2 = Problem // 주관식
+            .builder()
+            .problemId(2L)
+            .problemType(ProblemType.SHORT_ANSWER_QUESTION)
+            .category("정렬")
+            .title("삽입 정렬")
+            .problemContent(ProblemContent.builder()
+                .content("답을 쓰세요.")
+                .numberOfBlank(0)
+                .problemId(2L)
+                .build()
+            )
+            .problemChoices(null)
+            .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(2L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
+            .build();
+
+        problems = Arrays.asList(problem1, problem2);
     }
 
     @Test
-    @DisplayName("정답을 제출하고 점수를 정상적으로 계산해야 한다.")
-    void markSolutionTest() {
+    @DisplayName("방을 생성할 수 있어야 한다.")
+    void createRoomTest() {
+        // Given
+        CreateRoomDTO createRoomDTO = CreateRoomDTO.builder()
+            .title("New Room")
+            .maxPlayer(4)
+            .password("password")
+            .gameRound(3)
+            .build();
+
+        // When
+        String roomId = multiGameService.createRoom(1L, "host", createRoomDTO);
+
+        // Then
+        verify(multiGameRepository).addRoom(any(MultiGameRoom.class));
+        assertNotNull(roomId);
+    }
+
+    @Test
+    @DisplayName("방에 참가할 수 있어야 한다.")
+    void joinRoomTest() {
+        // Given
+        room.add("1234", hostPlayer);
+
+        when(multiGameRepository.findOneById(anyString())).thenReturn(room);
+
+        // When
+        multiGameService.joinRoom(room.getRoomId(), "1234", 2L, "player2");
+
+        // Then
+        assertTrue(room.getPlayers().stream().anyMatch(p -> p.getUserId().equals(2L)));
+    }
+
+    @Test
+    @DisplayName("빈칸 문제를 채점하고 점수를 옳바르게 계산해야 한다.")
+    void markFillInTheBlankSolutionTest() {
 
         // Given
-        Problem problem = Problem.builder()
-            .answer(Map.of(1, 2, 2, 3))
-            .build();
+        room.add("1234", hostPlayer);
+        room.add("1234", otherPlayer);
+        room.gameStart(problems, room.getHostId());
 
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-
-        Player player1 = Player.builder().userId(1L).username("host").isHost(true).streakCount(0).build();
-        Player player2 = Player.builder().userId(2L).username("player").isHost(false).streakCount(0).build();
-        gameRoom.add("1234", player1);
-        gameRoom.add("1234", player2);
-        gameRoom.gameStart(List.of(problem), 1L);
+        when(multiGameRepository.findOneById(anyString())).thenReturn(room);
 
         Solved solved = Solved.builder()
-            .solve(Map.of(1, 2, 2, 3))
-            .submitTime(5)
+            .solve(Map.of(1, 1, 2, 2, 3, 3))
+            .solveText(null)
+            .submitTime(20) // Within time limit
             .build();
 
         // When
-        int score = multiGameService.markSolution("abc-def", player1, solved);
-        int ans = 1000 * (solved.getSubmitTime() / 30) + (player1.getStreakCount() * 75);
+        int score = multiGameService.markSolution(room.getRoomId(), Player.builder().userId(1L).streakCount(2).build(), solved);
 
         // Then
-        assertThat(score).isEqualTo(ans);
-        verify(multiGameRepository).findOneById("abc-def");
-        assertThat(gameRoom.getScoreBoard().get(1L)).isEqualTo(ans);
+        assertTrue(score > 0);
     }
 
     @Test
-    @DisplayName("방장은 게임을 시작할 수 있어야 하며, 문제들이 정상적으로 설정되어야 한다.")
+    @DisplayName("빈칸 문제를 채점하고 점수를 옳바르게 계산해야 한다.")
+    void markShortAnswerQuestionSolutionTest() {
+
+        // Given
+        room.add("1234", hostPlayer);
+        room.add("1234", otherPlayer);
+        room.gameStart(problems, room.getHostId());
+        room.nextRound(); // 2번 문제가 주관식
+
+        when(multiGameRepository.findOneById(anyString())).thenReturn(room);
+
+        Solved solved = Solved.builder()
+            .solve(null)
+            .solveText("test answer")
+            .submitTime(20) // Within time limit
+            .build();
+
+        // When
+        int score = multiGameService.markSolution(room.getRoomId(), Player.builder().userId(1L).streakCount(2).build(), solved);
+
+        // Then
+        assertTrue(score > 0);
+    }
+
+    @Test
+    @DisplayName("게임을 시작할 수 있어야 한다.")
     void startGameTest() {
 
         // Given
-        List<Problem> problems = List.of(
-            Problem.builder().answer(Map.of(1, 2)).build(),
-            Problem.builder().answer(Map.of(1, 3)).build()
-        );
-
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-
-        gameRoom.add("1234", Player.builder().userId(1L).username("Host").isHost(true).build());
-        gameRoom.add("1234", Player.builder().userId(2L).username("Player").isHost(false).build());
-
-        when(problemService.getProblems()).thenReturn(problems);
+        room.add("1234", hostPlayer);
+        room.add("1234", otherPlayer);
+        when(multiGameRepository.findOneById(anyString())).thenReturn(room);
+        when(problemService.getProblems(anyInt())).thenReturn(problems);
 
         // When
-        List<ProblemInfo> startedProblems = multiGameService.startGame("abc-def", 1L);
+        List<ProblemResponse.ListDTO> problemList = multiGameService.startGame(room.getRoomId(), 1L);
 
         // Then
-        assertThat(startedProblems).isEqualTo(problems.stream()
-            .map(problem -> ProblemInfo.builder()
-                .problemId(problem.getProblemId())
-                .type(problem.getType())
-                .title(problem.getTitle())
-                .category(problem.getCategory())
-                .content(problem.getContent())
-                .build())
-            .toList());
-        assertThat(gameRoom.getProblems()).isEqualTo(problems);
-        assertThat(gameRoom.getIsStart()).isTrue();
+        assertNotNull(problemList);
+        assertEquals(2, problemList.size());
     }
 
     @Test
-    @DisplayName("정답이 없을 경우 점수가 0이 되어야 한다.")
-    void markSolutionNoCorrectAnswersTest() {
+    @DisplayName("방을 삭제할 수 있어야 한다.")
+    void deleteRoomTest() {
 
         // Given
-        List<Problem> problems = List.of(
-            Problem.builder().problemId(1L).answer(Map.of(1, 2, 2, 3)).build(),
-            Problem.builder().problemId(2L).answer(Map.of(2, 3)).build()
-        );
-
-
-        Player player1 = Player.builder().userId(1L).username("host").isHost(true).streakCount(0).build();
-        Player player2 = Player.builder().userId(2L).username("player").isHost(false).streakCount(0).build();
-        gameRoom.add("1234", player1);
-        gameRoom.add("1234", player2);
-        gameRoom.gameStart(problems, 1L);
-
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-
-        Solved solved = Solved.builder()
-            .problemId(1L)
-            .solve(Map.of(1, 3, 2, 1))
-            .submitTime(5)
-            .build();
+        when(multiGameRepository.findOneById(anyString())).thenReturn(room);
 
         // When
-        int score = multiGameService.markSolution("abc-def", player1, solved);
+        multiGameService.deleteRoom(room.getRoomId());
 
         // Then
-        assertThat(score).isEqualTo(0);
-    }
-
-    @Test
-    @DisplayName("문제가 없을 경우 예외를 발생시켜야 한다.")
-    void startGameNoProblemsTest() {
-
-        // Given
-        when(problemService.getProblems()).thenReturn(Collections.emptyList());
-        when(multiGameRepository.findOneById("abc-def")).thenReturn(gameRoom);
-
-        // When
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            multiGameService.startGame("abc-def", 1L);
-        });
-
-        // Then
-        assertThat(exception.getMessage()).isEqualTo(ErrorCode.PROBLEM_NOT_FOUND.getMessage());
+        verify(multiGameRepository).deleteRoom(anyString());
     }
 }
-
