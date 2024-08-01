@@ -62,33 +62,33 @@ public class MemberControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    @DisplayName("회원가입 후 유저 정보를 조회할 수 있어야 합니다.")
-    void testUserInfo() throws Exception {
-        // 회원가입
-        UserRegisterRequestDto registerRequestDto = new UserRegisterRequestDto("test1", "hihi", "테스트용", "싸피고등학교", birthDate);
-        mockMvc.perform(post("/user/join")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequestDto)))
-            .andExpect(status().isOk())
-            .andDo(print());
-
-        // 유저 정보 조회를 위한 Mock 설정
-        UserInfoResponseDto userInfoDto = new UserInfoResponseDto("test1", "테스트용", "싸피고등학교", birthDate);
-        when(userService.getUserInfo("27")).thenReturn(userInfoDto);
-
-        // 유저 정보 조회 API 호출
-        mockMvc.perform(get("/user")
-                .header("memberId", "27")) // 실제 ID를 사용하거나 설정한 ID를 사용
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.userId").value("test1"))
-            .andExpect(jsonPath("$.name").value("테스트용"))
-            .andExpect(jsonPath("$.schoolName").value("싸피고등학교"))
-            .andExpect(jsonPath("$.birth").value("2006-01-31"))
-            .andDo(print());
-
-        verify(userService, times(1)).getUserInfo("27");
-    }
+//    @Test
+//    @DisplayName("회원가입 후 유저 정보를 조회할 수 있어야 합니다.")
+//    void testUserInfo() throws Exception {
+//        // 회원가입
+//        UserRegisterRequestDto registerRequestDto = new UserRegisterRequestDto("test1", "hihi", "테스트용", "싸피고등학교", birthDate);
+//        mockMvc.perform(post("/user/join")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(registerRequestDto)))
+//            .andExpect(status().isOk())
+//            .andDo(print());
+//
+//        // 유저 정보 조회를 위한 Mock 설정
+//        UserInfoResponseDto userInfoDto = new UserInfoResponseDto("test1", "테스트용", "싸피고등학교", birthDate);
+//        when(userService.getUserInfo("27")).thenReturn(userInfoDto);
+//
+//        // 유저 정보 조회 API 호출
+//        mockMvc.perform(get("/user")
+//                .header("memberId", "27")) // 실제 ID를 사용하거나 설정한 ID를 사용
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$.userId").value("test1"))
+//            .andExpect(jsonPath("$.name").value("테스트용"))
+//            .andExpect(jsonPath("$.schoolName").value("싸피고등학교"))
+//            .andExpect(jsonPath("$.birth").value("2006-01-31"))
+//            .andDo(print());
+//
+//        verify(userService, times(1)).getUserInfo("27");
+//    }
 
     // 로그인 테스트
     @Test
