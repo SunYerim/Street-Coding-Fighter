@@ -126,16 +126,17 @@ public class BattleGameService {
         Problem problem = problemOpt.get();
 
         // 문제의 정답 가져오기
-        Map<Integer, Integer> answer = problem.getAnswer();
+        List<ProblemAnswer> answers = problem.getProblemAnswers();
+        ProblemType problemType = problem.getProblemType();
 
-        // 제출된 답안과 문제의 정답을 비교하기
-        int correctAnswerCount = compareAnswers(answer, solved.getSolve());
-        int score = 0;
-        if (correctAnswerCount > 0) { // 맞추었다면
-            score = calculatePower(solved.getSubmitTime());
+        boolean isCorrect = compareAnswers(problemType, solved, answers);
+
+        if (isCorrect) {
+            int score = calculateScore(solved.getSubmitTime());
             room.updateHp(userId, score);
-            return FightDTO.builder().userId(userId).isAttack(true).power(score).build();
+            FightDTO.builder().userId(userId).isAttack(true).power(score).build();
         }
+
         return FightDTO.builder().userId(userId).isAttack(false).power(0).build();
     }
 
