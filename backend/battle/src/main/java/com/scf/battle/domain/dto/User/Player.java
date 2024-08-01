@@ -1,4 +1,4 @@
-package com.scf.battle.domain.dto;
+package com.scf.battle.domain.dto.User;
 
 
 import lombok.AllArgsConstructor;
@@ -11,5 +11,4 @@ public class Player {
     private Long userId;
     private String username;
     private Integer Hp;
-
 }

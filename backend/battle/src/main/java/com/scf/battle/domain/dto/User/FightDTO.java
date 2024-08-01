@@ -1,4 +1,4 @@
-package com.scf.battle.domain.dto;
+package com.scf.battle.domain.dto.User;
 
 import lombok.Builder;
 import lombok.Data;
