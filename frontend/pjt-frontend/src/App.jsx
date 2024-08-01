@@ -23,7 +23,6 @@ function App() {
 
   const { setSound, play, isPlaying } = SoundStore();
   useEffect(() => {
-    setSound("/BGM-1.mp3");
     console.log("effect called")
     if(!isPlaying){
       console.log('play');

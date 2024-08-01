@@ -2,8 +2,17 @@ import { create } from 'zustand';
 import { Howl } from 'howler';
 
 const SoundStore = create((set) => ({
-  sound: null,
+  sound: new Howl({
+    src: ["/BGM-1.mp3"],
+    loop: true,
+    volume: 0.3,
+  }),
   isPlaying: false,
+  volume: 0.3, // 기본 볼륨 값 추가
+  clickSound: new Howl({
+    src: ['/clickSound.mp3'], // 효과음 파일 경로
+    volume: 1.0,
+  }),
   play: () => {
     set((state) => {
       state.sound && state.sound.play();
@@ -13,7 +22,7 @@ const SoundStore = create((set) => ({
   pause: () => {
     set((state) => {
       state.sound && state.sound.pause();
-      return { isPlaying: false }; // isPlaying을 false로 설정
+      return { isPlaying: false };
     });
   },
   setSound: (src) => {
@@ -27,9 +36,15 @@ const SoundStore = create((set) => ({
   setVolume: (volume) => {
     set((state) => {
       if (state.sound) {
-        state.sound.volume(volume); // Howl 객체의 volume 메서드를 호출
+        state.sound.volume(volume);
       }
       return { volume }; // 상태의 volume을 업데이트
+    });
+  },
+  playClickSound: () => {
+    set((state) => {
+      state.clickSound.play();
+      return {};
     });
   },
 }));
