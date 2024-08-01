@@ -80,17 +80,13 @@ public class BattleGameRoom {
         } else {
             throw new IllegalArgumentException("Invalid userId");
         }
-        return FightDTO.builder()
-            .userId(userId)
-            .isAttack(this.isAttack)
-            .power(power)
-            .build();
+        return FightDTO.builder().userId(userId).isAttack(this.isAttack).power(power).build();
     }
 
     private void updatePlayerHp(Player player, int power) {
         int adjustedPower = this.isAttack ? -power : power;
-        if(isAttack){
-            if(playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
+        if (isAttack) {
+            if (playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
             else player = playerA; // 내가 A
         }
         if (!isAttack) {
@@ -104,7 +100,7 @@ public class BattleGameRoom {
         if (!Boolean.TRUE.equals(this.isStart)) {
             // TODO : 시작 안 된 상황
         }
-        if(this.finalRound == currentRound){ // 끝난상황
+        if (this.finalRound == currentRound) { // 끝난상황
             return -1;
         }
         hasPlayerASubmitted = false;
