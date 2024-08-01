@@ -23,7 +23,6 @@ public class BattleGameRoom {
     private final List<List<Problem>> roundProblems = new ArrayList<>(); // 라운드 마다 3문제로 나누기 위함
     private Player playerA;
     private Player playerB;
-    //private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>()); // player, score
     private Boolean isAttack;
     private Boolean isStart;
     private Integer finalRound;
