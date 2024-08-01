@@ -1,8 +1,9 @@
 package com.scf.battle.application;
 
 import com.scf.battle.domain.dto.CreateRoomDTO;
-import com.scf.battle.domain.dto.JoinRoomDTO;
+import com.scf.battle.domain.dto.FightDTO;
 import com.scf.battle.domain.dto.Problem;
+import com.scf.battle.domain.dto.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,21 +13,21 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class BattleGameServiceTest {
 
     @Mock
     private BattleGameRepository battleGameRepository;
+
+    @Mock
+    private ProblemService problemService;
 
     @InjectMocks
     private BattleGameService battleGameService;
@@ -38,78 +39,117 @@ public class BattleGameServiceTest {
 
     @Test
     public void testFindAllRooms() {
-        given(battleGameRepository.findAllRooms()).willReturn(Collections.emptyList());
+        // Given
+        List<BattleGameRoom> rooms = new ArrayList<>();
+        when(battleGameRepository.findAllRooms()).thenReturn(rooms);
 
-        List<BattleGameRoom> rooms = battleGameService.findAllRooms();
+        // When
+        List<BattleGameRoom> result = battleGameService.findAllRooms();
 
-        assertTrue(rooms.isEmpty());
-        verify(battleGameRepository).findAllRooms();
+        // Then
+        assertEquals(rooms, result);
     }
 
     @Test
     public void testFindById() {
-        BattleGameRoom room = BattleGameRoom.builder().roomId("room1").hostId(1L).build();
-        given(battleGameRepository.findById(anyString())).willReturn(room);
+        // Given
+        String roomId = UUID.randomUUID().toString();
+        BattleGameRoom room = BattleGameRoom.builder().roomId(roomId).build();
+        when(battleGameRepository.findById(roomId)).thenReturn(room);
 
-        BattleGameRoom foundRoom = battleGameService.findById("room1");
+        // When
+        BattleGameRoom result = battleGameService.findById(roomId);
 
-        assertNotNull(foundRoom);
-        assertEquals("room1", foundRoom.getRoomId());
-        verify(battleGameRepository).findById("room1");
+        // Then
+        assertEquals(room, result);
     }
 
     @Test
     public void testJoinRoom() {
-        JoinRoomDTO joinRoomDTO = JoinRoomDTO.builder()
-            .userId(1L)
-            .username("user1")
-            .roomPassword("1234")
-            .build();
+        // Given
+        String roomId = UUID.randomUUID().toString();
+        Long userId = 1L;
+        String username = "user";
+        String roomPassword = "password";
 
-        battleGameService.joinRoom("room1", joinRoomDTO);
+        // When
+        battleGameService.joinRoom(roomId, userId, username, roomPassword);
 
-        verify(battleGameRepository).joinRoom("room1", joinRoomDTO);
+        // Then
+        verify(battleGameRepository, times(1)).joinRoom(roomId, userId, username, roomPassword);
     }
 
     @Test
     public void testCreateRoom() {
+        // Given
+        Long userId = 1L;
         CreateRoomDTO createRoomDTO = CreateRoomDTO.builder()
             .title("Test Room")
-            .password("1234")
+            .password("password")
             .build();
+        String roomId = UUID.randomUUID().toString();
+        doNothing().when(battleGameRepository).addRoom(any(BattleGameRoom.class));
 
-        String roomId = battleGameService.createRoom(1L, createRoomDTO);
+        // When
+        String result = battleGameService.createRoom(userId, createRoomDTO);
 
-        assertNotNull(roomId);
-        verify(battleGameRepository).addRoom(any(BattleGameRoom.class));
+        // Then
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testStartGame() {
+        // Given
+        Long userId = 1L;
+        String roomId = UUID.randomUUID().toString();
+        BattleGameRoom room = BattleGameRoom.builder().roomId(roomId).hostId(userId).build();
+        List<Problem> problems = new ArrayList<>();
+        problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
+        problems.add(new Problem(2L, 0, "정렬", "삽입 정렬", "삽입 정렬 내용", Map.of(0, 1, 1, 2)));
+
+        when(battleGameRepository.findById(roomId)).thenReturn(room);
+        when(problemService.getProblem()).thenReturn(problems);
+
+        // When
+        List<Problem> result = battleGameService.startGame(userId, roomId);
+
+        // Then
+        assertNotNull(result);
+        assertTrue(room.getIsStart());
     }
 
 //    @Test
-//    public void testStartGame() {
-//        Map<Integer, Integer> answer = new HashMap<>();
-//        answer.put(1, 2);
-//        Problem problem = new Problem(1L, 1, "Category", "Title", "Content", answer);
-//
-//        List<Problem> problems = new ArrayList<>();
-//        problems.add(problem);
-//
-//        BattleGameRoom room = BattleGameRoom.builder()
-//            .roomId("room1")
-//            .hostId(1L)
-//            .title("Test Room")
-//            .password("1234")
-//            .isStart(false)
-//            .round(0)
+//    public void testMarkSolution() {
+//        // Given
+//        String roomId = UUID.randomUUID().toString();
+//        Long userId = 1L;
+//        Solved solved = Solved.builder()
+//            .problemId(1L)
+//            .userId(userId)
+//            .solve(Map.of(0, 1, 1, 2))
+//            .submitTime(5)
 //            .build();
 //
-//        given(battleGameRepository.findById(anyString())).willReturn(room);
+//        BattleGameRoom room = BattleGameRoom.builder()
+//            .roomId(roomId)
+//            .round(1)
+//            .isStart(true)
+//            .build();
 //
-//        battleGameService.startGame(1L, "room1");
+//        room.setRoundProblems(List.of(
+//            List.of(
+//                new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2))
+//            )
+//        ));
 //
-//        assertTrue(room.getIsStart());
-//        assertEquals(1, room.getProblems().size());
-//        assertEquals(problem, room.getProblems().get(0));
+//        when(battleGameRepository.findById(roomId)).thenReturn(room);
 //
-//        verify(battleGameRepository).findById("room1");
+//        // When
+//        FightDTO result = battleGameService.markSolution(roomId, userId, solved);
+//
+//        // Then
+//        assertNotNull(result);
+//        assertEquals(userId, result.getUserId());
+//        assertTrue(result.getIsAttack());
 //    }
 }

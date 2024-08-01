@@ -2,7 +2,6 @@ package com.scf.battle.presentation.controller;
 
 import com.scf.battle.application.BattleGameService;
 import com.scf.battle.domain.dto.CreateRoomDTO;
-import com.scf.battle.domain.dto.JoinRoomDTO;
 import com.scf.battle.domain.dto.Problem;
 import com.scf.battle.domain.model.BattleGameRoom;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +38,9 @@ public class BattleGameController {
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @RequestBody JoinRoomDTO joinRoomDto) { // TODO : userId requestHeader로 받도록 수정
-        battleGameService.joinRoom(roomId, joinRoomDto);
+        @RequestHeader Long userId, @RequestHeader String username,
+        @RequestBody String roomPassword) { // TODO : userId requestHeader로 받도록 수정
+        battleGameService.joinRoom(roomId, userId, username, roomPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -48,6 +48,7 @@ public class BattleGameController {
     public ResponseEntity<?> createRoom(@RequestHeader Long userId,
         @RequestBody CreateRoomDTO createRoomDto) {
         String roomId = battleGameService.createRoom(userId, createRoomDto);
+        System.out.println(roomId);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 

@@ -1,5 +1,6 @@
 package com.scf.battle.domain.dto;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,10 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinRoomDTO {
+public class Solved {
 
-    private String roomId;
+    private Long problemId;
     private Long userId;
-    private String username;
-    private String roomPassword;
+    private Map<Integer, Integer> solve;
+    private Integer submitTime;
+    private String roomId;
+    private Integer round;
 }

@@ -1,6 +1,6 @@
 package com.scf.battle.domain.model;
 
-import com.scf.battle.domain.dto.JoinRoomDTO;
+import com.scf.battle.domain.dto.FightDTO;
 import com.scf.battle.domain.dto.Player;
 import com.scf.battle.domain.dto.Problem;
 import lombok.Builder;
@@ -19,19 +19,20 @@ public class BattleGameRoom {
     private String password;
 
     private final List<List<Problem>> roundProblems = new ArrayList<>(); // 라운드 마다 3문제로 나누기 위함
-    private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
-    private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(
-        new HashMap<>()); // player, score
+    private Player playerA;
+    private Player playerB;
+    //private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>()); // player, score
+    private Boolean isAttack;
     private Boolean isStart;
-    private Integer round;
+    private Integer finalRound;
+    private Integer currentRound;
+    private Boolean hasPlayerASubmitted;
+    private Boolean hasPlayerBSubmitted;
 
-    public void add(JoinRoomDTO joinRoomDto) {
-        Long userId = joinRoomDto.getUserId();
-        String username = joinRoomDto.getUsername();
-        String roomPassword = joinRoomDto.getRoomPassword();
 
+    public void add(Long userId, String username, String roomPassword) {
         if (roomPassword.equals(this.password)) {
-            players.add(new Player(userId, username));
+            this.playerB = new Player(userId, username, 100);
         } else {
             // 예외처리
         }
@@ -41,7 +42,7 @@ public class BattleGameRoom {
         if (!this.hostId.equals(userId)) { //방장이 아닐 때
             //예외처리
         }
-        if (this.players.size() < 2) { // 2명보다 작을 때
+        if (playerA != null && playerB != null) { // 2명보다 작을 때
             //예외처리
         }
         if (problems == null || problems.isEmpty()) { // TODO : 문제에 대한 예외처리
@@ -61,32 +62,57 @@ public class BattleGameRoom {
 
     // 특정 라운드의 문제를 가져오는 메서드
     public List<Problem> getProblemsForRound(Integer roundNumber) {
-        if (roundNumber < 1 || roundNumber > roundProblems.size()) {
+        if (roundNumber < 0 || roundNumber > roundProblems.size()) {
             // 예외처리 하기
         }
-        return roundProblems.get(roundNumber - 1);
+        return roundProblems.get(roundNumber);
     }
 
-    public void updateScore(Long userId, int score) {
-
-        boolean hasPlayer = this.players.stream()
-            .anyMatch(player -> player.getUserId().equals(userId));
-
-        if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-            // TODO : 유저 없는 예외처리
+    public FightDTO updateHp(Long userId, int power) {
+        if (playerA == null || playerB == null) {
+            throw new IllegalArgumentException("Player not found");
         }
-
-        int newScore = scoreBoard.get(userId) + score;
-        this.scoreBoard.put(userId, newScore);
+        if (playerA.getUserId().equals(userId)) {
+            hasPlayerASubmitted = true;
+            updatePlayerHp(playerB, power);
+        } else if (playerB.getUserId().equals(userId)) {
+            hasPlayerBSubmitted = true;
+            updatePlayerHp(playerA, power);
+        } else {
+            throw new IllegalArgumentException("Invalid userId");
+        }
+        return FightDTO.builder()
+            .userId(userId)
+            .isAttack(this.isAttack)
+            .power(power)
+            .build();
     }
 
-    public void nextRound() {
+    private void updatePlayerHp(Player player, int power) {
+        int adjustedPower = this.isAttack ? -power : power;
+        if(isAttack){
+            if(playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
+            else player = playerA; // 내가 A
+        }
+        if (!isAttack) {
+            this.isAttack = true;
+        }
+        player.setHp(player.getHp() - adjustedPower);
+    }
+
+    public Integer nextRound() {
 
         if (!Boolean.TRUE.equals(this.isStart)) {
             // TODO : 시작 안 된 상황
         }
-
-        this.round += 1;
+        if(this.finalRound == currentRound){ // 끝난상황
+            return -1;
+        }
+        hasPlayerASubmitted = false;
+        hasPlayerBSubmitted = false;
+        this.isAttack = false;
+        this.currentRound += 1;
+        return currentRound;
     }
 
 }
