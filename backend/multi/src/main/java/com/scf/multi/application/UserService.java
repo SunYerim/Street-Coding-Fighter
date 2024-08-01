@@ -20,7 +20,7 @@ public class UserService {
     public void saveUserSolveds(Map<Long, List<Solved>> solveds) {
 
         webClient.post()
-            .uri("/user/solved")
+            .uri("/solved")
             .bodyValue(solveds)
             .retrieve() // 요청 실행
             .bodyToMono(Void.class);
