@@ -13,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 export default function MultiGame() {
   const navigate = useNavigate();
   const [start, setStart] = useState(0);
-  const [headerUser, setHeaderUser] = useState(false);
-  const [user, setUser] = useState(null);
+  const [headerUser, setHeaderUser] = useState('');
+  const [user, setUser] = useState('');
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -39,13 +39,19 @@ export default function MultiGame() {
 
 
   const handleStart = () => {
+    setStart(1);
     socket.emit("start");
-  };
+  };  
   
 
+  // useEffect(() => {
+  //   setModalOpen(true)
+  // }, [round])
+
+
   useEffect(() => {
-    setModalOpen(true)
-  }, [round])
+    socket.emit("start");
+  }, [start]);
 
 
   useEffect(() => {
@@ -62,8 +68,9 @@ export default function MultiGame() {
       setUserList(user);
     });
 
-    socket.on('headerUser', (header) => {
-      setHeaderUser(header);
+    socket.on('headerUser', (headerUser) => {
+      setHeaderUser(headerUser);
+      console.log(headerUser);
     });
 
     // 컴포넌트가 언마운트될 때 이벤트 수신 해제
@@ -98,6 +105,8 @@ export default function MultiGame() {
     socket.emit("login", userName, (res) => {
       if(res?.ok) {
         setUser(res.data);
+        console.log(res.data);
+        console.log(user.name);
       }
     });
   };
@@ -133,12 +142,23 @@ export default function MultiGame() {
               <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
               . . . Waiting . . .</h1>
             ) : (
-              (start === 0 && headerUser ? (
+              (start === 0 ? (
                 <div className="before-start">
                   <h1>. . . Waiting for start . . .</h1>
-                  <button className="game-start-button" onClick={handleStart}>
+                  {/* <button className="game-start-button" onClick={handleStart}>
                     Start
-                  </button>
+                  </button> */}
+                  { headerUser == user.name ? (
+                    <button className="game-start-button" onClick={handleStart}>
+                      Start
+                    </button>
+                  ) : (
+                    <div>
+                      <h1>대기중 . . .</h1>
+                      <h1>헤더유저: {headerUser}</h1>
+                      <h1>니이름: {user.name}</h1>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>

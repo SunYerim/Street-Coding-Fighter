@@ -2,15 +2,25 @@ const userController = require("../Controllers/user.controller.js")
 const chatController = require("../Controllers/chat.controller.js")
 const problemController = require("../Controllers/problem.controller.js")
 
+let headerUser = null;
 
 module.exports = function (io) {
   io.on('connection', async(socket) => {
     console.log('New client connected',socket.id);
-    
+    io.emit("headerUser", headerUser);
+
     // 유저가 입장했다는 메시지를 생성
     socket.on("login", async(userName, cb) => {
       try {
         const user = await userController.saveUser(userName, socket.id);
+
+        // 첫 번째 사용자일 경우 방장으로 설정
+        if (!headerUser) {
+          headerUser = user.name;
+          io.emit("headerUser", headerUser);
+          console.log(headerUser);
+        }
+
         const welcomeMessage = {
           chat: `${user.name} is joined`,
           user: {
@@ -80,6 +90,13 @@ module.exports = function (io) {
               name: "system"
             },
           };
+
+          // 방장이 나갔을 경우 새로운 방장 설정
+          if (headerUser === user.name) {
+            headerUser = onlineUsers.length > 0 ? onlineUsers[0].name : null;
+            io.emit("headerUser", headerUser);
+          }
+
           // 모든 클라이언트에게 메시지를 전송
           io.emit("message", goodbyeMessage);
           
