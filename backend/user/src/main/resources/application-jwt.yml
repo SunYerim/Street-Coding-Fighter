@@ -6,3 +6,6 @@ jwt:
   refresh:
     expiration: 1209600 # refresh -> 2주
     header: Authorization-refresh
+  passwordTime:
+    expiration: 180 # 3분
+    header: Authorization-password
