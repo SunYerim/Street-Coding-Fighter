@@ -33,7 +33,6 @@ public class BattleGameService {
     }
 
     public BattleGameRoom findById(String roomId) {
-        // TODO : room이 null일 때
         return battleGameRepository.findById(roomId);
     }
 
@@ -93,13 +92,14 @@ public class BattleGameService {
         return problems;
     }
 
-    private int calculatePower(int submitTime) { // TODO: 협의 후 수정
-
+    public int calculateScore(Integer submitTime) { // TODO: 협의 후 수정
         if (submitTime > 30) {
-            // TODO : 예외처리 30초 보다 많은 경우
+            throw new BusinessException(String.valueOf(submitTime), "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
-        int power = 10-submitTime;
-        if(power < 0) power = 0;
+        int initialScore = 20;
+        double decrementPerSecond = 0.3333;
+        int power = (int) (initialScore - (submitTime * decrementPerSecond));
+        if (power < 0) power = 0;
         return power;
     }
 
