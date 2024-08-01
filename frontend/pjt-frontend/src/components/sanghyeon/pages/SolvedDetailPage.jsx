@@ -1,14 +1,15 @@
 import Header from "../components/Header";
 import "../../../css/SolvedDetailPage.css";
-import { useEffect } from "react";
-import axios from "axios";
 import store from "../../../store/store.js";
 import { CodeBlock } from "react-code-blocks";
+import { useParams } from "react-router-dom";
 
 const SolvedDetailPage = () => {
   const { memberId } = store((state) => ({
     memberId: state.memberId,
   }));
+
+  const { solvedId } = useParams();
 
   return (
     <>

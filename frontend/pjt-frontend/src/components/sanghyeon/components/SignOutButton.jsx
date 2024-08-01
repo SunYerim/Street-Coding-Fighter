@@ -1,4 +1,3 @@
-import axios from "axios";
 import createAuthClient from "../apis/createAuthClient.js";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +29,7 @@ const SignOutButton = function () {
     try {
       await authClient({
         method: "DELETE",
-        url: `${baseURL}/user/quit/${memberId}`,
+        url: `${baseURL}/user/quit/`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

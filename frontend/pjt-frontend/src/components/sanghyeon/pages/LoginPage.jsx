@@ -4,6 +4,7 @@ import AccountButton from "../components/AccountButton.jsx";
 import "../../../css/LoginPage.css";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import createAuthClient from "../apis/createAuthClient.js";
 
 const LoginPage = () => {
   const {
@@ -54,7 +55,31 @@ const LoginPage = () => {
 
       setAccessToken(accessToken);
       setMemberId(memberID);
-      navigate("/main");
+      try {
+        const authClient = createAuthClient(
+          baseURL,
+          () => accessToken,
+          setAccessToken
+        );
+
+        const userInfoRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/user`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setUserId(userInfoRes.data.userId);
+        setName(userInfoRes.data.name);
+        setSchoolName(userInfoRes.data.schoolName);
+        setBirth(userInfoRes.data.birth);
+        navigate("/main");
+      } catch (error) {
+        alert("로그인 실패");
+        setAccessToken(null);
+        setMemberId(null);
+      }
     } catch (error) {
       alert("로그인 실패");
     }
@@ -81,10 +106,7 @@ const LoginPage = () => {
           <AccountButton buttonType="Sign Up" />
           <div className="find-and-kakao">
             <div className="find-password" onClick={() => alert("미구현")}>
-              비밀번호 찾기...
-            </div>
-            <div className="find-password" onClick={() => alert("미구현")}>
-              카카오로 시작하기
+              비밀번호 찾기
             </div>
           </div>
         </div>

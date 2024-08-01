@@ -59,7 +59,7 @@ function App() {
             element={accessToken ? <SolvedPage /> : <LoginPage />}
           />
           <Route
-            path="/solved-detail"
+            path="/solved/:solvedId"
             element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
           />
           <Route

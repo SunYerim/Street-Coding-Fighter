@@ -68,7 +68,6 @@ function ProfilePage() {
   };
 
   useEffect(() => {
-    console.log(accessToken);
     const getProfile = async () => {
       try {
         const profileRes = await authClient({
@@ -76,11 +75,8 @@ function ProfilePage() {
           url: `${baseURL}/profile`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            memberId: memberId,
           },
         });
-
-        console.log(profileRes);
 
         setName(profileRes.data.name);
         setSchoolName(profileRes.data.school);

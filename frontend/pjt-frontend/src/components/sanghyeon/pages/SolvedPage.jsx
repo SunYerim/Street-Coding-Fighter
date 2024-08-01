@@ -3,18 +3,26 @@ import Header from "../components/Header";
 import "../../../css/SolvedPage.css";
 import createAuthClient from "../apis/createAuthClient";
 import store from "../../../store/store.js";
+import { useNavigate } from "react-router-dom";
 
 function SolvedPage() {
+  const navigate = useNavigate();
+
   const [solvedData, setSolvedData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
-  const [sortOption, setSortOption] = useState("");
+  const [sortOption, setSortOption] = useState("title");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const { accessToken, setAccessToken, baseURL, memberId } = store((state) => ({
-    accessToken: state.accessToken,
-    setAccessToken: state.setAccessToken,
-    baseURL: state.baseURL,
-    memberId: state.memberId,
-  }));
+  const { accessToken, setAccessToken, baseURL, memberId, name } = store(
+    (state) => ({
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+      baseURL: state.baseURL,
+      memberId: state.memberId,
+      name: state.name,
+    })
+  );
 
   const authClient = createAuthClient(
     baseURL,
@@ -23,26 +31,111 @@ function SolvedPage() {
   );
 
   useEffect(() => {
-    const getSolved = async function () {
+    const getSolved = async () => {
       try {
-        const solvedRes = await authClient({
-          method: "GET",
-          url: `${baseURL}/profile/solved`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            memberId: memberId,
-          },
-        });
+        // const solvedRes = await authClient({
+        //   method: "GET",
+        //   url: `${baseURL}/profile/solved`,
+        //   headers: {
+        //     Authorization: `Bearer ${accessToken}`,
+        //   },
+        // });
 
-        console.log(solvedRes);
+        // setSolvedData(solvedRes.data);
 
         const solved = [
-          { title: "최대값 구하기", isSolved: false, difficulty: "3" },
-          { title: "A + B 구하기", isSolved: true, difficulty: "4" },
-          { title: "합 구하기", isSolved: false, difficulty: "5" },
-          { title: "문자 출력하기", isSolved: true, difficulty: "2" },
-          { title: "곱셈 구하기", isSolved: true, difficulty: "3" },
+          {
+            solvedId: 1,
+            isCorrect: false,
+            choice: "A",
+            title: "문제1",
+            difficulty: 4,
+            category: "category1",
+            type: "type1",
+          },
+          {
+            solvedId: 2,
+            isCorrect: true,
+            choice: "B",
+            title: "문제2",
+            difficulty: 2,
+            category: "category2",
+            type: "type2",
+          },
+          {
+            solvedId: 3,
+            isCorrect: false,
+            choice: "C",
+            title: "문제3",
+            difficulty: 1,
+            category: "category3",
+            type: "type3",
+          },
+          {
+            solvedId: 4,
+            isCorrect: true,
+            choice: "D",
+            title: "문제4",
+            difficulty: 4,
+            category: "category4",
+            type: "type4",
+          },
+          {
+            solvedId: 5,
+            isCorrect: true,
+            choice: "A",
+            title: "문제5",
+            difficulty: 3,
+            category: "category5",
+            type: "type5",
+          },
+          {
+            solvedId: 6,
+            isCorrect: false,
+            choice: "B",
+            title: "문제6",
+            difficulty: 2,
+            category: "category6",
+            type: "type6",
+          },
+          {
+            solvedId: 7,
+            isCorrect: true,
+            choice: "C",
+            title: "문제7",
+            difficulty: 1,
+            category: "category7",
+            type: "type7",
+          },
+          {
+            solvedId: 8,
+            isCorrect: false,
+            choice: "D",
+            title: "문제8",
+            difficulty: 4,
+            category: "category8",
+            type: "type8",
+          },
+          {
+            solvedId: 9,
+            isCorrect: true,
+            choice: "E",
+            title: "문제9",
+            difficulty: 3,
+            category: "category9",
+            type: "type9",
+          },
+          {
+            solvedId: 10,
+            isCorrect: false,
+            choice: "F",
+            title: "문제10",
+            difficulty: 2,
+            category: "category10",
+            type: "type10",
+          },
         ];
+        setSolvedData(solved);
       } catch (error) {
         console.error("Failed to fetch record", error);
       }
@@ -52,15 +145,15 @@ function SolvedPage() {
   }, []);
 
   useEffect(() => {
-    if (sortOption) {
+    if (sortOption && solvedData.length > 0) {
       const sorted = [...solvedData];
       if (sortOption === "title") {
         sorted.sort((a, b) => a.title.localeCompare(b.title));
       } else if (sortOption === "difficulty") {
-        sorted.sort((a, b) => a.difficulty.localeCompare(b.difficulty));
+        sorted.sort((a, b) => a.difficulty - b.difficulty);
       } else if (sortOption === "correctness") {
         sorted.sort((a, b) =>
-          a.correct === b.correct ? 0 : a.correct ? -1 : 1
+          a.isCorrect === b.isCorrect ? 0 : a.isCorrect ? -1 : 1
         );
       }
       setSortedData(sorted);
@@ -71,6 +164,19 @@ function SolvedPage() {
     setSortOption(e.target.value);
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(sortedData.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <>
       <div className="outer-container">
@@ -78,7 +184,7 @@ function SolvedPage() {
         <div className="solved-outer-container">
           <div className="solved-container">
             <div className="solved-title-container">
-              <h2 className="solved-title">Player Name : dltkdgus482</h2>
+              <h2 className="solved-title">Player Name : {name}</h2>
               <select name="" id="" className="" onChange={handleSortChange}>
                 <option value="title">제목순</option>
                 <option value="difficulty">난이도순</option>
@@ -92,15 +198,28 @@ function SolvedPage() {
                 <p>난이도</p>
               </div>
               <div className="solved-inner">
-                {sortedData.map((data, index) => {
-                  return (
-                    <div className="solved" key={index}>
-                      <p>{data.title}</p>
-                      <p>{data.isSolved ? "O" : "X"}</p>
-                      <p>{data.difficulty}</p>
-                    </div>
-                  );
-                })}
+                {currentItems.map((data, index) => (
+                  <div
+                    className="solved"
+                    onClick={() => navigate("/solved/" + data.solvedId)}
+                    key={index}
+                  >
+                    <p>{data.title}</p>
+                    <p>{data.isCorrect ? "O" : "X"}</p>
+                    <p>{data.difficulty}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="solved-pagination">
+                {pageNumbers.map((number) => (
+                  <button
+                    key={number}
+                    onClick={() => handlePageChange(number)}
+                    className={number === currentPage ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

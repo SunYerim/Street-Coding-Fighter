@@ -45,7 +45,7 @@ class PDF(FPDF):
         self.set_xy(x, y + 15)
         self.cell(w, 10, value, 0, 1, 'C')
 
-    def add_analysis_section(self, title, x, y, w, h, image_path=None):
+    def add_analysis_section(self, title, x, y, w, h, image_path=None, text=None):
         self.set_xy(x, y)
         self.set_fill_color(255, 255, 255)
         self.rect(x, y, w, h, 'F')
@@ -61,6 +61,11 @@ class PDF(FPDF):
             img_w = w - 4  # Width with padding
             img_h = h - 20  # Height with padding (title space)
             self.image(image_path, x + 2, y + 12, img_w, img_h)  # Added padding for image placement
+        
+        if text:
+            self.set_xy(x + 2, y + 12)
+            self.set_font('font', '', 10)
+            self.multi_cell(w - 4, 8, text)  # Added text content with padding
 
 def create_hexagonal_radar_chart():
     categories = ['Input', 'List', 'Print', 'Graph', 'Python', 'CS']
@@ -78,7 +83,7 @@ def create_hexagonal_radar_chart():
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(categories)
 
-    plt.title('Accuracy Rate', size=15, color='blue', y=1.1)
+    plt.title('Accuracy Rate', size=15, y=1.1)
     plt.savefig('hexagonal_radar_chart.png', bbox_inches='tight', pad_inches=0, dpi=100)
     plt.close()
 
@@ -119,15 +124,23 @@ def generate_pdf():
     create_hexagonal_radar_chart()
     create_bar_chart()
 
-    pdf.add_analysis_section('AI 종합 분석', 20, 100, 170, 45)
-    pdf.add_analysis_section('영역별 분석', 20, 155, 80, 65, 'hexagonal_radar_chart.png')
-    pdf.add_analysis_section('최근 기록 분석', 110, 155, 80, 65, 'bar_chart.png')
-    pdf.add_analysis_section('AI 추천 문제', 20, 230, 170, 45)
+    ai_analysis_text = (
+        "이 섹션은 AI를 통해 분석된 종합적인 평가를 제공합니다. " 
+        "사용자의 코드 패턴, 문제 해결 능력, 효율성 등을 종합적으로 분석하여 "
+        "강점과 약점을 파악할 수 있습니다. 이를 통해 사용자 맞춤형 피드백과 "
+        "추천 문제를 제시합니다."
+    )
+
+    pdf.add_analysis_section('AI 종합 분석', 20, 100, 170, 40, text=ai_analysis_text)
+    pdf.add_analysis_section('영역별 분석', 20, 150, 80, 70, 'hexagonal_radar_chart.png')
+    pdf.add_analysis_section('최근 기록 분석', 110, 150, 80, 70, 'bar_chart.png')
+    pdf.add_analysis_section('AI 추천 문제', 20, 230, 170, 50, text=ai_analysis_text)
 
     # 임시 파일 생성
     output_path = './analysis_report.pdf'
     pdf.output(output_path)
     return output_path
+
 
 @api_view(['GET'])
 def index(request):

@@ -4,6 +4,7 @@ import greenSlime from "../../../assets/characters/movingGreenSlime.gif";
 import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const ReportPage = () => {
   const navigate = useNavigate();

@@ -69,7 +69,6 @@ const CharacterSelection = () => {
   useEffect(() => {
     if (selectedCharacter === "nyan") {
       alert("Hidden Character Selected");
-      console.log(selectedCharacter);
       // signup();
     }
   }, [selectedCharacter]);

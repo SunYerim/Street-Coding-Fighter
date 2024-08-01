@@ -12,6 +12,8 @@ function MainSelectModeBox(props) {
       navigate("/multi");
     } else if (mode === "1 vs 1") {
       alert(`${mode}`);
+    } else if (mode === "랭킹") {
+      alert(`${mode}`);
     }
   };
 

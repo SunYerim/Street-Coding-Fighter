@@ -16,6 +16,9 @@ const store = create(
       name: "",
       setName: (name) => set({ name }),
 
+      email: "",
+      setEmail: (email) => set({ email }),
+
       schoolName: "",
       setSchoolName: (schoolName) => set({ schoolName }),
 
@@ -32,6 +35,7 @@ const store = create(
         userId: "",
         name: "",
         password: "",
+        email: "",
         schoolName: "",
         birth: "",
         characterType: "",
