@@ -1,20 +1,7 @@
 spring:
   application:
     name: scf
-  mail:
-    host: smtp.naver.com
-    port: 465
-    username: streetcodingfighter@naver.com
-    password: scfighter!
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            enable: true
-          required: true
+
   datasource:
     url: jdbc:mariadb://localhost:3306/scf_db?characterEncoding=utf8mb4
     driver-class-name: org.mariadb.jdbc.Driver
