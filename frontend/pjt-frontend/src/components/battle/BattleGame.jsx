@@ -1,5 +1,6 @@
 import "../../index.css";
 import "../../css/GameMain.css";
+import "../../css/BattleGame.css";
 import Timer from "../game/Timer.jsx";
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
@@ -16,13 +17,15 @@ export default function BattleGame() {
   const [messageList, setMessageList] = useState([]);
 
   const userList = [
-    { id: 1, name: "방장" },
-    { id: 2, name: "B", score: 100 },
-    { id: 3, name: "F", score: 90 },
-    { id: 4, name: "S", score: 80 },
-    { id: 5, name: "H", score: 70 },
-    { id: 6, name: "E", score: 60 },
-    { id: 7, name: "J", score: 30 },
+    { id: 1, rank: 2, name: "방장", score: 97 },
+    { id: 2, rank: 1, name: "B", score: 100 },
+    { id: 3, rank: 3, name: "F", score: 90 },
+    { id: 4, rank: 4, name: "S", score: 80 },
+    { id: 5, rank: 5, name: "H", score: 70 },
+    { id: 6, rank: 6, name: "E", score: 60 },
+    { id: 7, rank: 7, name: "J", score: 30 },
+    { id: 7, rank: 7, name: "말숙", score: 50 },
+    { id: 7, rank: 7, name: "ai", score: 90 },
   ];
 
 
@@ -55,47 +58,66 @@ export default function BattleGame() {
     socket.emit("sendMessage", message, (res)=> {
       console.log("sendMessage res", res);
     });
-    // socket.emit("sendMessage", message);
-    // setMessage('');
+    setMessage('');
   };
 
 
   return (
     <>
       <div className="game-container">
-        <div className="game-main">
-          <div className="game-header">
-            <Timer />
-            <h2>Waiting for start. . .</h2>
-            <p>~Round~</p>
+        <div className="battle-game-main">
+          <div className="battle-game-header">
+            <div className="your-hp">
+              <p>your hp</p>
+            </div>
+            <div className="battle-status">
+              <div className="battle-round">
+                <p>~Round~</p>
+              </div>
+              <div className="battle-timer">
+                <Timer />
+              </div>
+            </div>
+            <div className="my-hp">
+            <p>my hp</p>
+            </div>
           </div>
-          <div className="game-body">
-            <div className="rank-table">
-              <div>
+          <div className="battle-game-body">
+            <div className="battle-game-left">
+              <div className="your-video">
+              <p>your video</p>
+              </div>
+              <div className="battle-rank-table">
                 {
                   userList.map((user, i) => {
-                    return <userRank rank={user.id} name={user.name} score={user.score} key={i} />
+                    return <UserRank rank={user.rank} name={user.name} score={user.score} key={i} />
                   })
                 }
               </div>
             </div>
-              <div className="game-content">
-                {userList.length === 1 ? (
-                  <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                  . . . Waiting . . .</h1>
-                ) : (
-                  (start === 0 ? (
+            <div className="battle-game-center">
+              {userList.length === 1 ? (
+                <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                . . . Waiting . . .</h1>
+              ) : (
+                (start === 0 ? (
+                  <div className="before-start">
+                    <h2>. . . Waiting for start . . .</h2>
                     <button className="game-start-button" onClick={handleStart}>
                       Start
                     </button>
-                  ) : (
-                    <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                      . . . Playing . . .</h1>
-                  ))
-                )}
+                  </div>
+                ) : (
+                  <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                    . . . Playing . . .</h1>
+                ))
+              )}
             </div>
-            <div className="chat-room">
-              <div className="message-room">
+            <div className="battle-game-right">
+              <div className="my-video">
+                <p>my video</p>
+              </div>
+              <div className="battle-message-room">
                 <MessageContainer messageList={messageList} user={user} />
               </div>
                 <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
@@ -107,12 +129,15 @@ export default function BattleGame() {
   );
 }
 
-function userRank(props) {
+
+function UserRank(props) {
   return (
-    <div className="rank-item">
-      <span>{props.rank}</span>
-      <span>{props.name}</span>
-      <span>{props.score}</span>
-    </div>
+    <>
+      <div className="battle-rank-items">
+        <h3>{props.rank}</h3>
+        <h3>{props.name}</h3>
+        <h4>{props.score}</h4>
+      </div>
+    </>
   );
 }
