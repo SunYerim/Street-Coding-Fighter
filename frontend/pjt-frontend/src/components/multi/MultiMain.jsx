@@ -49,7 +49,7 @@ export default function MultiMain() {
               <h2>No.</h2>
               <h2>Title</h2>
               <h2>King</h2>
-              <h2>Limit</h2>
+              <h2>Num</h2>
               <h2>PW</h2>
             </div>
             <div className="white-line"></div>
