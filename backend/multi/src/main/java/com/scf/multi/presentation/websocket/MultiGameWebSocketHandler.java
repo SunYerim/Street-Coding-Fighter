@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
@@ -99,11 +100,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
         throws Exception {
 
-        Player player = sessionPlayers.remove(session.getId());
+        Player exitPlayer = sessionPlayers.remove(session.getId());
 
         String roomId = sessionRooms.get(session.getId());
         if (roomId != null) {
-            multiGameService.exitRoom(roomId, player.getUserId());
+            multiGameService.exitRoom(roomId, exitPlayer.getUserId());
             Set<WebSocketSession> roomSessions = rooms.get(roomId);
             if (roomSessions != null) {
                 roomSessions.remove(session);
@@ -113,7 +114,15 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 }
             }
 
-            broadcastMessageToRoom(roomId, player.getUsername() + "님이 게임을 나갔습니다.");
+            broadcastMessageToRoom(roomId, exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
+
+            if (exitPlayer.getIsHost() && !rooms.get(roomId).isEmpty()) { // 방장 rotate
+                Optional<WebSocketSession> hostSession = rooms.get(roomId).stream().findFirst();
+                String sessionId = hostSession.get().getId();
+                Player newHost = sessionPlayers.get(sessionId);
+                newHost.setIsHost(true);
+                broadcastMessageToRoom(roomId, newHost.getUserId().toString());
+            }
         }
     }
 
