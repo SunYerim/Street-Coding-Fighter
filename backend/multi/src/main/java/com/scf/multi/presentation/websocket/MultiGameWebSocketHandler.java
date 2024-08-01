@@ -10,6 +10,7 @@ import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.utils.JsonConverter;
+import com.scf.multi.infrastructure.KafkaMessageProducer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
-    private final UserService userService;
+    private final KafkaMessageProducer kafkaMessageProducer;
     private final Map<String, Player> sessionPlayers = new ConcurrentHashMap<>(); // session ID -> player (player 이름, 아이디 알려고)
     private final Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
@@ -74,10 +75,9 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             Player player = sessionPlayers.get(session.getId());
 
-            Solved solved = saveSolved(roomId, player.getUserId(), message.getContent());// 푼 문제 저장
+            Solved solved = saveSolved(roomId, player.getUserId(), message.getContent()); // 푼 문제 저장
 
-            int attainedScore = multiGameService.markSolution(roomId, player,
-                solved); // 문제 채점
+            int attainedScore = multiGameService.markSolution(roomId, player, solved); // 문제 채점
 
             session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
 
@@ -85,19 +85,29 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             int curSubmitCount = curAtomicSubmitCount.incrementAndGet();// 제출된 풀이 수 증가
 
-            if(curSubmitCount == room.getPlayers().size()) { // 모든 플레이어가 풀이를 제출했으면
-                
-                room.nextRound(); // 다음 라운드 진행
+            if (curSubmitCount == room.getPlayers().size()) { // 각 라운드마다 모든 플레이어가 풀이를 제출했으면
 
-                if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
-                    userService.saveUserSolveds(solveds); // 푼 문제 저장
-                    curAtomicSubmitCount.set(0);
-                }
+                room.nextRound(); // 다음 라운드 진행
 
                 List<Rank> ranks = room.calculateRank();
                 String rankMsg = JsonConverter.getInstance().toString(ranks);
+                broadcastMessageToRoom(roomId, rankMsg);
 
-                session.sendMessage(new TextMessage(rankMsg));
+                if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
+
+                    List<Solved> userSolved = solveds.get(player.getUserId()); // 푼 문제 저장
+                    if (userSolved != null) {
+                        for (Solved s : userSolved) {
+                            kafkaMessageProducer.sendSolved(s);
+                        }
+                    }
+
+                    for(Rank rank : ranks) { // 게임 최종 결과 저장
+                        kafkaMessageProducer.sendResult(rank);
+                    }
+
+                    curAtomicSubmitCount.set(0);
+                }
             }
         }
     }
