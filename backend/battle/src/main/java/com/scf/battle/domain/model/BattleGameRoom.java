@@ -1,8 +1,10 @@
 package com.scf.battle.domain.model;
 
-import com.scf.battle.domain.dto.FightDTO;
-import com.scf.battle.domain.dto.Player;
-import com.scf.battle.domain.dto.Problem;
+import com.scf.battle.domain.dto.User.FightDTO;
+import com.scf.battle.domain.dto.User.Player;
+import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.global.error.ErrorCode;
+import com.scf.battle.global.error.exception.BusinessException;
 import lombok.Builder;
 import lombok.Getter;
 
