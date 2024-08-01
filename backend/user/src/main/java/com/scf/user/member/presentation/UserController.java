@@ -133,7 +133,7 @@ public class UserController {
     }
 
     // 인증번호 일치 확인
-    @GetMapping("/request-verification")
+    @PostMapping("/request-verification")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeRequestDto verifyrequest) {
         boolean isValid = passwordResetService.validateAuthCode(verifyrequest.getUserId(),
             verifyrequest.getCode());
