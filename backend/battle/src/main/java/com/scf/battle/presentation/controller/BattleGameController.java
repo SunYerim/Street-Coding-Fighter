@@ -60,10 +60,14 @@ public class BattleGameController {
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @RequestHeader Long userId, @RequestHeader String username,
-        @RequestBody String roomPassword) { // TODO : userId requestHeader로 받도록 수정
-        battleGameService.joinRoom(roomId, userId, username, roomPassword);
-        return new ResponseEntity<>(HttpStatus.OK);
+                                      @RequestHeader Long memberId, @RequestHeader String username,
+                                      @RequestBody String roomPassword) {
+        try {
+            battleGameService.joinRoom(roomId, memberId, username, roomPassword);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
     }
 
     @PostMapping("/room")
