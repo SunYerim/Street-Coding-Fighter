@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FillInTheBlank from "../game/FillInTheBlank";
-import ShortAnswerQuestion from "../game/ShortAnswerQuestion";
+import ShortAnswerQuestion from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
 
@@ -51,6 +51,7 @@ export default function MultiGame() {
   };
 
   // 문제요청 함수
+  // 2. 문제받기 정의
   const requestProblems = (gameRound) => {
     socket.emit('requestProblems', gameRound, (response) => {
       if (response.ok) {
@@ -65,6 +66,7 @@ export default function MultiGame() {
 
   useEffect(() => {
     // 메세지 목록 업데이트
+    // 1. 메세지 주고받기
     socket.on("message", (message) => {
       setMessageList((prevState) => prevState.concat(message));
     });
@@ -73,10 +75,10 @@ export default function MultiGame() {
     askUserName();
 
     // 유저 리스트 이벤트를 수신하고 유저 목록을 업데이트
+    // 0. 입장한 유저정보 받기
     socket.on('userList', (user) => {
       setUserList(user);
     });
-
     socket.on('headerUser', (headerUser) => {
       setHeaderUser(headerUser);
     });
@@ -111,17 +113,6 @@ export default function MultiGame() {
     };
   }, [currentProblemIndex, problems.length]);
 
-  // 문제요청 함수
-  // const requestProblems = (limit) => {
-  //   socket.emit('requestProblems', limit, (response) => {
-  //     if (response.ok) {
-  //       setProblems(response.problems);
-  //     } else {
-  //       console.error(response.err);
-  //     }
-  //   });
-  // };
-
 
   const askUserName = () => {
     const userName = prompt("이름입력ㄱㄱ");
@@ -142,6 +133,8 @@ export default function MultiGame() {
     setMessage('');
   };
 
+
+  // 3. 답보내기
   const submitAnswer = (answer) => {
     socket.emit("submitAnswer", answer, (res) => {
       if (res.ok) {

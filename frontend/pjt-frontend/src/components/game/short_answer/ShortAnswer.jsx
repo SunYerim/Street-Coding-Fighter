@@ -2,22 +2,23 @@ import { borderRadius, height, minWidth, padding, style } from '@mui/system';
 import StyleToPythonCode from '../StyleToPythonCode';
 import { useState } from 'react';
 
-const testQuizContent = {
-  content: '# 다음 코드의 출력 결과는 무엇일까요? \n print(15 % 4)',
-  answer: {
-    1: 'j + 1',
-    2: 'j',
-    3: 'data',
-  },
-  choices: {
-    1: 'i',
-    2: 'i+1',
-    3: 'j+1',
-    4: 'j',
-    5: 'data',
-    6: 'print',
-  },
-};
+// const testQuizContent = {
+//   content: '# 다음 코드의 출력 결과는 무엇일까요? \n print(15 % 4)',
+//   answer: {
+//     1: 'j + 1',
+//     2: 'j',
+//     3: 'data',
+//   },
+//   choices: {
+//     1: 'i',
+//     2: 'i+1',
+//     3: 'j+1',
+//     4: 'j',
+//     5: 'data',
+//     6: 'print',
+//   },
+// };
+
 const styles = {
   codeContainer: {
     maxWidth: '600px',
@@ -55,7 +56,7 @@ const styles = {
   },
 
 };
-const ShortAnswer = () => {
+const ShortAnswer = ({ problem }) => {
   const [answer, setAnswer] = useState('');
   
   const onInputChange = (e) =>{
@@ -75,7 +76,7 @@ const ShortAnswer = () => {
     <>
       <h2>Short Answer</h2>
       <div style={styles.codeContainer}>
-        <StyleToPythonCode codeString={testQuizContent.content} />
+        <StyleToPythonCode codeString={problem.problemContent.content} />
       </div>
       <div style={styles.inputDiv}>
         <input style={styles.answerInput} type="text" onChange={onInputChange} onKeyDown={handleKeyDown} />
