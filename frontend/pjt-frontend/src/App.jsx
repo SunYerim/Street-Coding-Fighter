@@ -18,17 +18,21 @@ import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SoundStore from "./stores/SoundStore.jsx";
-import React, {useEffect} from 'react';
-function App() {
+import React, { useEffect } from 'react';
 
-  const { setSound, play, isPlaying } = SoundStore();
+function App() {
+  const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } = SoundStore();
+
   useEffect(() => {
-    console.log("effect called")
-    if(!isPlaying){
-      console.log('play');
-      play();
-    }
-  }, [setSound]);
+    // 배경음악 초기화 및 재생
+    initializeBackgroundMusic('/BGM-1.mp3');
+
+    return () => {
+      // 컴포넌트가 언마운트될 때 배경음악 정지
+      console.log('stop music');
+      stopBackgroundMusic();
+    };
+  }, [initializeBackgroundMusic, stopBackgroundMusic]);
 
   return (
     <>

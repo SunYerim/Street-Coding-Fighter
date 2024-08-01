@@ -4,6 +4,7 @@ import AccountButton from "../components/AccountButton.jsx";
 import "../../../css/LoginPage.css";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import { Howl } from 'howler';
 
 const LoginPage = () => {
   const {
@@ -32,8 +33,13 @@ const LoginPage = () => {
   const userId = useRef(null);
   const password = useRef(null);
   const navigate = useNavigate();
-
+  const startSound = new Howl({
+    src: ['/startSound.mp3'],
+    loop: false,
+    volume: 0.5,
+  });
   const noAuthLogin = async () => {
+    startSound.play();
     try {
       const res = await axios({
         method: "POST",
@@ -54,7 +60,6 @@ const LoginPage = () => {
       setAccessToken(accessToken);
       setMemberId(memberID);
       navigate("/main");
-
       // if (accessToken && memberID) {
       //   try {
       //     const infoRes = await axios({
