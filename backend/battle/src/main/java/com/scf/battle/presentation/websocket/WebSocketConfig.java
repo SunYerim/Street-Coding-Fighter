@@ -1,4 +1,4 @@
-package com.scf.battle.presentation.controller;
+package com.scf.battle.presentation.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
