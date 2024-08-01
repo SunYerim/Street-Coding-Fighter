@@ -1,16 +1,23 @@
 package com.scf.battle.application;
 
-import com.scf.battle.domain.dto.CreateRoomDTO;
-import com.scf.battle.domain.dto.FightDTO;
-import com.scf.battle.domain.dto.Player;
-import com.scf.battle.domain.dto.Problem;
-import com.scf.battle.domain.dto.Solved;
+import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.Problem.ProblemAnswer;
+import com.scf.battle.domain.dto.Problem.ProblemChoice;
+import com.scf.battle.domain.dto.Problem.ProblemType;
+import com.scf.battle.domain.dto.Room.CreateRoomDTO;
+import com.scf.battle.domain.dto.User.FightDTO;
+import com.scf.battle.domain.dto.User.Player;
+import com.scf.battle.domain.dto.User.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.scf.battle.global.error.ErrorCode;
+import com.scf.battle.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
