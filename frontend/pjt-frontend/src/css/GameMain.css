@@ -17,181 +17,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   margin: 0;
-}
-
-
-.list-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: rgba(0, 0, 50, 0.7);
-  width: 80vw;
-  border-radius: 20px;
-  height: 80vh;
-  color : white;
-}
-
-
-.game-list {
-  overflow-y: auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  width: 70%;
-  height: 75%;
-  display: flex;
-  justify-content: center;
-  border: 3px solid black;
-  border-radius: 10px;
-  margin-left: 30px;
-  margin-bottom: 30px;
-}
-
-/* 스크롤바의 폭 너비 */
-.game-list::-webkit-scrollbar {
-  width: 10px;  
-}
-
-/* 스크롤바 막대 */
-.game-list::-webkit-scrollbar-thumb {
-  background: #4a29c2;
-  /* border: 2px solid #a480b9; */
-  border-radius: 10px;
-}
-
-.game-list::-webkit-scrollbar-track {
-  background: rgba(214, 193, 212, 0.1);
-}
-
-.game-list::-webkit-scrollbar-thumb:hover {
-	background-color:#181883;
-}
-
-
-.room-items {
-  display: grid;
-  grid-template-columns: 3fr 2fr 2fr 1fr;
-  justify-items: center;
-  align-items: center;
-  width: 45vw;
-  height: 80px;
-  margin: 5px 0px;
-  border: 3px solid black;
-  border-radius: 10px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.room-items h3 {
-  justify-self: start;
-  padding-left: 25px;
-  max-width: 80%; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap;
-}
-
-.room-items img {
-  justify-self: start;
-  padding-right: 25px;
-  max-width: 80%; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap;
-}
-
-.room-items:hover {
-  background-color: #0056b3;
-}
-
-.create-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgba(0, 0, 50, 0.7);
-  width: 80vw;
-  border-radius: 20px;
-  height: 80vh;
-  color: white;
-}
-
-.game-main {
-  position: absolute;
-  display: flex;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  flex-direction: column;
-  align-items: center;
-  background-color: rgba(0, 0, 50, 0.7);
-  width: 1200px;
-  height: 600px;
-  border-radius: 20px;
-  color: white;
-}
-
-.create-input {
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
-  align-items: right;
-}
-
-.create-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 1.5rem;
-}
-
-.create-title, .create-password {
-  display: flex;
-  width: 35vw;
-  padding: 7px;
-  font-size: 18px;
-  border-radius: 5px;
-  margin: 10px 0;
-  color: black;
-  background-color: #eee;
-}
-
-.create-max-number, .create-problems {
-  display: flex;
-  width: 35vw;
-  padding: 7px;
-  font-size: 18px;
-  text-align: center;
-  border-radius: 5px;
-  margin: 10px 0;
-  color: black;
-  background-color: #eee;
-}
-
-
-input[type="number"]::-webkit-inner-spin-button, 
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: inner-spin-button !important;
-  opacity: 1 !important;
-  width: 50px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  background-color: blue !important;
-  border: 2.5px solid red !important;
-}
-
-.pink-line {
-  width: 80%;
-  height: 2px;
-  background-color: pink;
-  margin: 10px auto;
 }
 
 .button-container {
@@ -201,135 +29,13 @@ input[type="number"]::-webkit-outer-spin-button {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  border: 3px solid black;
-  border-radius: 10px;
+  /* border: 3px solid black;
+  border-radius: 10px; */
   margin: 0px 30px 30px 30px;
   overflow: hidden;
 }
 
-.create-button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 7vh;
-  width: 50vw;
-  margin: 10px 20px;
-  font-size: 1.5rem;
-}
-
-.create-button {
-  height: 7vh;
-  width: 22vw;
-  margin: 10px 0px;
-  font-size: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-}
-
-
-.game-header {
-  position: absolute;
-  display: flex;
-  left: 2%;
-  width: 1150px;
-  height: 80px;
-  justify-content: space-around;
-  align-items: center;
-  margin: 2% 0px;
-  border: 3px solid black;
-  border-radius: 10px;
-}
-
-
-.game-body {
-  position: absolute;
-  display: flex;
-  left: 2%;
-  top: 20%;
-  width: 1150px;
-  height: 450px;
-  border: 3px solid black;
-  border-radius: 10px;
-}
-
-
-.rank-table {
-  overflow-y: auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  position: absolute;
-  display: flex;
-  padding-right: 10px;
-  flex-direction: column;
-  top: 2%;
-  width: 250px;
-  height: 425px;
-  border: 3px solid black;
-  border-radius: 10px;
-}
-
-/* 스크롤바의 폭 너비 */
-.rank-table::-webkit-scrollbar {
-  width: 10px;  
-}
-
-/* 스크롤바 막대 */
-.rank-table::-webkit-scrollbar-thumb {
-  background: #4a29c2;
-  /* border: 2px solid #a480b9; */
-  border-radius: 10px;
-}
-
-.rank-table::-webkit-scrollbar-track {
-  background: rgba(214, 193, 212, 0.1);
-}
-
-.rank-table::-webkit-scrollbar-thumb:hover {
-	background-color:#181883;
-}
-
-.rank-items {
-  display: grid;
-  grid-template-columns: 1fr 2fr 3fr;
-  justify-items: center;
-  align-items: center;
-  width: 20vw;
-  height: 60px;
-  border: 3px solid black;
-  border-radius: 10px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-}
-
-.rank-items h3, h4 {
-  justify-self: start;
-  padding: 0px 25px;
-  max-width: 80%; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap;
-}
-
-
-.game-content {
-  position: absolute;
-  left: 260px;
-  top: 2%;
-  width: 625px;
-  height: 425px;
-  border: 3px solid black;
-  border-radius: 10px;
-}
-
-.chat-room {
+/* .chat-room {
   position: absolute;
   left: 895px;
   top: 2%;
@@ -337,10 +43,9 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 425px;
   border: 3px solid black;
   border-radius: 10px;
-}
+} */
 
-
-.play-room {
+/* .play-room {
   position: absolute;
   left: 260px;
   top: 2%;
@@ -348,40 +53,24 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 425px;
   border: 3px solid black;
   border-radius: 10px;
-}
+} */
 
-.message-room {
-  overflow-y: auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
+
+.before-start {
+  display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
   width: 100%;
-  height: 370px;
-  border: 3px solid black;
-  border-radius: 10px;
+  height: 100%;
 }
 
-/* 스크롤바의 폭 너비 */
-.message-room::-webkit-scrollbar {
-  width: 10px;  
+.before-start h2 {
+  margin-top: 15%;
 }
 
-/* 스크롤바 막대 */
-.message-room::-webkit-scrollbar-thumb {
-  background: #4a29c2; /* 스크롤바 막대 색상 */
-  border: 2px solid #a480b9; /* 스크롤바 막대 테두리 설정  */
-  border-radius: 10px; /* 스크롤바 둥근 테두리 */
-}
 
-.message-room::-webkit-scrollbar-track {
-  background: rgba(214, 193, 212, 0.1);  /*스크롤바 뒷 배경 색상*/
-}
-
-.message-room::-webkit-scrollbar-thumb:hover {
-	background-color:#181883;
-}
 
 
 

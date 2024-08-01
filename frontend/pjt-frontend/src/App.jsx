@@ -15,6 +15,7 @@ import MultiCreate from "./components/multi/MultiCreate.jsx";
 import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
+import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/battle" element={<BattleMain />} />
           <Route path="/battle-create" element={<BattleCreate />} />
           <Route path="/multi-game" element={<MultiGame />} />
+          <Route path="/battle-game" element={<BattleGame />} />
           <Route path="/single-main" element={<SingleMain />} />
           <Route path="/single-play/:content_id" element={<SinglePlay />} />
           <Route path="*" element={<TitlePage />} />

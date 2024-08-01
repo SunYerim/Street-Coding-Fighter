@@ -25,7 +25,6 @@ module.exports = function (io) {
     socket.on("sendMessage", async(message, cb) => {
       try {
         // 유저찾기 (socket id로)
-        // async함수는 await
         const user = await userController.getUser(socket.id);
 
         // 메세지 저장
