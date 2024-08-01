@@ -187,7 +187,7 @@ public class BattleGameService {
 
     public boolean isRoundOver(String roomId) {
         BattleGameRoom room = findById(roomId);
-        if(room.getHasPlayerASubmitted() && room.getHasPlayerBSubmitted()) return true;
+        if (room.getHasPlayerASubmitted() && room.getHasPlayerBSubmitted()) return true;
         return false;
     }
 
@@ -195,13 +195,13 @@ public class BattleGameService {
     public Integer runRound(String roomId) {
         BattleGameRoom room = findById(roomId);
         Integer currentRound = room.nextRound();
-        if(currentRound == -1){ // 라운드 끝인 상황
+        if (currentRound == -1) { // 라운드 끝인 상황
 
         }
         return currentRound;
     }
 
-    public List<Problem> getCurrentRoundProblem(String roomId, Integer currentRound){
+    public List<Problem> getCurrentRoundProblem(String roomId, Integer currentRound) {
         BattleGameRoom room = findById(roomId);
         List<Problem> currentRoundProblem = room.getProblemsForRound(currentRound);
         return currentRoundProblem;
