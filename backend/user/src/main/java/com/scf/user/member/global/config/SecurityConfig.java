@@ -8,6 +8,7 @@ import com.scf.user.member.infrastructure.security.JwtCookieUtil;
 import com.scf.user.member.infrastructure.security.JwtTokenProvider;
 import com.scf.user.member.infrastructure.security.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -57,7 +58,8 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
+                    configuration.setAllowedOrigins(
+                        Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
