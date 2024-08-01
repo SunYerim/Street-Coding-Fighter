@@ -105,14 +105,22 @@ public class BattleGameService {
 
     public FightDTO markSolution(String roomId, Long userId, Solved solved) {
         BattleGameRoom room = battleGameRepository.findById(roomId);
-        //해당 라운드 문제 가져오기
+        if (room == null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
+        }
+
+        // 해당 라운드 문제 가져오기
         List<Problem> problems = room.getProblemsForRound(solved.getRound());
-        //해당 라운드에서 유저가 선택한 문제 추출
+        if (problems == null || problems.isEmpty()) {
+            throw new BusinessException(String.valueOf(solved.getRound()), "round", ErrorCode.NO_PROBLEM_FOR_ROUND);
+        }
+
+        // 해당 라운드에서 유저가 선택한 문제 추출
         Optional<Problem> problemOpt = problems.stream()
-            .filter(p -> p.getProblemId().equals(solved.getProblemId()))
-            .findFirst();
+                .filter(p -> p.getProblemId().equals(solved.getProblemId()))
+                .findFirst();
         if (!problemOpt.isPresent()) {
-            // TODO : 문제가 없는 경우
+            throw new BusinessException(solved.getProblemId().toString(), "problemId", ErrorCode.PROBLEM_NOT_FOUND);
         }
         //추출한 문제 : problem
         Problem problem = problemOpt.get();
