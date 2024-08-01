@@ -1,7 +1,7 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.problem.ProblemInfo;
+import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.user.Player;
@@ -61,9 +61,9 @@ public class MultiGameController {
     }
 
     @PostMapping("/game/{roomId}/start")
-    public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
+    public ResponseEntity<List<ProblemResponse.ListDTO>> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
 
-        List<ProblemInfo> problems = multiGameService.startGame(roomId, memberId);
+        List<ProblemResponse.ListDTO> problems = multiGameService.startGame(roomId, memberId);
 
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }

@@ -142,6 +142,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             .userId(userId)
             .problemId(problem.getProblemId())
             .solve(content.getSolve())
+            .solveText(content.getSolveText())
             .submitTime(content.getSubmitTime())
             .build();
 
