@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class Content {
 
     private Integer submitTime;
-    private Map<Integer, Integer> solve; // 빈칸 문제 대비 map 사용 ex) 0번 째 빈칸 : 1번 보기
+    private Map<Integer, Integer> solve; // 빈칸 문제 대비 map 사용 ex) 0번 째 빈칸 : 1번 보기, 객관식 문제
+    private String solveText; // 주관식 문제
 }

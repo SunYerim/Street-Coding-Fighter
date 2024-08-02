@@ -1,8 +1,8 @@
 package com.scf.multi.domain.model;
 
+import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
@@ -18,7 +18,8 @@ import lombok.Getter;
 public class MultiGameRoom {
 
     private final String roomId;
-    private final Long hostId;
+    private Long hostId;
+    private String hostname;
     private final String title;
     private final String password;
     private final Integer maxPlayer;
@@ -26,19 +27,20 @@ public class MultiGameRoom {
     private final List<Problem> problems = new ArrayList<>();
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>());
-    private final Integer maxRound;
+    private final Integer playRound;
     private Boolean isStart;
     private Integer round;
 
     @Builder
-    public MultiGameRoom(String roomId, Long hostId, String title, String password, Integer maxPlayer, Integer maxRound) {
+    public MultiGameRoom(String roomId, Long hostId, String hostname, String title, String password, Integer maxPlayer, Integer playRound) {
         this.roomId = roomId;
         this.hostId = hostId;
+        this.hostname = hostname;
         this.title = title;
         this.password = password;
         this.maxPlayer = maxPlayer;
 
-        this.maxRound = maxRound;
+        this.playRound = playRound;
         this.isStart = false;
         this.round = 0;
     }
@@ -125,10 +127,10 @@ public class MultiGameRoom {
         this.round += 1;
     }
 
-    public List<Rank> calculateRank() {
+    public List<GameRank> calculateRank() {
         // scoreBoard의 userId와 score를 Rank 객체로 변환
-        List<Rank> ranks = scoreBoard.entrySet().stream()
-            .map(entry -> Rank.builder()
+        List<GameRank> ranks = scoreBoard.entrySet().stream()
+            .map(entry -> GameRank.builder()
                 .userId(entry.getKey())
                 .username(players.stream()
                     .filter(player -> player.getUserId().equals(entry.getKey()))
@@ -139,6 +141,10 @@ public class MultiGameRoom {
                 .build())
             .sorted((rank1, rank2) -> Integer.compare(rank2.getScore(), rank1.getScore()))
             .collect(Collectors.toList());
+
+        for(int i=1; i<=ranks.size(); i++) {
+            ranks.get(i-1).setRank(i);
+        }
 
         return ranks;
     }

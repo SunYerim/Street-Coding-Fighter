@@ -1,8 +1,9 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.problem.ProblemInfo;
+import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.CreateRoomDTO;
+import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
@@ -26,8 +27,8 @@ public class MultiGameController {
     private final MultiGameService multiGameService;
 
     @GetMapping("/room")
-    public ResponseEntity<?> roomList() {
-        List<MultiGameRoom> rooms = multiGameService.findAllRooms();
+    public ResponseEntity<List<RoomRequest.ListDTO>> roomList() {
+        List<RoomRequest.ListDTO> rooms = multiGameService.findAllRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
@@ -45,24 +46,24 @@ public class MultiGameController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<?> createRoom(@RequestHeader Long userId,
+    public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
         @RequestBody @Valid CreateRoomDTO createRoomDTO) {
-        String roomId = multiGameService.createRoom(userId, createRoomDTO);
+        String roomId = multiGameService.createRoom(memberId, username, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
-        @Valid @RequestBody String roomPassword, @RequestHeader Long userId,
+        @Valid @RequestBody String roomPassword, @RequestHeader Long memberId,
         @RequestHeader String username) {
-        multiGameService.joinRoom(roomId, roomPassword, userId, username);
+        multiGameService.joinRoom(roomId, roomPassword, memberId, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/game/{roomId}/start")
-    public ResponseEntity<?> gameStart(@PathVariable String roomId, @RequestHeader Long userId) {
+    public ResponseEntity<List<ProblemResponse.ListDTO>> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
 
-        List<ProblemInfo> problems = multiGameService.startGame(roomId, userId);
+        List<ProblemResponse.ListDTO> problems = multiGameService.startGame(roomId, memberId);
 
         return new ResponseEntity<>(problems, HttpStatus.OK);
     }

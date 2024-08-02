@@ -18,38 +18,13 @@ public class ProblemService {
         this.webClient = webClientBuilder.baseUrl(problemServerUrl).build();
     }
 
-    public List<Problem> getProblems() {
+    public List<Problem> getProblems(Integer playRound) {
 
-        // 예시 문제 반환 코드
-        List<Problem> problems = new ArrayList<>();
-        Problem problem1 = Problem
-            .builder()
-            .problemId(1L)
-            .type(0)
-            .category("정렬")
-            .title("버블 정렬")
-            .content("버블 정렬 내용")
-            .answer(Map.of(0, 1, 1, 2))
-            .build();
-
-        Problem problem2 = Problem
-            .builder()
-            .problemId(2L)
-            .type(0)
-            .category("정렬")
-            .title("삽입 정렬")
-            .content("삽입 정렬 내용")
-            .answer(Map.of(0, 1, 1, 2))
-            .build();
-        problems.add(problem1);
-        problems.add(problem2);
-        return problems;
-
-//        return webClient.get()
-//            .uri("/api/problems") // 나중에 협의 후 수정
-//            .retrieve()
-//            .bodyToFlux(Problem.class)
-//            .collectList()
-//            .block();
+        return webClient.get()
+            .uri("?limit=" + playRound)
+            .retrieve()
+            .bodyToFlux(Problem.class)
+            .collectList()
+            .block();
     }
 }

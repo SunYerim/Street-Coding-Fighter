@@ -6,13 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.problem.ProblemAnswer;
+import com.scf.multi.domain.dto.problem.ProblemChoice;
+import com.scf.multi.domain.dto.problem.ProblemContent;
+import com.scf.multi.domain.dto.problem.ProblemType;
+import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.domain.dto.user.Player;
-import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,24 +41,48 @@ class MultiGameRoomTest {
             .isHost(false)
             .build();
 
-        Problem problem1 = Problem
+        List<ProblemChoice> problemChoices = Arrays.asList(
+            ProblemChoice.builder().problemId(1L).choiceId(1).choiceText("i+1").build(),
+            ProblemChoice.builder().problemId(1L).choiceId(2).choiceText("i+2").build(),
+            ProblemChoice.builder().problemId(1L).choiceId(3).choiceText("i+3").build()
+        );
+
+        List<ProblemAnswer> ProblemAnswers = Arrays.asList(
+            ProblemAnswer.builder().answerId(1).problemId(1L).blankPosition(1).correctChoice(problemChoices.get(0)).correctAnswerText(null).build(),
+            ProblemAnswer.builder().answerId(2).problemId(1L).blankPosition(2).correctChoice(problemChoices.get(1)).correctAnswerText(null).build(),
+            ProblemAnswer.builder().answerId(3).problemId(1L).blankPosition(3).correctChoice(problemChoices.get(2)).correctAnswerText(null).build()
+        );
+
+        Problem problem1 = Problem // 빈칸 채우기
             .builder()
             .problemId(1L)
-            .type(0)
+            .problemType(ProblemType.FILL_IN_THE_BLANK)
             .category("정렬")
             .title("버블 정렬")
-            .content("버블 정렬 내용")
-            .answer(Map.of(0, 1, 1, 2))
+            .problemContent(ProblemContent.builder()
+                .content("빈칸을 채우세요.")
+                .numberOfBlank(3)
+                .problemId(1L)
+                .build()
+            )
+            .problemChoices(problemChoices)
+            .problemAnswers(ProblemAnswers)
             .build();
 
-        Problem problem2 = Problem
+        Problem problem2 = Problem // 주관식 
             .builder()
             .problemId(2L)
-            .type(0)
+            .problemType(ProblemType.FILL_IN_THE_BLANK)
             .category("정렬")
             .title("삽입 정렬")
-            .content("삽입 정렬 내용")
-            .answer(Map.of(0, 1, 1, 2))
+            .problemContent(ProblemContent.builder()
+                .content("답을 쓰세요.")
+                .numberOfBlank(0)
+                .problemId(2L)
+                .build()
+            )
+            .problemChoices(null)
+            .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(2L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
             .build();
 
         problems = Arrays.asList(problem1, problem2);
@@ -158,7 +185,7 @@ class MultiGameRoomTest {
     }
 
     @Test
-    @DisplayName("게임이 시작됐을 경우 정상적으로 예외가 발생해야 한다.")
+    @DisplayName("게임이 시작된 후 추가하려는 경우 정상적으로 예외가 발생해야 한다.")
     void AddPlayerWithAlreadyStartGameTest() {
 
         // given
@@ -346,7 +373,7 @@ class MultiGameRoomTest {
         gameRoom.updateScore(otherPlayer.getUserId(), 15);
 
         // when
-        List<Rank> ranks = gameRoom.calculateRank();
+        List<GameRank> ranks = gameRoom.calculateRank();
 
         // then
         assertThat(ranks).hasSize(2);
