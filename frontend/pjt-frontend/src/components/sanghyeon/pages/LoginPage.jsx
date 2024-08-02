@@ -5,7 +5,7 @@ import "../../../css/LoginPage.css";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 import { Howl } from 'howler';
-
+import SoundStore from "../../../stores/SoundStore.jsx";
 const LoginPage = () => {
   const {
     accessToken,
@@ -33,13 +33,10 @@ const LoginPage = () => {
   const userId = useRef(null);
   const password = useRef(null);
   const navigate = useNavigate();
-  const startSound = new Howl({
-    src: ['/startSound.mp3'],
-    loop: false,
-    volume: 0.5,
-  });
+  const { playStartSound } = SoundStore();
+
   const noAuthLogin = async () => {
-    startSound.play();
+    playStartSound();
     try {
       const res = await axios({
         method: "POST",

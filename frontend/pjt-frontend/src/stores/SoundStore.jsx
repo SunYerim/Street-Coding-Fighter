@@ -6,9 +6,15 @@ const SoundStore = create((set) => ({
   isPlaying: false,
   volume: 0.3, // 기본 볼륨 값 추가
   clickSound: new Howl({
-    src: ['/clickSound.mp3'], // 효과음 파일 경로
-    volume: 1.0,
+    src: ['/startSound.mp3'], // 효과음 파일 경로
+    volume: 0.5,
   }),
+  startSound: new Howl({
+    src: ['/startSound.mp3'],
+    loop: false,
+    volume: 0.5,
+  }),
+
   initializeBackgroundMusic: (src) => {
     set((state) => {
       if (!state.sound) { // sound가 없을 때만 새로운 Howl 인스턴스를 생성
@@ -53,6 +59,12 @@ const SoundStore = create((set) => ({
   playClickSound: () => {
     set((state) => {
       state.clickSound.play();
+      return {};
+    });
+  },
+  playStartSound: () => {
+    set((state) => {
+      state.startSound.play();
       return {};
     });
   },
