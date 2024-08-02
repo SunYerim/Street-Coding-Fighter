@@ -41,7 +41,6 @@
         private final Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
         private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
         private final Map<Long, List<Solved>> solveds = Collections.synchronizedMap(new HashMap<>());
-        private final AtomicInteger curAtomicSubmitCount = new AtomicInteger(0);
         private final List<RoundRank> roundRanks = Collections.synchronizedList(new ArrayList<>());
 
         @Override
@@ -90,6 +89,8 @@
 
             if (message.getType().equals("solve")) {
 
+                MultiGameRoom room = multiGameService.findOneById(roomId);
+
                 Player player = sessionPlayers.get(session.getId());
 
                 Solved solved = saveSolved(roomId, player.getUserId(), message.getContent()); // 푼 문제 저장
@@ -98,9 +99,9 @@
 
                 session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
 
-                MultiGameRoom room = multiGameService.findOneById(roomId);
-
-                int curSubmitCount = curAtomicSubmitCount.incrementAndGet();// 제출된 풀이 수 증가
+                int submitCount = room.getCurSubmitCount(); // 제출된 풀이 수 증가
+                room.updateSubmitCount(submitCount+1);
+                int curSubmitCount = room.getCurSubmitCount();
 
                 if (curSubmitCount <= 3) {
                     roundRanks.add(
@@ -118,6 +119,10 @@
                     List<GameRank> gameRank = room.calculateRank();
                     String gameRankMsg = JsonConverter.getInstance().toString(gameRank);
                     String roundRankMsg = JsonConverter.getInstance().toString(roundRanks);
+
+                    System.out.println("gameRank: " + gameRankMsg);
+                    System.out.println("rountRank: " + roundRankMsg);
+
                     broadcastMessageToRoom(roomId, roundRankMsg);
                     broadcastMessageToRoom(roomId, gameRankMsg);
                     roundRanks.clear();
@@ -134,9 +139,8 @@
                         for (GameRank rank : gameRank) { // 게임 최종 결과 저장
                             kafkaMessageProducer.sendResult(rank);
                         }
-
-                        curAtomicSubmitCount.set(0);
                     }
+                    room.updateSubmitCount(0);
                 }
             }
         }

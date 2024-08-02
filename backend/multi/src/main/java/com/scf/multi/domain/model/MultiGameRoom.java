@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class MultiGameRoom {
     private final Integer playRound;
     private Boolean isStart;
     private Integer round;
+    private int curSubmitCount;
 
     @Builder
     public MultiGameRoom(String roomId, Long hostId, String hostname, String title, String password, Integer maxPlayer, Integer playRound) {
@@ -43,6 +45,7 @@ public class MultiGameRoom {
         this.playRound = playRound;
         this.isStart = false;
         this.round = 0;
+        this.curSubmitCount = 0;
     }
 
     public List<Player> getPlayers() {
@@ -147,5 +150,9 @@ public class MultiGameRoom {
         }
 
         return ranks;
+    }
+
+    public void updateSubmitCount(int count) {
+        this.curSubmitCount = count;
     }
 }
