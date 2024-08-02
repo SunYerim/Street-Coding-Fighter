@@ -44,6 +44,10 @@ const StyleToPythonCode = ({ codeString, quizType }) => {
     // console.log("number", i, match);
     return <span className="number" key={`number-${seq++}`}>{match}</span>;
   });
+  codeString = reactStringReplace(codeString, "\\n", (match, i) => {
+    // console.log("number", i, match);
+    return <br key={`newline-${seq++}`} />;
+  });
 
   return (
     <pre className="code-with-blanks" style={styles.codeWithBlanks}>

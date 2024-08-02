@@ -24,7 +24,7 @@ const testQuizContent = {
   },
 };
 
-const DragNDropQuiz = () => {
+const DragNDropQuiz = ({ problem }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState(Object.values(testQuizContent.choices));
 

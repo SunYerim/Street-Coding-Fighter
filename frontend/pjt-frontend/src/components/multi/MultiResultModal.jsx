@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
-import RankingGraph from "../ranking/RankingGraph";
-import S from '../ranking/styled.jsx';
+import MultiRanking from "./MultiRanking.jsx";
 
 
-const GameResultModal = () => {
+const MultiResultModal = ({userList}) => {
   
   const [modalOpen, setModalOpen] = useState(true);
   const modalOutsisde = useRef();
@@ -18,7 +17,7 @@ const GameResultModal = () => {
           }
         }}>
           <div className="result-modal-content">
-              <RankingGraph />
+              <MultiRanking userList={userList} />
           </div>
         </div>
       }
@@ -27,4 +26,4 @@ const GameResultModal = () => {
   );
 }
 
-export default GameResultModal;
+export default MultiResultModal;

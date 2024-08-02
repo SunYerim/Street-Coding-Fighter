@@ -1,17 +1,29 @@
 import "../../index.css";
 import "../../css/GameMain.css";
 import "../../css/MultiGame.css";
-import Timer from "../game/Timer.jsx";
+import '../../css/Timer.css';
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
-import GameResultModal from "../game/GameResultModal.jsx";
+import MultiResultModal from "./MultiResultModal.jsx";
 import socket from "../game/server.js"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FillInTheBlank from "../game/FillInTheBlank";
-import ShortAnswerQuestion from "../game/short_answer/ShortAnswer";
+import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
+
+// export const userL = [
+//   { id: 1, rank: 2, name: "방장", score: 97 },
+//   { id: 2, rank: 1, name: "B", score: 100 },
+//   { id: 3, rank: 3, name: "F", score: 90 },
+//   { id: 4, rank: 4, name: "S", score: 80 },
+//   { id: 5, rank: 5, name: "H", score: 70 },
+//   { id: 6, rank: 6, name: "E", score: 60 },
+//   { id: 7, rank: 7, name: "J", score: 30 },
+//   { id: 7, rank: 7, name: "말숙", score: 50 },
+//   { id: 7, rank: 7, name: "ai", score: 90 },
+// ];
 
 
 export default function MultiGame() {
@@ -24,25 +36,11 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [problems, setProblems] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [roomId, setRoomId] = useState('defaultRoomId');
 
-  const [round, setRound] = useState(0);
-  const [playing, setPlaying] = useState(false);
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
-
-
-  // const userList = [
-  //   { id: 1, rank: 2, name: "방장", score: 97 },
-  //   { id: 2, rank: 1, name: "B", score: 100 },
-  //   { id: 3, rank: 3, name: "F", score: 90 },
-  //   { id: 4, rank: 4, name: "S", score: 80 },
-  //   { id: 5, rank: 5, name: "H", score: 70 },
-  //   { id: 6, rank: 6, name: "E", score: 60 },
-  //   { id: 7, rank: 7, name: "J", score: 30 },
-  //   { id: 7, rank: 7, name: "말숙", score: 50 },
-  //   { id: 7, rank: 7, name: "ai", score: 90 },
-  // ];
+  // 시간을 담을 변수
+  const [count, setCount] = useState(30);
 
 
   const handleStart = () => {
@@ -56,7 +54,6 @@ export default function MultiGame() {
     socket.emit('requestProblems', gameRound, (response) => {
       if (response.ok) {
         setProblems(response.problems);
-        console.log(response.problems);
       } else {
         console.error(response.err);
       }
@@ -84,7 +81,6 @@ export default function MultiGame() {
     });
 
     socket.on('gameStart', () => {
-      console.log('start!!!');
       setStart(1);
       requestProblems(3);
     })
@@ -151,13 +147,38 @@ export default function MultiGame() {
       case "FILL_IN_THE_BLANK":
         return <FillInTheBlank problem={problem} />;
       case "SHORT_ANSWER_QUESTION":
-        return <ShortAnswerQuestion problem={problem} />;
+        return <ShortAnswer problem={problem} submitTime={count} />;
       case "MULTIPLE_CHOICE":
         return <MultipleChoice problem={problem} />;
       default:
         return <div>Unknown problem type</div>;
     }
   };
+
+  
+  function Timer({ setTimerEnded }) {
+    useEffect(() => {
+      if (count === 0) {
+        setTimerEnded(true);
+        return;
+      }
+  
+      // 설정된 시간 간격마다 setInterval 콜백이 실행된다. 
+      const id = setInterval(() => {
+        // 타이머 숫자가 하나씩 줄어들도록
+        setCount((count) => count - 1);
+      }, 1000);
+      
+      // 0이 되면 카운트가 멈춤
+      if(count === 0) {
+        clearInterval(id);
+      }
+      return () => clearInterval(id);
+      // 카운트 변수가 바뀔때마다 useEffecct 실행
+    }, [count, setTimerEnded]);
+  
+    return <div><span>{count}</span></div>;
+  }
 
 
   return (
@@ -199,6 +220,7 @@ export default function MultiGame() {
                       <h1>대기중 . . .</h1>
                       <h1>헤더유저: {headerUser}</h1>
                       <h1>니이름: {user.name}</h1>
+                      {/* <MultiResultModal userList={userList} /> */}
                     </div>
                   )}
                 </div>
@@ -213,14 +235,20 @@ export default function MultiGame() {
                   {/* Playing Games! */}
                   {problems.length > 0 && renderProblem()}
                   {timerEnded && submitAnswer(null)}
+                  {modalOpen && <MultiResultModal userList={userList} />}
                 </div>
               ))
             )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              <h1>Round</h1>
-              <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
+              {/* <h1>Round</h1> */}
+              { start ? (
+                <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
+              ) : (
+                <h1>Waiting...</h1>
+              )}
+              
             </div>
             <div className="multi-message-room">
               <MessageContainer messageList={messageList} user={user} />
@@ -229,11 +257,10 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <GameResultModal />}
+      {/* {modalOpen && <MultiResultModal userList={userList} />} */}
     </>
   );
 }
-
 
 function UserRank(props) {
   return (

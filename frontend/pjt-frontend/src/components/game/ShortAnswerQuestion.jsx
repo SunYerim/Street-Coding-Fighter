@@ -1,10 +1,12 @@
 import React from 'react';
 
 const ShortAnswerQuestion = ({ problem }) => {
+  const content = `??? ${problem.problemContent.content}`;
+
   return (
     <div>
       <h2>{problem.title}</h2>
-      <p>{problem.problemContent.content}</p>
+      <p>{content}</p>
       <input type="text" placeholder="Your answer" />
     </div>
   );

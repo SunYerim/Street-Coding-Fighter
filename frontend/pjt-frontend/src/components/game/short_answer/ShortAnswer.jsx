@@ -1,43 +1,29 @@
-import { borderRadius, height, minWidth, padding, style } from '@mui/system';
+import { borderRadius, fontSize, height, minWidth, padding, style } from '@mui/system';
 import StyleToPythonCode from '../StyleToPythonCode';
+import "../../../css/MultiGame.css";
 import { useState } from 'react';
-
-// const testQuizContent = {
-//   content: '# 다음 코드의 출력 결과는 무엇일까요? \n print(15 % 4)',
-//   answer: {
-//     1: 'j + 1',
-//     2: 'j',
-//     3: 'data',
-//   },
-//   choices: {
-//     1: 'i',
-//     2: 'i+1',
-//     3: 'j+1',
-//     4: 'j',
-//     5: 'data',
-//     6: 'print',
-//   },
-// };
+import socket from "../server.js"
 
 const styles = {
   codeContainer: {
-    maxWidth: '600px',
-    height: '150px',
+    width: '40vw',
+    height: '60%',
     margin: '0 auto',
     padding: '1rem',
-    // backgroundColor: '#f9f9f9',
     borderRadius: '5px',
     boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
   },
   answerInput: {
-    width: '200px',
-    height: '30px',
+    width: '20vw', 
+    height: '20%',
     padding : '10px',
     paddingLeft: '20px',
+    fontSize: '1.5rem',
+    margin: '5% 0',
   },
   inputDiv: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     margin: '10px',
     borderRadius: '5px',
@@ -54,13 +40,12 @@ const styles = {
     // marginTop: '20px',
     marginLeft: '20px',
   },
-
 };
-const ShortAnswer = ({ problem }) => {
+const ShortAnswer = ({ problem, submitTime }) => {
+
+
   const [answer, setAnswer] = useState('');
-  
   const onInputChange = (e) =>{
-    console.log(e.target.value);
     setAnswer(e.target.value)
   }
   const handleKeyDown = (e) => {
@@ -70,18 +55,30 @@ const ShortAnswer = ({ problem }) => {
   }
   const handleSubmit = () => {
     // 여기 제출하는 함수 작성하시면 됩니다!
+    socket.emit('submitAnswer', {
+      "type": "SHORT_ANSWER_QUESTION",
+      "content": {
+        "submitTime": {submitTime},
+        "solve": null, // 빈칸 문제, 객관식 채점용
+        "solveText": `${answer}`
+      }
+    })
+
+
     alert(`${answer}제출됨`)
   };
   return (
     <>
       <h2>Short Answer</h2>
-      <div style={styles.codeContainer}>
-        <StyleToPythonCode codeString={problem.problemContent.content} />
-      </div>
-      <div style={styles.inputDiv}>
-        <input style={styles.answerInput} type="text" onChange={onInputChange} onKeyDown={handleKeyDown} />
-        <button style={styles.submitButton} onClick={handleSubmit}>제출</button>
-      </div>
+      <div className='multi-game-playing'>
+        <div style={styles.codeContainer}>
+          <StyleToPythonCode codeString={problem.problemContent.content} />
+        </div>
+        <div style={styles.inputDiv}>
+          <input style={styles.answerInput} type="text" onChange={onInputChange} onKeyDown={handleKeyDown} />
+          <button className='multi-button' onClick={handleSubmit}>제출</button>
+        </div>
+      </div>  
     </>
   );
 };

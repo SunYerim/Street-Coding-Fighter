@@ -62,13 +62,6 @@
   margin: 1%;
 }
 
-.hourglass {
-  width: 60%;
-  height: 60%;
-  filter: red;
-  /* filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg) brightness(97%) contrast(113%); */
-}
-
 .multi-rank-table {
   overflow-y: auto;
   overflow-y: scroll;
@@ -132,7 +125,6 @@
   align-items: center;
   width: 100%;
   height: 20%;
-  /* border: 3px solid black; */
   background-color: rgba(0, 0, 50, 0.7);
   margin: 1%;
   border-radius: 10px;
@@ -202,4 +194,18 @@
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.multi-button {
+  width: 120px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.multi-button:hover {
+  background-color: #eee;
 }
