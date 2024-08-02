@@ -42,7 +42,6 @@ const rowList = [0, 1, 2, 3];
 export default function EpisodeList({ rownum }) {
   const navigate = useNavigate();
   const [nextIndex, setNextIndex] = useState(nIdx);
-  const navigate = useNavigate();
   
   return (
     <>
