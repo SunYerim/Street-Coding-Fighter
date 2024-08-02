@@ -67,6 +67,15 @@ public class MultiGameService {
             .playRound(createRoomDTO.getGameRound())
             .build();
 
+        Player hostPlayer = Player.builder()
+            .userId(userId)
+            .username(username)
+            .isHost(true)
+            .streakCount(0)
+            .build();
+
+        room.add(createRoomDTO.getPassword(), hostPlayer);
+
         multiGameRepository.addRoom(room);
         return roomId;
     }
@@ -92,6 +101,7 @@ public class MultiGameService {
             .userId(userId)
             .username(username)
             .isHost(isHost)
+            .streakCount(0)
             .build();
         room.add(roomPassword, player);
     }
@@ -216,7 +226,7 @@ public class MultiGameService {
             throw new BusinessException(submitTime, "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
 
-        int score = 1000 * (submitTime / 30);
+        int score = 1000 * (30 - submitTime);
         score += (streakCount * 75);
 
         return score;
