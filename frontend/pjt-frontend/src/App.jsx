@@ -16,6 +16,8 @@ import MultiMain from "./components/multi/MultiMain.jsx";
 import MultiCreate from "./components/multi/MultiCreate.jsx";
 import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
+import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
+import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
@@ -68,7 +70,8 @@ function App() {
           />
           <Route
             path="/multi"
-            element={accessToken ? <MultiMain /> : <LoginPage />}
+            // element={accessToken ? <MultiMain /> : <LoginPage />}
+            element={<MultiMain />}
           />
           <Route
             path="/multi-create"
@@ -76,11 +79,23 @@ function App() {
           />
           <Route
             path="/battle"
-            element={accessToken ? <BattleMain /> : <LoginPage />}
+            // element={accessToken ? <BattleMain /> : <LoginPage />}
+            element={<BattleMain />}
           />
           <Route
             path="/battle-create"
-            element={accessToken ? <BattleCreate /> : <LoginPage />}
+            // element={accessToken ? <BattleCreate /> : <LoginPage />}
+            element={<BattleCreate />}
+          />
+          <Route
+            path="/battle-game"
+            // element={accessToken ? <BattleGamePage /> : <LoginPage />}
+            element={<BattleGamePage />}
+          />
+          <Route
+            path="/battle-list"
+            // element={accessToken ? <BattleGamePage /> : <LoginPage />}
+            element={<BattleGameListPage />}
           />
           <Route
             path="/multi-game"

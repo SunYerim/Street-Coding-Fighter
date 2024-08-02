@@ -22,7 +22,7 @@ const ChangePasswordPage = () => {
       try {
         const res = await axios({
           method: "POST",
-          url: `${baseURL}/user/change-password`,
+          url: `${baseURL}/user/public/change-password`,
           data: {
             userId: userId,
             newPassword: newPassword.current.value,

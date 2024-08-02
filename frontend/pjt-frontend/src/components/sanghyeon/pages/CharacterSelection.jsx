@@ -106,7 +106,7 @@ const CharacterSelection = () => {
     try {
       const signupRes = await axios({
         method: "POST",
-        url: `${baseURL}/user/join`,
+        url: `${baseURL}/user/public/join`,
         data: updatedRegisterInfo,
       });
 

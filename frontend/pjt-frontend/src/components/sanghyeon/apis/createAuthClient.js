@@ -12,7 +12,7 @@ const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
     try {
       const res = await axios({
         method: "POST",
-        url: `${baseURL}/user/reissue`,
+        url: `${baseURL}/user/public/reissue`,
         withCredentials: true,
       });
 

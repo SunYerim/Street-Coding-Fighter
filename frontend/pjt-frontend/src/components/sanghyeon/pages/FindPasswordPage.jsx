@@ -20,7 +20,7 @@ const FindPasswordPage = () => {
     try {
       const sendRes = await axios({
         method: "POST",
-        url: `${baseURL}/user/request-verification-code`,
+        url: `${baseURL}/user/public/request-verification-code`,
         data: {
           userId: currentUserId.current.value,
         },
@@ -34,7 +34,7 @@ const FindPasswordPage = () => {
     try {
       const chkRes = await axios({
         method: "GET",
-        url: `${baseURL}/user/request-verification`,
+        url: `${baseURL}/user/public/request-verification`,
         data: {
           userId: currentUserId.current.value,
           verificationCode: verificationCode.current.value,

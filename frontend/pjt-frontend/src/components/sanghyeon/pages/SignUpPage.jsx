@@ -66,7 +66,7 @@ function SignUpPage() {
     try {
       const idCheckRes = await axios({
         method: "GET",
-        url: `${baseURL}/user/validate/${userId.current.value}`,
+        url: `${baseURL}/user/public/validate/${userId.current.value}`,
       });
 
       setErrorMessage("사용 가능한 아이디입니다.");

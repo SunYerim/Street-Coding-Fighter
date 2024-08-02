@@ -39,7 +39,7 @@ const LoginPage = () => {
     try {
       const res = await axios({
         method: "POST",
-        url: `${baseURL}/user/login`,
+        url: `${baseURL}/user/public/login`,
         data: {
           userId: userId.current.value,
           password: password.current.value,
@@ -51,10 +51,11 @@ const LoginPage = () => {
         ? authorizationHeader.replace(/^Bearer\s+/i, "")
         : null;
 
-      const memberID = res.data["memberId"];
+      const memberId = res.data["memberId"];
 
       setAccessToken(accessToken);
-      setMemberId(memberID);
+      setMemberId(memberId);
+
       try {
         const authClient = createAuthClient(
           baseURL,
@@ -64,7 +65,7 @@ const LoginPage = () => {
 
         const userInfoRes = await authClient({
           method: "GET",
-          url: `${baseURL}/user`,
+          url: `${baseURL}/user/info`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
