@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const FindPasswordPage = () => {
-  const { userId, baseURL, code, setCode } = store((state) => ({
+  const { userId, baseURL, code, setCode, setUserId } = store((state) => ({
     userId: state.userId,
     baseURL: state.baseURL,
     code: state.code,
@@ -37,10 +37,11 @@ const FindPasswordPage = () => {
         url: `${baseURL}/user/public/request-verification`,
         data: {
           userId: currentUserId.current.value,
-          verificationCode: verificationCode.current.value,
+          code: verificationCode.current.value,
         },
       });
       isVerified.current = true;
+      setUserId(currentUserId.current.value);
     } catch (error) {
       console.log(error);
     }

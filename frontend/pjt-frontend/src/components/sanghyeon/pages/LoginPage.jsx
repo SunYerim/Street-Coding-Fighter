@@ -4,7 +4,7 @@ import AccountButton from "../components/AccountButton.jsx";
 import "../../../css/LoginPage.css";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
-import { Howl } from 'howler';
+import { Howl } from "howler";
 import SoundStore from "../../../stores/SoundStore.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
 
@@ -59,6 +59,7 @@ const LoginPage = () => {
 
       setAccessToken(accessToken);
       setMemberId(memberId);
+      setUserId(userId.current.value);
       navigate("/main");
     } catch (error) {
       alert("로그인 실패");
