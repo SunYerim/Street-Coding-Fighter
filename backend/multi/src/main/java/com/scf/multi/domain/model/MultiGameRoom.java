@@ -1,8 +1,8 @@
 package com.scf.multi.domain.model;
 
+import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
@@ -127,10 +127,10 @@ public class MultiGameRoom {
         this.round += 1;
     }
 
-    public List<Rank> calculateRank() {
+    public List<GameRank> calculateRank() {
         // scoreBoard의 userId와 score를 Rank 객체로 변환
-        List<Rank> ranks = scoreBoard.entrySet().stream()
-            .map(entry -> Rank.builder()
+        List<GameRank> ranks = scoreBoard.entrySet().stream()
+            .map(entry -> GameRank.builder()
                 .userId(entry.getKey())
                 .username(players.stream()
                     .filter(player -> player.getUserId().equals(entry.getKey()))
@@ -143,7 +143,7 @@ public class MultiGameRoom {
             .collect(Collectors.toList());
 
         for(int i=1; i<=ranks.size(); i++) {
-            ranks.get(i).setRank(i);
+            ranks.get(i-1).setRank(i);
         }
 
         return ranks;

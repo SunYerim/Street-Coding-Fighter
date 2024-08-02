@@ -1,12 +1,12 @@
 package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.application.UserService;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.socket_message.Content;
 import com.scf.multi.domain.dto.socket_message.Message;
+import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.domain.dto.user.Player;
-import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.RoundRank;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.utils.JsonConverter;
@@ -38,6 +38,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
     private final Map<Long, List<Solved>> solveds = Collections.synchronizedMap(new HashMap<>());
     private final AtomicInteger curAtomicSubmitCount = new AtomicInteger(0);
+    private final List<RoundRank> roundRanks = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -85,13 +86,25 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             int curSubmitCount = curAtomicSubmitCount.incrementAndGet();// 제출된 풀이 수 증가
 
+            if (curSubmitCount <= 3) {
+                roundRanks.add(
+                    RoundRank.builder()
+                        .userId(player.getUserId())
+                        .username(player.getUsername())
+                        .score(attainedScore)
+                        .rank(curSubmitCount).build());
+            }
+
             if (curSubmitCount == room.getPlayers().size()) { // 각 라운드마다 모든 플레이어가 풀이를 제출했으면
 
                 room.nextRound(); // 다음 라운드 진행
 
-                List<Rank> ranks = room.calculateRank();
-                String rankMsg = JsonConverter.getInstance().toString(ranks);
-                broadcastMessageToRoom(roomId, rankMsg);
+                List<GameRank> gameRank = room.calculateRank();
+                String gameRankMsg = JsonConverter.getInstance().toString(gameRank);
+                String roundRankMsg = JsonConverter.getInstance().toString(roundRanks);
+                broadcastMessageToRoom(roomId, roundRankMsg);
+                broadcastMessageToRoom(roomId, gameRankMsg);
+                roundRanks.clear();
 
                 if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
 
@@ -102,7 +115,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                         }
                     }
 
-                    for(Rank rank : ranks) { // 게임 최종 결과 저장
+                    for (GameRank rank : gameRank) { // 게임 최종 결과 저장
                         kafkaMessageProducer.sendResult(rank);
                     }
 

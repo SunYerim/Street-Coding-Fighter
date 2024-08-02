@@ -1,6 +1,6 @@
 package com.scf.multi.global.config;
 
-import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.domain.dto.user.Solved;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -28,12 +28,12 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Rank> resultDTOProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs(Rank.class));
+    public ProducerFactory<String, GameRank> resultDTOProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs(GameRank.class));
     }
 
     @Bean
-    public KafkaTemplate<String, Rank> resultDTOKafkaTemplate() {
+    public KafkaTemplate<String, GameRank> resultDTOKafkaTemplate() {
         return new KafkaTemplate<>(resultDTOProducerFactory());
     }
 
