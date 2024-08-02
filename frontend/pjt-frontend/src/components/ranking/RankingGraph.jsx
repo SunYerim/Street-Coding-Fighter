@@ -14,7 +14,7 @@ const RankingGraph = () => {
       <>
         <ProfileImageContainer />
         <P.Name>{player.name}</P.Name>
-        <P.Exp>score</P.Exp>
+        <P.Exp>{player.exp}</P.Exp>
       </>
     );
   };
@@ -23,20 +23,20 @@ const RankingGraph = () => {
     <GraphContainer>
       <LeaderBoardSecond>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={2} />
+          <PodiumPlayer rank={3} />
         </PodiumPlayerContainer>
         <PlaceHolder>2</PlaceHolder>
       </LeaderBoardSecond>
       <LeaderBoardFirst>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={1} />
+          <PodiumPlayer rank={0} />
 
         </PodiumPlayerContainer>
           <PlaceHolder>1</PlaceHolder>
       </LeaderBoardFirst>
       <LeaderBoardThird>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={3} />
+          <PodiumPlayer rank={2} />
         </PodiumPlayerContainer>
           <PlaceHolder>3</PlaceHolder>
       </LeaderBoardThird>
@@ -133,7 +133,7 @@ const NoPlayerData = styled.div`
 const ProfileImageContainer = styled.div`
   width: 70px;
   height: 70px;
-  background-image: url('../../../src/assets/single-test.webp');
+  background-image: url('/single-test.webp');
   background-size: cover;
   background-position: center;
   border-radius: 50%;

@@ -58,6 +58,7 @@ function App() {
           <Route path="/signup-character" element={<CharacterSelection />} />
           <Route
             path="/ranking"
+            // element={<Ranking />}
             element={accessToken ? <Ranking /> : <LoginPage />}
           />
           <Route
