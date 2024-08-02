@@ -16,8 +16,8 @@
   width: 80vw;
   max-width: 1200px;
   border-radius: 20px;
-  height: 70vh;
-  margin: 50px;
+  height: 75vh;
+  margin: 20px;
   padding: 30px;
 }
 
@@ -51,12 +51,17 @@
 
 .solved-inner-title {
   color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   padding: 0 40px;
+  margin: 0 50px;
   font-size: 1.2rem;
   letter-spacing: 2px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+
+.solved-inner-title p {
+  flex: 1;
 }
 
 .solved-inner {
@@ -68,12 +73,31 @@
   color: white;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   padding: 0 40px;
-  margin: 15px;
+  margin: 15px 50px;
   color: black;
   background-color: white;
   font-size: 1rem;
   font-weight: bold;
   letter-spacing: 1px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.solved p {
+  flex: 1;
+}
+
+.solved-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.solved-pagination button {
+  margin: 5px;
+  font-size: 1.2rem;
+  width: 30px;
+  cursor: pointer;
 }

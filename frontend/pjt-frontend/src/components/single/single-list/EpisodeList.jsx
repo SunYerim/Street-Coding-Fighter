@@ -3,7 +3,6 @@ import S from "./styled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 const courses = [
   { id: 0, content_type: "변수와 자료형", title: "변수" },
   { id: 1, content_type: "변수와 자료형", title: "자료형" },
@@ -41,8 +40,8 @@ completed.forEach((e, i) => {
 });
 const rowList = [0, 1, 2, 3];
 export default function EpisodeList({ rownum }) {
-  const [nextIndex, setNextIndex] = useState(nIdx);
   const navigate = useNavigate();
+  const [nextIndex, setNextIndex] = useState(nIdx);
   
   return (
     <>
@@ -54,6 +53,7 @@ export default function EpisodeList({ rownum }) {
               .map((e, index, array) => (
                 <React.Fragment key={e.id}>
                   <S.CheckPoint
+                    onClick={() => navigate("/single-play")}
                     key={`checkpoint-${e.id}`}
                     $completed={completed[e.id]}
                     $isNext={e.id === nextIndex}

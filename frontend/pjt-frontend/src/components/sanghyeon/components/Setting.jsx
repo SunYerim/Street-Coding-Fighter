@@ -38,8 +38,8 @@ const Setting = () => {
   const logout = async () => {
     try {
       const logoutRes = await authClient({
-        method: 'POST',
-        url: `${baseURL}/user/logout/${memberId}`,
+        method: "POST",
+        url: `${baseURL}/user/logout`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

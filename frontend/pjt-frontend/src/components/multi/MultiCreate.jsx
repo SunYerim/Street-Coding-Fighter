@@ -27,11 +27,21 @@ export default function MultiCreate() {
           <form className="multi-create-input">
             <div className="create-box">
               <span>방 제목 : </span>
-                <input name="title" className="create-title" type="text" placeholder="Enter Room Title" maxLength={30} />
+              <input
+                className="create-title"
+                type="text"
+                placeholder="Enter Room Title"
+                maxLength={30}
+              />
             </div>
             <div className="create-box">
               <span>최대인원 : </span>
-              <input name="userMax" className="create-max-number" type="number" min="2" max="30" placeholder="10" />
+              <input
+                className="create-max-number"
+                type="number"
+                min="1"
+                max="30"
+              />
             </div>
             <div className="create-box">
               <span>비밀번호 : </span>
@@ -42,8 +52,15 @@ export default function MultiCreate() {
               <input name="round" className="create-problems" type="number" min="5" max="20" placeholder="5" />
             </div>
             <div className="create-button-container">
-              <button className="create-button" onSubmit={createMultiRoom}>Create</button>
-              <button className="create-button" onClick={() => navigate("/multi")}>Cancle</button>
+              <button className="create-button" onSubmit={createMultiRoom}>
+                Create
+              </button>
+              <button
+                className="create-button"
+                onClick={() => navigate("/multi")}
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>

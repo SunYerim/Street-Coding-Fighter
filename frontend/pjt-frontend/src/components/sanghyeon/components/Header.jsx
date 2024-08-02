@@ -9,6 +9,9 @@ function Header() {
   return (
     <>
       <div className="header-container">
+        <button className="header-back-button" onClick={() => navigate(-1)}>
+          뒤로 가기 (임시)
+        </button>
         <h2
           className="header-title"
           onClick={() => {
