@@ -23,6 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -60,14 +61,15 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         configuration.setAllowedOrigins(
-                            Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                            Arrays.asList("http://localhost:5173",
+                                "https://ssafy11s.com"));
+                        configuration.setAllowedMethods(
+                            Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(
                             Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-                        configuration.setMaxAge(3600L);
-
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setMaxAge(3600L);
 
                         return configuration;
                     }
@@ -79,7 +81,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(user -> user
                 .requestMatchers("/user/public/login", "/user/public/join",
                     "/user/public/validate/**", "/user/public/request-verification-code",
-                    "/user/public/request-verification", "/user/public/change-password", "/user/public/reissue")
+                    "/user/public/request-verification", "/user/public/change-password",
+                    "/user/public/reissue")
                 .permitAll()
 
                 .anyRequest().authenticated())
