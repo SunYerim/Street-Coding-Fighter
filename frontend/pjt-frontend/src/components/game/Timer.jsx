@@ -15,7 +15,7 @@ export default function Timer() {
     
     // 0이 되면 카운트가 멈춤
     if(count === 0) {
-        clearInterval(id);
+      clearInterval(id);
     }
     return () => clearInterval(id);
     // 카운트 변수가 바뀔때마다 useEffecct 실행

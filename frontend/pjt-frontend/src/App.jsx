@@ -17,6 +17,7 @@ import MultiCreate from "./components/multi/MultiCreate.jsx";
 import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
+import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";

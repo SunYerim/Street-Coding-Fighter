@@ -42,6 +42,8 @@ const rowList = [0, 1, 2, 3];
 export default function EpisodeList({ rownum }) {
   const navigate = useNavigate();
   const [nextIndex, setNextIndex] = useState(nIdx);
+  const navigate = useNavigate();
+  
   return (
     <>
       {rowList.map((r) => (
@@ -56,6 +58,7 @@ export default function EpisodeList({ rownum }) {
                     key={`checkpoint-${e.id}`}
                     $completed={completed[e.id]}
                     $isNext={e.id === nextIndex}
+                    onClick = {()=>{navigate(`/single-play/${e.id}`)}}
                   >
                     {e.id + 1}. {e.title}
                     {index === array.length - 1 && r < 3 ? (
