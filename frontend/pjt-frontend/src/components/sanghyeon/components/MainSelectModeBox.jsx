@@ -11,7 +11,7 @@ function MainSelectModeBox(props) {
     } else if (mode === "멀티플레이") {
       navigate("/multi");
     } else if (mode === "1 vs 1") {
-      alert(`${mode}`);
+      navigate("/battle-list");
     } else if (mode === "랭킹") {
       alert(`${mode}`);
     }

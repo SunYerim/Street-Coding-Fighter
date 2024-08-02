@@ -43,7 +43,7 @@ const LoginPage = () => {
     try {
       const res = await axios({
         method: "POST",
-        url: `${baseURL}/user/login`,
+        url: `${baseURL}/user/public/login`,
         data: {
           userId: userId.current.value,
           password: password.current.value,
@@ -55,35 +55,11 @@ const LoginPage = () => {
         ? authorizationHeader.replace(/^Bearer\s+/i, "")
         : null;
 
-      const memberID = res.data["memberId"];
+      const memberId = res.data["memberId"];
 
       setAccessToken(accessToken);
-      setMemberId(memberID);
-      try {
-        const authClient = createAuthClient(
-          baseURL,
-          () => accessToken,
-          setAccessToken
-        );
-
-        const userInfoRes = await authClient({
-          method: "GET",
-          url: `${baseURL}/user`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        setUserId(userInfoRes.data.userId);
-        setName(userInfoRes.data.name);
-        setSchoolName(userInfoRes.data.schoolName);
-        setBirth(userInfoRes.data.birth);
-        navigate("/main");
-      } catch (error) {
-        alert("로그인 실패");
-        setAccessToken(null);
-        setMemberId(null);
-      }
+      setMemberId(memberId);
+      navigate("/main");
     } catch (error) {
       alert("로그인 실패");
     }
