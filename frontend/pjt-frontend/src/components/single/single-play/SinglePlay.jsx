@@ -13,6 +13,8 @@ export default function SinglePlay() {
     {
       page_no: 0,
       script_content: "첫번째 줄 \n 두번째 줄 \n 세번째 줄",
+      action: 0,
+      image : 0,
     },
     {
       page_no: 1,
