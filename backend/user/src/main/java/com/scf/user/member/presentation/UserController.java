@@ -40,7 +40,7 @@ public class UserController {
     private final PasswordResetService passwordResetService;
 
     // 회원가입
-    @PostMapping("/join")
+    @PostMapping("/public/join")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequestDto registerRequestDto) {
         log.info("회원가입 요청 requestDto : {} ", registerRequestDto);
 
@@ -50,7 +50,7 @@ public class UserController {
 
 
     // 유저 정보 조회
-    @GetMapping
+    @GetMapping("/info")
     public ResponseEntity<UserInfoResponseDto> userinfo(
         @RequestHeader("memberId") String memberId) {
         UserInfoResponseDto userInfo = userService.getUserInfo(memberId);
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     // 아이디 중복 확인
-    @GetMapping("/validate/{userId}")
+    @GetMapping("/public/validate/{userId}")
     public ResponseEntity<?> checkUserId(@PathVariable("userId") String userId) {
         if (userService.checkUserIdDuplicate(userId)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용하고 있는 아이디입니다."); // 409
@@ -90,7 +90,7 @@ public class UserController {
     }
 
     // token 재발급
-    @PostMapping("/reissue")
+    @PostMapping("/public/reissue")
     public ResponseEntity<?> refreshAccessToken(HttpServletRequest request,
         HttpServletResponse response) {
         // 쿠키에서 리프레시 토큰 추출
@@ -108,7 +108,7 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PostMapping("/change-password")
+    @PostMapping("/public/change-password")
     public ResponseEntity<?> changePassword(
         @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
         passwordResetService.resetPassword(passwordResetRequestDto.getUserId(),
@@ -118,7 +118,7 @@ public class UserController {
     }
 
     // 인증번호 전송
-    @PostMapping("/request-verification-code")
+    @PostMapping("/public/request-verification-code")
     public ResponseEntity<?> sendVerificationCode(
         @RequestBody UserPasswordRequestDto passwordRequestDto) {
         try {
@@ -133,7 +133,7 @@ public class UserController {
     }
 
     // 인증번호 일치 확인
-    @PostMapping("/request-verification")
+    @PostMapping("/public/request-verification")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeRequestDto verifyrequest) {
         boolean isValid = passwordResetService.validateAuthCode(verifyrequest.getUserId(),
             verifyrequest.getCode());

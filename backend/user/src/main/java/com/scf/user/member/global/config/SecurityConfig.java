@@ -48,7 +48,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManager(), jwtTokenProvider,
             objectMapper(), redisService, memberDetailService, jwtCookieUtil);
-        loginFilter.setFilterProcessesUrl("/user/login"); // 로그인 엔드포인트 설정.
+        loginFilter.setFilterProcessesUrl("/user/public/login"); // 로그인 엔드포인트 설정.
 
         httpSecurity
             .cors((corsCustomizer -> corsCustomizer.configurationSource(
@@ -59,12 +59,13 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(
-                        Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
-                    configuration.setAllowedMethods(Collections.singletonList("*"));
-                    configuration.setAllowCredentials(true);
-                    configuration.setAllowedHeaders(Collections.singletonList("*"));
-                    configuration.setMaxAge(3600L);
+                        configuration.setAllowedOrigins(
+                            Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(
+                            Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                        configuration.setMaxAge(3600L);
 
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
@@ -76,9 +77,9 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(user -> user
-                .requestMatchers("/user/login", "/user/join",
-                    "/user/validate/**", "/user/request-verification-code",
-                    "/user/request-verification", "/user/change-password")
+                .requestMatchers("/user/public/login", "/user/public/join",
+                    "/user/public/validate/**", "/user/public/request-verification-code",
+                    "/user/public/request-verification", "/user/public/change-password", "/user/public/reissue")
                 .permitAll()
 
                 .anyRequest().authenticated())
