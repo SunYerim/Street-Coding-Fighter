@@ -53,7 +53,6 @@ export default function EpisodeList({ rownum }) {
               .map((e, index, array) => (
                 <React.Fragment key={e.id}>
                   <S.CheckPoint
-                    onClick={() => navigate("/single-play")}
                     key={`checkpoint-${e.id}`}
                     $completed={completed[e.id]}
                     $isNext={e.id === nextIndex}

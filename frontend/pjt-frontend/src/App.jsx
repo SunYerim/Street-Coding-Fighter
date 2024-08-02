@@ -21,9 +21,13 @@ import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SoundStore from "./stores/SoundStore.jsx";
 import React, { useEffect } from 'react';
-
+import store from "./store/store.js";
+import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
 function App() {
   const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } = SoundStore();
+  const { accessToken } = store((state) => ({
+    accessToken: state.accessToken,
+  }));
 
   useEffect(() => {
     // 배경음악 초기화 및 재생
