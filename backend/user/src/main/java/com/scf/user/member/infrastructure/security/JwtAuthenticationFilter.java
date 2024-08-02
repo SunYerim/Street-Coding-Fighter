@@ -27,10 +27,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         // 토큰이 필요 없는 요청인지 확인
-        if (requestURI.startsWith("/user/login") || requestURI.startsWith("/user/join")
-            || requestURI.startsWith("/user/validate/") || requestURI.startsWith(
-            "/user/request-verification-code") || requestURI.startsWith(
-            "/user/request-verification") || requestURI.startsWith("/user/change-password")) {
+        if (requestURI.startsWith("/user/public/login") || requestURI.startsWith(
+            "/user/public/join")
+            || requestURI.startsWith("/user/public/validate/") || requestURI.startsWith(
+            "/user/public/request-verification-code") || requestURI.startsWith(
+            "/user/public/request-verification") || requestURI.startsWith(
+            "/user/public/change-password") || requestURI.startsWith("/user/public/reissue")) {
             filterChain.doFilter(request, response); // 다음 필터로 진행
             return;
         }
