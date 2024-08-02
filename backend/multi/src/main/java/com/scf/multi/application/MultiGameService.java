@@ -167,7 +167,7 @@ public class MultiGameService {
         List<ProblemAnswer> answers) {
 
         switch (problemType) {
-            case ProblemType.MULTIPLE_CHOICE -> { // 객관식
+            case MULTIPLE_CHOICE -> { // 객관식
 
                 Map<Integer, Integer> solve = solved.getSolve();
 
@@ -177,7 +177,7 @@ public class MultiGameService {
                     return false;
                 }
             }
-            case ProblemType.SHORT_ANSWER_QUESTION -> { // 주관식
+            case SHORT_ANSWER_QUESTION -> { // 주관식
 
                 String correctAnswerText = answers.getFirst().getCorrectAnswerText();
 
@@ -185,7 +185,7 @@ public class MultiGameService {
                     return false;
                 }
             }
-            case ProblemType.FILL_IN_THE_BLANK -> { // 빈칸 채우기
+            case FILL_IN_THE_BLANK -> { // 빈칸 채우기
 
                 Map<Integer, Integer> solve = solved.getSolve();
 
