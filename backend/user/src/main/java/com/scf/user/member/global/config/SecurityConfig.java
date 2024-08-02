@@ -51,7 +51,7 @@ public class SecurityConfig {
             objectMapper(), redisService, memberDetailService, jwtCookieUtil);
         loginFilter.setFilterProcessesUrl("/user/public/login"); // 로그인 엔드포인트 설정.
 
-        httpSecurity
+                httpSecurity
             .cors((corsCustomizer -> corsCustomizer.configurationSource(
                 new CorsConfigurationSource() {
 
@@ -60,20 +60,19 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(
-                            Arrays.asList("http://localhost:5173",
-                                "https://ssafy11s.com"));
-                        configuration.setAllowedMethods(
-                            Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(
-                            Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                    configuration.setAllowedOrigins(
+                        Arrays.asList("https://ssafy11s.com", "http://localhost:5173"));
+                    configuration.setAllowedMethods(Collections.singletonList("*"));
+                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+                    configuration.setMaxAge(3600L);
+
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-                        configuration.setMaxAge(3600L);
 
                         return configuration;
                     }
                 })));
+
         httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
