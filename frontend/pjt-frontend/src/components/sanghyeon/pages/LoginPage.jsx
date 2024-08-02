@@ -55,32 +55,7 @@ const LoginPage = () => {
 
       setAccessToken(accessToken);
       setMemberId(memberId);
-
-      try {
-        const authClient = createAuthClient(
-          baseURL,
-          () => accessToken,
-          setAccessToken
-        );
-
-        const userInfoRes = await authClient({
-          method: "GET",
-          url: `${baseURL}/user/info`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        setUserId(userInfoRes.data.userId);
-        setName(userInfoRes.data.name);
-        setSchoolName(userInfoRes.data.schoolName);
-        setBirth(userInfoRes.data.birth);
-        navigate("/main");
-      } catch (error) {
-        alert("로그인 실패");
-        setAccessToken(null);
-        setMemberId(null);
-      }
+      navigate("/main");
     } catch (error) {
       alert("로그인 실패");
     }

@@ -4,6 +4,9 @@ import store from "../../../store/store.js";
 import createAuthClient from "../apis/createAuthClient.js";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const BattleGameListPage = () => {
   const navigate = useNavigate();
@@ -20,6 +23,9 @@ const BattleGameListPage = () => {
   );
 
   const searchKeyword = useRef(null);
+  const battleRoomTitle = useRef(null);
+  const battleRoomPassword = useRef(null);
+  const battleRoomRound = useRef(null);
   const [battleList, setBattleList] = useState([]);
   const [currentBattleList, setCurrentBattleList] = useState([]);
 
@@ -80,6 +86,27 @@ const BattleGameListPage = () => {
       //   }
       // ]
       // navigate() // 배틀 페이지로 이동
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createBattleRoom = async () => {
+    try {
+      const createRes = await authClient({
+        method: "POST",
+        url: `${baseURL}/battle/room`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          title: battleRoomTitle.current.value,
+          password: battleRoomPassword.current.value,
+          round: battleRoomRound.current.value,
+        },
+      });
+
+      console.log(createRes);
     } catch (error) {
       console.log(error);
     }
@@ -190,9 +217,36 @@ const BattleGameListPage = () => {
     getRecord();
   }, []);
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   return (
     <>
       <div className="battle-list-entire-container">
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Example Modal"
+          className="modal"
+          overlayClassName="overlay"
+        >
+          <h3>방 생성 설정</h3>
+          <input ref={battleRoomTitle} type="text" placeholder="방 제목" />
+          <input
+            ref={battleRoomPassword}
+            type="text"
+            placeholder="방 비밀번호"
+          />
+          <input ref={battleRoomRound} type="text" placeholder="게임 라운드" />
+          <button onClick={createBattleRoom}>방 만들기</button>
+        </Modal>
         <Header />
         <div className="battle-list-outer-outer-container">
           <div className="battle-list-outer-container">
@@ -231,9 +285,7 @@ const BattleGameListPage = () => {
                   <button onClick={battleListRefresh}>새로고침</button>
                 </div>
                 <div className="battle-list-create-container">
-                  <button onClick={() => navigate("/battle-create")}>
-                    방 만들기
-                  </button>
+                  <button onClick={openModal}>방 만들기</button>
                 </div>
               </div>
             </div>
