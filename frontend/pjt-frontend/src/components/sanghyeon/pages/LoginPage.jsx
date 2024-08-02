@@ -4,6 +4,7 @@ import AccountButton from "../components/AccountButton.jsx";
 import "../../../css/LoginPage.css";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import createAuthClient from "../apis/createAuthClient.js";
 
 const LoginPage = () => {
   const {
@@ -34,6 +35,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const noAuthLogin = async () => {
+    console.log(baseURL);
     try {
       const res = await axios({
         method: "POST",
@@ -53,36 +55,31 @@ const LoginPage = () => {
 
       setAccessToken(accessToken);
       setMemberId(memberID);
-      navigate("/main");
+      try {
+        const authClient = createAuthClient(
+          baseURL,
+          () => accessToken,
+          setAccessToken
+        );
 
-      // if (accessToken && memberID) {
-      //   try {
-      //     const infoRes = await axios({
-      //       method: "GET",
-      //       url: `${baseURL}/user/${memberID}`,
-      //       headers: {
-      //         Authorization: `Bearer ${accessToken}`,
-      //       },
-      //     });
+        const userInfoRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/user`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-      //     const { userId, name, schoolName, birth } = infoRes.data;
-
-      //     if (userId && name && schoolName && birth) {
-      //       setUserId(userId);
-      //       setName(name);
-      //       setSchoolName(schoolName);
-      //       setBirth(birth);
-
-      //       navigate("/main");
-      //     } else {
-      //       alert("로그인 실패");
-      //     }
-      //   } catch (error) {
-      //     alert("로그인 실패");
-      //   }
-      // } else {
-      //   alert("로그인 실패");
-      // }
+        setUserId(userInfoRes.data.userId);
+        setName(userInfoRes.data.name);
+        setSchoolName(userInfoRes.data.schoolName);
+        setBirth(userInfoRes.data.birth);
+        navigate("/main");
+      } catch (error) {
+        alert("로그인 실패");
+        setAccessToken(null);
+        setMemberId(null);
+      }
     } catch (error) {
       alert("로그인 실패");
     }
@@ -108,11 +105,11 @@ const LoginPage = () => {
           <button onClick={noAuthLogin}>Login</button>
           <AccountButton buttonType="Sign Up" />
           <div className="find-and-kakao">
-            <div className="find-password" onClick={() => alert("미구현")}>
-              비밀번호 찾기...
-            </div>
-            <div className="find-password" onClick={() => alert("미구현")}>
-              카카오로 시작하기
+            <div
+              className="find-password"
+              onClick={() => navigate("/find-password")}
+            >
+              비밀번호 찾기
             </div>
           </div>
         </div>

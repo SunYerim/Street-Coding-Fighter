@@ -15,7 +15,7 @@
   width: 50vw;
   max-width: 500px;
   border-radius: 20px;
-  height: 60vh;
+  height: 65vh;
 }
 
 .signup-container input {
@@ -41,11 +41,16 @@
   margin-top: 30px;
 }
 
+.modal {
+  width: 100%;
+  height: 100%;
+}
+
 .modal-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0;
+  margin: 10;
 }
 
 .warning-img {

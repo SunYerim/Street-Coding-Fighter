@@ -1,0 +1,132 @@
+.solved-problem-entire-container {
+  height: 100vh;
+}
+
+.solved-problem-outer-outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.solved-problem-outer-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(27, 26, 85, 0.7);
+  width: 80vw;
+  max-width: 1200px;
+  border-radius: 20px;
+  height: 75vh;
+  margin: 20px;
+  padding: 30px;
+}
+
+.solved-problem-title-container {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+.solved-problem-title {
+  margin: 0;
+  color: white;
+  letter-spacing: 2px;
+  border: 2px solid white;
+  border-radius: 2px;
+}
+
+.solved-problem-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.solved-problem-ranking-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  padding: 10px;
+  width: 20%;
+}
+
+.solved-problem-chatting-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  padding: 10px;
+  width: 20%;
+}
+
+.solved-problem-inner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  padding: 10px;
+  width: 60%;
+  height: auto;
+}
+
+.solved-problem-problem {
+  width: 100%;
+  height: 70%;
+  border: 2px solid white;
+  border-radius: 2px;
+}
+
+code * {
+  font: 1.2rem "Fira Code", monospace !important;
+  font-weight: bold !important;
+}
+
+.solved-problem-answer {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+  border-radius: 2px;
+}
+
+.solved-problem-upper-answer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.solved-problem-lower-answer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.solved-problem-answer button {
+  width: 15vw;
+  margin: 2%;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+}

@@ -10,6 +10,7 @@ function MainPage() {
         <MainSelectModeBox mode="싱글플레이" />
         <MainSelectModeBox mode="멀티플레이" />
         <MainSelectModeBox mode="1 vs 1" />
+        <MainSelectModeBox mode="랭킹" />
       </div>
     </>
   );

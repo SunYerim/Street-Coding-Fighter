@@ -7,14 +7,17 @@ import { useNavigate } from "react-router-dom";
 import store from "../../../store/store.js";
 
 function SignUpPage() {
-  const { baseURL } = store((state) => ({
+  const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
+    registerInfo: state.registerInfo,
+    setRegisterInfo: state.setRegisterInfo,
   }));
 
   const userId = useRef(null);
   const name = useRef(null);
   const password1 = useRef(null);
   const password2 = useRef(null);
+  const email = useRef(null);
   const schoolName = useRef(null);
   const birth = useRef(null);
   const navigate = useNavigate();
@@ -33,7 +36,9 @@ function SignUpPage() {
     setModalIsOpen(false);
   };
 
-  const signUp = async function () {
+  const signUp = async (event) => {
+    event.preventDefault();
+
     if (!idCheckComplete.current) {
       setErrorMessage("아이디 중복 확인을 해주세요.");
       openModal();
@@ -44,23 +49,16 @@ function SignUpPage() {
       setErrorMessage("비밀번호가 일치하지 않습니다.");
       openModal();
     } else {
-      try {
-        const res = await axios({
-          method: "POST",
-          url: `${baseURL}/user/join`,
-          data: {
-            userId: userId.current.value,
-            name: name.current.value,
-            password: password1.current.value,
-            schoolName: schoolName.current.value,
-            birth: birth.current.value,
-          },
-        });
-        navigate("/login");
-      } catch (error) {
-        setErrorMessage("회원가입에 실패했습니다.");
-        openModal();
-      }
+      setRegisterInfo({
+        userId: userId.current.value,
+        name: name.current.value,
+        password: password1.current.value,
+        email: email.current.value,
+        schoolName: schoolName.current.value,
+        birth: birth.current.value,
+        characterType: "",
+      });
+      navigate("/signup-character");
     }
   };
 
@@ -71,17 +69,18 @@ function SignUpPage() {
         url: `${baseURL}/user/validate/${userId.current.value}`,
       });
 
-      if (idCheckRes.status === 200) {
-        setErrorMessage("사용 가능한 아이디입니다.");
-        openModal();
-        idCheckComplete.current = true;
-      } else {
+      setErrorMessage("사용 가능한 아이디입니다.");
+      openModal();
+      idCheckComplete.current = true;
+    } catch (error) {
+      if (error.response.status === 409) {
         setErrorMessage("이미 사용중인 아이디입니다.");
         openModal();
+      } else {
+        console.log(error.response);
+        setErrorMessage("아이디 중복 확인에 실패했습니다.");
+        openModal();
       }
-    } catch (error) {
-      setErrorMessage("아이디 중복 확인에 실패했습니다.");
-      openModal();
     }
   };
 
@@ -89,7 +88,7 @@ function SignUpPage() {
     <>
       <div className="signup-outer-container">
         <h1 className="signup-title">SIGN UP</h1>
-        <div className="signup-container">
+        <form className="signup-container" onSubmit={signUp}>
           <div className="signup-userId">
             <input type="text" ref={userId} placeholder="아이디" />
             <div onClick={idCheck} className="duplicate-chk">
@@ -99,6 +98,7 @@ function SignUpPage() {
           <input type="text" ref={name} placeholder="닉네임" />
           <input type="password" ref={password1} placeholder="비밀번호" />
           <input type="password" ref={password2} placeholder="비밀번호 확인" />
+          <input type="email" ref={email} placeholder="이메일 주소" />
           <input type="text" ref={schoolName} placeholder="학교" />
           <input
             type="date"
@@ -106,8 +106,8 @@ function SignUpPage() {
             placeholder="생일"
             className="custom-date-input"
           />
-          <button onClick={signUp}>CREATE</button>
-        </div>
+          <button type="submit">NEXT</button>
+        </form>
       </div>
       <Modal
         isOpen={modalIsOpen}

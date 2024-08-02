@@ -4,7 +4,6 @@ import Modal from "react-modal";
 import "../../../css/Setting.css";
 import settingIcon from "../../../assets/settingIcon.png";
 import close from "../../../assets/close.png";
-import axios from "axios";
 import store from "../../../store/store.js";
 import createAuthClient from "../apis/createAuthClient.js";
 
@@ -40,7 +39,7 @@ const Setting = () => {
     try {
       const logoutRes = await authClient({
         method: "POST",
-        url: `${baseURL}/user/logout/${memberId}`,
+        url: `${baseURL}/user/logout`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
