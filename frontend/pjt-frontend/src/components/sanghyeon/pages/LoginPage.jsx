@@ -4,6 +4,8 @@ import AccountButton from "../components/AccountButton.jsx";
 import "../../../css/LoginPage.css";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import { Howl } from 'howler';
+import SoundStore from "../../../stores/SoundStore.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
 
 const LoginPage = () => {
@@ -33,8 +35,10 @@ const LoginPage = () => {
   const userId = useRef(null);
   const password = useRef(null);
   const navigate = useNavigate();
+  const { playStartSound } = SoundStore();
 
   const noAuthLogin = async () => {
+    playStartSound();
     console.log(baseURL);
     try {
       const res = await axios({

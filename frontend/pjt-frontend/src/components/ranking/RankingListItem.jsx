@@ -31,10 +31,11 @@ const RankingItemContainer = styled.div`
 `;
 
 const Rank = styled.h4`
-  margin: 0 20px 0 0;
-  width : 20px;
-  font-size: 1.5em;
+  margin: 0px 0px 0 0;
+  width : 30px;
+  font-size: 1.3em;
   color: #495057;
+  paddingLeft: 10px;
 `;
 
 const ProfileImageContainer = styled.div`

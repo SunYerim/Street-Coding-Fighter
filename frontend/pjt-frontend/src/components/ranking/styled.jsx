@@ -38,6 +38,40 @@ const RankingListSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  overflow-y: auto;
+  height: 500px;
+  /* 스크롤바의 폭 너비 */
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* 스크롤바 막대 */
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      to bottom,
+      rgb(148, 226, 148),
+      rgb(72, 129, 199),
+      rgb(229, 141, 229),
+      pink,
+      rgb(228, 103, 103)
+    );
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(214, 193, 212, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      to bottom,
+      rgb(148, 226, 148),
+      rgb(72, 129, 199),
+      rgb(229, 141, 229),
+      pink,
+      rgb(228, 103, 103)
+    );
+  }
 `;
 const RankingInfoContainer = styled.div`
   display: flex;

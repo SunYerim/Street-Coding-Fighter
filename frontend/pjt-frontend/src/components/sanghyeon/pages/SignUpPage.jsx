@@ -2,7 +2,6 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import "../../../css/SignUpPage.css";
 import Modal from "react-modal";
-import warningSign from "../../../assets/warningSign.png";
 import { useNavigate } from "react-router-dom";
 import store from "../../../store/store.js";
 
@@ -83,7 +82,7 @@ function SignUpPage() {
       }
     }
   };
-
+  const warningSign = "/warningSign.png"
   return (
     <>
       <div className="signup-outer-container">

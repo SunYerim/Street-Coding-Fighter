@@ -1,10 +1,11 @@
 import "../../../css/Header.css";
-import userIcon from "../../../assets/userIcon.png";
+// import userIcon from "../../../../public/userIcon.png";
 import Setting from "./Setting";
 import { useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
+  const userIcon = "userIcon.png"
   return (
     <>
       <div className="header-container">

@@ -1,14 +1,19 @@
-import "../../../index.css";
-import "../../../css/TitlePage.css";
-import TitleLogo from "../components/TitleLogo";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-
+import '../../../index.css';
+import '../../../css/TitlePage.css';
+import TitleLogo from '../components/TitleLogo';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import SoundStore from '../../../stores/SoundStore';
 function TitlePage() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
-
+  const { playClickSound } = SoundStore();
+  const handleClick = () =>{
+    navigate('/login');
+    console.log('play click')
+    playClickSound();
+  }
   return (
     <>
       <div className="title-container">
@@ -18,12 +23,12 @@ function TitlePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 2 }}
-        className={`start-button-container ${isVisible ? "visible" : ""}`}
+        className={`start-button-container ${isVisible ? 'visible' : ''}`}
         onAnimationComplete={() => setIsVisible(true)}
       >
         <button
           className="start-button"
-          onClick={() => navigate("/login")}
+          onClick={handleClick}
           disabled={!isVisible} // 비활성화 상태 추가
         >
           Start

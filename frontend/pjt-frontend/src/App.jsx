@@ -19,15 +19,22 @@ import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
-import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
-import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
-import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
-import store from "./store/store.js";
+import SoundStore from "./stores/SoundStore.jsx";
+import React, { useEffect } from 'react';
 
 function App() {
-  const { accessToken } = store((state) => ({
-    accessToken: state.accessToken,
-  }));
+  const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } = SoundStore();
+
+  useEffect(() => {
+    // 배경음악 초기화 및 재생
+    initializeBackgroundMusic('/BGM-1.mp3');
+
+    return () => {
+      // 컴포넌트가 언마운트될 때 배경음악 정지
+      console.log('stop music');
+      stopBackgroundMusic();
+    };
+  }, [initializeBackgroundMusic, stopBackgroundMusic]);
 
   return (
     <>
