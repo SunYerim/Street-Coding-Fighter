@@ -19,10 +19,16 @@ import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
-import SoundStore from "./stores/SoundStore.jsx";
-import React, { useEffect } from 'react';
-import store from "./store/store.js";
+import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
+import store from "./store/store.js";
+
+
+import { useEffect } from 'react';
+import SoundStore from "./stores/SoundStore.jsx";
+import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
+
+
 function App() {
   const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } = SoundStore();
   const { accessToken } = store((state) => ({
