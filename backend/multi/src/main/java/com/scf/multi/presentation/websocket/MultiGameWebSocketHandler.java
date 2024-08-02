@@ -76,7 +76,6 @@
             sessionRooms.put(session.getId(), roomId);
             rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
 
-            System.out.println(session.getId());
             broadcastMessageToRoom(room.getRoomId(), username + " 님이 게임에 참가 하였습니다.");
         }
 
