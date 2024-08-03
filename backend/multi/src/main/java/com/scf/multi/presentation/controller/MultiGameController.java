@@ -2,9 +2,9 @@ package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
-import com.scf.multi.domain.dto.room.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomRequest;
-import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.room.RoomResponse;
+import com.scf.multi.domain.model.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,8 +27,8 @@ public class MultiGameController {
     private final MultiGameService multiGameService;
 
     @GetMapping("/room")
-    public ResponseEntity<List<RoomRequest.ListDTO>> roomList() {
-        List<RoomRequest.ListDTO> rooms = multiGameService.findAllRooms();
+    public ResponseEntity<List<RoomResponse.ListDTO>> roomList() {
+        List<RoomResponse.ListDTO> rooms = multiGameService.findAllRooms();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
@@ -47,7 +47,7 @@ public class MultiGameController {
 
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
-        @RequestBody @Valid CreateRoomDTO createRoomDTO) {
+        @RequestBody @Valid RoomRequest.CreateRoomDTO createRoomDTO) {
         String roomId = multiGameService.createRoom(memberId, username, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }

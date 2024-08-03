@@ -8,7 +8,7 @@
     import com.scf.multi.domain.dto.socket_message.Content;
     import com.scf.multi.domain.dto.socket_message.Message;
     import com.scf.multi.domain.dto.user.GameRank;
-    import com.scf.multi.domain.dto.user.Player;
+    import com.scf.multi.domain.model.Player;
     import com.scf.multi.domain.dto.user.RoundRank;
     import com.scf.multi.domain.dto.user.Solved;
     import com.scf.multi.domain.model.MultiGameRoom;
@@ -165,7 +165,7 @@
                     Optional<WebSocketSession> hostSession = rooms.get(roomId).stream().findFirst();
                     String sessionId = hostSession.get().getId();
                     Player newHost = sessionPlayers.get(sessionId);
-                    newHost.setIsHost(true);
+                    newHost.setHost();
                     broadcastMessageToRoom(roomId, newHost.getUserId().toString());
                 }
             }

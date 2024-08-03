@@ -1,14 +1,13 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
+import com.scf.multi.domain.dto.room.RoomResponse;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.problem.ProblemAnswer;
 import com.scf.multi.domain.dto.problem.ProblemChoice;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.problem.ProblemType;
-import com.scf.multi.domain.dto.room.CreateRoomDTO;
-import com.scf.multi.domain.dto.room.RoomRequest;
-import com.scf.multi.domain.dto.room.RoomRequest.ListDTO;
-import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.model.Player;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
@@ -27,11 +26,11 @@ public class MultiGameService {
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
 
-    public List<RoomRequest.ListDTO> findAllRooms() {
+    public List<RoomResponse.ListDTO> findAllRooms() {
         List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
 
         return rooms.stream().map(room ->
-            ListDTO.builder()
+            RoomResponse.ListDTO.builder()
                 .roomId(room.getRoomId())
                 .title(room.getTitle())
                 .hostname(room.getHostname())

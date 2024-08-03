@@ -1,8 +1,7 @@
 package com.scf.multi.domain.model;
 
-import com.scf.multi.domain.dto.user.GameRank;
-import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.problem.Problem;
+import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
