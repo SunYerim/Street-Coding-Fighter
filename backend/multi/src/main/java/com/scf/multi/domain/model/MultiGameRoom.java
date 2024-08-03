@@ -203,6 +203,8 @@ public class MultiGameRoom {
 
     public void exitRoom(Player exitPlayer) {
         this.players.remove(exitPlayer);
+        this.leaderBoard.remove(exitPlayer.getUserId());
+        this.scoreBoard.remove(exitPlayer.getUserId());
     }
 
     public void updateHost(Player newHost) {
