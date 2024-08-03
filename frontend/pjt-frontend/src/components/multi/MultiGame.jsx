@@ -5,9 +5,9 @@ import '../../css/Timer.css';
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
 import MultiResultModal from "./MultiResultModal.jsx";
-import socket from "../game/server.js"
+import newSocket from "../game/server.js"
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import FillInTheBlank from "../game/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
@@ -28,9 +28,14 @@ import MultipleChoice from "../game/MultipleChoice";
 
 export default function MultiGame() {
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const { roomId, userId, username } = location.state;
+  const socket = newSocket(roomId, userId, username);
+
   const [start, setStart] = useState(0);
   const [headerUser, setHeaderUser] = useState('');
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState(username);
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -45,23 +50,37 @@ export default function MultiGame() {
 
   const handleStart = () => {
     setStart(1);
-    socket.emit("start");
+    // socket.emit("start");
   };
 
   // 문제요청 함수
   // 2. 문제받기 정의
   const requestProblems = (gameRound) => {
-    socket.emit('requestProblems', gameRound, (response) => {
-      if (response.ok) {
-        setProblems(response.problems);
-      } else {
-        console.error(response.err);
-      }
-    });
+    // socket.emit('requestProblems', gameRound, (response) => {
+    //   if (response.ok) {
+    //     setProblems(response.problems);
+    //   } else {
+    //     console.error(response.err);
+    //   }
+    // });
   };
 
 
   useEffect(() => {
+
+    if (socket) {
+      socket.on('message', (message) => {
+        console.log('WebSocket message received:', message);
+      });
+
+      // 컴포넌트 언마운트 시 소켓 연결 해제
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [socket]);
+
+
     // 메세지 목록 업데이트
     // 1. 메세지 주고받기
     socket.on("message", (message) => {
@@ -69,56 +88,56 @@ export default function MultiGame() {
     });
 
     // 임시) 유저정보 받기
-    askUserName();
+    // askUserName();
 
     // 유저 리스트 이벤트를 수신하고 유저 목록을 업데이트
     // 0. 입장한 유저정보 받기
-    socket.on('userList', (user) => {
-      setUserList(user);
-    });
-    socket.on('headerUser', (headerUser) => {
-      setHeaderUser(headerUser);
-    });
+    // socket.on('userList', (user) => {
+    //   setUserList(user);
+    // });
+    // socket.on('headerUser', (headerUser) => {
+    //   setHeaderUser(headerUser);
+    // });
 
-    socket.on('gameStart', () => {
-      setStart(1);
-      requestProblems(3);
-    })
+    // socket.on('gameStart', () => {
+    //   setStart(1);
+    //   requestProblems(3);
+    // })
 
-    socket.on('roundEnd', () => {
-      setModalOpen(true); // 라운드 종료 시 모달 창 열기
-      setTimeout(() => {
-        setModalOpen(false);  // 5초 후 모달 창 닫기
-        if (currentProblemIndex < problems.length - 1) {
-          setCurrentProblemIndex(currentProblemIndex + 1); // 다음 문제로 인덱스 증가
-          setTimerEnded(false); // 타이머 상태 리셋
-        } else {
-          setStart(0); // 모든 라운드가 끝났다면 게임 대기 상태로 전환
-        }  
-      }, 5000);
-    });
+    // socket.on('roundEnd', () => {
+    //   setModalOpen(true); // 라운드 종료 시 모달 창 열기
+    //   setTimeout(() => {
+    //     setModalOpen(false);  // 5초 후 모달 창 닫기
+    //     if (currentProblemIndex < problems.length - 1) {
+    //       setCurrentProblemIndex(currentProblemIndex + 1); // 다음 문제로 인덱스 증가
+    //       setTimerEnded(false); // 타이머 상태 리셋
+    //     } else {
+    //       setStart(0); // 모든 라운드가 끝났다면 게임 대기 상태로 전환
+    //     }  
+    //   }, 5000);
+    // });
 
 
     // 컴포넌트가 언마운트될 때 이벤트 수신 해제
-    return () => {
-      socket.off('message');
-      socket.off('userList');
-      socket.off('headerUser');
-      socket.off('gameStart');
-      socket.off('roundEnd');
-    };
-  }, [currentProblemIndex, problems.length]);
+    // return () => {
+    //   socket.off('message');
+    //   socket.off('userList');
+    //   socket.off('headerUser');
+    //   socket.off('gameStart');
+    //   socket.off('roundEnd');
+    // };
+  // }, [currentProblemIndex, problems.length]);
 
 
-  const askUserName = () => {
-    const userName = prompt("이름입력ㄱㄱ");
+  // const askUserName = () => {
+  //   const userName = prompt("이름입력ㄱㄱ");
 
-    socket.emit("login", userName, (res) => {
-      if(res?.ok) {
-        setUser(res.data);
-      }
-    });
-  };
+  //   socket.emit("login", userName, (res) => {
+  //     if(res?.ok) {
+  //       setUser(res.data);
+  //     }
+  //   });
+  // };
 
   
   const sendMessage = (event) => {

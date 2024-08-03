@@ -3,7 +3,7 @@ import '../../css/PasswordModal.css';
 import '../../css/Button.css';
 
 
-function Modal({ onClose, onSubmit }) {
+function PasswordModal({ onClose, onSubmit }) {
   const modalRef = useRef();
 
   const handleClickOutside = (event) => {
@@ -20,14 +20,12 @@ function Modal({ onClose, onSubmit }) {
   }, []);
 
   return (
-    <div className="modal">
+    <div className="password-modal">
       <div className="modal-content" ref={modalRef}>
         <span className="close" onClick={onClose}>&times;</span>
         <form className="password-form" onSubmit={onSubmit}>
-          <label>
-            Password:
-            <input className="password-input" type="password" name="password" />
-          </label>
+          <h2>PassWord : </h2>
+          <input className="password-input" type="password" name="password" required />
           <button className='password-button' type="submit">입장</button>
         </form>
       </div>
@@ -35,4 +33,4 @@ function Modal({ onClose, onSubmit }) {
   );
 }
 
-export default Modal;
+export default PasswordModal;

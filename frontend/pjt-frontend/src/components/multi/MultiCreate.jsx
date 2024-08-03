@@ -8,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 export default function MultiCreate() {
   const navigate = useNavigate();
 
-  const baseUrl = "192.168.30.171:8080";
-  const memberId = 22;
-  const username = "Ethan!";
+  //*** ssafy11s.com으로 수정하기
+  const baseUrl = "localhost:8080";
+  //*** 스토어에서 꺼내오기
+  const memberId = 35;
+  const username = "hermes";
 
   const createMultiRoom = async (data) => {
     data.preventDefault();
@@ -30,23 +32,22 @@ export default function MultiCreate() {
 
       const response = await axios.post(`http://${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
       console.log(response.data)
-      const roomId = response.data.roomId;
-      navigate(`/multi/room/${roomId}`);  
+      const roomId = response.data;
+      navigate(`/multi/room/${roomId}`, { state: { roomId: roomId, userId: memberId, username: username } });  
 
-
-      const ws = new WebSocket(`ws://${baseUrl}/multi?roomId=${roomId}&userId=${memberId}&username=${username}`);
-      ws.onopen = () => {
-        console.log('WebSocket connection established');
-      };
-      ws.onmessage = (message) => {
-        console.log('WebSocket message received:', message);
-      };
-      ws.onclose = () => {
-        console.log('WebSocket connection closed');
-      };
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-      };
+      // const ws = new WebSocket(`ws://${baseUrl}/multi?roomId=${roomId}&userId=${memberId}&username=${username}`);
+      // ws.onopen = () => {
+      //   console.log('WebSocket connection established');
+      // };
+      // ws.onmessage = (message) => {
+      //   console.log('WebSocket message received:', message);
+      // };
+      // ws.onclose = () => {
+      //   console.log('WebSocket connection closed');
+      // };
+      // ws.onerror = (error) => {
+      //   console.error('WebSocket error:', error);
+      // };
 
     } catch (error) {
       console.error("Error creating room:", error);
