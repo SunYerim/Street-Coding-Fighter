@@ -10,8 +10,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      network:
-        ipv4_address: 172.26.0.2
+      - network
     volumes:
       - db_data_user:/var/lib/mysql/user
 
@@ -23,8 +22,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     networks:
-      network:
-        ipv4_address: 172.26.0.3
+      - network
     volumes:
       - db_data_problem:/var/lib/mysql/problem
 
@@ -33,16 +31,14 @@ services:
     ports:
       - "6379:6379"
     networks:
-      network:
-        ipv4_address: 172.26.0.4
+      - network
 
   redis-rank:
     image: redis:latest
     ports:
       - "6380:6380"
     networks:
-      network:
-        ipv4_address: 172.26.0.5
+      - network
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -56,8 +52,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      network:
-        ipv4_address: 172.26.0.6
+      - network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -67,8 +62,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      network:
-        ipv4_address: 172.26.0.7
+      - network
 
   user-server:
     image: zlxldgus123/user
@@ -91,8 +85,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      network:
-        ipv4_address: 172.26.0.8
+      - network
 
   problem-server:
     image: zlxldgus123/problem
@@ -115,8 +108,7 @@ services:
     ports:
       - "8081:8081"
     networks:
-      network:
-        ipv4_address: 172.26.0.9
+      - network
 
   multi-server:
     image: zlxldgus123/multi
@@ -141,8 +133,7 @@ services:
     ports:
       - "8082:8082"
     networks:
-      network:
-        ipv4_address: 172.26.0.10
+      - network
 
   rank-server:
     image: zlxldgus123/rank
@@ -166,15 +157,12 @@ services:
     ports:
       - "8083:8083"
     networks:
-      network:
-        ipv4_address: 172.26.0.11
+      - network
 
 networks:
   network:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.26.0.0/16
+    external: true
+    driver: bridge
 
 volumes:
   db_data_user:
