@@ -1,7 +1,8 @@
 package com.scf.multi.global.config;
 
-import com.scf.multi.domain.dto.user.GameRank;
+import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
+import java.util.List;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -18,22 +19,22 @@ import java.util.Map;
 public class KafkaProducerConfig {
 
     @Bean
-    public ProducerFactory<String, Solved> solvedDTOProducerFactory() {
+    public ProducerFactory<String, List<Solved>> solvedDTOProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs(Solved.class));
     }
 
     @Bean
-    public KafkaTemplate<String, Solved> solvedDTOKafkaTemplate() {
+    public KafkaTemplate<String, List<Solved>> solvedDTOKafkaTemplate() {
         return new KafkaTemplate<>(solvedDTOProducerFactory());
     }
 
     @Bean
-    public ProducerFactory<String, GameRank> resultDTOProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs(GameRank.class));
+    public ProducerFactory<String, List<Rank>> resultDTOProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs(Rank.class));
     }
 
     @Bean
-    public KafkaTemplate<String, GameRank> resultDTOKafkaTemplate() {
+    public KafkaTemplate<String, List<Rank>> resultDTOKafkaTemplate() {
         return new KafkaTemplate<>(resultDTOProducerFactory());
     }
 

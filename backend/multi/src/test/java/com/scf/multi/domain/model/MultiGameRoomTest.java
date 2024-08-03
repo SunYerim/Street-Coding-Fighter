@@ -10,8 +10,8 @@ import com.scf.multi.domain.dto.problem.ProblemAnswer;
 import com.scf.multi.domain.dto.problem.ProblemChoice;
 import com.scf.multi.domain.dto.problem.ProblemContent;
 import com.scf.multi.domain.dto.problem.ProblemType;
-import com.scf.multi.domain.dto.user.GameRank;
 import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.Arrays;
@@ -314,7 +314,7 @@ class MultiGameRoomTest {
         gameRoom.add("secret", hostPlayer);
 
         // when
-        gameRoom.updateScore(hostPlayer.getUserId(), 10);
+        gameRoom.updateScoreBoard(hostPlayer.getUserId(), 10);
 
         // then
         assertThat(gameRoom.getScoreBoard().get(hostPlayer.getUserId())).isEqualTo(10);
@@ -326,7 +326,7 @@ class MultiGameRoomTest {
 
         // when
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            gameRoom.updateScore(otherPlayer.getUserId(), 10);
+            gameRoom.updateScoreBoard(otherPlayer.getUserId(), 10);
         });
 
         // then
@@ -369,11 +369,12 @@ class MultiGameRoomTest {
         gameRoom.add("secret", hostPlayer);
         gameRoom.add("secret", otherPlayer);
 
-        gameRoom.updateScore(hostPlayer.getUserId(), 10);
-        gameRoom.updateScore(otherPlayer.getUserId(), 15);
+        gameRoom.updateLeaderBoard(hostPlayer.getUserId(), 10);
+        gameRoom.updateLeaderBoard(otherPlayer.getUserId(), 15);
 
         // when
-        List<GameRank> ranks = gameRoom.calculateRank();
+        List<Rank> ranks = gameRoom.getGameRank();
+        System.out.println(ranks.toString());
 
         // then
         assertThat(ranks).hasSize(2);

@@ -14,20 +14,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
+import com.scf.multi.domain.dto.room.RoomResponse;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.problem.ProblemAnswer;
 import com.scf.multi.domain.dto.problem.ProblemChoice;
 import com.scf.multi.domain.dto.problem.ProblemContent;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.problem.ProblemType;
-import com.scf.multi.domain.dto.room.CreateRoomDTO;
-import com.scf.multi.domain.dto.room.RoomRequest;
-import com.scf.multi.domain.dto.room.RoomRequest.ListDTO;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -130,7 +128,7 @@ class MultiGameControllerTest {
     void roomListTest() throws Exception {
 
         // Given
-        RoomRequest.ListDTO listDTO = ListDTO.builder()
+        RoomResponse.ListDTO listDTO = RoomResponse.ListDTO.builder()
             .roomId(gameRoom.getRoomId())
             .title(gameRoom.getTitle())
             .maxPlayer(gameRoom.getMaxPlayer())
@@ -138,7 +136,7 @@ class MultiGameControllerTest {
             .curPlayer(gameRoom.getPlayers().size())
             .isLock(gameRoom.getPassword() != null)
             .build();
-        List<RoomRequest.ListDTO> rooms = List.of(listDTO);
+        List<RoomResponse.ListDTO> rooms = List.of(listDTO);
         when(multiGameService.findAllRooms()).thenReturn(rooms);
 
         // When & Then
