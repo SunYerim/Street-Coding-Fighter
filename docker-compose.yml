@@ -10,7 +10,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.2
     volumes:
       - db_data_user:/var/lib/mysql/user
@@ -23,7 +23,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.3
     volumes:
       - db_data_problem:/var/lib/mysql/problem
@@ -33,7 +33,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.4
 
   redis-rank:
@@ -41,7 +41,7 @@ services:
     ports:
       - "6380:6380"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.5
 
   kafka:
@@ -56,7 +56,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.6
 
   zookeeper:
@@ -67,7 +67,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.7
 
   user-server:
@@ -91,7 +91,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.8
 
   problem-server:
@@ -115,7 +115,7 @@ services:
     ports:
       - "8081:8081"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.9
 
   multi-server:
@@ -141,7 +141,7 @@ services:
     ports:
       - "8082:8082"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.10
 
   rank-server:
@@ -166,11 +166,11 @@ services:
     ports:
       - "8083:8083"
     networks:
-      network:
+      default_bridge:
         ipv4_address: 172.26.0.11
 
 networks:
-  network:
+  default_bridge:
     ipam:
       driver: default
       config:
