@@ -1,5 +1,6 @@
 package com.scf.problem.domain.model;
 
+import com.scf.problem.domain.dto.ProblemRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,4 +35,11 @@ public class ProblemChoice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id", nullable = false)
     private ProblemInfo problemInfo;
+
+    public static ProblemChoice create(ProblemRequest.ProblemChoiceDTO problemChoice, ProblemInfo problem) {
+        return ProblemChoice.builder()
+            .choiceText(problemChoice.getChoiceText())
+            .problemInfo(problem)
+            .build();
+    }
 }

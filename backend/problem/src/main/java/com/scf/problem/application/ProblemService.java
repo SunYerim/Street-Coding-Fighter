@@ -1,5 +1,6 @@
 package com.scf.problem.application;
 
+import com.scf.problem.domain.dto.ProblemRequest;
 import com.scf.problem.domain.dto.ProblemResponse;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemAnswerDTO;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemChoiceDTO;
@@ -41,9 +42,16 @@ public class ProblemService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void addProblem(ProblemRequest.ProblemInfoDTO problemInfo) {
+        ProblemInfo problem = ProblemInfo.create(problemInfo);
+        problemInfoRepository.save(problem);
+    }
+
     private ProblemResponse.ProblemInfoDTO convertToDTO(ProblemInfo problem) {
 
         ProblemContentDTO contentDTO = mapToProblemContentDTO(problem.getProblemContent());
+        Collections.shuffle(problem.getProblemChoices());
         List<ProblemChoiceDTO> choiceDTOs = mapToProblemChoiceDTOs(problem.getProblemChoices());
         List<ProblemAnswerDTO> answerDTOs = mapToProblemAnswerDTOs(problem.getProblemAnswers());
 

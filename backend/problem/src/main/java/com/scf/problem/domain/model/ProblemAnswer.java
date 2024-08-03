@@ -1,5 +1,6 @@
 package com.scf.problem.domain.model;
 
+import com.scf.problem.domain.dto.ProblemRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,4 +41,13 @@ public class ProblemAnswer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id", nullable = false)
     private ProblemInfo problemInfo;
+
+    public static ProblemAnswer create(ProblemRequest.ProblemAnswerDTO problemAnswerInfo, ProblemInfo problem, int idx) {
+        return ProblemAnswer.builder()
+            .blankPosition(problemAnswerInfo.getBlankPosition())
+            .correctChoice(problem.getProblemChoices().get(idx))
+            .correctAnswerText(problemAnswerInfo.getCorrectAnswerText())
+            .problemInfo(problem)
+            .build();
+    }
 }
