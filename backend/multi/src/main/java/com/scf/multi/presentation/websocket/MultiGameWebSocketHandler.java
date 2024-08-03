@@ -80,7 +80,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         ResponseMessage attainScoreObj = ResponseMessage.builder()
             .type("attainScore")
-            .payload(Integer.toString(attainedScore))
+            .payload(attainedScore)
             .build();
 
         String attainScoreMessage = JsonConverter.getInstance().toString(attainScoreObj);
