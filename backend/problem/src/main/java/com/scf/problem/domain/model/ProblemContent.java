@@ -1,5 +1,6 @@
 package com.scf.problem.domain.model;
 
+import com.scf.problem.domain.dto.ProblemRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,4 +38,13 @@ public class ProblemContent {
     @MapsId
     @JoinColumn(name = "problem_id")
     private ProblemInfo problemInfo;
+
+    public static ProblemContent create(ProblemRequest.ProblemContentDTO problemContent, ProblemInfo problem) {
+
+        return ProblemContent.builder()
+            .content(problemContent.getContent())
+            .numberOfBlanks(problemContent.getNumberOfBlanks())
+            .problemInfo(problem)
+            .build();
+    }
 }

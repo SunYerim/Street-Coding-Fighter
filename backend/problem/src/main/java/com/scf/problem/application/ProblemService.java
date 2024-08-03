@@ -1,5 +1,6 @@
 package com.scf.problem.application;
 
+import com.scf.problem.domain.dto.ProblemRequest;
 import com.scf.problem.domain.dto.ProblemResponse;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemAnswerDTO;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemChoiceDTO;
@@ -11,6 +12,7 @@ import com.scf.problem.domain.model.ProblemInfo;
 import com.scf.problem.domain.repository.ProblemInfoRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,9 +42,16 @@ public class ProblemService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void addProblem(ProblemRequest.ProblemInfoDTO problemInfo) {
+        ProblemInfo problem = ProblemInfo.create(problemInfo);
+        problemInfoRepository.save(problem);
+    }
+
     private ProblemResponse.ProblemInfoDTO convertToDTO(ProblemInfo problem) {
 
         ProblemContentDTO contentDTO = mapToProblemContentDTO(problem.getProblemContent());
+        Collections.shuffle(problem.getProblemChoices());
         List<ProblemChoiceDTO> choiceDTOs = mapToProblemChoiceDTOs(problem.getProblemChoices());
         List<ProblemAnswerDTO> answerDTOs = mapToProblemAnswerDTOs(problem.getProblemAnswers());
 
@@ -88,9 +97,11 @@ public class ProblemService {
     private ProblemAnswerDTO mapToProblemAnswerDTO(ProblemAnswer answer) {
 
         ProblemChoiceDTO correctChoiceDTO = ProblemChoiceDTO.builder()
-            .choiceId(answer.getCorrectChoice().getChoiceId())
-            .problemId(answer.getCorrectChoice().getProblemInfo().getProblemId())
-            .choiceText(answer.getCorrectChoice().getChoiceText())
+            .choiceId(Optional.ofNullable(answer.getCorrectChoice())
+                .map(ProblemChoice::getChoiceId)
+                .orElse(null))
+            .problemId(answer.getProblemInfo().getProblemId())
+            .choiceText(answer.getCorrectAnswerText())
             .build();
 
         return ProblemAnswerDTO.builder()

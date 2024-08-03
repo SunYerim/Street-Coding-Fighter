@@ -1,6 +1,7 @@
 package com.scf.problem.presentation;
 
 import com.scf.problem.application.ProblemService;
+import com.scf.problem.domain.dto.ProblemRequest;
 import com.scf.problem.domain.dto.ProblemResponse.ProblemInfoDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,5 +34,12 @@ public class ProblemController {
 
         List<ProblemInfoDTO> randomProblems = problemService.getRandomProblems(limit);
         return new ResponseEntity<>(randomProblems, HttpStatus.OK);
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> addProblem(@RequestBody ProblemRequest.ProblemInfoDTO problem) {
+
+        problemService.addProblem(problem);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
