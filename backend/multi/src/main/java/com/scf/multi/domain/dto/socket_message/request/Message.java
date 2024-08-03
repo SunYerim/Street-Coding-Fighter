@@ -1,4 +1,4 @@
-package com.scf.multi.domain.dto.socket_message;
+package com.scf.multi.domain.dto.socket_message.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

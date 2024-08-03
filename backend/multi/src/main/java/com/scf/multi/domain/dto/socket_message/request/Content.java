@@ -1,4 +1,4 @@
-package com.scf.multi.domain.dto.socket_message;
+package com.scf.multi.domain.dto.socket_message.request;
 
 import com.scf.multi.domain.dto.problem.ProblemType;
 import java.util.Map;

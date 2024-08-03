@@ -69,8 +69,56 @@ public class ProblemService {
             .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(2L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
             .build();
 
+        Problem problem3 = Problem // 주관식
+            .builder()
+            .problemId(3L)
+            .problemType(ProblemType.SHORT_ANSWER_QUESTION)
+            .category("정렬")
+            .title("삽입 정렬")
+            .problemContent(ProblemContent.builder()
+                .content("답을 쓰세요.")
+                .numberOfBlank(0)
+                .problemId(2L)
+                .build()
+            )
+            .problemChoices(null)
+            .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(3L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
+            .build();
 
-        return List.of(problem1, problem2);
+        Problem problem4 = Problem // 주관식
+            .builder()
+            .problemId(4L)
+            .problemType(ProblemType.SHORT_ANSWER_QUESTION)
+            .category("정렬")
+            .title("삽입 정렬")
+            .problemContent(ProblemContent.builder()
+                .content("답을 쓰세요.")
+                .numberOfBlank(0)
+                .problemId(2L)
+                .build()
+            )
+            .problemChoices(null)
+            .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(4L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
+            .build();
+
+        Problem problem5 = Problem // 주관식
+            .builder()
+            .problemId(5L)
+            .problemType(ProblemType.SHORT_ANSWER_QUESTION)
+            .category("정렬")
+            .title("삽입 정렬")
+            .problemContent(ProblemContent.builder()
+                .content("답을 쓰세요.")
+                .numberOfBlank(0)
+                .problemId(2L)
+                .build()
+            )
+            .problemChoices(null)
+            .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(5L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
+            .build();
+
+
+        return List.of(problem1, problem2, problem3, problem4, problem5);
 
 //        return webClient.get()
 //            .uri("?limit=" + playRound)
