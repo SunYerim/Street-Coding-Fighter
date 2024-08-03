@@ -204,4 +204,9 @@ public class MultiGameRoom {
     public void exitRoom(Player exitPlayer) {
         this.players.remove(exitPlayer);
     }
+
+    public void updateHost(Player newHost) {
+        this.hostId = newHost.getUserId();
+        this.hostname = newHost.getUsername();
+    }
 }

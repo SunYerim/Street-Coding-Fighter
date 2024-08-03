@@ -142,6 +142,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
             
             newHost.setIsHost(true); // 방장으로 설정
+            room.updateHost(newHost); // 방장 정보 업데이트
             
             broadcastMessageToRoom(roomId, newHost.getUserId().toString()); // 새로운 방장 broadCasting
         }
