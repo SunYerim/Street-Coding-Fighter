@@ -41,57 +41,42 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://ssafy11s.com", "https://www.ssafy11s.com"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(), jwtTokenProvider,
-            objectMapper(), redisService, memberDetailService, jwtCookieUtil);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(), jwtTokenProvider, objectMapper(), redisService, memberDetailService, jwtCookieUtil);
         loginFilter.setFilterProcessesUrl("/user/public/login"); // 로그인 엔드포인트 설정.
 
         httpSecurity
-            .cors((corsCustomizer -> corsCustomizer.configurationSource(
-                new CorsConfigurationSource() {
-
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
-                        CorsConfiguration configuration = new CorsConfiguration();
-
-                        configuration.setAllowedOrigins(
-                            Arrays.asList("http://localhost:5173",
-                                "https://ssafy11s.com"));
-                        configuration.setAllowedMethods(
-                            Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(
-                            Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-                        configuration.setMaxAge(3600L);
-
-                        return configuration;
-                    }
-                })));
-        httpSecurity
+            .cors(Customizer.withDefaults()) // 기본 CORS 설정 사용
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(user -> user
-                .requestMatchers("/user/public/login", "/user/public/join",
-                    "/user/public/validate/**", "/user/public/request-verification-code",
-                    "/user/public/request-verification", "/user/public/change-password",
-                    "/user/public/reissue")
-                .permitAll()
-
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/user/public/login", "/user/public/join", "/user/public/validate/**", "/user/public/request-verification-code", "/user/public/request-verification", "/user/public/change-password", "/user/public/reissue").permitAll()
                 .anyRequest().authenticated())
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
             .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class) // 로그인 필터 추가
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();
     }
-
 }
