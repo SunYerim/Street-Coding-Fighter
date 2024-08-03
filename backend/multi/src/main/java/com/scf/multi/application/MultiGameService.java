@@ -106,17 +106,6 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public void exitRoom(String roomId, Long userId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        if (room == null) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
-        }
-
-        room.remove(userId);
-    }
-
     public int markSolution(String roomId, Player player, Solved solved) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
