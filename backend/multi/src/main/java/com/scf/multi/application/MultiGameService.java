@@ -95,6 +95,10 @@ public class MultiGameService {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
+        if (room == null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
+        }
+
         boolean isHost = room.getHostId().equals(userId);
 
         Player player = Player.builder()
