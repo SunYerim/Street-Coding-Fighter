@@ -1,14 +1,17 @@
 package com.scf.multi.domain.model;
 
 import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.user.GameRank;
+import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,13 +25,16 @@ public class MultiGameRoom {
     private final String title;
     private final String password;
     private final Integer maxPlayer;
+    private final Integer playRound;
 
     private final List<Problem> problems = new ArrayList<>();
     private final List<Player> players = Collections.synchronizedList(new ArrayList<>());
+    private final Map<Long, Integer> leaderBoard = Collections.synchronizedMap(new HashMap<>());
     private final Map<Long, Integer> scoreBoard = Collections.synchronizedMap(new HashMap<>());
-    private final Integer playRound;
+
     private Boolean isStart;
     private Integer round;
+    private final AtomicInteger curSubmitCount;
 
     @Builder
     public MultiGameRoom(String roomId, Long hostId, String hostname, String title, String password, Integer maxPlayer, Integer playRound) {
@@ -42,6 +48,7 @@ public class MultiGameRoom {
         this.playRound = playRound;
         this.isStart = false;
         this.round = 0;
+        this.curSubmitCount = new AtomicInteger(0);
     }
 
     public List<Player> getPlayers() {
@@ -71,6 +78,7 @@ public class MultiGameRoom {
 
         this.players.add(player);
         this.scoreBoard.put(player.getUserId(), 0);
+        this.leaderBoard.put(player.getUserId(), 0);
     }
 
     public void remove(Long userId) {
@@ -104,7 +112,7 @@ public class MultiGameRoom {
         this.isStart = true;
     }
 
-    public void updateScore(Long userId, int score) {
+    public void updateLeaderBoard(Long userId, int score) {
 
         boolean hasPlayer = this.players.stream()
             .anyMatch(player -> player.getUserId().equals(userId));
@@ -113,8 +121,20 @@ public class MultiGameRoom {
             throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
         }
 
-        int newScore = scoreBoard.get(userId) + score;
-        this.scoreBoard.put(userId, newScore);
+        int newScore = leaderBoard.get(userId) + score;
+        this.leaderBoard.put(userId, newScore);
+    }
+
+    public void updateScoreBoard(Long userId, int score) {
+
+        boolean hasPlayer = this.players.stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
+            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+        }
+
+        this.scoreBoard.put(userId, score);
     }
 
     public void nextRound() {
@@ -126,25 +146,62 @@ public class MultiGameRoom {
         this.round += 1;
     }
 
-    public List<GameRank> calculateRank() {
-        // scoreBoard의 userId와 score를 Rank 객체로 변환
-        List<GameRank> ranks = scoreBoard.entrySet().stream()
-            .map(entry -> GameRank.builder()
-                .userId(entry.getKey())
-                .username(players.stream()
-                    .filter(player -> player.getUserId().equals(entry.getKey()))
+    public List<Rank> getGameRank() {
+
+        List<Rank> ranks = leaderBoard.entrySet().stream()
+            .map(entry -> {
+                Long userId = entry.getKey();
+                String username = players.stream()
+                    .filter(player -> player.getUserId().equals(userId))
                     .map(Player::getUsername)
                     .findFirst()
-                    .orElse("Unknown"))
-                .score(entry.getValue())
-                .build())
-            .sorted((rank1, rank2) -> Integer.compare(rank2.getScore(), rank1.getScore()))
+                    .orElse("Unknown");
+
+                return Rank.builder()
+                    .userId(userId)
+                    .username(username)
+                    .score(entry.getValue())
+                    .build();
+            })
+            .sorted(Comparator.comparingInt(Rank::getScore).reversed())
             .collect(Collectors.toList());
 
-        for(int i=1; i<=ranks.size(); i++) {
-            ranks.get(i-1).setRank(i);
-        }
+        AtomicInteger rankCounter = new AtomicInteger(1);
+        ranks.forEach(rank -> rank.setRank(rankCounter.getAndIncrement()));
 
         return ranks;
+    }
+
+
+    public List<Rank> getRoundRank() {
+
+        List<Rank> ranks = scoreBoard.entrySet().stream()
+            .map(entry -> {
+                Long userId = entry.getKey();
+                String username = players.stream()
+                    .filter(player -> player.getUserId().equals(userId))
+                    .map(Player::getUsername)
+                    .findFirst()
+                    .orElse("Unknown");
+
+                return Rank.builder()
+                    .userId(userId)
+                    .username(username)
+                    .score(entry.getValue())
+                    .build();
+            })
+            .sorted(Comparator.comparingInt(Rank::getScore).reversed()) // Sort by score in descending order
+            .limit(3) // Limit to top 3
+            .collect(Collectors.toList());
+
+
+        AtomicInteger rankCounter = new AtomicInteger(1);
+        ranks.forEach(rank -> rank.setRank(rankCounter.getAndIncrement()));
+
+        return ranks;
+    }
+
+    public void exitRoom(Player exitPlayer) {
+        this.players.remove(exitPlayer);
     }
 }

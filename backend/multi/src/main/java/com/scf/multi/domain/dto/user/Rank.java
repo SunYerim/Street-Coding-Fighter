@@ -6,15 +6,15 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class RoundRank {
+public class Rank {
 
     private Long userId;
     private String username;
-    private int score;
-    private int rank;
+    private Integer score;
+    private Integer rank;
 
     @Builder
-    public RoundRank(Long userId, String username, Integer score, Integer rank) {
+    public Rank(Long userId, String username, Integer score, Integer rank) {
         this.userId = userId;
         this.username = username;
         this.score = score;

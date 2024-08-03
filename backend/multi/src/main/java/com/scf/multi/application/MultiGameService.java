@@ -7,7 +7,8 @@ import com.scf.multi.domain.dto.problem.ProblemAnswer;
 import com.scf.multi.domain.dto.problem.ProblemChoice;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.problem.ProblemType;
-import com.scf.multi.domain.model.Player;
+import com.scf.multi.domain.dto.socket_message.Content;
+import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
@@ -130,16 +131,17 @@ public class MultiGameService {
         List<ProblemAnswer> answers = problem.getProblemAnswers();
         ProblemType problemType = problem.getProblemType();
 
-        // 점수를 계산할 변수
+        // 점수 계산
         boolean isCorrect = compareWith(problemType, solved, answers);
-
+        int score = 0;
         if (isCorrect) {
-            int score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
-            room.updateScore(player.getUserId(), score);
-            return score;
+            score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
         }
 
-        return 0;
+        room.updateScoreBoard(player.getUserId(), score);
+        room.updateLeaderBoard(player.getUserId(), score);
+
+        return score;
     }
 
     public List<ProblemResponse.ListDTO> startGame(String roomId, Long userId) {
@@ -170,6 +172,21 @@ public class MultiGameService {
                 .problemChoices(problem.getProblemChoices())
                 .build())
             .toList();
+    }
+
+    public Solved makeSolved(MultiGameRoom room, Long userId, Content content) {
+
+        List<Problem> problems = room.getProblems();
+        Problem problem = problems.get(room.getRound());
+
+        return Solved
+            .builder()
+            .userId(userId)
+            .problemId(problem.getProblemId())
+            .solve(content.getSolve())
+            .solveText(content.getSolveText())
+            .submitTime(content.getSubmitTime())
+            .build();
     }
 
     private boolean compareWith(ProblemType problemType, Solved solved,

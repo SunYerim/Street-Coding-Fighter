@@ -4,7 +4,7 @@ import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.room.RoomResponse;
-import com.scf.multi.domain.model.Player;
+import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.Valid;
 import java.util.List;
