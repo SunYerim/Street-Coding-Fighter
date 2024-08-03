@@ -4,9 +4,8 @@ import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.problem.Problem;
-import com.scf.multi.domain.dto.socket_message.Content;
-import com.scf.multi.domain.dto.socket_message.Message;
+import com.scf.multi.domain.dto.socket_message.request.Message;
+import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
@@ -20,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.message.ObjectMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -55,7 +55,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         sessionRooms.put(session.getId(), roomId);
         rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
 
-        broadcastMessageToRoom(room.getRoomId(),
+        broadcastMessageToRoom(room.getRoomId(), "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
     }
 
@@ -78,7 +78,13 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         int attainedScore = multiGameService.markSolution(roomId, player, solved); // 문제 채점
 
-        session.sendMessage(new TextMessage(Integer.toString(attainedScore)));
+        ResponseMessage attainScoreObj = ResponseMessage.builder()
+            .type("attainScore")
+            .payload(Integer.toString(attainedScore))
+            .build();
+
+        String attainScoreMessage = JsonConverter.getInstance().toString(attainScoreObj);
+        session.sendMessage(new TextMessage(attainScoreMessage));
 
         int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
 
@@ -86,12 +92,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             room.nextRound(); // 다음 라운드 진행
 
-            List<Rank> gameRank = room.getGameRank();
             List<Rank> roundRank = room.getRoundRank();
-            String gameRankMsg = JsonConverter.getInstance().toString(gameRank);
-            String roundRankMsg = JsonConverter.getInstance().toString(roundRank);
-            broadcastMessageToRoom(roomId, roundRankMsg);
-            broadcastMessageToRoom(roomId, gameRankMsg);
+            broadcastMessageToRoom(roomId, "roundRank", roundRank);
+
+            List<Rank> gameRank = room.getGameRank();
+            broadcastMessageToRoom(roomId, "gameRank", gameRank);
 
             if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
 
@@ -131,7 +136,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             }
         }
 
-        broadcastMessageToRoom(roomId, exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
+        broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
         if (exitPlayer.getIsHost() && !rooms.get(roomId).isEmpty()) { // 방장 rotate
             Optional<WebSocketSession> newHostSession = rooms.get(roomId).stream().findFirst(); // 방에 연결된 플레이어 session 찾기
@@ -144,17 +149,27 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             newHost.setIsHost(true); // 방장으로 설정
             room.updateHost(newHost); // 방장 정보 업데이트
             
-            broadcastMessageToRoom(roomId, newHost.getUserId().toString()); // 새로운 방장 broadCasting
+            broadcastMessageToRoom(roomId, "newHost", newHost.getUserId()); // 새로운 방장 broadCasting
         }
     }
 
-    public void broadcastMessageToRoom(String roomId, String message) throws Exception {
+    public void broadcastMessageToRoom(String roomId, String type, Object payload) throws Exception {
 
         Set<WebSocketSession> roomSessions = rooms.get(roomId);
 
         if (roomSessions != null) {
+
             for (WebSocketSession session : roomSessions) {
+
                 if (session.isOpen()) {
+
+                    ResponseMessage responseMessage = ResponseMessage.builder()
+                        .type(type)
+                        .payload(payload)
+                        .build();
+
+                    String message = JsonConverter.getInstance().toString(responseMessage);
+
                     session.sendMessage(new TextMessage(message));
                 }
             }

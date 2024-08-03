@@ -7,7 +7,7 @@ import com.scf.multi.domain.dto.problem.ProblemAnswer;
 import com.scf.multi.domain.dto.problem.ProblemChoice;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.problem.ProblemType;
-import com.scf.multi.domain.dto.socket_message.Content;
+import com.scf.multi.domain.dto.socket_message.request.Content;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
