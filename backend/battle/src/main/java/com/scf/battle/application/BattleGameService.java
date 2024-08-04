@@ -97,10 +97,10 @@ public class BattleGameService {
     }
 
     public int calculateScore(Integer submitTime) { // TODO: 협의 후 수정
-        if (submitTime > 30) {
+        if (submitTime > 30) { // 예외처리고, 실제로는 30초가 딱 되면
             throw new BusinessException(String.valueOf(submitTime), "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
-        int initialScore = 20;
+        int initialScore = 20; // TODO : 알고리즘 추가 log
         double decrementPerSecond = 0.3333;
         int power = (int) (initialScore - (submitTime * decrementPerSecond));
         if (power < 0) power = 0;
