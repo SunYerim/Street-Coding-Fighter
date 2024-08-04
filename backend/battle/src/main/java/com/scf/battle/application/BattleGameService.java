@@ -134,14 +134,15 @@ public class BattleGameService {
         ProblemType problemType = problem.getProblemType();
 
         boolean isCorrect = compareAnswers(problemType, solved, answers);
-
-        if (isCorrect) {
-            int score = calculateScore(solved.getSubmitTime());
+        int score = 0;
+        if (isCorrect) { //맞은 경우
+            System.out.println("correct");
+            score = calculateScore(solved.getSubmitTime());
             room.updateHp(userId, score);
-            FightDTO.builder().userId(userId).isAttack(true).power(score).build();
+            return FightDTO.builder().userId(userId).isAttack(true).power(score).build();
         }
-
-        return FightDTO.builder().userId(userId).isAttack(false).power(0).build();
+        room.updateHp(userId, score);
+        return FightDTO.builder().userId(userId).isAttack(false).power(score).build();
     }
 
     private boolean compareAnswers(ProblemType problemType, Solved solved, List<ProblemAnswer> answers) {
