@@ -214,4 +214,26 @@ public class BattleGameService {
         List<Problem> currentRoundProblem = room.getProblemsForRound(currentRound);
         return currentRoundProblem;
     }
+
+    public void sendRoundProblemToRoom(String roomId) {
+        BattleGameRoom room = findById(roomId);
+        List<Problem> roundSelectProblems = room.getProblemsForRound(room.getCurrentRound());
+        List<ProblemResponse.ListDTO> roundSelectProblemsDTOs = roundSelectProblems.stream()
+                .map(problem -> ProblemResponse.ListDTO.builder()
+                        .problemId(problem.getProblemId())
+                        .title(problem.getTitle())
+                        .problemType(problem.getProblemType())
+                        .category(problem.getCategory())
+                        .difficulty(problem.getDifficulty())
+//                        .problemContent(problem.getProblemContent())
+//                        .problemChoices(problem.getProblemChoices())
+                        .build())
+                .collect(Collectors.toList());
+        messagingTemplate.convertAndSend("/room/" + roomId+"/RoundChoiceProblem" , roundSelectProblemsDTOs);
+    }
+
+    public void removeRoom(String roomId) {
+        battleGameRepository.removeRoom(roomId);
+    }
+
 }
