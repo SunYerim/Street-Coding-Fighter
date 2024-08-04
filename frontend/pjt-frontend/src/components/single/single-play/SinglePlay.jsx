@@ -7,12 +7,14 @@ import { TypeAnimation } from 'react-type-animation';
 import { useParams } from 'react-router-dom';
 import SingleBanner from './SingleBanner.jsx';
 import SoundStore from '../../../stores/SoundStore.jsx';
-import SingleSoundStore from '../../../stores/SingleSoundStore.jsx'; // SingleSoundStore import 추가
+import SingleSoundStore from '../../../stores/SingleSoundStore.jsx';
+import ChatModal from './chat-modal/ChatModal.jsx'; // ChatModal import 추가
 import { style } from '@mui/system';
 
 export default function SinglePlay() {
   const [page, setPage] = useState(0);
   const [showDialogue, setShowDialogue] = useState(false); // DialogueBox를 표시할지 여부를 결정하는 상태
+  const [isChatOpen, setIsChatOpen] = useState(false); // 채팅창 모달 표시 여부를 결정하는 상태
   const { content_id } = useParams();
   const dialogueList = [
     {
@@ -78,10 +80,24 @@ export default function SinglePlay() {
     playClickSoundSingle();
     console.log(page);
   };
-
+  const handleChatOpen = () => {
+    if (isChatOpen) {
+      setIsChatOpen(false);
+    } else {
+      setIsChatOpen(true);
+    }
+  };
   const currentDialogue = dialogueList[page];
   const ChatButton = () => {
-    return <div style={styles.chatButton}>채팅(아이콘으로바꿀꺼)</div>;
+    return (
+      <div
+        style={styles.chatButton}
+        onClick={handleChatOpen} // 채팅 버튼 클릭 시 모달 열림
+      >
+        채팅
+        {isChatOpen ? <ChatModal /> : null}
+      </div>
+    );
   };
 
   const renderImages = () => {
@@ -111,7 +127,7 @@ export default function SinglePlay() {
     }
     return images;
   };
-
+  
   return (
     <S.PlayView>
       <SingleBanner />
@@ -172,11 +188,20 @@ export default function SinglePlay() {
   );
 }
 
-
 const styles = {
-  chatButton : {
+  chatButton: {
     position: 'fixed',
-    right : '10px',
-    bottom : '30vh'
-  }
-}
+    right: '10px',
+    bottom: '30vh',
+    color: '',
+    backgroundColor: 'yellow',
+    borderRadius: '50%',
+    width: '80px',
+    height: '80px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
+    transition: '0.3s',
+  },
+};

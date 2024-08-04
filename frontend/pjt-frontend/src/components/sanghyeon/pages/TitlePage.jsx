@@ -31,7 +31,7 @@ function TitlePage() {
           onClick={handleClick}
           disabled={!isVisible} // 비활성화 상태 추가
         >
-          Start
+          START
         </button>
       </motion.div>
     </>

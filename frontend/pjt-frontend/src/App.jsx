@@ -68,11 +68,13 @@ function App() {
           <Route path="/report" element={accessToken ? <ReportPage /> : <LoginPage />} />
           <Route path="/solved" element={accessToken ? <SolvedPage /> : <LoginPage />} />
           <Route path="/solved/:solvedId" element={accessToken ? <SolvedDetailPage /> : <LoginPage />} />
-          <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} />
+          {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
+          <Route path="/multi" element={<MultiMain/>} />
           <Route path="/multi-create" element={accessToken ? <MultiCreate /> : <LoginPage />} />
           <Route path="/battle" element={accessToken ? <BattleMain /> : <LoginPage />} />
           <Route path="/battle-create" element={accessToken ? <BattleCreate /> : <LoginPage />} />
-          <Route path="/multi-game" element={accessToken ? <MultiGame /> : <LoginPage />} />
+          {/* <Route path="/multi-game" element={accessToken ? <MultiGame /> : <LoginPage />} /> */}
+          <Route path="/multi-game" element={<MultiGame />} />
           {/* <Route path="/single-main" element={accessToken ? <SingleMain /> : <LoginPage />} /> */}
           <Route path="/single-main" element={<SingleMain/> } />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
