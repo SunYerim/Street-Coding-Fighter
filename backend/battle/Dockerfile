@@ -1,17 +1,18 @@
 # openjdk 21 버전의 환경을 구성
-FROM openjdk:21
-
-# tzdata 패키지 설치 및 타임존 설정
-RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo Asia/Seoul > /etc/timezone
-
-# 임시 볼륨 설정
-VOLUME /tmp
+FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-# JAR 파일을 /app 디렉토리로 복사
-COPY build/libs/battle-0.0.1-SNAPSHOT-plain.jar /app/battle.jar
+# COPY만 docker-compose 파일의 위치를 기반으로 작동함
+COPY . .
 
-# 운영 및 개발에서 사용되는 환경 설정을 분리
-# -Duser.timezone=Asia/Seoul JVM 옵션을 사용하여 애플리케이션 수준에서도 타임존을 설정
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "/app/battle.jar"]
+# 개행문자 오류 해결 [unix와 window 시스템 차이]
+RUN sed -i 's/\r$//' gradlew
+
+# RUN은 현재 파일을 위치를 기반으로 작동함
+RUN chmod +x ./gradlew
+RUN ./gradlew clean build -x test --stacktrace
+
+RUN mv build/libs/battle-0.0.1-SNAPSHOT.jar /app/app.jar
+
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "app.jar"]
