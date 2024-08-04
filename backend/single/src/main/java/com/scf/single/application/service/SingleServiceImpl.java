@@ -28,10 +28,10 @@ public class SingleServiceImpl implements SingleService {
 
     // content 목록 조회
     @Override
-    public ContentListResponsesDto getUserContentList(String memberId) {
+    public ContentListResponsesDto getUserContentList(Long memberId) {
         // memberId를 사용하여 content_check_user 테이블 조회
         List<ContentCheckUser> contentCheckUsers = contentCheckUserRepository.findByMemberId(
-            Long.parseLong(memberId));
+            memberId);
 
         // DTO로 변환
         List<ContentListResponseDto> contentList = contentCheckUsers.stream()

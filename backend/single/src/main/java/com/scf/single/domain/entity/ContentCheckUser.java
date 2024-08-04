@@ -33,5 +33,4 @@ public class ContentCheckUser {
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
-
 }

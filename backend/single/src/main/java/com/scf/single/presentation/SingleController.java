@@ -25,7 +25,7 @@ public class SingleController {
 
     // 목록 조회
     @GetMapping
-    public ResponseEntity<?> getList(@RequestHeader("memberId") String memberId) {
+    public ResponseEntity<?> getList(@RequestHeader("memberId") Long memberId) {
         // 서비스 단에서 조회
         ContentListResponsesDto listResponsesDto = singleService.getUserContentList(memberId);
 
@@ -36,7 +36,7 @@ public class SingleController {
     // contents 상세내용 조회 -> 회원만 content내용을 열람할 수 있도록 RequestHeader에 memberId가 있어야 열람 가능.
     @GetMapping("/{contentId}")
     public ResponseEntity<?> getSingle(@PathVariable("contentId") int contentId,
-        @RequestHeader("memberId") String memberId) {
+        @RequestHeader("memberId") Long memberId) {
         // 서비스 단에서 조회
         ContentDetailResponsesDto contentScript = singleService.getScripts(contentId);
 
