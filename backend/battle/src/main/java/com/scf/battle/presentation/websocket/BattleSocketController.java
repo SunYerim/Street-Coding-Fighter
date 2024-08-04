@@ -36,13 +36,13 @@ public class BattleSocketController {
     private final SimpMessagingTemplate messagingTemplate;
     private final KafkaMessageProducer kafkaMessageProducer;
 
-    @MessageMapping("/quiz/join")
-    public void joinRoom(JoinRoomDTO joinRoomDTO) {
+    @MessageMapping("/game/{roomId}/join")
+    public void joinRoom(@DestinationVariable String roomId, JoinRoomDTO joinRoomDTO) {
         System.out.println(joinRoomDTO);
-        battleGameService.joinRoom(joinRoomDTO.getRoomId(), joinRoomDTO.getUserId(),
-            joinRoomDTO.getUsername(), joinRoomDTO.getRoomPassword());
-        BattleGameRoom room = battleGameService.findById(joinRoomDTO.getRoomId());
-        messagingTemplate.convertAndSend("/topic/quiz/" + joinRoomDTO.getRoomId(), room);
+        battleGameService.joinRoom(roomId, joinRoomDTO.getUserId(), joinRoomDTO.getUsername(), joinRoomDTO.getRoomPassword());
+        //BattleGameRoom room = battleGameService.findById(roomId); // 필요 없지만, 디버깅시 필요할 수 있음.
+
+        messagingTemplate.convertAndSend("/room/" + roomId, new JoinRoomUserDTO(joinRoomDTO.getUserId(), joinRoomDTO.getUsername())); // 실제로는 입장 메세지
     }
     @SendTo("/topic/messages")
     @MessageMapping("/quiz/answer")
