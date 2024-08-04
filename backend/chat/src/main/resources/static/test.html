@@ -9,7 +9,7 @@
     var currentRoomId = null;
 
     function connect() {
-      var socket = new SockJS('http://localhost:8080/ws');
+      var socket = new SockJS('http://localhost:8080/ws-chat');
       stompClient = Stomp.over(socket);
       currentRoomId = document.getElementById('roomId').value;
       stompClient.connect({}, function (frame) {
