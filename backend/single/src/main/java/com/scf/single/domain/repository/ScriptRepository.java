@@ -1,7 +1,5 @@
 package com.scf.single.domain.repository;
 
-import com.scf.single.domain.dto.ContentDetailResponseDto;
-import com.scf.single.domain.entity.Content;
 import com.scf.single.domain.entity.Script;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

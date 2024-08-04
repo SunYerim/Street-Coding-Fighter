@@ -1,14 +1,19 @@
 package com.scf.single.application.service;
 
+import com.scf.single.domain.dto.ContentCompletionRequestDto;
 import com.scf.single.domain.dto.ContentDetailResponseDto;
 import com.scf.single.domain.dto.ContentDetailResponsesDto;
 import com.scf.single.domain.dto.ContentListResponseDto;
 import com.scf.single.domain.dto.ContentListResponsesDto;
+import com.scf.single.domain.entity.Content;
 import com.scf.single.domain.entity.ContentCheckUser;
 import com.scf.single.domain.entity.Script;
 import com.scf.single.domain.repository.ContentCheckUserRepository;
+import com.scf.single.domain.repository.ContentRepository;
 import com.scf.single.domain.repository.ScriptRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ public class SingleServiceImpl implements SingleService {
 
     private final ContentCheckUserRepository contentCheckUserRepository;
     private final ScriptRepository scriptRepository;
+    private final ContentRepository contentRepository;
 
     // content 목록 조회
     @Override
@@ -41,9 +47,37 @@ public class SingleServiceImpl implements SingleService {
 
         // DTO로 변환
         List<ContentDetailResponseDto> contentScripts = scripts.stream()
-            .map(script -> new ContentDetailResponseDto(script.getPageNo(), script.getScriptContent(), script.getAction(), script.getImageCount()))
+            .map(script -> new ContentDetailResponseDto(script.getPageNo(),
+                script.getScriptContent(), script.getAction(), script.getImageCount()))
             .collect(Collectors.toList());
 
         return new ContentDetailResponsesDto(contentScripts);
+    }
+
+    @Override
+    @Transactional
+    public void markContentAsCompleted(ContentCompletionRequestDto requestDto) {
+        Long memberId = requestDto.getMemberId();
+        int contentId = requestDto.getContentId();
+
+        // 사용자의 수강 완료 여부 확인
+        Optional<ContentCheckUser> existingRecord = contentCheckUserRepository.findByMemberIdAndContent_ContentId(
+            requestDto.getMemberId(), requestDto.getContentId());
+
+        if (existingRecord.isEmpty()) {
+            // 수강 완료 기록이 없으면 새로 저장
+            ContentCheckUser newRecord = new ContentCheckUser();
+            newRecord.setMemberId(memberId);
+            newRecord.setComplete(1);  // 수강 완료 상태를 나타내는 값 -> 1
+
+            Content content = contentRepository.findById(contentId)
+                .orElseThrow(() -> new IllegalArgumentException("콘텐츠를 찾을 수 없습니다."));
+            newRecord.setContent(content);
+
+            contentCheckUserRepository.save(newRecord);
+        } else {
+            throw new IllegalStateException("이미 수강 완료된 콘텐츠입니다.");
+        }
+
     }
 }
