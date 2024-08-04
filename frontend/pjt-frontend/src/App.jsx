@@ -75,7 +75,8 @@ function App() {
           />
           <Route
             path="/multi-create"
-            element={accessToken ? <MultiCreate /> : <LoginPage />}
+            // element={accessToken ? <MultiCreate /> : <LoginPage />}
+            element={<MultiCreate />}
           />
           <Route
             path="/battle"
@@ -111,7 +112,8 @@ function App() {
           />
           <Route
             path="/multi-game-select"
-            element={accessToken ? <SelectProblem /> : <LoginPage />}
+            // element={accessToken ? <SelectProblem /> : <LoginPage />}
+            element={<SelectProblem />}
           />
           <Route path="*" element={<TitlePage />} />
         </Routes>

@@ -90,21 +90,32 @@ function SignUpPage() {
         <h1 className="signup-title">SIGN UP</h1>
         <form className="signup-container" onSubmit={signUp}>
           <div className="signup-userId">
-            <input type="text" ref={userId} placeholder="아이디" />
+            <input type="text" ref={userId} placeholder="아이디" required />
             <div onClick={idCheck} className="duplicate-chk">
               중복 확인
             </div>
           </div>
-          <input type="text" ref={name} placeholder="닉네임" />
-          <input type="password" ref={password1} placeholder="비밀번호" />
-          <input type="password" ref={password2} placeholder="비밀번호 확인" />
-          <input type="email" ref={email} placeholder="이메일 주소" />
-          <input type="text" ref={schoolName} placeholder="학교" />
+          <input type="text" ref={name} placeholder="닉네임" required />
+          <input
+            type="password"
+            ref={password1}
+            placeholder="비밀번호"
+            required
+          />
+          <input
+            type="password"
+            ref={password2}
+            placeholder="비밀번호 확인"
+            required
+          />
+          <input type="email" ref={email} placeholder="이메일 주소" required />
+          <input type="text" ref={schoolName} placeholder="학교" required />
           <input
             type="date"
             ref={birth}
             placeholder="생일"
             className="custom-date-input"
+            required
           />
           <button type="submit">NEXT</button>
         </form>
