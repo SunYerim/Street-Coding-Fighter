@@ -1,4 +1,5 @@
 let stompClient = null;
+let currentProblems = [];
 
 function setConnected(connected) {
     console.log('Connection status: ', connected);
@@ -13,16 +14,22 @@ function setConnected(connected) {
 }
 
 function connect() {
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS('http://localhost:8080/ws-room');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
 
-        // 메시지 및 퀴즈 결과를 구독
-        stompClient.subscribe('/topic/messages', function (message) {
+        const roomId = $("#roomId").val();
+        console.log(roomId);
+        stompClient.subscribe('/room/' + roomId, function (message) {
             console.log('Received: ' + message.body);
             showGreeting(JSON.parse(message.body));
+        });
+        const userId = $("#userId").val();
+        stompClient.subscribe('/room/' + roomId + '/' + userId, function (message) {
+            console.log('Received selected problem: ' + message.body);
+            showSelectedProblem(JSON.parse(message.body));
         });
     }, function (error) {
         console.log('STOMP error: ' + error);
@@ -38,20 +45,22 @@ function disconnect() {
 }
 
 function joinRoom() {
+    const roomPassword = $("#roomPassword").val() || null;
     const joinRoomDTO = {
         roomId: $("#roomId").val(),
         userId: $("#userId").val(),
         username: $("#username").val(),
-        roomPassword: $("#roomPassword").val()
+        roomPassword: roomPassword
     };
     console.log('Joining room with data: ', joinRoomDTO);
-    stompClient.send("/app/quiz/join", {}, JSON.stringify(joinRoomDTO));
+    stompClient.send("/send/game/" + joinRoomDTO.roomId + "/join", {}, JSON.stringify(joinRoomDTO));
 }
 
 function createRoom() {
     const userId = $("#userId").val();
+    const roomPassword = $("#roomPasswordCreate").val() || null;
     const createRoomDTO = {
-        roomPassword: $("#roomPassword").val()
+        roomPassword: roomPassword
     };
     $.ajax({
         url: 'http://localhost:8080/battle/room',
@@ -72,15 +81,13 @@ function createRoom() {
 }
 
 function sendAnswer() {
-    // solve 객체를 Map 형식에 맞게 작성
     const solveMap = {};
     $(".solve").each(function() {
-        const key = parseInt($(this).data("key")); // data-key 속성을 사용하여 키를 가져옴
-        const value = parseInt($(this).val()); // 값을 가져옴
+        const key = parseInt($(this).data("key"));
+        const value = parseInt($(this).val());
         solveMap[key] = value;
     });
 
-    // DTO에 맞게 solved 객체를 생성
     const solved = {
         problemId: parseInt($("#problemId").val()),
         userId: parseInt($("#userId").val()),
@@ -90,14 +97,42 @@ function sendAnswer() {
         round: parseInt($("#round").val())
     };
 
-    // 콘솔에 출력 및 STOMP 클라이언트를 사용하여 메시지 전송
     console.log('Sending answer: ', JSON.stringify(solved));
-    stompClient.send("/app/quiz/answer", {}, JSON.stringify(solved));
+    stompClient.send("/send/game/" + solved.roomId + "/answer", {}, JSON.stringify(solved));
 }
 
+function selectProblemByIndex() {
+    const roomId = $("#roomId").val();
+    const userId = $("#userId").val();
+    const problemIndex = parseInt($("#problemIndex").val());
+    if (problemIndex >= 0 && problemIndex < currentProblems.length) {
+        const problemId = currentProblems[problemIndex].problemId;
+        console.log('Selecting problem with index: ', problemIndex, 'and problemId: ', problemId);
+        const payload = {
+            problemId: problemId
+        };
+        stompClient.send("/send/game/" + roomId + "/selectProblem", { userId: userId }, JSON.stringify(payload));
+    } else {
+        console.log('Invalid problem index');
+    }
+}
 
 function showGreeting(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
+}
+
+function showProblem(problems) {
+    currentProblems = problems; // 저장하여 나중에 인덱스로 접근 가능하게 함
+    $("#problems").html("");
+    problems.forEach((problem, index) => {
+        $("#problems").append(
+            `<div>문제 ${index + 1} - ${problem.title}</div>`
+        );
+    });
+}
+
+function showSelectedProblem(problem) {
+    $("#selectedProblem").html(`<div>${problem.title}</div>`);
 }
 
 $(function () {
@@ -123,5 +158,9 @@ $(function () {
     $("#sendAnswer").click(function () { 
         console.log('Send Answer button clicked');
         sendAnswer(); 
+    });
+    $("#selectProblemButton").click(function () {
+        console.log('Select Problem button clicked');
+        selectProblemByIndex();
     });
 });

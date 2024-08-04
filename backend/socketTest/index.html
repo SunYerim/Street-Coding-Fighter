@@ -9,48 +9,76 @@
     <script src="app.js"></script>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable Javascript and reload this page!</h2></noscript>
+<noscript>
+    <h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable Javascript and reload this page!</h2>
+</noscript>
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-6">
-            <form class="form-inline">
+            <form class="form-inline mb-3">
                 <div class="form-group">
                     <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="button">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="button" disabled="disabled">Disconnect</button>
+                    <button id="connect" class="btn btn-primary ml-2" type="button">Connect</button>
+                    <button id="disconnect" class="btn btn-secondary ml-2" type="button" disabled="disabled">Disconnect</button>
                 </div>
+            </form>
+            <form class="form-inline mb-3">
+                <div class="form-group mr-2">
+                    <label for="roomId">Room ID:</label>
+                    <input type="text" id="roomId" class="form-control ml-2" placeholder="Room ID">
+                </div>
+                <div class="form-group mr-2">
+                    <label for="userId">User ID:</label>
+                    <input type="text" id="userId" class="form-control ml-2" placeholder="User ID">
+                </div>
+                <div class="form-group mr-2">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" class="form-control ml-2" placeholder="Username">
+                </div>
+                <div class="form-group mr-2">
+                    <label for="roomPassword">Room Password:</label>
+                    <input type="password" id="roomPassword" class="form-control ml-2" placeholder="Room Password">
+                </div>
+                <button id="join" class="btn btn-primary ml-2" type="button">Join Room</button>
+            </form>
+            <form class="form-inline mb-3">
+                <div class="form-group mr-2">
+                    <label for="roomPasswordCreate">Room Password:</label>
+                    <input type="password" id="roomPasswordCreate" class="form-control ml-2" placeholder="Room Password">
+                </div>
+                <button id="createRoom" class="btn btn-success ml-2" type="button">Create Room</button>
             </form>
         </div>
         <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="roomId">Room ID:</label>
-                    <input type="text" id="roomId" class="form-control" placeholder="Room ID">
+            <form class="form-inline mb-3">
+                <div class="form-group mr-2">
+                    <label for="problemIndex">Problem Index:</label>
+                    <input type="text" id="problemIndex" class="form-control ml-2" placeholder="Enter Problem Index (0-2)">
                 </div>
-                <div class="form-group">
-                    <label for="userId">User ID:</label>
-                    <input type="text" id="userId" class="form-control" placeholder="User ID">
-                </div>
-                <div class="form-group">
+                <button id="selectProblemButton" class="btn btn-info ml-2" type="button">Select Problem</button>
+            </form>
+            <form class="form-inline mb-3">
+                <div class="form-group mr-2">
                     <label for="problemId">Problem ID:</label>
-                    <input type="text" id="problemId" class="form-control" placeholder="Problem ID">
+                    <input type="text" id="problemId" class="form-control ml-2" placeholder="Problem ID">
                 </div>
-                <div class="form-group">
+                <div class="form-group mr-2">
                     <label for="round">Round:</label>
-                    <input type="text" id="round" class="form-control" placeholder="Round">
+                    <input type="text" id="round" class="form-control ml-2" placeholder="Round">
                 </div>
-                <div class="form-group">
+                <div class="form-group mr-2">
                     <label for="submitTime">Submit Time:</label>
-                    <input type="text" id="submitTime" class="form-control" placeholder="Submit Time">
+                    <input type="text" id="submitTime" class="form-control ml-2" placeholder="Submit Time">
                 </div>
-                <div class="form-group">
-                    <label for="solve">Answer:</label>
-                    <input type="text" class="solve form-control" data-key="0" placeholder="Answer Key 0">
-                    <input type="text" class="solve form-control" data-key="1" placeholder="Answer Key 1">
+                <div class="form-group mr-2">
+                    <label for="solve0">Answer Key 0:</label>
+                    <input type="text" class="solve form-control ml-2" data-key="0" placeholder="Answer Key 0">
                 </div>
-                <button id="join" class="btn btn-default" type="button">Join Room</button>
-                <button id="createRoom" class="btn btn-default" type="button">Create Room</button>
-                <button id="sendAnswer" class="btn btn-default" type="button">Send Answer</button>
+                <div class="form-group mr-2">
+                    <label for="solve1">Answer Key 1:</label>
+                    <input type="text" class="solve form-control ml-2" data-key="1" placeholder="Answer Key 1">
+                </div>
+                <button id="sendAnswer" class="btn btn-warning ml-2" type="button">Send Answer</button>
             </form>
         </div>
     </div>
@@ -65,6 +93,12 @@
                 <tbody id="greetings">
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="problems"></div>
+            <div id="selectedProblem"></div>
         </div>
     </div>
 </div>
