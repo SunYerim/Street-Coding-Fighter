@@ -1,2 +1,5 @@
-package com.scf.single;public class SingleListTest {
+package com.scf.single;
+
+public class SingleListTest {
+
 }
