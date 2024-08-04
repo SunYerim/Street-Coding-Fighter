@@ -146,4 +146,15 @@ public class BattleSocketController {
                         .ifPresent(kafkaMessageProducer::sendSolved)
         );
     }
+
+    private void sendToKafkaGameResult(BattleGameRoom room, GameResultType determineValue) {
+        GameResultRoomDTO gameResultRoomDTO = new GameResultRoomDTO(
+                GameType.BATTLE,
+                LocalDateTime.now(),
+                room.getPlayerA().getUserId(),
+                room.getPlayerB().getUserId(),
+                determineValue
+        );
+        kafkaMessageProducer.sendGameResult(gameResultRoomDTO);
+    }
 }
