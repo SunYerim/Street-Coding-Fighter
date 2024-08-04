@@ -71,11 +71,39 @@ public class BattleSocketController {
         }
     }
 
-//        if (room.getPlayerA().getHp() <= 0 || room.getPlayerB().getHp() <= 0
-//            || room.getRound() > 10) {
-//            String resultMessage = determineWinner(room);
-//            messagingTemplate.convertAndSend("/topic/messages/" + solved.getRoomId(), resultMessage);
-//        }
+    @MessageMapping("/game/{roomId}/selectProblem")
+    public void handleSelectProblem(@DestinationVariable String roomId, @RequestBody Map<String, Long> payload, @RequestHeader Long memberId) {
+        Long selectProblemId = payload.get("problemId"); // "problemId" : 1L
+        BattleGameRoom room = battleGameService.findById(roomId);
+        System.out.println(roomId + " " + selectProblemId + " " + memberId);
+        Player selectingUser = room.getPlayerById(memberId);
+        Player opponentUser = room.getOpponentById(memberId);
+        List<ProblemResponse.SelectProblemDTO> roundSelectProblems = room.getProblemsForRound(room.getCurrentRound())
+                .stream()
+                .map(problem -> ProblemResponse.SelectProblemDTO.builder()
+                        .problemId(problem.getProblemId())
+                        .title(problem.getTitle())
+                        .problemType(problem.getProblemType())
+                        .category(problem.getCategory())
+                        .difficulty(problem.getDifficulty())
+                        .problemContent(problem.getProblemContent())
+                        .problemChoices(problem.getProblemChoices())
+                        .build())
+                .toList();
+        Optional<ProblemResponse.SelectProblemDTO> selectedProblem = roundSelectProblems.stream()
+                .filter(problem -> problem.getProblemId().equals(selectProblemId))
+                .findFirst();
+        selectedProblem.ifPresent(problem -> {
+            if (selectingUser.getUserId().equals(room.getPlayerA().getUserId())) {
+                room.setProblemForPlayerB(problem);
+            } else {
+                room.setProblemForPlayerA(problem);
+            }
+        });
+
+        // 상대방에게 선택된 문제 전송
+        messagingTemplate.convertAndSend("/room/" + roomId + "/" + opponentUser.getUserId(), selectedProblem);
+
     }
 
     private String determineWinner(BattleGameRoom room) {
