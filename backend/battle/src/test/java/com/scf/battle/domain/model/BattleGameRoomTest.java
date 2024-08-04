@@ -1,142 +1,127 @@
 package com.scf.battle.domain.model;
 
-import com.scf.battle.domain.dto.FightDTO;
-import com.scf.battle.domain.dto.Player;
-import com.scf.battle.domain.dto.Problem;
-import java.util.Arrays;
+import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.User.Player;
+import com.scf.battle.global.error.ErrorCode;
+import com.scf.battle.global.error.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BattleGameRoomTest {
+class BattleGameRoomTest {
 
-    private BattleGameRoom battleGameRoom;
-    private final Long hostId = 1L;
-    private final String roomId = "room1";
-    private final String title = "Test Room";
-    private final String password = "pass";
+    private BattleGameRoom room;
+    private Long hostId;
+    private Player playerA;
+    private Player playerB;
 
     @BeforeEach
-    public void setUp() {
-        battleGameRoom = BattleGameRoom.builder()
-            .roomId(roomId)
-            .hostId(hostId)
-            .title(title)
-            .password(password)
-            .isAttack(false)
-            .isStart(false)
-            .finalRound(0)
-            .build();
+    void setUp() {
+        hostId = 1L;
+        playerA = new Player(1L, "PlayerA", 100);
+        playerB = new Player(null, "PlayerB", 100); // userId를 null로 설정
+
+        room = BattleGameRoom.builder()
+                .roomId(UUID.randomUUID().toString())
+                .hostId(hostId)
+                .title("Test Room")
+                .password("password")
+                .playerA(playerA)
+                .playerB(playerB)
+                .isAttack(false)
+                .isStart(false)
+                .finalRound(3)
+                .currentRound(0)
+                .hasPlayerASubmitted(false)
+                .hasPlayerBSubmitted(false)
+                .build();
     }
 
     @Test
-    public void testAddPlayer() {
-        // Given
-        Long userId1 = 2L;
-        String username1 = "PlayerA";
-        Long userId2 = 3L;
-        String username2 = "PlayerB";
-
-        // When
-        battleGameRoom.add(userId1, username1, password);
-        battleGameRoom.add(userId2, username2, password);
-
-        // Then
-        assertNotNull(battleGameRoom.getPlayerA());
-        assertNotNull(battleGameRoom.getPlayerB());
-        assertEquals(username1, battleGameRoom.getPlayerA().getUsername());
-        assertEquals(username2, battleGameRoom.getPlayerB().getUsername());
+    void testAddPlayer() {
+        room.add(2L, "PlayerB", "password");
+        assertNotNull(room.getPlayerB());
+        assertEquals(2L, room.getPlayerB().getUserId());
     }
 
     @Test
-    public void testStartGame() {
-        // Given
-        List<Problem> problems = new ArrayList<>();
-        problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(2L, 0, "정렬", "삽입 정렬", "삽입 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(3L, 0, "정렬", "선택 정렬", "선택 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(4L, 0, "정렬", "퀵 정렬", "퀵 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(5L, 0, "정렬", "병합 정렬", "병합 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(6L, 0, "정렬", "힙 정렬", "힙 정렬 내용", Map.of(0, 1, 1, 2)));
-
-        Long userId1 = 2L;
-        String username1 = "PlayerA";
-        Long userId2 = 3L;
-        String username2 = "PlayerB";
-        battleGameRoom.add(userId1, username1, password);
-        battleGameRoom.add(userId2, username2, password);
-
-        // When
-        battleGameRoom.startGame(problems, hostId);
-
-        // Then
-        assertTrue(battleGameRoom.getIsStart());
-        assertEquals(2, battleGameRoom.getRoundProblems().size());
-        assertEquals(3, battleGameRoom.getRoundProblems().get(0).size());
+    void testStartGame() {
+        room.getPlayerB().setUserId(2L); // playerB의 userId를 설정
+        List<Problem> problems = Arrays.asList(new Problem(), new Problem(), new Problem(), new Problem(), new Problem(), new Problem());
+        room.startGame(problems, hostId);
+        assertTrue(room.getIsStart());
+        assertEquals(2, room.getRoundProblems().size());
     }
 
     @Test
-    public void testUpdateHp() {
-        // Given
-        Long userId1 = 2L;
-        String username1 = "PlayerA";
-        Long userId2 = 3L;
-        String username2 = "PlayerB";
-        battleGameRoom.add(userId1, username1, password);
-        battleGameRoom.add(userId2, username2, password);
-        battleGameRoom.startGame(new ArrayList<>(), hostId);
-
-        // When
-        FightDTO fightDTO = battleGameRoom.updateHp(userId1, 10);
-
-        // Then
-        assertEquals(userId1, fightDTO.getUserId());
-        assertTrue(fightDTO.getIsAttack());
-        assertEquals(10, fightDTO.getPower());
-        assertEquals(90, battleGameRoom.getPlayerB().getHp());
+    void testStartGameNotHost() {
+        room.getPlayerB().setUserId(2L); // playerB의 userId를 설정
+        List<Problem> problems = Arrays.asList(new Problem(), new Problem(), new Problem(), new Problem(), new Problem(), new Problem());
+        BusinessException exception = assertThrows(BusinessException.class, () -> room.startGame(problems, 2L));
+        assertEquals(ErrorCode.USER_NOT_HOST.getMessage(), exception.getMessage());
     }
 
     @Test
-    public void testGetProblemsForRound() {
-        // Given
-        List<Problem> problems = new ArrayList<>();
-        problems.add(new Problem(1L, 0, "정렬", "버블 정렬", "버블 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(2L, 0, "정렬", "삽입 정렬", "삽입 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(3L, 0, "정렬", "선택 정렬", "선택 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(4L, 0, "정렬", "퀵 정렬", "퀵 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(5L, 0, "정렬", "병합 정렬", "병합 정렬 내용", Map.of(0, 1, 1, 2)));
-        problems.add(new Problem(6L, 0, "정렬", "힙 정렬", "힙 정렬 내용", Map.of(0, 1, 1, 2)));
-
-        Long userId1 = 2L;
-        String username1 = "PlayerA";
-        Long userId2 = 3L;
-        String username2 = "PlayerB";
-        battleGameRoom.add(userId1, username1, password);
-        battleGameRoom.add(userId2, username2, password);
-        battleGameRoom.startGame(problems, hostId);
-
-        // When
-        List<Problem> round1Problems = battleGameRoom.getProblemsForRound(1);
-
-        // Then
-        assertEquals(3, round1Problems.size());
+    void testStartGameInsufficientPlayers() {
+        List<Problem> problems = Arrays.asList(new Problem(), new Problem(), new Problem(), new Problem(), new Problem(), new Problem());
+        BusinessException exception = assertThrows(BusinessException.class, () -> room.startGame(problems, hostId));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+        assertEquals(ErrorCode.INSUFFICIENT_PLAYER.getMessage(), exception.getMessage());
     }
 
     @Test
-    public void testNextRound() {
-        // Given
+    void testStartGameNoProblems() {
+        room.getPlayerB().setUserId(2L); // playerB의 userId를 설정
+        BusinessException exception = assertThrows(BusinessException.class, () -> room.startGame(null, hostId));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+        assertEquals(ErrorCode.GAME_ALREADY_STARTED.getMessage(), exception.getMessage());
+    }
 
-        // When
-        battleGameRoom.nextRound();
+    @Test
+    void testGetProblemsForRound() {
+        List<Problem> round1Problems = Arrays.asList(new Problem(), new Problem(), new Problem());
+        room.getRoundProblems().add(round1Problems);
+        assertEquals(round1Problems, room.getProblemsForRound(0));
+    }
 
-        // Then
-        assertEquals(1, battleGameRoom.getRound());
-        assertFalse(battleGameRoom.getIsAttack());
+    @Test
+    void testGetProblemsForInvalidRound() {
+        List<Problem> round1Problems = Arrays.asList(new Problem(), new Problem(), new Problem());
+        room.getRoundProblems().add(round1Problems);
+        assertThrows(IndexOutOfBoundsException.class, () -> room.getProblemsForRound(1));
+    }
+
+    @Test
+    void testUpdateHp() {
+        room.getPlayerB().setUserId(2L); // playerB의 userId를 설정
+        room.updateHp(1L, 10);
+        assertEquals(90, room.getPlayerB().getHp());
+    }
+
+    @Test
+    void testNextRound() {
+        room.getPlayerB().setUserId(2L); // playerB의 userId를 설정
+        room = BattleGameRoom.builder()
+                .roomId(UUID.randomUUID().toString())
+                .hostId(hostId)
+                .title("Test Room")
+                .password("password")
+                .playerA(playerA)
+                .playerB(new Player(2L, "PlayerB", 100))
+                .isAttack(false)
+                .isStart(true)
+                .finalRound(3)
+                .currentRound(0)
+                .hasPlayerASubmitted(false)
+                .hasPlayerBSubmitted(false)
+                .build();
+        int nextRound = room.nextRound();
+        assertEquals(1, nextRound);
     }
 }

@@ -31,4 +31,8 @@ public class BattleGameRepository {
     public void addRoom(BattleGameRoom gameRoom) {
         gameRooms.put(gameRoom.getRoomId(), gameRoom);
     }
+
+    public void removeRoom(String roomid){
+        gameRooms.remove(roomid);
+    }
 }
