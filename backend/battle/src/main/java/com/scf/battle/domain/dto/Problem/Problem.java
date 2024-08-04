@@ -1,6 +1,8 @@
 package com.scf.battle.domain.dto.Problem;
 
 import java.util.List;
+
+import com.scf.battle.domain.enums.ProblemType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
