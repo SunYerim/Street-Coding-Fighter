@@ -185,9 +185,14 @@ services:
 
   chat-server:
     image: zlxldgus123/chat
+    depends_on:
+      - rank-server
     environment:
-      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
-      SPRING_APPLICATION_NAME: scf-chat
+    LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+    SPRING_APPLICATION_NAME: scf-chat
+    SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db
+    SPRING_DATASOURCE_USERNAME: user
+    SPRING_DATASOURCE_PASSWORD: password
     ports:
       - "8085:8085"
     networks:
