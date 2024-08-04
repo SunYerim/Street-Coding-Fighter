@@ -211,4 +211,12 @@ public class MultiGameRoom {
         this.hostId = newHost.getUserId();
         this.hostname = newHost.getUsername();
     }
+
+    public void finishGame() {
+        this.isStart = false;
+        this.leaderBoard.clear();
+        this.scoreBoard.clear();
+        this.round = 0;
+        this.curSubmitCount.set(0);
+    }
 }

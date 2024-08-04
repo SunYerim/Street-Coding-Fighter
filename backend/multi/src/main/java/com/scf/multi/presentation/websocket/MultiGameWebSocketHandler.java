@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.message.ObjectMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -63,15 +62,19 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage)
         throws Exception {
 
-        String msg = textMessage.getPayload();
-        Message message = JsonConverter.getInstance().toObject(msg, Message.class);
-
         String roomId = sessionRooms.get(session.getId());
         MultiGameRoom room = multiGameService.findOneById(roomId);
 
         Player player = room.getPlayers().stream()
             .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
             .orElseThrow(() -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
+
+        if(!room.getIsStart()) {
+            return;
+        }
+
+        String msg = textMessage.getPayload();
+        Message message = JsonConverter.getInstance().toObject(msg, Message.class);
 
         Solved solved = multiGameService.makeSolved(room, player.getUserId(), message.getContent());
         player.addSolved(solved);
@@ -108,6 +111,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 }
 
                 kafkaMessageProducer.sendResult(gameRank); // 게임 최종 결과 저장
+
+                room.finishGame();
             }
 
             room.getCurSubmitCount().set(0); // 제출 횟수 초기화
