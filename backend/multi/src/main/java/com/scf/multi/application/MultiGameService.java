@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomResponse;
 import com.scf.multi.domain.dto.problem.Problem;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +28,7 @@ public class MultiGameService {
 
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public List<RoomResponse.ListDTO> findAllRooms() {
         List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
@@ -152,6 +155,7 @@ public class MultiGameService {
         }
 
         room.gameStart(problems, userId);
+        eventPublisher.publishEvent(new GameStartedEvent(roomId));
 
         // problem -> problemList
         return problems.stream()
