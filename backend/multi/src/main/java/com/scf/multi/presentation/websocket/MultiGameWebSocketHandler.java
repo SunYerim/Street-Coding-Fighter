@@ -4,6 +4,7 @@ import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.Message;
 import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
@@ -119,7 +120,10 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                     }
                 }
 
-                kafkaMessageProducer.sendResult(gameRank); // 게임 최종 결과 저장
+                GameResult gameResult = GameResult.builder()
+                    .gameRank(gameRank)
+                    .build();
+                kafkaMessageProducer.sendResult(gameResult); // 게임 최종 결과 저장
 
                 room.finishGame();
             }
