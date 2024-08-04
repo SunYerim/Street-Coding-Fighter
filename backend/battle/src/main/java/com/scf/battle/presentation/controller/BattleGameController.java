@@ -46,15 +46,15 @@ public class BattleGameController {
     @GetMapping("/room/{roomId}")
     public ResponseEntity<?> findRoom(@PathVariable String roomId) { // room 하나만 return
         BattleGameRoom room = battleGameService.findById(roomId);
-        RoomResponseDTO roomResponseDTO = RoomResponseDTO.builder()
-                .roomId(room.getRoomId())
-                .hostId(room.getHostId())
-                .title(room.getTitle())
-                .maxPlayer(2)
-                .curPlayer(room.getPlayerB() != null && room.getPlayerB().getUserId() != null ? 2 : 1)
-                .isLock(room.getPassword() != null)
-                .build();
-        return new ResponseEntity<>(roomResponseDTO, HttpStatus.OK);
+//        RoomResponseDTO roomResponseDTO = RoomResponseDTO.builder()
+//                .roomId(room.getRoomId())
+//                .hostId(room.getHostId())
+//                .title(room.getTitle())
+//                .maxPlayer(2)
+//                .curPlayer(room.getPlayerB() != null && room.getPlayerB().getUserId() != null ? 2 : 1)
+//                .isLock(room.getPassword() != null)
+//                .build();
+        return new ResponseEntity<>(room, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
@@ -83,8 +83,9 @@ public class BattleGameController {
     @PostMapping("/room/{roomId}/start")
     public ResponseEntity<?> gameStart(@RequestHeader Long memberId, @PathVariable String roomId) {
         try {
-            List<Problem> problems = battleGameService.startGame(memberId, roomId);
-            return new ResponseEntity<>(problems, HttpStatus.OK);
+            battleGameService.startGame(memberId, roomId);
+            battleGameService.sendRoundProblemToRoom(roomId);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         }
