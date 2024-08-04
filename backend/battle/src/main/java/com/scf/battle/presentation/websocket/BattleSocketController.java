@@ -106,16 +106,44 @@ public class BattleSocketController {
 
     }
 
-    private String determineWinner(BattleGameRoom room) {
+    private void determineWinner(BattleGameRoom room) {
+
         int playerAHp = room.getPlayerA().getHp();
         int playerBHp = room.getPlayerB().getHp();
 
+        Long winnerId = null;
+        Long loserId = null;
+        GameResultType determineValue = GameResultType.DRAW;
         if (playerAHp > playerBHp) {
-            return "Player A Wins!";
+            determineValue = GameResultType.PLAYER_A_WINS;
+            winnerId = room.getPlayerA().getUserId();
+            loserId = room.getPlayerB().getUserId();
         } else if (playerBHp > playerAHp) {
-            return "Player B Wins!";
-        } else {
-            return "It's a Tie!";
-        }
+            determineValue = GameResultType.PLAYER_B_WINS;
+            winnerId = room.getPlayerB().getUserId();
+            loserId = room.getPlayerA().getUserId();
+        } // 무승부는 null 값
+
+        Map<String, Long> result = Map.of(
+                "winner", winnerId != null ? winnerId : -1,
+                "loser", loserId != null ? loserId : -1
+        );
+        sendToKafkaSolved(room); // kafka에게 유저별 문제 풀이 보내기
+        sendToKafkaGameResult(room, determineValue); // kafka에게 게임 결과 보내기
+        // 게임이 끝났으므로 클라이언트에게 알림
+        messagingTemplate.convertAndSend("/room/" + room.getRoomId(), new ResultRoomDTO(result));
+
+        // BattleGameRoom 삭제
+        battleGameService.removeRoom(room.getRoomId());
+    }
+
+    private void sendToKafkaSolved(BattleGameRoom room) {
+        List<Player> players = Arrays.asList(room.getPlayerA(), room.getPlayerB());
+
+        players.forEach(player ->
+                Optional.ofNullable(player)
+                        .map(Player::getSolveds)
+                        .ifPresent(kafkaMessageProducer::sendSolved)
+        );
     }
 }
