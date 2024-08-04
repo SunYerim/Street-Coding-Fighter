@@ -109,4 +109,13 @@ public class BattleGameRoom {
         return currentRound;
     }
 
+    public Player getOpponentById(Long userId) {
+        if (playerA.getUserId().equals(userId)) {
+            return playerB;
+        } else if (playerB.getUserId().equals(userId)) {
+            return playerA;
+        } else {
+            throw new IllegalArgumentException("Invalid userId");
+        }
+    }
 }
