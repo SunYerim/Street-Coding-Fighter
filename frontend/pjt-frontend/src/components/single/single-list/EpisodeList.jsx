@@ -2,21 +2,7 @@ import React from "react";
 import S from "./styled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const courses = [
-  { id: 0, content_type: "변수와 자료형", title: "변수" },
-  { id: 1, content_type: "변수와 자료형", title: "자료형" },
-  { id: 2, content_type: "연산자", title: "연산자" },
-  { id: 3, content_type: "입출력", title: "표준입출력" },
-  { id: 4, content_type: "입출력", title: "파일입출력" },
-  { id: 5, content_type: "제어구조", title: "반복문" },
-  { id: 6, content_type: "제어구조", title: "조건문" },
-  { id: 7, content_type: "자료구조", title: "1차원 리스트" },
-  { id: 8, content_type: "자료구조", title: "2차원 리스트" },
-  { id: 9, content_type: "함수", title: "함수의 활용" },
-  { id: 10, content_type: "알고리즘", title: "탐색" },
-  { id: 11, content_type: "알고리즘", title: "정렬" },
-];
+import SingleInfoStore from "../../../stores/SingleInfoStore";
 
 const completed = [
   true,
@@ -34,15 +20,31 @@ const completed = [
 ];
 let nIdx = 0;
 completed.forEach((e, i) => {
-  if (e & !completed[i + 1]) {
+  if (e && !completed[i + 1]) {
     nIdx = i + 1;
   }
 });
 const rowList = [0, 1, 2, 3];
+
 export default function EpisodeList({ rownum }) {
   const navigate = useNavigate();
   const [nextIndex, setNextIndex] = useState(nIdx);
-  
+  const { completed: completedStatus, courses, setCompleted } = SingleInfoStore();
+
+  const handleClick = (id) => () => {
+    // 클릭한 에피소드의 completed 상태
+    const isCompleted = completedStatus[id];
+    console.log(isCompleted);
+    // 첫 번째 false가 아닌 경우는 예외로 허용
+    const firstFalseIndex = completedStatus.indexOf(false);
+    if (firstFalseIndex === -1 || id <= firstFalseIndex || isCompleted) {
+      console.log(id);
+      navigate(`/single-play/${id}`);
+    } else {
+      // alert("이전 에피소드를 먼저 클리어해주세요.");
+    }
+  };
+
   return (
     <>
       {rowList.map((r) => (
@@ -54,22 +56,22 @@ export default function EpisodeList({ rownum }) {
                 <React.Fragment key={e.id}>
                   <S.CheckPoint
                     key={`checkpoint-${e.id}`}
-                    $completed={completed[e.id]}
+                    $completed={completedStatus[e.id]}
                     $isNext={e.id === nextIndex}
-                    onClick = {()=>{navigate(`/single-play/${e.id}`)}}
+                    onClick={handleClick(e.id)}
                   >
                     {e.id + 1}. {e.title}
                     {index === array.length - 1 && r < 3 ? (
                       <S.VerticalPath
                         key={`verticalpath-${e.id}`}
-                        $completed={completed[3 * (r + 1)]}
+                        $completed={completedStatus[3 * (r + 1)]}
                       ></S.VerticalPath>
                     ) : null}
                   </S.CheckPoint>
                   {index < array.length - 1 ? (
                     <S.Path
                       key={`path-${e.id}`}
-                      $completed={completed[e.id + 1]}
+                      $completed={completedStatus[e.id + 1]}
                     />
                   ) : null}
                 </React.Fragment>

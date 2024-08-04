@@ -6,7 +6,7 @@ const PlayView = styled.div`
   left: 0px;
   width: 100vw;
   height: 100vh;
-  background-image: url('/src/assets/background-single.png');
+  background-image: url('/background-single.png');
   background-size: cover;
   color: black;
 `;
@@ -17,8 +17,19 @@ const ImageBox = styled.div`
   left: 0px;
   width: 100vw;
   height: 100%;
+  
 `;
-
+const DialogueSection = styled.div`
+  width: 100%;
+  height: 250px;
+  background-color: #212121;
+  position: fixed;
+  bottom: 0px;
+ background: linear-gradient(
+    rgba(240, 240, 240, 0.0),
+    rgba(25, 42, 81, 0.7),
+    rgba(25, 42, 81, 0.9)
+  );`;
 const DialogueBox = styled.div`
   position: fixed;
   bottom: 10px;
@@ -28,7 +39,6 @@ const DialogueBox = styled.div`
   background-color: rgba(240, 240, 240, 0.9);
   border-radius: 0.4em;
   font-size: 1.3em;
-
   &:after {
     content: '';
     position: absolute;
@@ -65,7 +75,7 @@ const DialogueBodyRight = styled.div`
   height: 180px;
   left: 78vw;
   bottom: 10px;
-  color : white;
+  color: white;
   // background-color: rgba(240, 240, 240, 0.9);
 `;
 const DialogueContent = styled.div`
@@ -75,8 +85,7 @@ const DialogueContent = styled.div`
 
 const CharacterImage = styled.img`
   position: fixed;
-  height: 600px;
-  left: 30vw;
+  height: 70vh;
   bottom: 0px;
 `;
 
@@ -89,12 +98,23 @@ const CharacterName = styled.div`
   border-radius: 10px;
   border: 1px solid black;
   background-color: rgba(240, 240, 240, 0.8);
-  padding : 5px;
-  padding-right : 15px;
+  padding: 5px;
+  padding-right: 15px;
+`;
+
+const ImageContentBox = styled.div`
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 0.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
 `;
 
 const S = {
   PlayView,
+  DialogueSection,
   DialogueBody,
   DialogueBodyLeft,
   DialogueBodyRight,
@@ -105,5 +125,6 @@ const S = {
   CharacterImage,
   CharacterName,
   ImageBox,
+  ImageContentBox,
 };
 export default S;

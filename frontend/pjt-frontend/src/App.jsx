@@ -28,7 +28,7 @@ import { useEffect, useState } from 'react';
 import SoundStore from './stores/SoundStore.jsx';
 import SolvedDetailPage from './components/sanghyeon/pages/SolvedDetailPage.jsx';
 function App() {
-  const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } = SoundStore();
+  const { initializeBackgroundMusic, stopBackgroundMusic, playBackgroundMusic ,isPlaying } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
   const { accessToken } = store((state) => ({
     accessToken: state.accessToken,
@@ -39,7 +39,8 @@ function App() {
     setTimeout(() => {
       setIsLoading(false);
       console.log('loading end');
-      initializeBackgroundMusic('/BGM-1.mp3');
+      playBackgroundMusic();
+    
     }, 2000);
 
     return () => {
@@ -75,7 +76,7 @@ function App() {
           {/* <Route path="/single-main" element={accessToken ? <SingleMain /> : <LoginPage />} /> */}
           <Route path="/single-main" element={<SingleMain/> } />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
-          <Route path="/single-play" element={<SinglePlay />} />
+          <Route path="/single-play/:content_id" element={<SinglePlay />} />
           <Route path="/multi-game-select" element={accessToken ? <SelectProblem /> : <LoginPage />} />
           <Route path="*" element={<TitlePage />} />
         </Routes>

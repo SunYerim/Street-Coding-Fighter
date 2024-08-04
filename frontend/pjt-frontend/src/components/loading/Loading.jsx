@@ -19,7 +19,7 @@ const Loading = () => {
       </div>
       <div style={styles.loadingMessage}>
         <p>Now Loading...</p>
-        <img style={styles.characterContainer} src={characters[characterNum].moving} alt="character" />
+        <img style={styles.characterContainer} src={characters[characterNum]?.moving} alt="character" />
       </div>
     </div>
   );
