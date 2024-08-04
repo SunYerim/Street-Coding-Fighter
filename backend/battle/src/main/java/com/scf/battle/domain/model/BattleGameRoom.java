@@ -31,6 +31,9 @@ public class BattleGameRoom {
     private Boolean hasPlayerASubmitted;
     private Boolean hasPlayerBSubmitted;
 
+    // 각 유저가 풀어야 할 문제를 저장할 필드
+    private ProblemResponse.SelectProblemDTO problemForPlayerA;
+    private ProblemResponse.SelectProblemDTO problemForPlayerB;
 
     public void add(Long userId, String username, String roomPassword) {
         if (roomPassword.equals(this.password)) {
