@@ -13,26 +13,15 @@ import FillInTheBlank from "../game/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
-// export const userL = [
-//   { id: 1, rank: 2, name: "방장", score: 97 },
-//   { id: 2, rank: 1, name: "B", score: 100 },
-//   { id: 3, rank: 3, name: "F", score: 90 },
-//   { id: 4, rank: 4, name: "S", score: 80 },
-//   { id: 5, rank: 5, name: "H", score: 70 },
-//   { id: 6, rank: 6, name: "E", score: 60 },
-//   { id: 7, rank: 7, name: "J", score: 30 },
-//   { id: 7, rank: 7, name: "말숙", score: 50 },
-//   { id: 7, rank: 7, name: "ai", score: 90 },
-// ];
-
 
 export default function MultiGame() {
   const navigate = useNavigate();
 
   const location = useLocation();
   const { roomId, userId, username } = location.state;
-  const socket = newSocket(roomId, userId, username);
+  // const socket = newSocket(roomId, userId, username);
 
+  const [socket, setSocket] = useState(null);
   const [start, setStart] = useState(0);
   const [headerUser, setHeaderUser] = useState('');
   const [user, setUser] = useState(username);
@@ -50,42 +39,65 @@ export default function MultiGame() {
 
   const handleStart = () => {
     setStart(1);
-    // socket.emit("start");
+    if (socket) {
+      const messageObj = {
+          type: 'start_game',
+          content: {}
+      };
+      socket.send(JSON.stringify(messageObj));
+  }
   };
 
   // 문제요청 함수
   // 2. 문제받기 정의
-  const requestProblems = (gameRound) => {
-    // socket.emit('requestProblems', gameRound, (response) => {
-    //   if (response.ok) {
-    //     setProblems(response.problems);
-    //   } else {
-    //     console.error(response.err);
-    //   }
-    // });
-  };
-
+  // const requestProblems = (gameRound) => {
+  //   socket.send(JSON.stringify({ event: 'requestProblems', gameRound }));
+  // };
 
   useEffect(() => {
+    console.log(`Room ${roomId}, userId ${userId}, username: ${username}`);
 
-    if (socket) {
-      socket.on('message', (message) => {
-        console.log('WebSocket message received:', message);
-      });
+    const socketInstance = newSocket(roomId, userId, username);
+    setSocket(socketInstance);
 
-      // 컴포넌트 언마운트 시 소켓 연결 해제
-      return () => {
-        socket.disconnect();
-      };
-    }
-  }, [socket]);
+    console.log(user);
+
+    socketInstance.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      
+      if (data.type === 'start_game') {
+        setStart(1);
+        console.log(data.message); // "Game has started!" 메시지 출력
+      }
+
+      setMessageList((prevMessageList) => [...prevMessageList, event.data]);
+    };
+
+    return () => {
+      socketInstance.close();
+    };
+  }, []);
+
+  // useEffect(() => {
+
+    // if (socket) {
+    //   socket.on('message', (message) => {
+    //     console.log('WebSocket message received:', message);
+    //   });
+
+    //   // 컴포넌트 언마운트 시 소켓 연결 해제
+    //   return () => {
+    //     socket.disconnect();
+    //   };
+    // }
+  // }, [socket]);
 
 
     // 메세지 목록 업데이트
     // 1. 메세지 주고받기
-    socket.on("message", (message) => {
-      setMessageList((prevState) => prevState.concat(message));
-    });
+    // socket.on("message", (message) => {
+    //   setMessageList((prevState) => prevState.concat(message));
+    // });
 
     // 임시) 유저정보 받기
     // askUserName();
@@ -140,25 +152,45 @@ export default function MultiGame() {
   // };
 
   
-  const sendMessage = (event) => {
-    event.preventDefault();
-    socket.emit("sendMessage", message, (res)=> {
-      console.log("sendMessage res", res);
-    });
-    setMessage('');
+  // const sendMessage = (event) => {
+  //   event.preventDefault();
+  //   socket.send(JSON.stringify({ event: 'chat', message }));
+  //   // socket.emit("sendMessage", message, (res)=> {
+  //   //   console.log("sendMessage res", res);
+  //   // });
+  //   setMessage('');
+  // };
+
+  const sendMessage = () => {
+    if (socket && message.trim()) {
+        const messageObj = {
+            type: 'chat',
+            content: {
+                text: message.trim()
+            }
+        };
+        socket.send(JSON.stringify(messageObj));
+        setMessage('');
+    }
   };
 
 
   // 3. 답보내기
+  // const submitAnswer = (answer) => {
+  //   socket.send(JSON.stringify({ event: 'solve', answer }));
+  // };
+
   const submitAnswer = (answer) => {
-    socket.emit("submitAnswer", answer, (res) => {
-      if (res.ok) {
-        console.log("Answer submitted successfully");
-      } else {
-        console.error(res.err);
-      }
-    });
-  };
+    if (socket && answer.trim()) {
+        const messageObj = {
+            type: 'solve',
+            content: {
+                solve: answer.trim()
+            }
+        };
+        socket.send(JSON.stringify(messageObj));
+    }
+};
 
   const renderProblem = () => {
     const problem = problems[currentProblemIndex];
@@ -230,7 +262,7 @@ export default function MultiGame() {
                   {/* <button className="game-start-button" onClick={handleStart}>
                     Start
                   </button> */}
-                  { headerUser == user.name ? (
+                  { headerUser == user ? (
                     <button className="game-start-button" onClick={handleStart}>
                       Start
                     </button>
@@ -238,7 +270,7 @@ export default function MultiGame() {
                     <div>
                       <h1>대기중 . . .</h1>
                       <h1>헤더유저: {headerUser}</h1>
-                      <h1>니이름: {user.name}</h1>
+                      <h1>니이름: {user}</h1>
                       {/* <MultiResultModal userList={userList} /> */}
                     </div>
                   )}

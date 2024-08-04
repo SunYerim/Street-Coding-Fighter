@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 import PasswordModal from "./PasswordModal.jsx";
 import axios from "axios";
 import lock from '/lock.svg'
@@ -14,6 +15,17 @@ import unlock from '/unlock.svg'
 function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
 
   const handleOpenModal = () => {
@@ -48,7 +60,9 @@ function MultiRoom(props) {
     } catch (error) {
       console.error('Error entering the room:', error);
       // 실패 모달창
-      alert('Failed to enter the room');
+      setErrorMessage("잘못된 비밀번호입니다!"); 
+      openModal();
+      // alert('Failed to enter the room');
     }
     handleCloseModal();
   };
@@ -61,10 +75,10 @@ function MultiRoom(props) {
     }
   };
 
-
+  const warningSign = "/warningSign.png"
   return(
     <>
-    <div className='room-items' onClick={handleRoomClick}>
+      <div className='room-items' onClick={handleRoomClick}>
         <h3>{props.roomNum}</h3>
         <h3>{props.room}</h3>
         <h4>{props.hostname}</h4>
@@ -77,6 +91,18 @@ function MultiRoom(props) {
             onSubmit={handleSubmit}
           />
         )}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Alert Modal"
+          className="modal"
+          overlayClassName="overlay"
+        >
+          <div className="modal-container">
+            <img className="warning-img" src={warningSign} alt="warning-sign" />
+            <h4 className="warning-text">{errorMessage}</h4>
+          </div>
+        </Modal>
     </>
   )
 }
