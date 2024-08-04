@@ -1,17 +1,32 @@
 package com.scf.battle.presentation.websocket;
 
 import com.scf.battle.application.BattleGameService;
+import com.scf.battle.domain.dto.Problem.ProblemResponse;
+import com.scf.battle.domain.dto.Room.JoinRoomUserDTO;
+import com.scf.battle.domain.dto.Room.ResultRoomDTO;
 import com.scf.battle.domain.dto.User.FightDTO;
 import com.scf.battle.domain.dto.Room.JoinRoomDTO;
-import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.Room.GameResultRoomDTO;
+import com.scf.battle.domain.dto.User.Player;
 import com.scf.battle.domain.dto.User.Solved;
+import com.scf.battle.domain.enums.GameResultType;
+import com.scf.battle.domain.enums.GameType;
 import com.scf.battle.domain.model.BattleGameRoom;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import com.scf.battle.infrastructure.KafkaMessageProducer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,6 +34,7 @@ public class BattleSocketController {
 
     private final BattleGameService battleGameService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     @MessageMapping("/quiz/join")
     public void joinRoom(JoinRoomDTO joinRoomDTO) {
