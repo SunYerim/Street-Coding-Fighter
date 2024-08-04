@@ -186,12 +186,6 @@ services:
   chat-server:
     image: zlxldgus123/chat
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: true
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MariaDBDialect
       LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
       SPRING_APPLICATION_NAME: scf-chat
     ports:
