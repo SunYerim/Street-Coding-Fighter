@@ -192,7 +192,10 @@ public class BattleGameService {
 
     public boolean isRoundOver(String roomId) {
         BattleGameRoom room = findById(roomId);
-        if (room.getHasPlayerASubmitted() && room.getHasPlayerBSubmitted()) return true;
+        if (room.getHasPlayerASubmitted() && room.getHasPlayerBSubmitted()) {
+            Integer currentRound = room.nextRound(); // TODO:이 부분 생각하기
+            return true;
+        }
         return false;
     }
 
