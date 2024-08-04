@@ -29,9 +29,6 @@ public class ContentCheckUser {
     @Column(name = "member_id")
     private int memberId;
 
-    @Column(name = "content_id")
-    private int contentId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;

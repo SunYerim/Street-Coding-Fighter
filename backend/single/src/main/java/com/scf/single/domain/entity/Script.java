@@ -23,9 +23,6 @@ public class Script {
     @Column(name = "page_no")
     private int pageNo;
 
-    @Column(name = "content_id")
-    private int contentId;
-
     @Column(name = "script_content")
     private String scriptContent;
 
