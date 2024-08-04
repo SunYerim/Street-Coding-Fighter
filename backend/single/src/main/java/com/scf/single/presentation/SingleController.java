@@ -49,10 +49,20 @@ public class SingleController {
         @PathVariable("contentId") int contentId) {
         ContentCompletionRequestDto requestDto = new ContentCompletionRequestDto(memberId,
             contentId);
-        // 수강 완료 처리
-        singleService.markContentAsCompleted(requestDto);
-
-        return new ResponseEntity<>("수강을 완료하셨습니다.", HttpStatus.OK);
+        try {
+            // 수강 완료 처리
+            singleService.markContentAsCompleted(requestDto);
+            return ResponseEntity.ok("수강을 완료하셨습니다.");
+        } catch (IllegalArgumentException e) {
+            // 콘텐츠를 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            // 이미 수강 완료된 콘텐츠인 경우
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
     }
 
 }

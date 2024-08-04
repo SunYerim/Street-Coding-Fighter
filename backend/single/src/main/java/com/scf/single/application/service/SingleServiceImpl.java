@@ -60,24 +60,25 @@ public class SingleServiceImpl implements SingleService {
         Long memberId = requestDto.getMemberId();
         int contentId = requestDto.getContentId();
 
-        // 사용자의 수강 완료 여부 확인
-        Optional<ContentCheckUser> existingRecord = contentCheckUserRepository.findByMemberIdAndContent_ContentId(
-            requestDto.getMemberId(), requestDto.getContentId());
+        // 콘텐츠가 존재하는지 확인
+        Content content = contentRepository.findById(contentId)
+            .orElseThrow(() -> new IllegalArgumentException("콘텐츠를 찾을 수 없습니다."));
 
-        if (existingRecord.isEmpty()) {
-            // 수강 완료 기록이 없으면 새로 저장
+        // 사용자가 이미 수강 완료한 콘텐츠인지 확인
+        Optional<ContentCheckUser> existingRecord = contentCheckUserRepository.findByMemberIdAndContent_ContentId(
+            memberId, contentId);
+
+        if (existingRecord.isPresent()) {
+            // 이미 수강 완료된 콘텐츠인 경우
+            throw new IllegalStateException("이미 수강 완료된 콘텐츠입니다.");
+        } else {
+            // 수강 완료 기록 생성
             ContentCheckUser newRecord = new ContentCheckUser();
             newRecord.setMemberId(memberId);
-            newRecord.setComplete(1);  // 수강 완료 상태를 나타내는 값 -> 1
-
-            Content content = contentRepository.findById(contentId)
-                .orElseThrow(() -> new IllegalArgumentException("콘텐츠를 찾을 수 없습니다."));
+            newRecord.setComplete(1);  // 수강 완료 상태를 나타내는 값
             newRecord.setContent(content);
 
             contentCheckUserRepository.save(newRecord);
-        } else {
-            throw new IllegalStateException("이미 수강 완료된 콘텐츠입니다.");
         }
-
     }
 }
