@@ -36,11 +36,7 @@ public class BattleGameRoom {
     private ProblemResponse.SelectProblemDTO problemForPlayerB;
 
     public void add(Long userId, String username, String roomPassword) {
-        if (roomPassword.equals(this.password)) {
-            this.playerB = new Player(userId, username, 100);
-        } else {
-            // 예외처리
-        }
+        this.playerB = new Player(userId, username, 100);
     }
 
     public void startGame(List<Problem> problems, Long memberId) {
