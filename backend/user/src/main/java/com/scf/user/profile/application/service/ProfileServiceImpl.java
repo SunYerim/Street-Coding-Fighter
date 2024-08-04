@@ -27,9 +27,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     // 프로필 정보 조회
     @Override
-    public ProfileResponseDto getProfileInfo(String memberId) {
+    public ProfileResponseDto getProfileInfo(Long memberId) {
         // 멤버 정보 조회
-        Member member = userRepository.findById(Long.parseLong(memberId))
+        Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         // 프로필 DTO 생성
@@ -142,6 +142,21 @@ public class ProfileServiceImpl implements ProfileService {
             .list(solvedProblemDtoList)
             .build();
 
+    }
+
+    @Override
+    public void updateExp(Long memberId, int newExp) {
+        // 멤버 정보 조회
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        // 새로운 경험치로 업데이트
+        member.getCharacter().setExp(newExp);
+
+        // 변경사항을 저장
+        userRepository.save(member);
+
+        System.out.println("경험치가 업데이트 되었습니다. " + memberId + ": " + newExp);
     }
 
 }

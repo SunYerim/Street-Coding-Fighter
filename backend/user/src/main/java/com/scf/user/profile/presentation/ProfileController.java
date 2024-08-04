@@ -23,7 +23,7 @@ public class ProfileController {
 
     // 프로필 정보 조회
     @GetMapping
-    public ResponseEntity<?> profileInfo(@RequestHeader("memberId") String memberId) {
+    public ResponseEntity<?> profileInfo(@RequestHeader("memberId") Long memberId) {
         ProfileResponseDto profileInfo = profileService.getProfileInfo(memberId);
 
         return ResponseEntity.ok(profileInfo);
