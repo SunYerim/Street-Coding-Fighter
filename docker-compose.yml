@@ -159,6 +159,46 @@ services:
     networks:
       - network
 
+  battle-server:
+    image: zlxldgus123/battle
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SPRING_KAFKA_PRODUCER_PROPERTIES_ACKS: all
+      SPRING_KAFKA_PRODUCER_PROPERTIES_RETRIES: 3
+      SPRING_KAFKA_PRODUCER_PROPERTIES_COMPRESSION_TYPE: gzip
+      SPRING_KAFKA_PRODUCER_PROPERTIES_BATCH_SIZE: 16384
+      SPRING_KAFKA_PRODUCER_PROPERTIES_LINGER_MS: 1
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+      SPRING_APPLICATION_NAME: scf-battle
+      PROBLEM_SERVER_URL: http://ssafy11s.com/problem
+      USER_SERVER_URL: http://ssafy11s.com/user
+    ports:
+      - "8084:8084"
+    networks:
+      - network
+
+  chat-server:
+    image: zlxldgus123/chat
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MariaDBDialect
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+      SPRING_APPLICATION_NAME: scf-chat
+    ports:
+      - "8085:8085"
+    networks:
+      - network
+
 networks:
   network:
     external: true
