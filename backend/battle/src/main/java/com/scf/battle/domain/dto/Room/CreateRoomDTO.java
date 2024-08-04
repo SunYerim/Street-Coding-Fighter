@@ -12,7 +12,6 @@ public class CreateRoomDTO {
     @Size(max = 20, message = "제목은 최대 20자까지 가능합니다.")
     private String title;
 
-    @NotBlank(message = "비밀번호를 입력해야 합니다.")
     @Size(max = 120, message = "비밀번호은 최대 20자까지 가능합니다.")
     private String password;
 
