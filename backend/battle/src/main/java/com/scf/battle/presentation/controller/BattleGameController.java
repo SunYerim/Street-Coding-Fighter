@@ -2,7 +2,6 @@ package com.scf.battle.presentation.controller;
 
 import com.scf.battle.application.BattleGameService;
 import com.scf.battle.domain.dto.Room.CreateRoomDTO;
-import com.scf.battle.domain.dto.Problem.Problem;
 import com.scf.battle.domain.dto.Room.RoomResponseDTO;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.global.error.exception.BusinessException;
