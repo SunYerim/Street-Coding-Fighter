@@ -1,5 +1,6 @@
 package com.scf.battle.domain.model;
 
+import com.scf.battle.domain.dto.Problem.ProblemResponse;
 import com.scf.battle.domain.dto.User.FightDTO;
 import com.scf.battle.domain.dto.User.Player;
 import com.scf.battle.domain.dto.Problem.Problem;
@@ -8,8 +9,8 @@ import com.scf.battle.global.error.exception.BusinessException;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
