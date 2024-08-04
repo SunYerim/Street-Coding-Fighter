@@ -1,6 +1,6 @@
 spring:
   application:
-    name: scf
+    name: scf-chat
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
