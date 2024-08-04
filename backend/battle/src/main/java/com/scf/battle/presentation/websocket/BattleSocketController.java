@@ -44,22 +44,32 @@ public class BattleSocketController {
 
         messagingTemplate.convertAndSend("/room/" + roomId, new JoinRoomUserDTO(joinRoomDTO.getUserId(), joinRoomDTO.getUsername())); // 실제로는 입장 메세지
     }
-    @SendTo("/topic/messages")
-    @MessageMapping("/quiz/answer")
-    public void handleQuizAnswer(Solved solved) {
-        System.out.println("sasa"+solved.toString());
-        FightDTO fightDTO = battleGameService.markSolution(solved.getRoomId(), solved.getUserId(),
-            solved);
-        System.out.println("Received payload: " + solved.toString());
-        System.out.println("fightDTO: " + fightDTO.toString());
-        messagingTemplate.convertAndSend("/topic/messages/" + solved.getRoomId(), fightDTO);
 
-        // 만약 isAttack이 true이고, 나머지 플레이어
-        if(battleGameService.isRoundOver(solved.getRoomId())){ // 라운드가 끝났다면
-            Integer currentRound = battleGameService.runRound(solved.getRoomId());
-            List<Problem> currentRoundProblem  = battleGameService.getCurrentRoundProblem(solved.getRoomId(),currentRound);
-            messagingTemplate.convertAndSend("/topic/messages/" + currentRoundProblem);
+    @MessageMapping("/game/{roomId}/answer")
+    public void handleQuizAnswer(@DestinationVariable String roomId, Solved solved) {
+        BattleGameRoom room = battleGameService.findById(roomId);
+        System.out.println("Received payload: " + solved.toString());
+        FightDTO fightDTO = battleGameService.markSolution(roomId, solved.getUserId(), solved);
+        System.out.println("fightDTO: " + fightDTO.toString());
+        messagingTemplate.convertAndSend("/room/" + roomId, fightDTO); // 서버에서 프론트로 메세지 보내기
+        Long curruntUserId = solved.getUserId();
+        if (room.getPlayerA().getUserId().equals(curruntUserId)) room.getPlayerA().addSolved(solved);
+        if (room.getPlayerB().getUserId().equals(curruntUserId)) room.getPlayerB().addSolved(solved);
+
+        if (battleGameService.isRoundOver(roomId)) { // 라운드가 끝났다면
+            if (room.getCurrentRound().equals(room.getFinalRound())) {
+                determineWinner(room);
+                return;
+            }
+            // 큰 경우 예외처리
+            if (room.getPlayerA().getHp() <= 0 || room.getPlayerB().getHp() <= 0) {
+                determineWinner(room);
+                return;
+            }
+            battleGameService.sendRoundProblemToRoom(roomId); // 다시 초기 3문제 주기
+            //현재 라운드 보내기
         }
+    }
 
 //        if (room.getPlayerA().getHp() <= 0 || room.getPlayerB().getHp() <= 0
 //            || room.getRound() > 10) {
