@@ -109,6 +109,16 @@ public class BattleGameRoom {
         return currentRound;
     }
 
+    public Player getPlayerById(Long userId) {
+        if (playerA.getUserId().equals(userId)) {
+            return playerA;
+        } else if (playerB.getUserId().equals(userId)) {
+            return playerB;
+        } else {
+            throw new IllegalArgumentException("Invalid userId");
+        }
+    }
+
     public Player getOpponentById(Long userId) {
         if (playerA.getUserId().equals(userId)) {
             return playerB;
@@ -117,5 +127,13 @@ public class BattleGameRoom {
         } else {
             throw new IllegalArgumentException("Invalid userId");
         }
+    }
+
+    public void setProblemForPlayerA(ProblemResponse.SelectProblemDTO selectProblemDTO) {
+        this.problemForPlayerA = selectProblemDTO;
+    }
+
+    public void setProblemForPlayerB(ProblemResponse.SelectProblemDTO selectProblemDTO) {
+        this.problemForPlayerB = selectProblemDTO;
     }
 }
