@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ContentCheckUserRepository extends JpaRepository<ContentCheckUser, Long> {
+
     List<ContentCheckUser> findByMemberId(Long memberId);
 
 }

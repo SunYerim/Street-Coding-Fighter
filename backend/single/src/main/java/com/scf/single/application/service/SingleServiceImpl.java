@@ -19,8 +19,8 @@ public class SingleServiceImpl implements SingleService {
     @Override
     public ContentListResponsesDto getUserContentList(String memberId) {
         // memberId를 사용하여 content_check_user 테이블 조회
-        List<ContentCheckUser> contentCheckUsers = contentCheckUserRepository.findByMemberId(Long.parseLong(memberId));
-
+        List<ContentCheckUser> contentCheckUsers = contentCheckUserRepository.findByMemberId(
+            Long.parseLong(memberId));
 
         // DTO로 변환
         List<ContentListResponseDto> contentList = contentCheckUsers.stream()
