@@ -99,9 +99,6 @@ public class BattleGameRoom {
         if (!Boolean.TRUE.equals(this.isStart)) {
             // TODO : 시작 안 된 상황
         }
-        if (this.finalRound == currentRound) { // 끝난상황
-            return -1;
-        }
         hasPlayerASubmitted = false;
         hasPlayerBSubmitted = false;
         this.isAttack = false;
