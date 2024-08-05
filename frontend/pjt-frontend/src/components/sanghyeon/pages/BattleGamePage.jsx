@@ -104,8 +104,7 @@ const BattleGamePage = () => {
           subscribeEnterRoom();
           subscribeEnemyProblem();
           subscribeMyProblem();
-          subscribeRoundResult();
-          subscribeTotalResult();
+          subscribeResult();
           console.log("배틀 서버 연결");
 
           chatStompClient.current.connect(
@@ -213,27 +212,42 @@ const BattleGamePage = () => {
   }, []);
 
   // 체력 반영 미완성
-  const subscribeRoundResult = () => {
+  const subscribeResult = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
-      console.log(body);
-    });
-  };
 
-  const subscribeTotalResult = () => {
-    const endpoint = `/room/${roomId}`;
-    battleStompClient.current.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      setGameEnded(true);
-      setWinner(body.winner);
-      setLoser(body.loser);
-
-      setTimeout(() => {
+      if (body === "boom") {
+        alert("The host left the room");
         navigate("/battle-list");
-      }, 5);
+      } else if (body.result) {
+        setGameEnded(true);
+        setWinner(body.winner);
+        setLoser(body.loser);
+
+        setTimeout(() => {
+          navigate("/battle-list");
+        }, 5);
+      } else {
+        console.log(body);
+        // 체력 업데이트 반영
+      }
     });
   };
+
+  // const subscribeTotalResult = () => {
+  //   const endpoint = `/room/${roomId}`;
+  //   battleStompClient.current.subscribe(endpoint, (message) => {
+  //     const body = JSON.parse(message.body);
+  //     setGameEnded(true);
+  //     setWinner(body.winner);
+  //     setLoser(body.loser);
+
+  //     setTimeout(() => {
+  //       navigate("/battle-list");
+  //     }, 5);
+  //   });
+  // };
 
   const enterChat = () => {
     const endpoint = `/send/chat/${roomId}/enter`;
