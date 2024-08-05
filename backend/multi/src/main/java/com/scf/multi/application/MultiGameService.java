@@ -189,6 +189,63 @@ public class MultiGameService {
         return solved;
     }
 
+    public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
+        for (Player player : room.getPlayers()) {
+            List<Solved> solveds = player.getSolveds();
+            if (solveds != null) {
+                kafkaMessageProducer.sendSolved(solveds);
+            }
+        }
+
+        GameResult gameResult = GameResult.builder()
+            .gameRank(gameRank)
+            .build();
+        kafkaMessageProducer.sendResult(gameResult);
+
+        room.finishGame();
+    }
+
+    public Player connectPlayer(String roomId, Long userId, String sessionId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        Player connectedPlayer = findPlayerByUserId(room, userId);
+        connectedPlayer.setSessionId(sessionId);
+
+        return connectedPlayer;
+    }
+
+    public void validateRoom(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        if (room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
+        }
+    }
+
+    public Player handlePlayerExit(String roomId, String sessionId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        Player exitPlayer = findPlayerBySessionId(room, sessionId);
+        room.exitRoom(exitPlayer);
+
+        return exitPlayer;
+    }
+
+    public Player rotateHost(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        Player newHost = room.getPlayers().stream()
+            .findFirst()
+            .orElseThrow(() -> new BusinessException(null, "newHost", USER_NOT_FOUND));
+        newHost.setIsHost(true);
+        room.updateHost(newHost);
+
+        return newHost;
+    }
+
     private MultiGameRoom findRoom(String roomId) {
         return multiGameRepository.findOneById(roomId);
     }
@@ -295,62 +352,5 @@ public class MultiGameService {
         score += (streakCount * 75);
 
         return score;
-    }
-
-    public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
-        for (Player player : room.getPlayers()) {
-            List<Solved> solveds = player.getSolveds();
-            if (solveds != null) {
-                kafkaMessageProducer.sendSolved(solveds);
-            }
-        }
-
-        GameResult gameResult = GameResult.builder()
-            .gameRank(gameRank)
-            .build();
-        kafkaMessageProducer.sendResult(gameResult);
-
-        room.finishGame();
-    }
-
-    public Player connectPlayer(String roomId, Long userId, String sessionId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-        Player connectedPlayer = findPlayerByUserId(room, userId);
-        connectedPlayer.setSessionId(sessionId);
-
-        return connectedPlayer;
-    }
-
-    public void validateRoom(String roomId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        if (room.getIsStart()) {
-            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
-        }
-    }
-
-    public Player handlePlayerExit(String roomId, String sessionId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        Player exitPlayer = findPlayerBySessionId(room, sessionId);
-        room.exitRoom(exitPlayer);
-
-        return exitPlayer;
-    }
-
-    public Player rotateHost(String roomId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        Player newHost = room.getPlayers().stream()
-            .findFirst()
-            .orElseThrow(() -> new BusinessException(null, "newHost", USER_NOT_FOUND));
-        newHost.setIsHost(true);
-        room.updateHost(newHost);
-
-        return newHost;
     }
 }
