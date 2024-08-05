@@ -85,13 +85,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         int attainedScore = multiGameService.markSolution(roomId, solved); // 문제 채점
 
-        ResponseMessage attainScoreObj = ResponseMessage.builder()
-            .type("attainScore")
-            .payload(attainedScore)
-            .build();
-
-        String attainScoreMessage = JsonConverter.getInstance().toString(attainScoreObj);
-        session.sendMessage(new TextMessage(attainScoreMessage));
+        String attainScoreMessage = makeResponseMessage("attainScore", attainedScore);
+        sendMessage(session, attainScoreMessage);
 
         int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
 
@@ -124,6 +119,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             room.getCurSubmitCount().set(0); // 제출 횟수 초기화
         }
+    }
+
+    private static void sendMessage(WebSocketSession session, String attainScoreMessage)
+        throws IOException {
+        session.sendMessage(new TextMessage(attainScoreMessage));
     }
 
     @Override
@@ -188,7 +188,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
                     String message = JsonConverter.getInstance().toString(responseMessage);
 
-                    session.sendMessage(new TextMessage(message));
+                    sendMessage(session, message);
                 }
             }
         }
@@ -198,5 +198,13 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         String msg = textMessage.getPayload();
         return JsonConverter.getInstance().toObject(msg, SolvedMessage.class);
+    }
+
+    private static String makeResponseMessage(String type, Object payload) throws IOException {
+        ResponseMessage responseMessage = ResponseMessage.builder()
+            .type(type)
+            .payload(payload)
+            .build();
+        return JsonConverter.getInstance().toString(responseMessage);
     }
 }
