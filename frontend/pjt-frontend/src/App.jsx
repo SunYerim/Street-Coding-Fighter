@@ -103,8 +103,8 @@ function App() {
           />
           <Route
             path="/battle-list"
-            // element={accessToken ? <BattleGameListPage /> : <LoginPage />}
-            element={<BattleGameListPage />}
+            element={accessToken ? <BattleGameListPage /> : <LoginPage />}
+            // element={<BattleGameListPage />}
           />
           <Route
             path="/battle-game"
