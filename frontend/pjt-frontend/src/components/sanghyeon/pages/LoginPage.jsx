@@ -35,10 +35,10 @@ const LoginPage = () => {
   const userId = useRef(null);
   const password = useRef(null);
   const navigate = useNavigate();
-  const { playStartSound } = SoundStore();
+  const { playEffectSound } = SoundStore();
 
   const noAuthLogin = async () => {
-    playStartSound();
+    playEffectSound('mainStartSound');
     console.log(baseURL);
     try {
       const res = await axios({

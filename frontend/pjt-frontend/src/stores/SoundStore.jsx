@@ -2,21 +2,37 @@ import { create } from 'zustand';
 import { Howl } from 'howler';
 
 const SoundStore = create((set) => ({
-  sound: new Howl({
-    src: ['/BGM-1.mp3'],
+  backgroundMusic: new Howl({
+    src: ['/sounds/main-bgm.mp3'],
     loop: true,
-    volume: 0.3,
-  }),
-  isPlaying: false,
-  volume: 0.3, // 기본 볼륨 값 추가
-  clickSound: new Howl({
-    src: ['/clickSound.mp3'], // 효과음 파일 경로
     volume: 0.5,
   }),
+  isPlayingBgm: false,
+  bgmVolume: 0.5,
+  effectVolume: 0.5,
+  effectSounds: {
+    clickSound: new Howl({
+      src: ['/sounds/click-sound.mp3'], // 효과음 파일 경로
+      volume: 0.5,
+    }),
+    singleClickSound : new Howl({
+      src: ['/sounds/single-click.mp3'], // 효과음 파일 경로
+      volume: 0.5,
+    }),
+    btnClickSound : new Howl({
+      src: ['/sounds/btn-click.mp3'], // 효과음 파일 경로
+      volume: 0.5,
+    }),
+    mainStartSound : new Howl({
+      src: ['/sounds/main-start.mp3'], // 효과음 파일 경로
+      volume: 0.5,
+    }),
+    
+  },
   playBackgroundMusic: () => {
     set((state) => {
-      if (state.sound && !state.isPlaying) {
-        state.sound.play();
+      if (state.backgroundMusic && !state.isPlaying) {
+        state.backgroundMusic.play();
         return { isPlaying: true };
       }
       return {};
@@ -25,20 +41,42 @@ const SoundStore = create((set) => ({
   stopBackgroundMusic: () => {
     set((state) => {
       console.log(state.isPlaying);
-      if (state.sound && state.isPlaying) {
-        state.sound.stop();
+      if (state.backgroundMusic && state.isPlaying) {
+        state.backgroundMusic.stop();
         console.log('stop background music');
         return { isPlaying: false };
       }
       return {};
     });
   },
-  playClickSound: () => {
+  switchBackgroundMusic: (bgmType, callback) => {
     set((state) => {
-      state.clickSound.play();
+      state.backgroundMusic.stop();
+      const newBackgroundMusic = new Howl({
+        src: [`/sounds/${bgmType}-bgm.mp3`],
+        loop: true,
+        volume: state.bgmVolume,
+      });
+      callback(newBackgroundMusic);
+      return { backgroundMusic: newBackgroundMusic };
+    });
+  },
+  playEffectSound: (effectType) => {
+    set((state) => {
+      state.effectSounds?.[effectType].play();
       return {};
     });
   },
+  setBgmVolume: (volume) => {
+    set((state) => {
+      state.backgroundMusic.volume(volume);
+      return { bgmVolume: volume };
+    });
+  },
+  setEffectVolume: (volume) => set((state) =>{
+    Object.values(state.effectSounds).forEach((sound) => sound.volume(volume));
+    return { effectVolume: volume };
+  })
 }));
 
 export default SoundStore;

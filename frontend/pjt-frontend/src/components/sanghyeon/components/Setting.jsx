@@ -83,6 +83,12 @@ const Setting = () => {
             <p className="setting" onClick={handleVolume}>
               Music On/Off {volume > 0 ? <FaVolumeMute /> : <FaVolumeUp />} {/* 아이콘으로 대체 */}
             </p>
+            <p className="setting" onClick={handleVolume}>
+              Music On/Off {volume > 0 ? <FaVolumeMute /> : <FaVolumeUp />} {/* 아이콘으로 대체 */}
+            </p>
+            <p className="setting" onClick={handleVolume}>
+              Music On/Off {volume > 0 ? <FaVolumeMute /> : <FaVolumeUp />} {/* 아이콘으로 대체 */}
+            </p>
             <p className="setting">Language</p>
             <p className="setting" onClick={() => navigate('/')}>
               Back to Title

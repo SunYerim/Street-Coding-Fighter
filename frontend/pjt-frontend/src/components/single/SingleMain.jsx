@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import store from '../../store/store.js';
 import SingleInfoStore from '../../stores/SingleInfoStore.jsx';
+import Header from '../sanghyeon/components/Header.jsx';
 export default function SingleMain() {
   const { setCompleted } = SingleInfoStore();
   const navigate = useNavigate();
@@ -25,12 +26,15 @@ export default function SingleMain() {
   };
   // useEffect(() => {getSingleInfo()});
   return (
+  <>
+  <Header />
     <div id="container">
       <TitleDiv>
         <h1>Tutorials</h1>
       </TitleDiv>
       <EpisodeList rownum={3}></EpisodeList>
     </div>
+  </>
   );
 }
 
