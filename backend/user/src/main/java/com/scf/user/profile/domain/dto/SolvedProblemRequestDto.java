@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SolvedProblemRequestDto {
 
+    private Long memberId;
     private int problemId;
+    private String choice;
+    private String choiceText;
+    private boolean isCorrect;
 
 }

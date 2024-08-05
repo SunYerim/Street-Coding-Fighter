@@ -3,12 +3,14 @@ package com.scf.user.profile.application.service;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
 import com.scf.user.profile.application.client.ProblemClient;
+import com.scf.user.profile.domain.dto.ChoiceTextConverter;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.HistoryResponseDto;
 import com.scf.user.profile.domain.dto.ProblemResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemKafkaRequestDto;
+import com.scf.user.profile.domain.dto.SolvedProblemRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import com.scf.user.profile.domain.entity.Record;
@@ -171,19 +173,21 @@ public class ProfileServiceImpl implements ProfileService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        // Solved 엔티티 생성 -> dto 생성
-//        Solved solved = Solved.builder()
-//            .memberId(memberId)
-//            .choice(problemRequestDto.getChoice())
-//            .choiceText(problemRequestDto.getChoiceText())
-//            .isCorrect(problemRequestDto.isCorrect())
-//            .member(member)
-//            .build();
+        // choiceText를 문자열로 변환
+        String convertedChoiceText = ChoiceTextConverter.convertChoiceText(
+            problemRequestDto.getChoiceText(), problemRequestDto.getChoice());
+
+        //Solved 엔티티 생성 -> dto 생성
+        Solved solved = new Solved();
+        solved.setChoice(convertedChoiceText);
+        solved.setCorrect(problemRequestDto.isCorrect());
+        solved.setProblemId(
+            problemRequestDto.getProblemId());
+        solved.setMember(member);
 
         // Solved 엔티티 저장
-//        solvedRepository.save(solved);
+        solvedRepository.save(solved);
 
     }
-
 
 }
