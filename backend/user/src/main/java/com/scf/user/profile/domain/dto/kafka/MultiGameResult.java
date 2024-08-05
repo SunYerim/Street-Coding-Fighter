@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class GameResult {
+public class MultiGameResult {
 
     private Integer gameType; // 0 멀티, 1 배틀
     private LocalDateTime localDateTime;
     private List<Rank> gameRank = new ArrayList<>();
 
     @Builder
-    public GameResult(List<Rank> gameRank) {
+    public MultiGameResult(List<Rank> gameRank) {
         this.gameType = 0;
         this.localDateTime = LocalDateTime.now();
         this.gameRank = gameRank;
