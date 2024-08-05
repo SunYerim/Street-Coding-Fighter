@@ -19,8 +19,8 @@ import FillInTheBlank from "../game/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
-// const baseUrl = "https://www.ssafy11s.com"; // ssafy11s.com으로 수정하기
-const baseUrl = "http://localhost:8080"
+// const baseUrl = "www.ssafy11s.com"; // ssafy11s.com으로 수정하기
+const baseUrl = "localhost:8080"
 
 
 export default function MultiGame() {
@@ -61,6 +61,8 @@ export default function MultiGame() {
   const chatEndRef = useRef(null);
 
   const [selectedChoice, setSelectedChoice] = useState(null);
+  const [shortAnswer, setShortAnswer] = useState('');
+  const [blanks, setBlanks] = useState([]);
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
   // 시간을 담을 변수
@@ -73,7 +75,7 @@ export default function MultiGame() {
   const handleStart = async () => {
     setStart(1);
     const response = await axios.post(
-      `${baseUrl}/multi/game/${roomId}/start`,
+      `http://${baseUrl}/multi/game/${roomId}/start`,
       null, // 요청 본문을 생략
       {
         headers: {
@@ -142,6 +144,7 @@ export default function MultiGame() {
   }, []);
 
 
+  // 객관식 답변제출
   const handleChoiceSelection = (choiceId) => {
     setSelectedChoice(choiceId);
     console.log('선택된 choice ID:', choiceId);
@@ -151,7 +154,7 @@ export default function MultiGame() {
           content: {
               "problemType": "MULTIPLE_CHOICE",
               "submitTime": 30-count,
-              "solve": (1, choiceId),
+              "solve": {1 : choiceId},
               "solveText": null
           }
       };
@@ -159,14 +162,49 @@ export default function MultiGame() {
     }
   };
 
+  // 단답식 답변제출
+  const handleShortAnswer = (answer) => {
+    setShortAnswer(answer);
+    console.log('제출한 답:', answer);
+    if (socket && answer.trim().replace(/\s+/g, '')) {
+      const messageObj = {
+          type: 'solve',
+          content: {
+              "problemType": "SHORT_ANSWER_QUESTION",
+              "submitTime": 30-count,
+              "solve": null,
+              "solveText": answer
+          }
+      };
+      socket.send(JSON.stringify(messageObj));
+    }
+  };
+
+  // 빈칸 답변제출
+  const handleBlankAnswer = (blankList) => {
+    setBlanks(blankList);
+    console.log('제출한 답:', blankList);
+    if (socket && blankList) {
+      const messageObj = {
+          type: 'solve',
+          content: {
+              "problemType": "FILL_IN_THE_BLANK",
+              "submitTime": 30-count,
+              "solve": blankList,
+              "solveText": null
+          }
+      };
+      socket.send(JSON.stringify(messageObj));
+    }
+  };
 
   const renderProblem = () => {
     const problem = problems[currentProblemIndex];
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
-        return <FillInTheBlank problem={problem} onChoiceSelect={handleChoiceSelection} />;
+        return <FillInTheBlank problem={problem} onFillBlank={handleBlankAnswer} />;
       case "SHORT_ANSWER_QUESTION":
-        return <ShortAnswer problem={problem} onChoiceSelect={handleChoiceSelection} />;
+        return <ShortAnswer problem={problem} onShortAnswer={handleShortAnswer} />;
       case "MULTIPLE_CHOICE":
         return <MultipleChoice problem={problem} onChoiceSelect={handleChoiceSelection} />;
       default:

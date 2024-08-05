@@ -11,7 +11,7 @@ export default function MultiMain() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
 
-  // const baseUrl = "https://www.ssafy11s.com"
+  // const baseUrl = "www.ssafy11s.com"
   const baseUrl = "localhost:8080";
 
   const loadData = async () => {
@@ -34,7 +34,6 @@ export default function MultiMain() {
   }, []);
 
   const refreshPage = () => {
-    window.location.reload();
     loadData();
   }
 

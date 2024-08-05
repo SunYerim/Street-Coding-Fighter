@@ -40,21 +40,22 @@ const styles = {
     marginLeft: '20px',
   },
 };
-const ShortAnswer = ({ problem, submitTime }) => {
-
-
+const ShortAnswer = ({ problem, onShortAnswer }) => {
   const [answer, setAnswer] = useState('');
+
   const onInputChange = (e) =>{
     setAnswer(e.target.value)
   }
+
   const handleKeyDown = (e) => {
     if(e.key == 'Enter'){
       handleSubmit();
     }
   }
+
   const handleSubmit = () => {
-    // 여기 제출하는 함수 작성하시면 됩니다!
-    alert(`${answer}제출됨`)
+    onShortAnswer(answer);
+    // alert(`${answer}제출됨`)
   };
   return (
     <>
