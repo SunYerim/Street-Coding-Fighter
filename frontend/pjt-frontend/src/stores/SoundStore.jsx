@@ -12,7 +12,7 @@ const SoundStore = create((set) => ({
   effectVolume: 0.5,
   effectSounds: {
     clickSound: new Howl({
-      src: ['/sounds/click-sound.mp3'], // 효과음 파일 경로
+      src: ['/sounds/btn-click.mp3'], // 효과음 파일 경로
       volume: 0.5,
     }),
     singleClickSound : new Howl({
@@ -27,7 +27,10 @@ const SoundStore = create((set) => ({
       src: ['/sounds/main-start.mp3'], // 효과음 파일 경로
       volume: 0.5,
     }),
-    
+    hoverSound : new Howl({
+      src : ['/sounds/hover-sound.mp3'],
+      volume : 0.5,
+    }), 
   },
   playBackgroundMusic: () => {
     set((state) => {
