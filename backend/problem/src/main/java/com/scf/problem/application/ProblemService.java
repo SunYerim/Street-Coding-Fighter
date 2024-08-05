@@ -43,9 +43,12 @@ public class ProblemService {
     }
 
     @Transactional
-    public void addProblem(ProblemRequest.ProblemInfoDTO problemInfo) {
-        ProblemInfo problem = ProblemInfo.create(problemInfo);
-        problemInfoRepository.save(problem);
+    public void addProblems(List<ProblemRequest.ProblemInfoDTO> problemInfos) {
+
+        for(ProblemRequest.ProblemInfoDTO problemInfo : problemInfos) {
+            ProblemInfo problem = ProblemInfo.create(problemInfo);
+            problemInfoRepository.save(problem);
+        }
     }
 
     private ProblemResponse.ProblemInfoDTO convertToDTO(ProblemInfo problem) {
