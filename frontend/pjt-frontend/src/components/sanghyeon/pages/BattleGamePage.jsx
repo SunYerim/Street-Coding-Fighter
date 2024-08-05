@@ -318,14 +318,17 @@ const BattleGamePage = () => {
   // };
 
   useEffect(() => {
-    connect()
-      .then(() => {
+    const initializeConnections = async () => {
+      try {
+        await connect();
         enterRoom();
         enterChat();
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log("Connection error:", error);
-      });
+      }
+    };
+
+    initializeConnections();
 
     return () => {
       sendQuitMessage();

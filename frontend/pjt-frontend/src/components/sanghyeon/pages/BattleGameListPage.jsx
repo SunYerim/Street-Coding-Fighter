@@ -74,12 +74,12 @@ const BattleGameListPage = () => {
       return;
     }
 
-    let password = "";
+    let password = null;
 
     if (isLock === true) {
       password = prompt("비밀번호를 입력하세요.");
 
-      if (password === null || password === "") {
+      if (password === null) {
         alert("비밀번호를 입력해주세요.");
         return;
       }
