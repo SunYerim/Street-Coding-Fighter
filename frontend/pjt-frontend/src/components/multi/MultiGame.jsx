@@ -8,22 +8,27 @@ import MultiResultModal from "./MultiResultModal.jsx";
 import newSocket from "../game/server.js"
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import multiStore from '../../stores/multiStore.jsx';
+import axios from 'axios';
 
 import FillInTheBlank from "../game/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
+const baseUrl = "https://www.ssafy11s.com"; // ssafy11s.com으로 수정하기
+
 
 export default function MultiGame() {
   const navigate = useNavigate();
-
   const location = useLocation();
-  const { roomId, userId, username } = location.state;
-  // const socket = newSocket(roomId, userId, username);
+
+  const roomId = multiStore.getState().roomId;
+  const userId = multiStore.getState().userId;
+  const username = multiStore.getState().username;
 
   const [socket, setSocket] = useState(null);
   const [start, setStart] = useState(0);
-  const [headerUser, setHeaderUser] = useState('');
+  const [hostId, setHostId] = useState(null);
   const [user, setUser] = useState(username);
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
@@ -36,41 +41,55 @@ export default function MultiGame() {
   // 시간을 담을 변수
   const [count, setCount] = useState(30);
 
+  useEffect(() => {
+    setHostId(location.state?.hostId || null);
+  }, [location.state]);
 
-  const handleStart = () => {
+  const handleStart = async () => {
     setStart(1);
-    if (socket) {
-      const messageObj = {
-          type: 'start_game',
-          content: {}
-      };
-      socket.send(JSON.stringify(messageObj));
-  }
+    const response = await axios.post(`${baseUrl}/multi/game/${roomId}/start`, { roomId }, { hostId });
+    console.log(response.data);
+    setProblems(response.data);
+  };  
+
+  const isJsonString = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
   };
 
-  // 문제요청 함수
-  // 2. 문제받기 정의
-  // const requestProblems = (gameRound) => {
-  //   socket.send(JSON.stringify({ event: 'requestProblems', gameRound }));
-  // };
-
   useEffect(() => {
+    const roomId = multiStore.getState().roomId;
+    const userId = multiStore.getState().userId;
+    const username = multiStore.getState().username;
+
+    setUser(username);
+
     console.log(`Room ${roomId}, userId ${userId}, username: ${username}`);
 
     const socketInstance = newSocket(roomId, userId, username);
     setSocket(socketInstance);
 
-    console.log(user);
-
     socketInstance.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      
-      if (data.type === 'start_game') {
-        setStart(1);
-        console.log(data.message); // "Game has started!" 메시지 출력
-      }
+      const messageData = event.data;
+      if (isJsonString(messageData)) {
+        const data = JSON.parse(messageData);
 
-      setMessageList((prevMessageList) => [...prevMessageList, event.data]);
+        if (data.type === 'start_game') {
+          setStart(1);
+          console.log(data.message); // "Game has started!" 메시지 출력
+        } else if (data.type === '') { // 방장바뀌는 타입
+          setHostId(data.hostId);
+        }
+
+        setMessageList((prevMessageList) => [...prevMessageList, data]);
+      } else {
+        console.error('Received non-JSON message:', messageData);
+        setMessageList((prevMessageList) => [...prevMessageList, { text: messageData }]);
+      }
     };
 
     return () => {
@@ -78,88 +97,6 @@ export default function MultiGame() {
     };
   }, []);
 
-  // useEffect(() => {
-
-    // if (socket) {
-    //   socket.on('message', (message) => {
-    //     console.log('WebSocket message received:', message);
-    //   });
-
-    //   // 컴포넌트 언마운트 시 소켓 연결 해제
-    //   return () => {
-    //     socket.disconnect();
-    //   };
-    // }
-  // }, [socket]);
-
-
-    // 메세지 목록 업데이트
-    // 1. 메세지 주고받기
-    // socket.on("message", (message) => {
-    //   setMessageList((prevState) => prevState.concat(message));
-    // });
-
-    // 임시) 유저정보 받기
-    // askUserName();
-
-    // 유저 리스트 이벤트를 수신하고 유저 목록을 업데이트
-    // 0. 입장한 유저정보 받기
-    // socket.on('userList', (user) => {
-    //   setUserList(user);
-    // });
-    // socket.on('headerUser', (headerUser) => {
-    //   setHeaderUser(headerUser);
-    // });
-
-    // socket.on('gameStart', () => {
-    //   setStart(1);
-    //   requestProblems(3);
-    // })
-
-    // socket.on('roundEnd', () => {
-    //   setModalOpen(true); // 라운드 종료 시 모달 창 열기
-    //   setTimeout(() => {
-    //     setModalOpen(false);  // 5초 후 모달 창 닫기
-    //     if (currentProblemIndex < problems.length - 1) {
-    //       setCurrentProblemIndex(currentProblemIndex + 1); // 다음 문제로 인덱스 증가
-    //       setTimerEnded(false); // 타이머 상태 리셋
-    //     } else {
-    //       setStart(0); // 모든 라운드가 끝났다면 게임 대기 상태로 전환
-    //     }  
-    //   }, 5000);
-    // });
-
-
-    // 컴포넌트가 언마운트될 때 이벤트 수신 해제
-    // return () => {
-    //   socket.off('message');
-    //   socket.off('userList');
-    //   socket.off('headerUser');
-    //   socket.off('gameStart');
-    //   socket.off('roundEnd');
-    // };
-  // }, [currentProblemIndex, problems.length]);
-
-
-  // const askUserName = () => {
-  //   const userName = prompt("이름입력ㄱㄱ");
-
-  //   socket.emit("login", userName, (res) => {
-  //     if(res?.ok) {
-  //       setUser(res.data);
-  //     }
-  //   });
-  // };
-
-  
-  // const sendMessage = (event) => {
-  //   event.preventDefault();
-  //   socket.send(JSON.stringify({ event: 'chat', message }));
-  //   // socket.emit("sendMessage", message, (res)=> {
-  //   //   console.log("sendMessage res", res);
-  //   // });
-  //   setMessage('');
-  // };
 
   const sendMessage = () => {
     if (socket && message.trim()) {
@@ -180,27 +117,27 @@ export default function MultiGame() {
   //   socket.send(JSON.stringify({ event: 'solve', answer }));
   // };
 
-  const submitAnswer = (answer) => {
-    if (socket && answer.trim()) {
-        const messageObj = {
-            type: 'solve',
-            content: {
-                solve: answer.trim()
-            }
-        };
-        socket.send(JSON.stringify(messageObj));
-    }
-};
+  // const submitAnswer = (answer) => {
+  //   if (socket && answer.trim()) {
+  //       const messageObj = {
+  //           type: 'solve',
+  //           content: {
+  //               solve: answer.trim()
+  //           }
+  //       };
+  //       socket.send(JSON.stringify(messageObj));
+  //   }
+  // };
 
   const renderProblem = () => {
     const problem = problems[currentProblemIndex];
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
-        return <FillInTheBlank problem={problem} />;
+        return <FillInTheBlank problem={problem} submitTime={count} />;
       case "SHORT_ANSWER_QUESTION":
         return <ShortAnswer problem={problem} submitTime={count} />;
       case "MULTIPLE_CHOICE":
-        return <MultipleChoice problem={problem} />;
+        return <MultipleChoice problem={problem} submitTime={count} />;
       default:
         return <div>Unknown problem type</div>;
     }
@@ -262,14 +199,14 @@ export default function MultiGame() {
                   {/* <button className="game-start-button" onClick={handleStart}>
                     Start
                   </button> */}
-                  { headerUser == user ? (
+                  { hostId == userId ? (
                     <button className="game-start-button" onClick={handleStart}>
                       Start
                     </button>
                   ) : (
                     <div>
                       <h1>대기중 . . .</h1>
-                      <h1>헤더유저: {headerUser}</h1>
+                      <h1>방장ID: {hostId}</h1>
                       <h1>니이름: {user}</h1>
                       {/* <MultiResultModal userList={userList} /> */}
                     </div>
@@ -285,7 +222,7 @@ export default function MultiGame() {
 
                   {/* Playing Games! */}
                   {problems.length > 0 && renderProblem()}
-                  {timerEnded && submitAnswer(null)}
+                  {/* {timerEnded && submitAnswer(null)} */}
                   {modalOpen && <MultiResultModal userList={userList} />}
                 </div>
               ))
@@ -301,10 +238,10 @@ export default function MultiGame() {
               )}
               
             </div>
-            <div className="multi-message-room">
+            {/* <div className="multi-message-room">
               <MessageContainer messageList={messageList} user={user} />
             </div>
-              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
+              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
           </div>
         </div>
       </div>

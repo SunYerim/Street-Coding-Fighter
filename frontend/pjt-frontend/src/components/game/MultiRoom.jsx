@@ -5,19 +5,34 @@ import PasswordModal from "./PasswordModal.jsx";
 import axios from "axios";
 import lock from '/lock.svg'
 import unlock from '/unlock.svg'
-
-  //*** ssafy11s.com으로 수정하기
-  const baseUrl = "localhost:8080";
-  //*** 스토어에서 꺼내오기
-  const memberId = 35;
-  const username = "hermes";
+import multiStore from '../../stores/multiStore.jsx';
 
 function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const baseUrl = "localhost:8080";
+
   const [errorMessage, setErrorMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const setRoomId = multiStore((state) => state.setRoomId);
+  const setUserId = multiStore((state) => state.setUserId);
+  const setUsername = multiStore((state) => state.setUsername);
+
+  const [userId, setLocalUserId] = useState(null);
+  const [username, setLocalUsername] = useState(null);
+
+  useEffect(() => {
+    const userIdFromStore = multiStore.getState().userId;
+    const usernameFromStore = multiStore.getState().username;
+
+    setLocalUserId(userIdFromStore);
+    setLocalUsername(usernameFromStore);
+
+    setUserId(userIdFromStore);
+    setUsername(usernameFromStore);
+  }, [setUserId, setUsername]);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -41,19 +56,22 @@ function MultiRoom(props) {
     const password = event.target.password.value;
     console.log(password);
     const headers = {
-      'memberId': memberId,
+      'memberId': userId,
       'username': username
     };
     
     try {
-      const response = await axios.post(`http://localhost:8080/multi/room/${props.roomId}`, password, {
+      const response = await axios.post(`http://${baseUrl}/multi/room/${props.roomId}`, password, {
         headers: {
           ...headers,
           'Content-Type': 'text/plain'
         }
       });
       if (response.status === 200) {
-        navigate(`/multi/room/${props.roomId}`, { state: { roomId: props.roomId, userId: memberId, username: username } });
+        setRoomId(props.roomId);
+        setUserId(userId);
+        setUsername(username);
+        navigate(`/multi/room/${props.roomId}`);
       } else {
         alert('Incorrect password');
       }
@@ -71,7 +89,10 @@ function MultiRoom(props) {
     if (props.isLock) {
       handleOpenModal();
     } else {
-      navigate(`/multi/room/${props.roomId}`, { state: { roomId: roomId, userId: memberId, username: username } });
+      setRoomId(props.roomId);
+      setUserId(userId);
+      setUsername(username);
+      navigate(`/multi/room/${props.roomId}`);
     }
   };
 

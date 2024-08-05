@@ -55,15 +55,6 @@ const ShortAnswer = ({ problem, submitTime }) => {
   }
   const handleSubmit = () => {
     // 여기 제출하는 함수 작성하시면 됩니다!
-    socket.emit('submitAnswer', {
-      "type": "SHORT_ANSWER_QUESTION",
-      "content": {
-        "submitTime": {submitTime},
-        "solve": null, // 빈칸 문제, 객관식 채점용
-        "solveText": `${answer}`
-      }
-    })
-
 
     alert(`${answer}제출됨`)
   };

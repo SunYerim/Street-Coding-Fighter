@@ -4,22 +4,38 @@ import "../../css/GameCreate.css";
 import axios from 'axios';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import multiStore from '../../stores/multiStore.jsx';
 
 export default function MultiCreate() {
   const navigate = useNavigate();
 
+  const setRoomId = multiStore((state) => state.setRoomId);
+  const setUserId = multiStore((state) => state.setUserId);
+  const setUsername = multiStore((state) => state.setUsername);
+
   //*** ssafy11s.com으로 수정하기
-  const baseUrl = "localhost:8080";
-  //*** 스토어에서 꺼내오기
-  const memberId = 35;
-  const username = "hermes";
+  const baseUrl = "https://www.ssafy11s.com";
+
+  const [userId, setLocalUserId] = useState(null);
+  const [username, setLocalUsername] = useState(null);
+
+  useEffect(() => {
+    const userIdFromStore = multiStore.getState().userId;
+    const usernameFromStore = multiStore.getState().username;
+
+    setLocalUserId(userIdFromStore);
+    setLocalUsername(usernameFromStore);
+
+    setUserId(userIdFromStore);
+    setUsername(usernameFromStore);
+  }, [setUserId, setUsername]);
 
   const createMultiRoom = async (data) => {
     data.preventDefault();
     
     try {
       const headers = {
-        'memberId': memberId,
+        'memberId': userId,
         'username': username
       };
   
@@ -29,23 +45,11 @@ export default function MultiCreate() {
       const gameRound = data.target.gameRound.value;
 
 
-      const response = await axios.post(`http://${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
+      const response = await axios.post(`${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
       const roomId = response.data;
-      navigate(`/multi/room/${roomId}`, { state: { roomId: roomId, userId: memberId, username: username } });  
+      setRoomId(roomId);
+      navigate(`/multi/room/${roomId}`, { state: { hostId: userId } } );  
 
-      // const ws = new WebSocket(`ws://${baseUrl}/multi?roomId=${roomId}&userId=${memberId}&username=${username}`);
-      // ws.onopen = () => {
-      //   console.log('WebSocket connection established');
-      // };
-      // ws.onmessage = (message) => {
-      //   console.log('WebSocket message received:', message);
-      // };
-      // ws.onclose = () => {
-      //   console.log('WebSocket connection closed');
-      // };
-      // ws.onerror = (error) => {
-      //   console.error('WebSocket error:', error);
-      // };
 
     } catch (error) {
       console.error("Error creating room:", error);
