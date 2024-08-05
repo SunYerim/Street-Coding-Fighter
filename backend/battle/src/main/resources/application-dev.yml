@@ -1,30 +1,31 @@
 spring:
-    application:
-        name: scf
-    datasource:
-        url: jdbc:h2:tcp://localhost/~/scf
-        driver-class-name: org.h2.Driver
-        username: sa
-        password:
-        # Optional: You can use an in-memory database (jdbc:h2:mem:testdb) or file-based database (jdbc:h2:file:./data/testdb)
-    h2:
-        console:
-            enabled: true  # Enables the H2 console at /h2-console
-            path: /h2-console  # Path to access the H2 console (default is /h2-console)
-            settings:
-                web-allow-others: false  # Allows remote access to the console (not recommended for production)
-    jpa:
-        hibernate:
-            ddl-auto: update  # Automatically updates the database schema
-        show-sql: true  # Shows SQL statements in the console
+  application:
+    name: scf-battle
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        acks: all
+        retries: 3
+        compression-type: gzip
+        batch-size: 16384
+        linger.ms: 1
+
 
 logging:
-    level:
-        org:
-            hibernate:
-                SQL: debug
+  level:
+    org.hibernate.SQL: debug
+
+problem:
+  server:
+    url: http://ssafy11s.com/problem
+
+user:
+  server:
+    url: http://ssafy11s.com/user
 
 server:
-    error:
-        include-message: always
-        include-binding-errors: always
+  port: 8084
