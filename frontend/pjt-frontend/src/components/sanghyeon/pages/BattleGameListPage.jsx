@@ -74,22 +74,27 @@ const BattleGameListPage = () => {
       return;
     }
 
-    let password = null;
+    let inputPassword = "null";
+    // 비밀번호가 없는 경우 초기화
 
     if (isLock === true) {
-      password = prompt("비밀번호를 입력하세요.");
+      inputPassword = prompt("비밀번호를 입력하세요.");
 
-      if (password === null) {
+      if (inputPassword === null || inputPassword === "") {
         alert("비밀번호를 입력해주세요.");
         return;
       }
     }
 
+    console.log(inputPassword);
+
     try {
       const res = await authClient({
         method: "POST",
         url: `${baseURL}/battle/room/${roomId}`,
-        data: password,
+        data: {
+          password: inputPassword,
+        },
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
