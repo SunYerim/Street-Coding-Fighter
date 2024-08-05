@@ -6,7 +6,7 @@ import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.event.GameStartedEvent;
-import com.scf.multi.domain.dto.socket_message.request.Message;
+import com.scf.multi.domain.dto.socket_message.request.SolvedMessage;
 import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
@@ -15,6 +15,7 @@ import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.global.utils.JsonConverter;
 import com.scf.multi.infrastructure.KafkaMessageProducer;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,19 +75,17 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         String roomId = sessionRooms.get(session.getId());
         MultiGameRoom room = multiGameService.findOneById(roomId);
+        if (!room.getIsStart()) {
+            return;
+        }
 
         Player player = room.getPlayers().stream()
             .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
             .orElseThrow(() -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
 
-        if (!room.getIsStart()) {
-            return;
-        }
+        SolvedMessage solvedMessage = getSolvedMessage(textMessage);
 
-        String msg = textMessage.getPayload();
-        Message message = JsonConverter.getInstance().toObject(msg, Message.class);
-
-        Solved solved = multiGameService.makeSolved(room, player.getUserId(), message.getContent());
+        Solved solved = multiGameService.makeSolved(room, player.getUserId(), solvedMessage.getContent());
         player.addSolved(solved);
 
         int attainedScore = multiGameService.markSolution(roomId, player, solved); // 문제 채점
@@ -198,5 +197,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 }
             }
         }
+    }
+
+    private static SolvedMessage getSolvedMessage(TextMessage textMessage) throws IOException {
+
+        String msg = textMessage.getPayload();
+        return JsonConverter.getInstance().toObject(msg, SolvedMessage.class);
     }
 }
