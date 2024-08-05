@@ -177,6 +177,7 @@ const BattleGamePage = () => {
   const subsribeMyProblem = () => {
     const endpoint = `${baseURL}/${wsBattle}/room/${roomId}/${userId}`;
     battleStompClient.subscribe(endpoint, (message) => {
+      console.log(message);
       const body = JSON.parse(message.body);
       setMyProblem(body);
       closeModal();

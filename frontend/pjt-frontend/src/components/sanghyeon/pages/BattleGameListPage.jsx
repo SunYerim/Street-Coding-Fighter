@@ -68,7 +68,12 @@ const BattleGameListPage = () => {
     }
   };
 
-  const joinBattleRoom = async (roomId, isLock) => {
+  const joinBattleRoom = async (roomId, curPlayer, isLock) => {
+    if (curPlayer === 2) {
+      alert("인원 수가 최대치에 도달했습니다.");
+      return;
+    }
+
     let password = "";
 
     if (isLock === true) {
@@ -206,7 +211,9 @@ const BattleGameListPage = () => {
                 <hr />
                 {currentBattleList.map((data, index) => (
                   <div
-                    onClick={() => joinBattleRoom(data.roomId, data.isLock)}
+                    onClick={() =>
+                      joinBattleRoom(data.roomId, data.curPlayer, data.isLock)
+                    }
                     className="battle-room"
                     key={index}
                   >
