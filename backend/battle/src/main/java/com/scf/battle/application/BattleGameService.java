@@ -226,4 +226,15 @@ public class BattleGameService {
         battleGameRepository.removeRoom(roomId);
     }
 
+    public void leaveRoom(Long memberId, String roomId) {
+        BattleGameRoom room = findById(roomId);
+        if(memberId.equals(room.getHostId())){ // 방장인 경우
+            //방 터짐, 다른 사용자한테도 나가게
+            messagingTemplate.convertAndSend("/room/" +  room.getRoomId(), "boom");
+            removeRoom(roomId); // 방삭제
+        }
+        else{//아닌경우
+            room.leavePlayerB();
+        }
+    }
 }

@@ -92,4 +92,14 @@ public class BattleGameController {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         }
     }
+
+    @PostMapping("/room/{roomId}/leave")
+    public ResponseEntity<?> leaveRoom(@RequestHeader Long memberId, @PathVariable String roomId) {
+        try {
+            battleGameService.leaveRoom(memberId, roomId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
+    }
 }
