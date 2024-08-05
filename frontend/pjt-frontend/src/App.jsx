@@ -1,28 +1,29 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TitlePage from './components/sanghyeon/pages/TitlePage.jsx';
-import LoginPage from './components/sanghyeon/pages/LoginPage.jsx';
-import FindPasswordPage from './components/sanghyeon/pages/FindPasswordPage.jsx';
-import ChangePasswordPage from './components/sanghyeon/pages/ChangePasswordPage.jsx';
-import SignUpPage from './components/sanghyeon/pages/SignUpPage.jsx';
-import MainPage from './components/sanghyeon/pages/MainPage.jsx';
-import ProfilePage from './components/sanghyeon/pages/ProfilePage.jsx';
-import RecordPage from './components/sanghyeon/pages/RecordPage.jsx';
-import ReportPage from './components/sanghyeon/pages/ReportPage.jsx';
-import SolvedPage from './components/sanghyeon/pages/SolvedPage.jsx';
-import SingleMain from './components/single/SingleMain.jsx';
-import SinglePlay from './components/single/single-play/SinglePlay.jsx';
-import MultiMain from './components/multi/MultiMain.jsx';
-import MultiCreate from './components/multi/MultiCreate.jsx';
-import BattleCreate from './components/battle/BattleCreate.jsx';
-import BattleMain from './components/battle/BattleMain.jsx';
-import MultiGame from './components/multi/MultiGame.jsx';
-import BattleGame from './components/battle/BattleGame.jsx';
-import Ranking from './components/ranking/Ranking.jsx';
-import SelectProblem from './components/sanghyeon/pages/SelectProblem.jsx';
-import CharacterSelection from './components/sanghyeon/pages/CharacterSelection.jsx';
-import store from './store/store.js';
-import Loading from './components/loading/Loading.jsx';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import TitlePage from "./components/sanghyeon/pages/TitlePage.jsx";
+import LoginPage from "./components/sanghyeon/pages/LoginPage.jsx";
+import FindPasswordPage from "./components/sanghyeon/pages/FindPasswordPage.jsx";
+import ChangePasswordPage from "./components/sanghyeon/pages/ChangePasswordPage.jsx";
+import SignUpPage from "./components/sanghyeon/pages/SignUpPage.jsx";
+import MainPage from "./components/sanghyeon/pages/MainPage.jsx";
+import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
+import RecordPage from "./components/sanghyeon/pages/RecordPage.jsx";
+import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
+import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
+import SingleMain from "./components/single/SingleMain.jsx";
+import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
+import MultiMain from "./components/multi/MultiMain.jsx";
+import MultiCreate from "./components/multi/MultiCreate.jsx";
+import BattleCreate from "./components/battle/BattleCreate.jsx";
+import BattleMain from "./components/battle/BattleMain.jsx";
+import MultiGame from "./components/multi/MultiGame.jsx";
+import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
+import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
+import Ranking from "./components/ranking/Ranking.jsx";
+import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
+import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
+import store from "./store/store.js";
+import Loading from "./components/loading/Loading.jsx";
 
 import { useEffect, useState } from 'react';
 import SoundStore from './stores/SoundStore.jsx';
@@ -63,9 +64,27 @@ function App() {
           <Route path="/solved/:solvedId" element={accessToken ? <SolvedDetailPage /> : <LoginPage />} />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
           <Route path="/multi" element={<MultiMain />} />
-          <Route path="/multi-create" element={accessToken ? <MultiCreate /> : <LoginPage />} />
-          <Route path="/battle" element={accessToken ? <BattleMain /> : <LoginPage />} />
-          <Route path="/battle-create" element={accessToken ? <BattleCreate /> : <LoginPage />} />
+          <Route
+            path="/multi-create"
+            element={accessToken ? <MultiCreate /> : <LoginPage />}
+          />
+          <Route
+            path="/battle"
+            element={accessToken ? <BattleMain /> : <LoginPage />}
+          />
+          <Route
+            path="/battle-list"
+            element={accessToken ? <BattleGameListPage /> : <LoginPage />}
+            // element={<BattleGameListPage />}
+          />
+          <Route
+            path="/battle-game"
+            element={accessToken ? <BattleGamePage /> : <LoginPage />}
+          />
+          <Route
+            path="/battle-create"
+            element={accessToken ? <BattleCreate /> : <LoginPage />}
+          />
           {/* <Route path="/multi-game" element={accessToken ? <MultiGame /> : <LoginPage />} /> */}
           <Route path="/multi-game" element={<MultiGame />} />
           <Route path="/multi-game/:room_id" element={<MultiGame />} />
