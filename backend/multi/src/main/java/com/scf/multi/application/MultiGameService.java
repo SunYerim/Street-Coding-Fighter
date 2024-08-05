@@ -1,5 +1,7 @@
 package com.scf.multi.application;
 
+import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
+
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomResponse;
@@ -173,19 +175,27 @@ public class MultiGameService {
             .toList();
     }
 
-    public Solved makeSolved(MultiGameRoom room, Long userId, Content content) {
+    public Solved addSolved(MultiGameRoom room, String sessionId, Content content) {
 
         List<Problem> problems = room.getProblems();
         Problem problem = problems.get(room.getRound());
 
-        return Solved
+        Player player = room.getPlayers().stream()
+            .filter(p -> p.getSessionId().equals(sessionId)).findFirst()
+            .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
+
+        Solved solved = Solved
             .builder()
-            .userId(userId)
+            .userId(player.getUserId())
             .problemId(problem.getProblemId())
             .solve(content.getSolve())
             .solveText(content.getSolveText())
             .submitTime(content.getSubmitTime())
             .build();
+
+        player.addSolved(solved);
+
+        return solved;
     }
 
     private boolean compareWith(ProblemType problemType, Solved solved,

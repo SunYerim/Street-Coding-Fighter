@@ -79,14 +79,9 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-        Player player = room.getPlayers().stream()
-            .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
-            .orElseThrow(() -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
-
         SolvedMessage solvedMessage = getSolvedMessage(textMessage);
 
-        Solved solved = multiGameService.makeSolved(room, player.getUserId(), solvedMessage.getContent());
-        player.addSolved(solved);
+        Solved solved = multiGameService.addSolved(room, session.getId(), solvedMessage.getContent());
 
         int attainedScore = multiGameService.markSolution(roomId, player, solved); // 문제 채점
 
