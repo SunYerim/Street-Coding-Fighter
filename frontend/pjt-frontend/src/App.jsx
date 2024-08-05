@@ -17,7 +17,8 @@ import MultiCreate from "./components/multi/MultiCreate.jsx";
 import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
-import BattleGame from "./components/battle/BattleGame.jsx";
+import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
+import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
@@ -99,6 +100,15 @@ function App() {
           <Route
             path="/battle"
             element={accessToken ? <BattleMain /> : <LoginPage />}
+          />
+          <Route
+            path="/battle-list"
+            // element={accessToken ? <BattleGameListPage /> : <LoginPage />}
+            element={<BattleGameListPage />}
+          />
+          <Route
+            path="/battle-game"
+            element={accessToken ? <BattleGamePage /> : <LoginPage />}
           />
           <Route
             path="/battle-create"
