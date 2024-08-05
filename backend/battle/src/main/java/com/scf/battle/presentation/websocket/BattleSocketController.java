@@ -2,6 +2,7 @@ package com.scf.battle.presentation.websocket;
 
 import com.scf.battle.application.BattleGameService;
 import com.scf.battle.domain.dto.Problem.ProblemResponse;
+import com.scf.battle.domain.dto.Problem.ProblemSelectDTO;
 import com.scf.battle.domain.dto.Room.JoinRoomUserDTO;
 import com.scf.battle.domain.dto.Room.ResultRoomDTO;
 import com.scf.battle.domain.dto.User.FightDTO;
@@ -25,9 +26,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-
 @Controller
 @RequiredArgsConstructor
 public class BattleSocketController {
@@ -72,12 +70,12 @@ public class BattleSocketController {
     }
 
     @MessageMapping("/game/{roomId}/selectProblem")
-    public void handleSelectProblem(@DestinationVariable String roomId, @RequestBody Map<String, Long> payload, @RequestHeader Long memberId) {
-        Long selectProblemId = payload.get("problemId"); // "problemId" : 1L
+    public void handleSelectProblem(@DestinationVariable String roomId, ProblemSelectDTO problemSelectDTO) {
+        Long selectProblemId = problemSelectDTO.getProblemId(); // "problemId" : 1L
         BattleGameRoom room = battleGameService.findById(roomId);
-        System.out.println(roomId + " " + selectProblemId + " " + memberId);
-        Player selectingUser = room.getPlayerById(memberId);
-        Player opponentUser = room.getOpponentById(memberId);
+        System.out.println("handleSelectProblem : " +roomId + " " + selectProblemId + " " + problemSelectDTO.getMemberId());
+        Player selectingUser = room.getPlayerById(problemSelectDTO.getMemberId());
+        Player opponentUser = room.getOpponentById(problemSelectDTO.getMemberId());
         List<ProblemResponse.SelectProblemDTO> roundSelectProblems = room.getProblemsForRound(room.getCurrentRound())
                 .stream()
                 .map(problem -> ProblemResponse.SelectProblemDTO.builder()
