@@ -139,24 +139,17 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     }
 
-    public void broadcastMessageToRoom(String roomId, String type, Object payload)
+    private void broadcastMessageToRoom(String roomId, String type, Object payload)
         throws Exception {
 
         Set<WebSocketSession> roomSessions = rooms.get(roomId);
 
         if (roomSessions != null) {
 
+            String message = makeResponseMessage(type, payload);
+
             for (WebSocketSession session : roomSessions) {
-
                 if (session.isOpen()) {
-
-                    ResponseMessage responseMessage = ResponseMessage.builder()
-                        .type(type)
-                        .payload(payload)
-                        .build();
-
-                    String message = JsonConverter.getInstance().toString(responseMessage);
-
                     sendMessage(session, message);
                 }
             }
