@@ -89,7 +89,7 @@ const BattleGameListPage = () => {
       const res = await authClient({
         method: "POST",
         url: `${baseURL}/battle/room/${roomId}`,
-        ...(password !== "" && { data: password }),
+        data: password,
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "text/plain",

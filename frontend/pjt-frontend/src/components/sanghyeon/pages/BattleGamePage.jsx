@@ -81,6 +81,9 @@ const BattleGamePage = () => {
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
 
+  const [isBattleConnected, setIsBattleConnected] = useState(false);
+  const [isChatConnected, setIsChatConnected] = useState(false);
+
   // ---------------------- WebSocket ----------------------
 
   let battleStompClient = null;
@@ -96,6 +99,7 @@ const BattleGamePage = () => {
       {},
       (frame) => {
         console.log("Connected: " + frame);
+        setIsBattleConnected(true);
 
         subscribeEnterRoom();
         subscribeEnemyProblem();
@@ -113,6 +117,7 @@ const BattleGamePage = () => {
       (frame) => {
         console.log("Connected: " + frame);
 
+        setIsChatConnected(true);
         subscribeMessage();
       },
       (error) => {
@@ -122,7 +127,7 @@ const BattleGamePage = () => {
   };
 
   const enterRoom = () => {
-    if (battleStompClient && battleStompClient.connected) {
+    if (isBattleConnected === true) {
       const joinRoomDTO = {
         userId: userId,
         username: name,
@@ -165,8 +170,7 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    console.log(battleStompClient);
-    if (battleStompClient) {
+    if (isBattleConnected === true) {
       const endpoint = `/game/${roomId}/selectProblem`;
       battleStompClient.send(
         endpoint,
@@ -194,7 +198,7 @@ const BattleGamePage = () => {
 
   // 답변 제출 미완성
   const submitAnswer = useCallback(() => {
-    if (battleStompClient && battleStompClient.connected) {
+    if (isBattleConnected === true) {
       const endpoint = `/game/${roomId}/answer`;
       const submitAnswerDTO = {
         problemId: myProblem.problemId,
@@ -234,7 +238,7 @@ const BattleGamePage = () => {
   };
 
   const enterChat = () => {
-    if (chatStompClient && chatStompClient.connected) {
+    if (isChatConnected === true) {
       const endpoint = `/send/chat/${roomId}/enter`;
       const enterDTO = {
         sender: name,
@@ -260,7 +264,7 @@ const BattleGamePage = () => {
   // };
 
   const sendMessage = () => {
-    if (chatStompClient && chatStompClient.connected) {
+    if (isChatConnected) {
       const endpoint = `/send/chat/${roomId}`;
       const chatMessage = {
         sender: name,
@@ -288,7 +292,7 @@ const BattleGamePage = () => {
   };
 
   const sendQuitMessage = () => {
-    if (chatStompClient && chatStompClient.connected) {
+    if (isChatConnected) {
       const endpoint = `/send/chat/${roomId}/leave`;
       const chatMessage = {
         sender: name,
@@ -314,14 +318,19 @@ const BattleGamePage = () => {
   // };
 
   useEffect(() => {
-    connect();
-    enterRoom();
-    enterChat();
+    connect()
+      .then(() => {
+        enterRoom();
+        enterChat();
+      })
+      .catch((error) => {
+        console.log("Connection error:", error);
+      });
 
     return () => {
       sendQuitMessage();
-      battleStompClient.disconnect();
-      chatStompClient.disconnect();
+      if (battleStompClient) battleStompClient.disconnect();
+      if (chatStompClient) chatStompClient.disconnect();
     };
   }, []);
 
@@ -353,7 +362,7 @@ const BattleGamePage = () => {
     }
   }, [count2, navigate]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
