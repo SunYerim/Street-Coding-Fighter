@@ -269,6 +269,7 @@ const BattleGamePage = () => {
       roomId: roomId,
     };
     chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+    setMessage("");
   };
 
   const subscribeMessage = () => {
