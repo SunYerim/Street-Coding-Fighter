@@ -115,7 +115,7 @@ const BattleGamePage = () => {
         roomPassword: roomPassword,
       };
       stompClient.send(
-        `${baseURL}/${wsBattle}/send/chat/${roomId}/enter`,
+        `${baseURL}/${wsBattle}/game/${roomId}/join`,
         {},
         JSON.stringify(joinRoomDTO)
       );

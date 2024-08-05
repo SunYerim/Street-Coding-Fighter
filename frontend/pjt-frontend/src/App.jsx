@@ -25,26 +25,35 @@ import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
 import store from "./store/store.js";
 
-
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
-
+import { useNavigate } from "react-router-dom";
 
 function App() {
-  const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } = SoundStore();
+  const navigate = useNavigate();
+  const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } =
+    SoundStore();
   const { accessToken } = store((state) => ({
     accessToken: state.accessToken,
   }));
 
   useEffect(() => {
     // 배경음악 초기화 및 재생
-    initializeBackgroundMusic('/BGM-1.mp3');
+    initializeBackgroundMusic("/BGM-1.mp3");
+
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // 일부 브라우저에서는 이 설정이 필요합니다.
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       // 컴포넌트가 언마운트될 때 배경음악 정지
-      console.log('stop music');
+      console.log("stop music");
       stopBackgroundMusic();
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [initializeBackgroundMusic, stopBackgroundMusic]);
 

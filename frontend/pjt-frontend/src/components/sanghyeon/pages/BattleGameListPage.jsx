@@ -56,7 +56,7 @@ const BattleGameListPage = () => {
     try {
       const res = await authClient({
         method: "GET",
-        url: `${baseURL}/battle`,
+        url: `${baseURL}/battle/room`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
