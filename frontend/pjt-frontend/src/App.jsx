@@ -42,18 +42,10 @@ function App() {
     // 배경음악 초기화 및 재생
     initializeBackgroundMusic("/BGM-1.mp3");
 
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = ""; // 일부 브라우저에서는 이 설정이 필요합니다.
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
       // 컴포넌트가 언마운트될 때 배경음악 정지
       console.log("stop music");
       stopBackgroundMusic();
-      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [initializeBackgroundMusic, stopBackgroundMusic]);
 
