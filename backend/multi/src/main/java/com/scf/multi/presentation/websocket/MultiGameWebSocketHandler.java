@@ -34,8 +34,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
-    private final static Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
-    private final static Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
+    private final static Map<String, String> rooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
+    private final static Map<String, Set<WebSocketSession>> sessionRooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
 
     @EventListener
     public void onGameStarted(GameStartedEvent event) throws Exception {
@@ -54,8 +54,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         Player connectedPlayer = multiGameService.connectPlayer(roomId, userId, session.getId());
 
-        sessionRooms.put(session.getId(), roomId);
-        rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
+        rooms.put(session.getId(), roomId);
+        sessionRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
 
         broadcastMessageToRoom(roomId, "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
@@ -65,7 +65,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage)
         throws Exception {
 
-        String roomId = sessionRooms.get(session.getId());
+        String roomId = rooms.get(session.getId());
         MultiGameRoom room = multiGameService.findOneById(roomId);
         if (!room.getIsStart()) {
             return;
@@ -93,7 +93,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
         throws Exception {
 
-        String roomId = sessionRooms.get(session.getId());
+        String roomId = rooms.get(session.getId());
         MultiGameRoom room = multiGameService.findOneById(roomId);
         Player exitPlayer = room.getPlayers().stream()
             .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
@@ -101,21 +101,21 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 () -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
         room.exitRoom(exitPlayer);
 
-        Set<WebSocketSession> roomSessions = rooms.get(roomId);
+        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
         if (roomSessions != null) {
 
             roomSessions.remove(session); // 나간 유저 방에서 삭제
 
             if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
-                rooms.remove(roomId);
+                sessionRooms.remove(roomId);
                 multiGameService.deleteRoom(roomId);
             }
         }
 
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
-        if (exitPlayer.getIsHost() && !rooms.get(roomId).isEmpty()) { // 방장 rotate
-            Optional<WebSocketSession> newHostSession = rooms.get(roomId).stream()
+        if (exitPlayer.getIsHost() && !sessionRooms.get(roomId).isEmpty()) { // 방장 rotate
+            Optional<WebSocketSession> newHostSession = sessionRooms.get(roomId).stream()
                 .findFirst(); // 방에 연결된 플레이어 session 찾기
             String sessionId = newHostSession.get().getId();
 
@@ -136,7 +136,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     private void broadcastMessageToRoom(String roomId, String type, Object payload)
         throws Exception {
 
-        Set<WebSocketSession> roomSessions = rooms.get(roomId);
+        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
 
         if (roomSessions != null) {
 
