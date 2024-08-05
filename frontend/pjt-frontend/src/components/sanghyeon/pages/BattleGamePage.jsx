@@ -89,56 +89,56 @@ const BattleGamePage = () => {
   let battleStompClient = null;
   let chatStompClient = null;
 
-  const connect = () => {
+  const connect = async () => {
     const battleSocket = new SockJS(`${baseURL}/ws-battle`);
     const chatSocket = new SockJS(`${baseURL}/ws-chat`);
     battleStompClient = Stomp.over(battleSocket);
     chatStompClient = Stomp.over(chatSocket);
 
-    battleStompClient.connect(
-      {},
-      (frame) => {
-        console.log("Connected: " + frame);
-        setIsBattleConnected(true);
+    return new Promise((resolve, reject) => {
+      battleStompClient.connect(
+        {},
+        (frame) => {
+          console.log("Connected to battle server:", frame);
+          setIsBattleConnected(true);
 
-        subscribeEnterRoom();
-        subscribeEnemyProblem();
-        subsribeMyProblem();
-        subscribeRoundResult();
-        subscribeTotalResult();
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+          subscribeEnterRoom();
+          subscribeEnemyProblem();
+          subsribeMyProblem();
+          subscribeRoundResult();
+          subscribeTotalResult();
+          resolve();
+        },
+        (error) => {
+          console.log("Battle server connection error:", error);
+          reject(error);
+        }
+      );
 
-    console.log("배틀 서버 연결");
-
-    chatStompClient.connect(
-      {},
-      (frame) => {
-        console.log("Connected: " + frame);
-
-        setIsChatConnected(true);
-        subscribeMessage();
-
-        console.log("채팅 서버 연결");
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+      chatStompClient.connect(
+        {},
+        (frame) => {
+          console.log("Connected to chat server:", frame);
+          setIsChatConnected(true);
+          subscribeMessage();
+          console.log("Chat server connected");
+        },
+        (error) => {
+          console.log("Chat server connection error:", error);
+        }
+      );
+    });
   };
 
-  const enterRoom = () => {
-    if (isBattleConnected === true) {
+  const enterRoom = async () => {
+    if (isBattleConnected) {
       const joinRoomDTO = {
         userId: userId,
         username: name,
         roomPassword: roomPassword,
       };
       battleStompClient.send(
-        `$/game/${roomId}/join`,
+        `/game/${roomId}/join`,
         {},
         JSON.stringify(joinRoomDTO)
       );
@@ -201,8 +201,8 @@ const BattleGamePage = () => {
   };
 
   // 답변 제출 미완성
-  const submitAnswer = useCallback(() => {
-    if (isBattleConnected === true) {
+  const submitAnswer = useCallback(async () => {
+    if (isBattleConnected) {
       const endpoint = `/game/${roomId}/answer`;
       const submitAnswerDTO = {
         problemId: myProblem.problemId,
@@ -216,7 +216,7 @@ const BattleGamePage = () => {
     } else {
       console.log("Not connected yet");
     }
-  }, []);
+  }, [isBattleConnected, myProblem, userId, count, roomId, currentRound]);
 
   // 체력 반영 미완성
   const subscribeRoundResult = () => {
@@ -267,7 +267,7 @@ const BattleGamePage = () => {
   //   });
   // };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     console.log("send message");
     if (isChatConnected && chatStompClient?.connected) {
       const endpoint = `/send/chat/${roomId}`;
@@ -295,8 +295,7 @@ const BattleGamePage = () => {
       ]);
     });
   };
-
-  const sendQuitMessage = () => {
+  const sendQuitMessage = async () => {
     if (isChatConnected) {
       const endpoint = `/send/chat/${roomId}/leave`;
       const chatMessage = {
@@ -326,8 +325,8 @@ const BattleGamePage = () => {
     const initializeConnections = async () => {
       try {
         await connect();
-        enterRoom();
-        enterChat();
+        await enterRoom();
+        await enterChat();
       } catch (error) {
         console.log("Connection error:", error);
       }
