@@ -83,7 +83,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         Solved solved = multiGameService.addSolved(room, session.getId(), solvedMessage.getContent());
 
-        int attainedScore = multiGameService.markSolution(roomId, player, solved); // 문제 채점
+        int attainedScore = multiGameService.markSolution(roomId, solved); // 문제 채점
 
         ResponseMessage attainScoreObj = ResponseMessage.builder()
             .type("attainScore")

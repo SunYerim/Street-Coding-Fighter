@@ -115,31 +115,19 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public int markSolution(String roomId, Player player, Solved solved) {
+    public int markSolution(String roomId, Solved solved) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-        List<Problem> problems = room.getProblems();
-        Problem problem = problems.get(room.getRound());
+        MultiGameRoom room = findRoom(roomId);
+        Player player = findPlayerByUserId(room, solved.getUserId());
+        Problem problem = getCurrentProblem(room);
 
-        if (problem == null) {
-            throw new BusinessException(null, "problem", ErrorCode.PROBLEM_NOT_FOUND);
-        }
+        validateProblem(problem);
 
-        // 문제의 정답 가져오기
-        List<ProblemAnswer> answers = problem.getProblemAnswers();
-        ProblemType problemType = problem.getProblemType();
+        boolean isCorrect = isAnswerCorrect(problem, solved);
+        int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(), solved.getSubmitTime());
 
-        // 점수 계산
-        boolean isCorrect = compareWith(problemType, solved, answers);
-        int score = 0;
-        if (isCorrect) {
-            score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
-        }
-
-        solved.setIsCorrect(isCorrect);
-
-        room.updateScoreBoard(player.getUserId(), score);
-        room.updateLeaderBoard(player.getUserId(), score);
+        updateScoreBoard(room, player, score);
+        updateLeaderBoard(room, player, score);
 
         return score;
     }
@@ -196,6 +184,49 @@ public class MultiGameService {
         player.addSolved(solved);
 
         return solved;
+    }
+
+    private MultiGameRoom findRoom(String roomId) {
+        return multiGameRepository.findOneById(roomId);
+    }
+
+    private Problem getCurrentProblem(MultiGameRoom room) {
+        List<Problem> problems = room.getProblems();
+        return problems.get(room.getRound());
+    }
+
+    private Player findPlayerByUserId(MultiGameRoom room, Long userId) {
+        return room.getPlayers().stream()
+            .filter(p -> p.getUserId().equals(userId))
+            .findFirst()
+            .orElseThrow(() -> new BusinessException(userId, "userId", USER_NOT_FOUND));
+    }
+
+    private boolean isAnswerCorrect(Problem problem, Solved solved) {
+        List<ProblemAnswer> answers = problem.getProblemAnswers();
+        ProblemType problemType = problem.getProblemType();
+        return compareWith(problemType, solved, answers);
+    }
+
+    private void validateProblem(Problem problem) {
+        if (problem == null) {
+            throw new BusinessException(null, "problem", ErrorCode.PROBLEM_NOT_FOUND);
+        }
+    }
+
+    private int calculateScoreIfCorrect(boolean isCorrect, int streakCount, int submitTime) {
+        if (isCorrect) {
+            return calculateScore(streakCount, submitTime);
+        }
+        return 0;
+    }
+
+    private void updateScoreBoard(MultiGameRoom room, Player player, int score) {
+        room.updateScoreBoard(player.getUserId(), score);
+    }
+
+    private void updateLeaderBoard(MultiGameRoom room, Player player, int score) {
+        room.updateLeaderBoard(player.getUserId(), score);
     }
 
     private boolean compareWith(ProblemType problemType, Solved solved,
