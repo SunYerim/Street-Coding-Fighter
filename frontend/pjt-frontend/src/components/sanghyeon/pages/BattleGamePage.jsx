@@ -174,7 +174,7 @@ const BattleGamePage = () => {
     const endpoint = `/game/${roomId}/selectProblem`;
     battleStompClient.current.send(
       endpoint,
-      {},
+      { memberId: memberId },
       JSON.stringify({ problemId: problemId })
     );
     setSelectOpponentProblem(true);
