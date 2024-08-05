@@ -129,7 +129,7 @@ const BattleGamePage = () => {
         roomPassword: roomPassword,
       };
       battleStompClient.send(
-        `${baseURL}/${wsBattle}/game/${roomId}/join`,
+        `$/game/${roomId}/join`,
         {},
         JSON.stringify(joinRoomDTO)
       );
@@ -139,7 +139,7 @@ const BattleGamePage = () => {
   };
 
   const subscribeEnterRoom = () => {
-    const endpoint = `${baseURL}/${wsBattle}/game/${roomId}/join`;
+    const endpoint = `/game/${roomId}/join`;
     battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
@@ -155,7 +155,7 @@ const BattleGamePage = () => {
   };
 
   const subscribeEnemyProblem = () => {
-    const endpoint = `${baseURL}/${wsBattle}/room/${roomId}/RoundChoiceProblem`;
+    const endpoint = `/room/${roomId}/RoundChoiceProblem`;
     battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setEnemyProblems(body);
@@ -165,7 +165,7 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    const endpoint = `${baseURL}/${wsBattle}/game/${roomId}/selectProblem`;
+    const endpoint = `/game/${roomId}/selectProblem`;
     battleStompClient.send(
       endpoint,
       {},
@@ -175,7 +175,7 @@ const BattleGamePage = () => {
   };
 
   const subsribeMyProblem = () => {
-    const endpoint = `${baseURL}/${wsBattle}/room/${roomId}/${userId}`;
+    const endpoint = `/room/${roomId}/${userId}`;
     battleStompClient.subscribe(endpoint, (message) => {
       console.log(message);
       const body = JSON.parse(message.body);
@@ -189,7 +189,7 @@ const BattleGamePage = () => {
 
   // 답변 제출 미완성
   const submitAnswer = useCallback(() => {
-    const endpoint = `${baseURL}/${wsBattle}/game/${roomId}/answer`;
+    const endpoint = `/game/${roomId}/answer`;
     const submitAnswerDTO = {
       problemId: myProblem.problemId,
       userId: userId,
@@ -203,7 +203,7 @@ const BattleGamePage = () => {
 
   // 체력 반영 미완성
   const subscribeRoundResult = () => {
-    const endpoint = `${baseURL}/${wsBattle}/room/${roomId}`;
+    const endpoint = `/room/${roomId}`;
     battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       console.log(body);
@@ -211,7 +211,7 @@ const BattleGamePage = () => {
   };
 
   const subscribeTotalResult = () => {
-    const endpoint = `${baseURL}/${wsBattle}/room/${roomId}`;
+    const endpoint = `/room/${roomId}`;
     battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setGameEnded(true);
@@ -226,7 +226,7 @@ const BattleGamePage = () => {
 
   const enterChat = () => {
     if (chatStompClient && chatStompClient.connected) {
-      const endpoint = `${baseURL}/${wsChat}/send/chat/${roomId}/enter`;
+      const endpoint = `/send/chat/${roomId}/enter`;
       const enterDTO = {
         sender: name,
         content: `${name}님이 입장하셨습니다.`,
@@ -251,7 +251,7 @@ const BattleGamePage = () => {
   // };
 
   const sendMessage = () => {
-    const endpoint = `${baseURL}/${wsChat}/send/chat/${roomId}`;
+    const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
       sender: name,
       content: message,
@@ -262,7 +262,7 @@ const BattleGamePage = () => {
   };
 
   const subscribeMessage = () => {
-    const endpoint = `${baseURL}/${wsChat}/room/${roomId}`;
+    const endpoint = `/room/${roomId}`;
     chatStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
@@ -275,7 +275,7 @@ const BattleGamePage = () => {
   };
 
   const sendQuitMessage = () => {
-    const endpoint = `${baseURL}/${wsChat}/send/chat/${roomId}/leave`;
+    const endpoint = `/send/chat/${roomId}/leave`;
     const chatMessage = {
       sender: name,
       content: `${name}님이 퇴장하셨습니다.`,
