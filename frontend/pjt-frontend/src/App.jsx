@@ -19,7 +19,6 @@ import BattleMain from "./components/battle/BattleMain.jsx";
 import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
 import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
-import BattleGame from "./components/battle/BattleGame.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
@@ -37,11 +36,9 @@ function App() {
   }));
 
   useEffect(() => {
-    // 배경음악 초기화 및 재생
     initializeBackgroundMusic("/BGM-1.mp3");
 
     return () => {
-      // 컴포넌트가 언마운트될 때 배경음악 정지
       console.log("stop music");
       stopBackgroundMusic();
     };
