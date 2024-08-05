@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
-  const userIcon = "memberIcon.png";
+  const userIcon = "/memberIcon.png";
   return (
     <>
       <div className="header-container">
@@ -26,7 +26,7 @@ function Header() {
               navigate("/profile");
             }}
             className="user-icon"
-            src={memberIcon}
+            src={userIcon}
             alt="memberIcon"
           />
           <Setting />
