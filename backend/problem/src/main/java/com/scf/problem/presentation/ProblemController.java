@@ -37,9 +37,9 @@ public class ProblemController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> addProblem(@RequestBody ProblemRequest.ProblemInfoDTO problem) {
+    public ResponseEntity<?> addProblem(@RequestBody List<ProblemRequest.ProblemInfoDTO> problems) {
 
-        problemService.addProblem(problem);
+        problemService.addProblems(problems);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
