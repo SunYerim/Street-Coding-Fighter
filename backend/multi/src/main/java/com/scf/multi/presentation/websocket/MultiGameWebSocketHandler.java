@@ -54,8 +54,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         Player connectedPlayer = multiGameService.connectPlayer(roomId, userId, session.getId());
 
-        rooms.put(session.getId(), roomId);
-        sessionRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
+        addPlayerSessionToRoom(session, roomId);
 
         broadcastMessageToRoom(roomId, "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
@@ -148,6 +147,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 }
             }
         }
+    }
+
+    private static void addPlayerSessionToRoom(WebSocketSession session, String roomId) {
+        rooms.put(session.getId(), roomId);
+        sessionRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
     }
 
     private static SolvedMessage getSolvedMessage(TextMessage textMessage) throws IOException {
