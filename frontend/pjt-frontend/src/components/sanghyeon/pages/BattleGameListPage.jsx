@@ -68,7 +68,12 @@ const BattleGameListPage = () => {
     }
   };
 
-  const joinBattleRoom = async (roomId, isLock) => {
+  const joinBattleRoom = async (roomId, curPlayer, isLock) => {
+    if (curPlayer === 2) {
+      alert("인원 수가 최대치에 도달했습니다.");
+      return;
+    }
+
     let password = "";
 
     if (isLock === true) {
@@ -101,6 +106,20 @@ const BattleGameListPage = () => {
   };
 
   const createBattleRoom = async () => {
+    let data = null;
+
+    if (battleRoomPassword.current.value === "") {
+      data = {
+        title: battleRoomTitle.current.value,
+        round: battleRoomRound.current.value,
+      };
+    } else {
+      data = {
+        title: battleRoomTitle.current.value,
+        password: battleRoomPassword.current.value,
+        round: battleRoomRound.current.value,
+      };
+    }
     try {
       const createRes = await authClient({
         method: "POST",
@@ -108,11 +127,7 @@ const BattleGameListPage = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        data: {
-          title: battleRoomTitle.current.value,
-          password: battleRoomPassword.current.value,
-          round: battleRoomRound.current.value,
-        },
+        data: data,
       });
 
       setRoomId(createRes.data);
@@ -206,7 +221,9 @@ const BattleGameListPage = () => {
                 <hr />
                 {currentBattleList.map((data, index) => (
                   <div
-                    onClick={() => joinBattleRoom(data.roomId, data.isLock)}
+                    onClick={() =>
+                      joinBattleRoom(data.roomId, data.curPlayer, data.isLock)
+                    }
                     className="battle-room"
                     key={index}
                   >
@@ -216,7 +233,7 @@ const BattleGameListPage = () => {
                     <p>
                       {data.curPlayer} / {data.maxPlayer}
                     </p>
-                    <p>{data.isLock === false ? "Private" : "Public"}</p>
+                    <p>{data.isLock === true ? "Private" : "Public"}</p>
                   </div>
                 ))}
               </div>
