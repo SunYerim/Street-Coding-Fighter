@@ -50,18 +50,14 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String roomId = (String) session.getAttributes().get("roomId");
         Long userId = (Long) session.getAttributes().get("userId");
 
-        MultiGameRoom room = multiGameService.findOneById(roomId);
-
-        if (room.getIsStart()) {
-            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
-        }
+        multiGameService.validateRoom(roomId);
 
         Player connectedPlayer = multiGameService.connectPlayer(roomId, userId, session.getId());
 
         sessionRooms.put(session.getId(), roomId);
         rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
 
-        broadcastMessageToRoom(room.getRoomId(), "notice",
+        broadcastMessageToRoom(roomId, "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
     }
 

@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.domain.dto.user.GameResult;
@@ -315,5 +316,14 @@ public class MultiGameService {
         connectedPlayer.setSessionId(sessionId);
 
         return connectedPlayer;
+    }
+
+    public void validateRoom(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        if (room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
+        }
     }
 }
