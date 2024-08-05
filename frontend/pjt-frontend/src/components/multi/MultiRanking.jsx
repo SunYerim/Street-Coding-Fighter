@@ -1,50 +1,53 @@
+import React from 'react';
 import styled from 'styled-components';
-import { LeaderBoardPlayerLayouts as P } from './RankingListItem';
-import useLeaderboardStore from '../../../stores/LeaderboardStore.jsx';
 
-const RankingGraph = () => {
-  const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
-
-  const PodiumPlayer = ({ rank }) => {
-    const player = rankingList[boardPeriod]?.[rank];
-    if (!player) {
-      return <NoPlayerData>No player data</NoPlayerData>;
-    }
-    return (
-      <>
-        <ProfileImageContainer />
-        <P.Name>{player.name}</P.Name>
-        <P.Exp>{player.exp}</P.Exp>
-      </>
-    );
-  };
-
+const MultiRanking = ({userList}) => {
   return (
     <GraphContainer>
       <LeaderBoardSecond>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={3} />
+          {userList[1] ? (
+            <>
+              <div>{userList[1].name}</div>
+              <div>{userList[1].score}</div>
+            </>
+          ) : (
+            <NoPlayerData>No Data</NoPlayerData>
+          )}
         </PodiumPlayerContainer>
         <PlaceHolder>2</PlaceHolder>
       </LeaderBoardSecond>
       <LeaderBoardFirst>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={0} />
-
+          {userList[0] ? (
+            <>
+              <div>{userList[0].name}</div>
+              <div>{userList[0].score}</div>
+            </>
+          ) : (
+            <NoPlayerData>No Data</NoPlayerData>
+          )}
         </PodiumPlayerContainer>
-          <PlaceHolder>1</PlaceHolder>
+        <PlaceHolder>1</PlaceHolder>
       </LeaderBoardFirst>
       <LeaderBoardThird>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={2} />
+          {userList[2] ? (
+            <>
+              <div>{userList[2].name}</div>
+              <div>{userList[2].score}</div>
+            </>
+          ) : (
+            <NoPlayerData>No Data</NoPlayerData>
+          )}
         </PodiumPlayerContainer>
-          <PlaceHolder>3</PlaceHolder>
+        <PlaceHolder>3</PlaceHolder>
       </LeaderBoardThird>
     </GraphContainer>
   );
 };
 
-export default RankingGraph;
+export default MultiRanking;
 
 const GraphContainer = styled.div`
   display: flex;
@@ -120,7 +123,6 @@ const PodiumPlayerContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 10px;
-  // background-color: rgba(255, 255, 255, 0.8);
 `;
 
 const NoPlayerData = styled.div`
@@ -130,17 +132,8 @@ const NoPlayerData = styled.div`
   padding: 10px;
 `;
 
-const ProfileImageContainer = styled.div`
-  width: 70px;
-  height: 70px;
-  background-image: url('/single-test.webp');
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-`;
-
 const PlaceHolder = styled.div`
   position: absolute;
   top: 10px;
-  font-size : 1.5em;
+  font-size: 1.5em;
 `;

@@ -1,66 +1,172 @@
 import '../../index.css';
 import '../../css/GameMain.css';
 import "../../css/MultiGame.css";
-import hourglass from '/hourglass.svg'
-import Timer from '../game/Timer.jsx';
-import InputField from '../game/InputField.jsx';
-import MessageContainer from '../game/MessageContainer.jsx';
-import DragNDropQuiz from '../game/quiz_with_blank/DragNDropQuiz.jsx';
-import GameResultModal from "../game/GameResultModal.jsx";
-// import socket from "../game/server.js"
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ShortAnswer from '../game/short_answer/ShortAnswer.jsx';
+import '../../css/Timer.css';
+import InputField from "../game/InputField.jsx";
+import MessageContainer from "../game/MessageContainer.jsx";
+import MultiResultModal from "./MultiResultModal.jsx";
+import newSocket from "../game/server.js"
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import multiStore from '../../stores/multiStore.jsx';
+import axios from 'axios';
+
+import FillInTheBlank from "../game/FillInTheBlank";
+import ShortAnswer from "../game/short_answer/ShortAnswer";
+import MultipleChoice from "../game/MultipleChoice";
+
+const baseUrl = "https://www.ssafy11s.com"; // ssafy11s.com으로 수정하기
+
+
 export default function MultiGame() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const roomId = multiStore.getState().roomId;
+  const userId = multiStore.getState().userId;
+  const username = multiStore.getState().username;
+
+  const [socket, setSocket] = useState(null);
   const [start, setStart] = useState(0);
-  const [user, setUser] = useState(null);
+  const [hostId, setHostId] = useState(null);
+  const [user, setUser] = useState(username);
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [problems, setProblems] = useState([]);
+  const [userList, setUserList] = useState([]);
 
-  const userList = [
-    { id: 1, rank: 2, name: "방장", score: 97 },
-    { id: 2, rank: 1, name: "B", score: 100 },
-    { id: 3, rank: 3, name: "F", score: 90 },
-    { id: 4, rank: 4, name: "S", score: 80 },
-    { id: 5, rank: 5, name: "H", score: 70 },
-    { id: 6, rank: 6, name: "E", score: 60 },
-    { id: 7, rank: 7, name: "J", score: 30 },
-    { id: 7, rank: 7, name: "말숙", score: 50 },
-    { id: 7, rank: 7, name: "ai", score: 90 },
-  ];
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  const [timerEnded, setTimerEnded] = useState(false);
+  // 시간을 담을 변수
+  const [count, setCount] = useState(30);
 
-  const handleStart = () => {
+  useEffect(() => {
+    setHostId(location.state?.hostId || null);
+  }, [location.state]);
+
+  const handleStart = async () => {
     setStart(1);
-    setModalOpen(true);
+    const response = await axios.post(`${baseUrl}/multi/game/${roomId}/start`, { roomId }, { hostId });
+    console.log(response.data);
+    setProblems(response.data);
+  };  
+
+  const isJsonString = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
   };
 
-  // useEffect(() => {
-  //   socket.on("message", (message) => {
-  //     setMessageList((prevState) => prevState.concat(message));
-  //   });
-  //   askUserName();
-  // }, []);
+  useEffect(() => {
+    const roomId = multiStore.getState().roomId;
+    const userId = multiStore.getState().userId;
+    const username = multiStore.getState().username;
 
-  const askUserName = () => {
-    const userName = prompt('이름입력ㄱㄱ');
+    setUser(username);
 
-    socket.emit('login', userName, (res) => {
-      // res가 왔는데(?), ok정보가 true이다.
-      if (res?.ok) {
-        setUser(res.data);
+    console.log(`Room ${roomId}, userId ${userId}, username: ${username}`);
+
+    const socketInstance = newSocket(roomId, userId, username);
+    setSocket(socketInstance);
+
+    socketInstance.onmessage = (event) => {
+      const messageData = event.data;
+      if (isJsonString(messageData)) {
+        const data = JSON.parse(messageData);
+
+        if (data.type === 'start_game') {
+          setStart(1);
+          console.log(data.message); // "Game has started!" 메시지 출력
+        } else if (data.type === '') { // 방장바뀌는 타입
+          setHostId(data.hostId);
+        }
+
+        setMessageList((prevMessageList) => [...prevMessageList, data]);
+      } else {
+        console.error('Received non-JSON message:', messageData);
+        setMessageList((prevMessageList) => [...prevMessageList, { text: messageData }]);
       }
-    });
+    };
+
+    return () => {
+      socketInstance.close();
+    };
+  }, []);
+
+
+  const sendMessage = () => {
+    if (socket && message.trim()) {
+        const messageObj = {
+            type: 'chat',
+            content: {
+                text: message.trim()
+            }
+        };
+        socket.send(JSON.stringify(messageObj));
+        setMessage('');
+    }
   };
 
-  const sendMessage = (event) => {
-    event.preventDefault();
-    socket.emit('sendMessage', message, (res) => {
-      console.log('sendMessage res', res);
-    });
-    setMessage('');
+
+  // 3. 답보내기
+  // const submitAnswer = (answer) => {
+  //   socket.send(JSON.stringify({ event: 'solve', answer }));
+  // };
+
+  // const submitAnswer = (answer) => {
+  //   if (socket && answer.trim()) {
+  //       const messageObj = {
+  //           type: 'solve',
+  //           content: {
+  //               solve: answer.trim()
+  //           }
+  //       };
+  //       socket.send(JSON.stringify(messageObj));
+  //   }
+  // };
+
+  const renderProblem = () => {
+    const problem = problems[currentProblemIndex];
+    switch (problem.problemType) {
+      case "FILL_IN_THE_BLANK":
+        return <FillInTheBlank problem={problem} submitTime={count} />;
+      case "SHORT_ANSWER_QUESTION":
+        return <ShortAnswer problem={problem} submitTime={count} />;
+      case "MULTIPLE_CHOICE":
+        return <MultipleChoice problem={problem} submitTime={count} />;
+      default:
+        return <div>Unknown problem type</div>;
+    }
   };
+
+  
+  function Timer({ setTimerEnded }) {
+    useEffect(() => {
+      if (count === 0) {
+        setTimerEnded(true);
+        return;
+      }
+  
+      // 설정된 시간 간격마다 setInterval 콜백이 실행된다. 
+      const id = setInterval(() => {
+        // 타이머 숫자가 하나씩 줄어들도록
+        setCount((count) => count - 1);
+      }, 1000);
+      
+      // 0이 되면 카운트가 멈춤
+      if(count === 0) {
+        clearInterval(id);
+      }
+      return () => clearInterval(id);
+      // 카운트 변수가 바뀔때마다 useEffecct 실행
+    }, [count, setTimerEnded]);
+  
+    return <div><span>{count}</span></div>;
+  }
 
   return (
     <>
@@ -68,7 +174,10 @@ export default function MultiGame() {
         <div className="multi-game-main">
           <div className="multi-game-left">
             <div className="multi-timer">
-              <Timer />
+              {/* start가 1이고 모달이 열려 있지 않으며 타이머가 종료되지 않은 경우에만 타이머를 렌더링 */}
+              {start === 1 && !modalOpen && !timerEnded && (
+                <Timer setTimerEnded={setTimerEnded} />
+              )}
             </div>
             <div className="multi-rank-table">
               {
@@ -86,32 +195,56 @@ export default function MultiGame() {
               (start === 0 ? (
                 <div className="before-start">
                   <h1>. . . Waiting for start . . .</h1>
-                  <button className="game-start-button" onClick={handleStart}>
+                  {/* <button className="game-start-button" onClick={handleStart}>
                     Start
-                  </button>
+                  </button> */}
+                  { hostId == userId ? (
+                    <button className="game-start-button" onClick={handleStart}>
+                      Start
+                    </button>
+                  ) : (
+                    <div>
+                      <h1>대기중 . . .</h1>
+                      <h1>방장ID: {hostId}</h1>
+                      <h1>니이름: {user}</h1>
+                      {/* <MultiResultModal userList={userList} /> */}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>
-                  <div>
+                  {/* <div>
                     <GameResultModal  />
-                  </div>
-                  <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                  . . . Playing . . .</h1>
+                  </div> */}
+                  {/* <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                  . . . Playing . . .</h1> */}
+
+                  {/* Playing Games! */}
+                  {problems.length > 0 && renderProblem()}
+                  {/* {timerEnded && submitAnswer(null)} */}
+                  {modalOpen && <MultiResultModal userList={userList} />}
                 </div>
               ))
             )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              <p>~Round~</p>
+              {/* <h1>Round</h1> */}
+              { start ? (
+                <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
+              ) : (
+                <h1>Waiting...</h1>
+              )}
+              
             </div>
-            <div className="multi-message-room">
+            {/* <div className="multi-message-room">
               <MessageContainer messageList={messageList} user={user} />
             </div>
-              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
+              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
           </div>
         </div>
       </div>
+      {/* {modalOpen && <MultiResultModal userList={userList} />} */}
     </>
   );
 }

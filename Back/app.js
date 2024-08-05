@@ -4,6 +4,8 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 app.use(cors());
+app.use(express.json());
+const problemRoutes = require('./routes');
 
 mongoose.connect(process.env.DB, {
   // useNewUrlParser: true,
@@ -14,5 +16,6 @@ mongoose.connect(process.env.DB, {
   console.error('Error connecting to DB:', err);
 });
 
+app.use('/api', problemRoutes);
 
 module.exports = app;
