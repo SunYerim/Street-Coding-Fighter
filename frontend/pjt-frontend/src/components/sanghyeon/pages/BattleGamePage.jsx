@@ -131,20 +131,16 @@ const BattleGamePage = () => {
   };
 
   const enterRoom = async () => {
-    if (isBattleConnected) {
-      const joinRoomDTO = {
-        userId: userId,
-        username: name,
-        roomPassword: roomPassword,
-      };
-      battleStompClient.send(
-        `/game/${roomId}/join`,
-        {},
-        JSON.stringify(joinRoomDTO)
-      );
-    } else {
-      console.log("Not connected yet");
-    }
+    const joinRoomDTO = {
+      userId: userId,
+      username: name,
+      roomPassword: roomPassword,
+    };
+    battleStompClient.send(
+      `/game/${roomId}/join`,
+      {},
+      JSON.stringify(joinRoomDTO)
+    );
   };
 
   const subscribeEnterRoom = () => {
@@ -242,18 +238,14 @@ const BattleGamePage = () => {
   };
 
   const enterChat = () => {
-    if (isChatConnected === true) {
-      const endpoint = `/send/chat/${roomId}/enter`;
-      const enterDTO = {
-        sender: name,
-        content: `${name}님이 입장하셨습니다.`,
-        type: "JOIN",
-        roomId: roomId,
-      };
-      chatStompClient.send(endpoint, {}, JSON.stringify(enterDTO));
-    } else {
-      console.log("Not connected yet");
-    }
+    const endpoint = `/send/chat/${roomId}/enter`;
+    const enterDTO = {
+      sender: name,
+      content: `${name}님이 입장하셨습니다.`,
+      type: "JOIN",
+      roomId: roomId,
+    };
+    chatStompClient.send(endpoint, {}, JSON.stringify(enterDTO));
   };
 
   // const subscribeEnterMessage = () => {
@@ -269,18 +261,14 @@ const BattleGamePage = () => {
 
   const sendMessage = async () => {
     console.log("send message");
-    if (isChatConnected && chatStompClient?.connected) {
-      const endpoint = `/send/chat/${roomId}`;
-      const chatMessage = {
-        sender: name,
-        content: message,
-        type: "CHAT",
-        roomId: roomId,
-      };
-      chatStompClient.send(endpoint, {}, JSON.stringify(chatMessage));
-    } else {
-      console.log("Not connected yet");
-    }
+    const endpoint = `/send/chat/${roomId}`;
+    const chatMessage = {
+      sender: name,
+      content: message,
+      type: "CHAT",
+      roomId: roomId,
+    };
+    chatStompClient.send(endpoint, {}, JSON.stringify(chatMessage));
   };
 
   const subscribeMessage = () => {
