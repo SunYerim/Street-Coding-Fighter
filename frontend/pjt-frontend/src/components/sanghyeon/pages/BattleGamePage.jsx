@@ -172,14 +172,12 @@ const BattleGamePage = () => {
 
   const selectEnemyProblem = (problemId) => {
     const endpoint = `/game/${roomId}/selectProblem`;
-    const headers = {
-      memberId: memberId.toString(),
+    const payload = {
+      problemId: problemId,
+      memberId: memberId, // payload에 memberId 추가
     };
-    battleStompClient.current.send(
-      endpoint,
-      headers,
-      JSON.stringify({ problemId: problemId })
-    );
+
+    battleStompClient.current.send(endpoint, {}, JSON.stringify(payload));
     setSelectOpponentProblem(true);
   };
 
