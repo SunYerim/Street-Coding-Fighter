@@ -92,7 +92,6 @@ const BattleGameListPage = () => {
         data: password,
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "text/plain",
         },
       });
 
