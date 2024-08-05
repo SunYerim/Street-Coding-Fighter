@@ -4,6 +4,7 @@ import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.Message;
 import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
 import com.scf.multi.domain.dto.user.Player;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -31,8 +33,15 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
     private final KafkaMessageProducer kafkaMessageProducer;
-    private final Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
-    private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
+    private final static Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
+    private final static Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
+
+    @EventListener
+    public void onGameStarted(GameStartedEvent event) throws Exception {
+
+        String roomId = event.getRoomId();
+        broadcastMessageToRoom(roomId, "gameStart", "게임이 시작되었습니다!");
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -69,7 +78,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
             .orElseThrow(() -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
 
-        if(!room.getIsStart()) {
+        if (!room.getIsStart()) {
             return;
         }
 
@@ -127,7 +136,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         MultiGameRoom room = multiGameService.findOneById(roomId);
         Player exitPlayer = room.getPlayers().stream()
             .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
-            .orElseThrow(() -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
+            .orElseThrow(
+                () -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
         room.exitRoom(exitPlayer);
 
         Set<WebSocketSession> roomSessions = rooms.get(roomId);
@@ -144,21 +154,26 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
         if (exitPlayer.getIsHost() && !rooms.get(roomId).isEmpty()) { // 방장 rotate
-            Optional<WebSocketSession> newHostSession = rooms.get(roomId).stream().findFirst(); // 방에 연결된 플레이어 session 찾기
+            Optional<WebSocketSession> newHostSession = rooms.get(roomId).stream()
+                .findFirst(); // 방에 연결된 플레이어 session 찾기
             String sessionId = newHostSession.get().getId();
-            
+
             Player newHost = room.getPlayers().stream() // 방에 sessionId와 동일한 플레이어 찾기
                 .filter(player -> player.getSessionId().equals(sessionId)).findFirst()
-                .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
-            
+                .orElseThrow(
+                    () -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
+
             newHost.setIsHost(true); // 방장으로 설정
             room.updateHost(newHost); // 방장 정보 업데이트
-            
-            broadcastMessageToRoom(roomId, "newHost", newHost.getUserId()); // 새로운 방장 broadCasting
+
+            broadcastMessageToRoom(roomId, "newHost",
+                newHost.getUserId()); // 새로운 방장 broadCasting
         }
+
     }
 
-    public void broadcastMessageToRoom(String roomId, String type, Object payload) throws Exception {
+    public void broadcastMessageToRoom(String roomId, String type, Object payload)
+        throws Exception {
 
         Set<WebSocketSession> roomSessions = rooms.get(roomId);
 
