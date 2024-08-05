@@ -89,45 +89,47 @@ const BattleGamePage = () => {
   let battleStompClient = null;
   let chatStompClient = null;
 
-  const connect = () => {
+  // WebSocket 연결 및 초기화 함수
+  const connect = async () => {
     const battleSocket = new SockJS(`${baseURL}/ws-battle`);
     const chatSocket = new SockJS(`${baseURL}/ws-chat`);
     battleStompClient = Stomp.over(battleSocket);
     chatStompClient = Stomp.over(chatSocket);
 
-    battleStompClient.connect(
-      {},
-      (frame) => {
-        console.log("Connected: " + frame);
-        setIsBattleConnected(true);
+    return new Promise((resolve, reject) => {
+      battleStompClient.connect(
+        {},
+        (frame) => {
+          console.log("Connected: " + frame);
+          setIsBattleConnected(true);
+          subscribeEnterRoom();
+          subscribeEnemyProblem();
+          subsribeMyProblem();
+          subscribeRoundResult();
+          subscribeTotalResult();
+          console.log("배틀 서버 연결");
 
-        subscribeEnterRoom();
-        subscribeEnemyProblem();
-        subsribeMyProblem();
-        subscribeRoundResult();
-        subscribeTotalResult();
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    console.log("배틀 서버 연결");
-
-    chatStompClient.connect(
-      {},
-      (frame) => {
-        console.log("Connected: " + frame);
-
-        setIsChatConnected(true);
-        subscribeMessage();
-
-        console.log("채팅 서버 연결");
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+          chatStompClient.connect(
+            {},
+            (frame) => {
+              console.log("Connected: " + frame);
+              setIsChatConnected(true);
+              subscribeMessage();
+              console.log("채팅 서버 연결");
+              resolve();
+            },
+            (error) => {
+              console.log(error);
+              reject(error);
+            }
+          );
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
   };
 
   const enterRoom = () => {
@@ -302,8 +304,8 @@ const BattleGamePage = () => {
     const initializeConnections = async () => {
       try {
         await connect();
-        enterRoom();
-        enterChat();
+        await enterRoom();
+        await enterChat();
       } catch (error) {
         console.log("Connection error:", error);
       }
