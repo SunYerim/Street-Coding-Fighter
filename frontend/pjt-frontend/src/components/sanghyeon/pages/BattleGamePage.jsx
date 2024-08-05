@@ -112,6 +112,8 @@ const BattleGamePage = () => {
       }
     );
 
+    console.log("배틀 서버 연결");
+
     chatStompClient.connect(
       {},
       (frame) => {
@@ -119,6 +121,8 @@ const BattleGamePage = () => {
 
         setIsChatConnected(true);
         subscribeMessage();
+
+        console.log("채팅 서버 연결");
       },
       (error) => {
         console.log(error);

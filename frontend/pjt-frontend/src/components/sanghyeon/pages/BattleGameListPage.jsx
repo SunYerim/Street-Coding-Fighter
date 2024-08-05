@@ -63,6 +63,7 @@ const BattleGameListPage = () => {
       });
 
       setBattleList(res.data);
+      console.log(res.data);
       setCurrentBattleList(res.data);
     } catch (error) {
       console.error("Failed to fetch record", error);
@@ -102,7 +103,7 @@ const BattleGameListPage = () => {
       });
 
       setRoomId(roomId);
-      setRoomPassword(password);
+      setRoomPassword(inputPassword);
       setHostId("");
       navigate("/battle-game");
     } catch (error) {
