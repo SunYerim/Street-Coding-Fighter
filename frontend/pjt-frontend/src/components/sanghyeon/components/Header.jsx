@@ -20,7 +20,7 @@ function Header() {
         >
           Street Coding Figther
         </h2>
-        <div className="header-icon">
+        <div  className="header-icon">
           <img
             onClick={() => {
               navigate("/profile");
