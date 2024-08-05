@@ -7,7 +7,7 @@ import axios from "axios";
 import createAuthClient from "../apis/createAuthClient.js";
 
 import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
+import * as StompJs from "@stomp/stompjs";
 
 import DragNDropQuiz from "../../../components/game/quiz_with_blank/DragNDropQuiz.jsx";
 import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
@@ -29,7 +29,11 @@ const BattleGamePage = () => {
     roomId,
     roomPassword,
     baseURL,
+    wsBattle,
+    wsChat,
+    enemyId,
     setEnemyId,
+    enemyName,
     setEnemyName,
   } = store((state) => ({
     memberId: state.memberId,
@@ -41,7 +45,11 @@ const BattleGamePage = () => {
     roomId: state.roomId,
     roomPassword: state.roomPassword,
     baseURL: state.baseURL,
+    wsBattle: state.wsBattle,
+    wsChat: state.wsChat,
+    enemyId: state.enemyId,
     setEnemyId: state.setEnemyId,
+    enemyName: state.enemyName,
     setEnemyName: state.setEnemyName,
   }));
 
@@ -60,7 +68,7 @@ const BattleGamePage = () => {
   const [player2Health, setPlayer2Health] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
-  const [enemyProblems, setEnemyProblems] = useState([]);
+  const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
   const [timerEnded, setTimerEnded] = useState(false);
   const [gameStart, setGameStart] = useState(false);
@@ -77,68 +85,82 @@ const BattleGamePage = () => {
 
   // ---------------------- WebSocket ----------------------
 
-  let battleClient = null;
-  let chatClient = null;
+  let battleStompClient = useRef(null);
+  let chatStompClient = useRef(null);
 
-  const connect = async () => {
-    const battleSocket = new SockJS(`${baseURL}/ws-battle`);
-    const chatSocket = new SockJS(`${baseURL}/ws-chat`);
-
-    battleClient = new Client({
-      webSocketFactory: () => battleSocket,
+  const connect = () => {
+    battleStompClient.current = new StompJs.Client({
+      brokerURL: `${baseURL}/ws-battle`,
       connectHeaders: {},
-      debug: (str) => console.log("STOMP debug:", str),
+      debug: function (str) {
+        console.log(str);
+      },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: (frame) => {
-        console.log("Connected to battle server:", frame);
+        console.log("Connected: " + frame);
         setIsBattleConnected(true);
+
         subscribeEnterRoom();
         subscribeEnemyProblem();
-        subscribeMyProblem();
+        subsribeMyProblem();
         subscribeRoundResult();
         subscribeTotalResult();
+        enterRoom(); // battle websocket 연결 후 방 입장
       },
-      onDisconnect: () => setIsBattleConnected(false),
-      onStompError: (frame) => console.error("STOMP Error:", frame),
+      onStompError: (frame) => {
+        console.log("Broker reported error: " + frame.headers["message"]);
+        console.log("Additional details: " + frame.body);
+      },
     });
 
-    chatClient = new Client({
-      webSocketFactory: () => chatSocket,
+    chatStompClient.current = new StompJs.Client({
+      brokerURL: `${baseURL}/ws-chat`,
       connectHeaders: {},
-      debug: (str) => console.log("STOMP debug:", str),
+      debug: function (str) {
+        console.log(str);
+      },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: (frame) => {
-        console.log("Connected to chat server:", frame);
+        console.log("Connected: " + frame);
+
         setIsChatConnected(true);
         subscribeMessage();
-        enterChat();
+        enterChat(); // chat websocket 연결 후 방 입장
+        console.log("채팅 서버 연결");
       },
-      onDisconnect: () => setIsChatConnected(false),
-      onStompError: (frame) => console.error("STOMP Error:", frame),
+      onStompError: (frame) => {
+        console.log("Broker reported error: " + frame.headers["message"]);
+        console.log("Additional details: " + frame.body);
+      },
     });
 
-    battleClient.activate();
-    chatClient.activate();
+    battleStompClient.current.activate();
+    chatStompClient.current.activate();
   };
 
   const enterRoom = () => {
-    const joinRoomDTO = {
-      userId: userId,
-      username: name,
-      roomPassword: roomPassword,
-    };
-    battleClient.publish({
-      destination: `/game/${roomId}/join`,
-      body: JSON.stringify(joinRoomDTO),
-    });
+    if (isBattleConnected && battleStompClient.current) {
+      const joinRoomDTO = {
+        userId: userId,
+        username: name,
+        roomPassword: roomPassword,
+      };
+      battleStompClient.current.publish({
+        destination: `/game/${roomId}/join`,
+        body: JSON.stringify(joinRoomDTO),
+      });
+    } else {
+      console.log("Not connected yet");
+    }
   };
 
   const subscribeEnterRoom = () => {
-    battleClient.subscribe(`/game/${roomId}/join`, (message) => {
+    const endpoint = `/game/${roomId}/join`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
         ...prevMessages,
@@ -153,7 +175,8 @@ const BattleGamePage = () => {
   };
 
   const subscribeEnemyProblem = () => {
-    battleClient.subscribe(`/room/${roomId}/RoundChoiceProblem`, (message) => {
+    const endpoint = `/room/${roomId}/RoundChoiceProblem`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setEnemyProblems(body);
       openModal();
@@ -162,15 +185,22 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    battleClient.publish({
-      destination: `/game/${roomId}/selectProblem`,
-      body: JSON.stringify({ problemId: problemId }),
-    });
-    setSelectOpponentProblem(true);
+    if (isBattleConnected && battleStompClient.current) {
+      const endpoint = `/game/${roomId}/selectProblem`;
+      battleStompClient.current.publish({
+        destination: endpoint,
+        body: JSON.stringify({ problemId: problemId }),
+      });
+      setSelectOpponentProblem(true);
+    } else {
+      console.log("Not connected yet");
+    }
   };
 
-  const subscribeMyProblem = () => {
-    battleClient.subscribe(`/room/${roomId}/${userId}`, (message) => {
+  const subsribeMyProblem = () => {
+    const endpoint = `/room/${roomId}/${userId}`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
+      console.log(message);
       const body = JSON.parse(message.body);
       setMyProblem(body);
       closeModal();
@@ -180,8 +210,9 @@ const BattleGamePage = () => {
     });
   };
 
-  const submitAnswer = useCallback(async () => {
-    if (isBattleConnected) {
+  // 답변 제출 미완성
+  const submitAnswer = useCallback(() => {
+    if (isBattleConnected && battleStompClient.current) {
       const endpoint = `/game/${roomId}/answer`;
       const submitAnswerDTO = {
         problemId: myProblem.problemId,
@@ -191,7 +222,7 @@ const BattleGamePage = () => {
         roomId: roomId,
         round: currentRound,
       };
-      battleClient.publish({
+      battleStompClient.current.publish({
         destination: endpoint,
         body: JSON.stringify(submitAnswerDTO),
       });
@@ -200,15 +231,18 @@ const BattleGamePage = () => {
     }
   }, [isBattleConnected, myProblem, userId, count, roomId, currentRound]);
 
+  // 체력 반영 미완성
   const subscribeRoundResult = () => {
-    battleClient.subscribe(`/room/${roomId}`, (message) => {
+    const endpoint = `/room/${roomId}`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       console.log(body);
     });
   };
 
   const subscribeTotalResult = () => {
-    battleClient.subscribe(`/room/${roomId}`, (message) => {
+    const endpoint = `/room/${roomId}`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setGameEnded(true);
       setWinner(body.winner);
@@ -216,38 +250,49 @@ const BattleGamePage = () => {
 
       setTimeout(() => {
         navigate("/battle-list");
-      }, 5000); // Adjusted to 5000 ms for proper delay
+      }, 5);
     });
   };
 
   const enterChat = () => {
-    const enterDTO = {
-      sender: name,
-      content: `${name}님이 입장하셨습니다.`,
-      type: "JOIN",
-      roomId: roomId,
-    };
-    chatClient.publish({
-      destination: `/send/chat/${roomId}/enter`,
-      body: JSON.stringify(enterDTO),
-    });
+    if (isChatConnected && chatStompClient.current) {
+      const endpoint = `/send/chat/${roomId}/enter`;
+      const enterDTO = {
+        sender: name,
+        content: `${name}님이 입장하셨습니다.`,
+        type: "JOIN",
+        roomId: roomId,
+      };
+      chatStompClient.current.publish({
+        destination: endpoint,
+        body: JSON.stringify(enterDTO),
+      });
+    } else {
+      console.log("Not connected yet");
+    }
   };
 
   const sendMessage = () => {
-    const chatMessage = {
-      sender: name,
-      content: message,
-      type: "CHAT",
-      roomId: roomId,
-    };
-    chatClient.publish({
-      destination: `/send/chat/${roomId}`,
-      body: JSON.stringify(chatMessage),
-    });
+    if (isChatConnected && chatStompClient.current) {
+      const endpoint = `/send/chat/${roomId}`;
+      const chatMessage = {
+        sender: name,
+        content: message,
+        type: "CHAT",
+        roomId: roomId,
+      };
+      chatStompClient.current.publish({
+        destination: endpoint,
+        body: JSON.stringify(chatMessage),
+      });
+    } else {
+      console.log("Not connected yet");
+    }
   };
 
   const subscribeMessage = () => {
-    chatClient.subscribe(`/room/${roomId}`, (message) => {
+    const endpoint = `/room/${roomId}`;
+    chatStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
         ...prevMessages,
@@ -258,16 +303,17 @@ const BattleGamePage = () => {
     });
   };
 
-  const sendQuitMessage = async () => {
-    if (isChatConnected) {
+  const sendQuitMessage = () => {
+    if (isChatConnected && chatStompClient.current) {
+      const endpoint = `/send/chat/${roomId}/leave`;
       const chatMessage = {
         sender: name,
         content: `${name}님이 퇴장하셨습니다.`,
         type: "LEAVE",
         roomId: roomId,
       };
-      chatClient.publish({
-        destination: `/send/chat/${roomId}/leave`,
+      chatStompClient.current.publish({
+        destination: endpoint,
         body: JSON.stringify(chatMessage),
       });
     } else {
@@ -279,83 +325,106 @@ const BattleGamePage = () => {
     const initializeConnections = async () => {
       try {
         await connect();
-        await enterRoom();
       } catch (error) {
-        console.error("Error connecting:", error);
+        console.log("Connection error:", error);
       }
     };
 
     initializeConnections();
 
     return () => {
-      if (battleClient) {
-        battleClient.deactivate();
-      }
-      if (chatClient) {
-        chatClient.deactivate();
-      }
       sendQuitMessage();
+      if (battleStompClient.current) battleStompClient.current.deactivate();
+      if (chatStompClient.current) chatStompClient.current.deactivate();
     };
-  }, [connect, enterRoom, sendQuitMessage]);
+  }, []);
+
+  // ---------------------- WebSocket ----------------------
 
   useEffect(() => {
-    if (answerSubmitted) {
-      setAnswerSubmitted(false);
-    }
-  }, [answerSubmitted]);
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
 
-  const openModal = () => {
-    document.getElementById("problemModal").style.display = "block";
-  };
-
-  const closeModal = () => {
-    document.getElementById("problemModal").style.display = "none";
-  };
-
-  const handleAnswer = () => {
-    submitAnswer();
-    setAnswerSubmitted(true);
-    setTimerEnded(true);
-  };
-
-  const startTimer = () => {
-    setCount(30);
-    const timer = setInterval(() => {
-      setCount((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          setTimerEnded(true);
-          handleAnswer();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
+  useEffect(() => {
+    battleHistoryEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [battleHistory]);
 
   useEffect(() => {
     if (count === 0) {
-      setTimerEnded(true);
+      submitAnswer();
     }
   }, [count]);
 
   useEffect(() => {
-    if (count2 === 0) {
-      setGameStart(false);
-    }
-  }, [count2]);
+    if (gameEnded && count2 === 0) {
+      navigate("/battle-list");
+    } else if (gameEnded === true) {
+      const timer = setInterval(() => {
+        setCount2((prevCount) => prevCount - 1);
+      }, 1000);
 
-  useEffect(() => {
-    if (gameStart && !timerEnded) {
-      setCount2((prev) => prev - 1);
+      return () => clearInterval(timer);
     }
-  }, [gameStart, timerEnded]);
+  }, [count2, navigate]);
 
-  useEffect(() => {
-    if (count2 === 0) {
-      setGameStart(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const handleStart = async () => {
+    try {
+      const handleStartRes = await authClient({
+        method: "POST",
+        url: `${baseURL}/battle/room/${roomId}/start`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log("game start!");
+    } catch (error) {
+      console.log(error);
     }
-  }, [count2]);
+  };
+
+  const handleSubmit = () => {
+    if (answerSubmitted === true) {
+      alert("이미 답안을 제출하셨습니다.");
+    } else {
+      submitAnswer();
+    }
+  };
+
+  const startTimer = () => {
+    setCount(30);
+    const timerInterval = setInterval(() => {
+      setCount((prevCount) => {
+        if (prevCount <= 1) {
+          clearInterval(timerInterval);
+          // endRound();
+          return 0;
+        }
+        return prevCount - 1;
+      });
+    }, 1000);
+  };
+
+  const renderQuestion = (problem) => {
+    switch (problem.type) {
+      case "빈 칸 채우기":
+        return <DragNDropQuiz problem={problem} />;
+      case "주관식":
+        return <ShortAnswer problem={problem} />;
+      default:
+        return <div>Unknown problem type</div>;
+    }
+  };
 
   return (
     <div>
