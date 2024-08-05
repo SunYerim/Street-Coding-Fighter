@@ -170,17 +170,13 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    if (isBattleConnected === true) {
-      const endpoint = `/game/${roomId}/selectProblem`;
-      battleStompClient.send(
-        endpoint,
-        {},
-        JSON.stringify({ problemId: problemId })
-      );
-      setSelectOpponentProblem(true);
-    } else {
-      console.log("Not connected yet");
-    }
+    const endpoint = `/game/${roomId}/selectProblem`;
+    battleStompClient.send(
+      endpoint,
+      {},
+      JSON.stringify({ problemId: problemId })
+    );
+    setSelectOpponentProblem(true);
   };
 
   const subsribeMyProblem = () => {
