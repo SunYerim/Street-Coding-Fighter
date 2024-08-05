@@ -34,7 +34,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
-    private final KafkaMessageProducer kafkaMessageProducer;
     private final static Map<String, String> sessionRooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
     private final static Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
 
@@ -88,37 +87,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String attainScoreMessage = makeResponseMessage("attainScore", attainedScore);
         sendMessage(session, attainScoreMessage);
 
-        int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
-
-        if (curSubmitCount == room.getPlayers().size()) { // 각 라운드마다 모든 플레이어가 풀이를 제출했으면
-
-            room.nextRound(); // 다음 라운드 진행
-
-            List<Rank> roundRank = room.getRoundRank();
-            broadcastMessageToRoom(roomId, "roundRank", roundRank);
-
-            List<Rank> gameRank = room.getGameRank();
-            broadcastMessageToRoom(roomId, "gameRank", gameRank);
-
-            if (room.getRound().equals(room.getPlayRound())) { // 마지막 라운드이면
-
-                for (Player p : room.getPlayers()) { // 방에 참여한 모든 유저 푼 문제 저장
-                    List<Solved> solveds = p.getSolveds();
-                    if (solveds != null) {
-                        kafkaMessageProducer.sendSolved(solveds);
-                    }
-                }
-
-                GameResult gameResult = GameResult.builder()
-                    .gameRank(gameRank)
-                    .build();
-                kafkaMessageProducer.sendResult(gameResult); // 게임 최종 결과 저장
-
-                room.finishGame();
-            }
-
-            room.getCurSubmitCount().set(0); // 제출 횟수 초기화
-        }
+        handleRoundCompletion(room);
     }
 
     private static void sendMessage(WebSocketSession session, String attainScoreMessage)
@@ -206,5 +175,26 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             .payload(payload)
             .build();
         return JsonConverter.getInstance().toString(responseMessage);
+    }
+
+    private void handleRoundCompletion(MultiGameRoom room) throws Exception {
+
+        int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
+
+        if (curSubmitCount == room.getPlayers().size()) {
+            room.nextRound();
+
+            List<Rank> roundRank = room.getRoundRank();
+            broadcastMessageToRoom(room.getRoomId(), "roundRank", roundRank);
+
+            List<Rank> gameRank = room.getGameRank();
+            broadcastMessageToRoom(room.getRoomId(), "gameRank", gameRank);
+
+            if (room.getRound().equals(room.getPlayRound())) {
+                multiGameService.finalizeGame(room, gameRank);
+            }
+
+            room.getCurSubmitCount().set(0);
+        }
     }
 }

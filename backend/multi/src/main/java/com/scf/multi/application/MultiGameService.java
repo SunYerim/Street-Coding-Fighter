@@ -2,6 +2,8 @@ package com.scf.multi.application;
 
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
+import com.scf.multi.domain.dto.user.GameResult;
+import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomResponse;
@@ -17,6 +19,7 @@ import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
+import com.scf.multi.infrastructure.KafkaMessageProducer;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +34,7 @@ public class MultiGameService {
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
     private final ApplicationEventPublisher eventPublisher;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     public List<RoomResponse.ListDTO> findAllRooms() {
         List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
@@ -286,5 +290,21 @@ public class MultiGameService {
         score += (streakCount * 75);
 
         return score;
+    }
+
+    public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
+        for (Player player : room.getPlayers()) {
+            List<Solved> solveds = player.getSolveds();
+            if (solveds != null) {
+                kafkaMessageProducer.sendSolved(solveds);
+            }
+        }
+
+        GameResult gameResult = GameResult.builder()
+            .gameRank(gameRank)
+            .build();
+        kafkaMessageProducer.sendResult(gameResult);
+
+        room.finishGame();
     }
 }
