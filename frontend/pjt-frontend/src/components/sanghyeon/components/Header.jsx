@@ -1,11 +1,11 @@
 import "../../../css/Header.css";
-// import userIcon from "../../../../public/userIcon.png";
+import memberIcon from "../../../../public/memberIcon.png";
 import Setting from "./Setting";
 import { useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
-  const userIcon = "userIcon.png"
+  const userIcon = "userIcon.png";
   return (
     <>
       <div className="header-container">
@@ -26,8 +26,8 @@ function Header() {
               navigate("/profile");
             }}
             className="user-icon"
-            src={userIcon}
-            alt="userIcon"
+            src={memberIcon}
+            alt="memberIcon"
           />
           <Setting />
         </div>
