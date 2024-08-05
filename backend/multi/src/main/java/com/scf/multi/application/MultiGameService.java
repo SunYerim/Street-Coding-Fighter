@@ -131,6 +131,8 @@ public class MultiGameService {
             score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
         }
 
+        solved.setIsCorrect(isCorrect);
+
         room.updateScoreBoard(player.getUserId(), score);
         room.updateLeaderBoard(player.getUserId(), score);
 
