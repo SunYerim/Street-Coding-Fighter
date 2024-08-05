@@ -427,112 +427,171 @@ const BattleGamePage = () => {
   };
 
   return (
-    <div>
-      <Header />
-      <div className="battle-game-container">
-        <div className="chat-box">
-          <div className="messages">
-            {chatMessages.map((msg, index) => (
-              <div key={index}>{msg}</div>
-            ))}
-            <div ref={chatEndRef} />
-          </div>
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          />
-        </div>
-
-        <div className="battle-box">
-          <div className="battle-history">
-            <h2>Battle History</h2>
-            {battleHistory.map((entry, index) => (
-              <div key={index}>{entry}</div>
-            ))}
-            <div ref={battleHistoryEndRef} />
-          </div>
-
-          <div className="health-box">
-            <div className="health-bar">
-              <span>Player 1: {player1Health}</span>
-              <div
-                className="health-fill"
-                style={{ width: `${player1Health}%` }}
-              />
-            </div>
-            <div className="health-bar">
-              <span>Player 2: {player2Health}</span>
-              <div
-                className="health-fill"
-                style={{ width: `${player2Health}%` }}
-              />
-            </div>
-          </div>
-
-          {gameStart && !timerEnded && (
-            <div className="timer">Time Left: {count2}s</div>
-          )}
-
-          {!gameEnded && !gameStart && (
-            <div className="problem-selection">
-              <h2>Select Your Problem</h2>
-              <div className="problem-list">
-                {enemyProblems.map((problem) => (
-                  <button
-                    key={problem.problemId}
-                    onClick={() => selectEnemyProblem(problem.problemId)}
-                  >
-                    {problem.problemTitle}
-                  </button>
-                ))}
+    <>
+      <div className="battle-game-entire-container">
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Example Modal"
+          className="battle-game-select-problem-modal"
+          overlayClassName="overlay"
+        >
+          {gameEnded ? (
+            <div className="battle-game-result-container">
+              <div className="battle-game-result-title">
+                <div className="battle-game-result-title-container">
+                  게임 결과
+                </div>
+              </div>
+              <div className="battle-game-result-content">
+                {winner === userId ? "승리했습니다!" : "패배했습니다."}
+              </div>
+              <div className="battle-game-result-footer">
+                {count2}초 후 방 목록 화면으로 이동합니다.
               </div>
             </div>
-          )}
-
-          {gameStart && myProblem && (
-            <div className="problem-area">
-              {myProblem.type === "drag_and_drop" ? (
-                <DragNDropQuiz problem={myProblem} />
-              ) : (
-                <ShortAnswer problem={myProblem} />
-              )}
-              <button onClick={handleAnswer}>Submit Answer</button>
+          ) : selectOpponentProblem ? (
+            <div className="battle-game-select-problem-title">
+              상대방이 문제를 선택하는 중입니다.
             </div>
+          ) : (
+            <>
+              <div className="battle-game-select-problem-title">
+                상대방이 풀 문제를 선택 해주세요.
+              </div>
+              <div className="battle-game-select-problem-container">
+                {Array.isArray(EnemyProblems) &&
+                  EnemyProblems.map((data, index) => (
+                    <div
+                      className="battle-game-select-problem"
+                      onClick={() => selectEnemyProblem(data.problemId)}
+                      key={index}
+                    >
+                      <div className="battle-game-select-problem-sub-title">
+                        {data.title}
+                      </div>
+                      <hr />
+                      <div className="battle-game-select-problem-type">
+                        {data.problemType}
+                      </div>
+                      <div className="battle-game-select-problem-category">
+                        {data.category}
+                      </div>
+                      <div className="battle-game-select-problem-difficulty">
+                        {data.difficulty}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </>
           )}
-
-          {gameEnded && (
-            <div className="result">
-              <h2>{winner} wins!</h2>
-              <h3>{loser} loses!</h3>
+        </Modal>
+        <Header />
+        <div className="battle-game-outer-outer-container">
+          <div className="battle-game-outer-container">
+            <div className="battle-game-title-container">
+              <div className="health-bar">
+                <div
+                  className="health-bar-inner"
+                  style={{ width: `${player1Health}%` }}
+                ></div>
+              </div>
+              <h2 className="battle-game-title">Round {currentRound}</h2>
+              <div className="health-bar">
+                <div
+                  className="health-bar-inner"
+                  style={{ width: `${player2Health}%` }}
+                ></div>
+              </div>
             </div>
-          )}
+            <div className="battle-game-sub-title-container">
+              <div className="battle-game-sub-title-player">{name}</div>
+              <div className="battle-game-sub-title-timer">{count}</div>
+              <div className="battle-game-sub-title-player">{enemyName}</div>
+            </div>
+            <div className="battle-game-container">
+              <div className="battle-game-left-container">
+                <div className="battle-game-left-cam"></div>
+                <div className="battle-game-history-container">
+                  <div className="battle-game-history">
+                    <div className="battle-game-history-title">전투 기록</div>
+                    {battleHistory.map((data, index) => (
+                      <div className="battle-game-history-message" key={index}>
+                        {data.isAttack === true
+                          ? `${data.userId}님이 플레이어 2님에게 ${data.power}만큼 데미지를 주었습니다.`
+                          : `${data.userId}님이 ${data.power}만큼 체력을 회복하였습니다.`}
+                      </div>
+                    ))}
+                    <div ref={battleHistoryEndRef} />
+                  </div>
+                </div>
+              </div>
+              <div className="battle-game-inner-container">
+                {gameStart ? (
+                  <>
+                    {renderQuestion(myProblem)}
+                    <button
+                      onClick={handleSubmit}
+                      className="battle-game-submit-answer"
+                    >
+                      답안 제출
+                    </button>
+                  </>
+                ) : (
+                  <div className="battle-game-game-start-container">
+                    <div className="battle-game-game-start-title">
+                      게임 시작 전입니다.
+                    </div>
+                    {hostId === "" ? (
+                      <div className="battle-game-game-start-waiting">
+                        대기 중...
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleStart}
+                        className="battle-game-game-start-button"
+                      >
+                        게임 시작
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="battle-game-right-container">
+                <div className="battle-game-right-cam"></div>
+                <div className="battle-game-chatting-container">
+                  <div className="battle-game-chatting">
+                    {chatMessages.map((msg, index) => (
+                      <div className="battle-game-chatting-message" key={index}>
+                        {msg}
+                      </div>
+                    ))}
+                    <div ref={chatEndRef} />
+                  </div>
+                  <div className="battle-game-chat-input">
+                    <input
+                      type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="메시지를 입력하세요"
+                      onKeyUp={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          sendMessage();
+                        }
+                      }}
+                    />
+                    <button type="button" onClick={sendMessage}>
+                      전송
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <Modal
-        id="problemModal"
-        isOpen={true}
-        onRequestClose={closeModal}
-        contentLabel="Select Problem"
-      >
-        <h2>Select a Problem</h2>
-        <div className="modal-content">
-          {enemyProblems.map((problem) => (
-            <button
-              key={problem.problemId}
-              onClick={() => {
-                selectEnemyProblem(problem.problemId);
-                closeModal();
-              }}
-            >
-              {problem.problemTitle}
-            </button>
-          ))}
-        </div>
-      </Modal>
-    </div>
+    </>
   );
 };
 
