@@ -1,6 +1,5 @@
 import "../../../css/Header.css";
 import Setting from "./Setting";
-import memberIcon from "../../../../public/memberIcon.png";
 import { useNavigate } from "react-router-dom";
 
 function Header() {

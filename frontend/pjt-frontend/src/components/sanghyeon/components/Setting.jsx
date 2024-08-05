@@ -7,6 +7,7 @@ import store from '../../../store/store.js';
 import createAuthClient from '../apis/createAuthClient.js';
 import SoundStore from '../../../stores/SoundStore.jsx';
 import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa'; //react-icons import
+import VolumeSlider from './VolumeSlider.jsx';
 
 Modal.setAppElement('#root');
 const settingIcon = '/settingIcon.png';
@@ -66,12 +67,12 @@ const Setting = () => {
     memberId: state.memberId,
     setMemberId: state.setMemberId,
   }));
+  const { setBgmVolume, setEffectVolume, bgmVolume, effectVolume } = SoundStore();
 
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const authClient = createAuthClient(baseURL, () => accessToken, setAccessToken);
-  const { setVolume, volume } = SoundStore(); // volume 상태 추가
-  
+
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -83,7 +84,7 @@ const Setting = () => {
   const logout = async () => {
     try {
       await authClient({
-        method: "POST",
+        method: 'POST',
         url: `${baseURL}/user/logout`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -98,24 +99,9 @@ const Setting = () => {
     }
   };
 
-  const handleVolume = () => {
-    if (volume > 0) {
-      console.log('volume off');
-      setVolume(0);
-    } else {
-      console.log('volume on');
-      setVolume(0.3);
-    }
-  };
-
   return (
     <div>
-      <img 
-        onClick={openModal} 
-        className="setting-icon" 
-        src={settingIcon} 
-        alt="settingIcon" 
-      />
+      <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -125,21 +111,18 @@ const Setting = () => {
         <div className="setting-container">
           <div style={styles.settingTitle}>
             <h2 style={styles.settingTitleText}>Setting</h2>
-            <img 
-              onClick={closeModal} 
-              style={styles.settingClose} 
-              src="/close.png" 
-              alt="close-setting" 
-            />
+            <img onClick={closeModal} style={styles.settingClose} src="/close.png" alt="close-setting" />
           </div>
           <hr />
           <div className="settings">
-            <p style={styles.setting} onClick={handleVolume}>
+            <div style={styles.setting}>
               BGM Volume
-            </p>
-            <p style={styles.setting} onClick={handleVolume}>
+              <VolumeSlider volume={bgmVolume*100} handler={setBgmVolume} />
+            </div>
+            <div style={styles.setting}>
               Effect Volume
-            </p>
+              <VolumeSlider volume={effectVolume*100} handler={setEffectVolume} />
+            </div>
             <p style={styles.setting} onClick={() => navigate('/')}>
               Back to Title
             </p>
