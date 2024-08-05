@@ -2,6 +2,7 @@ package com.scf.battle.presentation.controller;
 
 import com.scf.battle.application.BattleGameService;
 import com.scf.battle.domain.dto.Room.CreateRoomDTO;
+import com.scf.battle.domain.dto.Room.RoomJoinPasswordDTO;
 import com.scf.battle.domain.dto.Room.RoomResponseDTO;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.global.error.exception.BusinessException;
@@ -60,9 +61,10 @@ public class BattleGameController {
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
                                       @RequestHeader Long memberId, @RequestHeader String username,
-                                      @RequestBody String roomPassword) {
+                                      @RequestBody RoomJoinPasswordDTO roomJoinPasswordDTO) {
         try {
-            battleGameService.joinRoom(roomId, memberId, username, roomPassword);
+            String password = roomJoinPasswordDTO.getPassword();
+            battleGameService.joinRoom(roomId, memberId, username, password);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());

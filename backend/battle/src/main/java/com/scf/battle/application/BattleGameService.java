@@ -51,7 +51,7 @@ public class BattleGameService {
             throw new BusinessException(roomId, "roomId", ErrorCode.MAX_PLAYERS_EXCEEDED);
         }
 
-        if (room.getPassword() != null && !room.getPassword().equals(roomPassword)) {
+        if (room.getPassword() != "null" && !room.getPassword().equals(roomPassword)) {
             throw new BusinessException(roomPassword, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
         }
         battleGameRepository.joinRoom(roomId, userId, username, roomPassword);
