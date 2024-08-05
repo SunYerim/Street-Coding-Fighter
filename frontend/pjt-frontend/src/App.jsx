@@ -5,7 +5,8 @@ import LoginPage from "./components/sanghyeon/pages/LoginPage.jsx";
 import FindPasswordPage from "./components/sanghyeon/pages/FindPasswordPage.jsx";
 import ChangePasswordPage from "./components/sanghyeon/pages/ChangePasswordPage.jsx";
 import SignUpPage from "./components/sanghyeon/pages/SignUpPage.jsx";
-import MainPage from "./components/sanghyeon/pages/MainPage.jsx";
+import MainPage from "./components/main-page/MainPage.jsx";
+//mainpage 경로 수정했습니다. //
 import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
 import RecordPage from "./components/sanghyeon/pages/RecordPage.jsx";
 import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
