@@ -137,7 +137,7 @@ const BattleGamePage = () => {
       roomPassword: roomPassword,
     };
     battleStompClient.send(
-      `$/game/${roomId}/join`,
+      `/game/${roomId}/join`,
       {},
       JSON.stringify(joinRoomDTO)
     );
