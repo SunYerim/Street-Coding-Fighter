@@ -260,7 +260,7 @@ const BattleGamePage = () => {
   // };
 
   const sendMessage = async () => {
-    if (message.trim === "") return;
+    if (message.trim() === "") return;
     console.log("send message");
     const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
@@ -564,13 +564,20 @@ const BattleGamePage = () => {
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="메시지를 입력하세요"
                       onKeyUp={(e) => {
-                        if (e.key === "Enter") {
+                        if (e.key === "Enter" && message.trim() !== "") {
                           e.preventDefault();
                           sendMessage();
                         }
                       }}
                     />
-                    <button type="button" onClick={sendMessage}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (message.trim() !== "") {
+                          sendMessage();
+                        }
+                      }}
+                    >
                       전송
                     </button>
                   </div>
