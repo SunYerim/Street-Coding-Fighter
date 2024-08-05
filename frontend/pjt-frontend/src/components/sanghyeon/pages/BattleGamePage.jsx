@@ -103,7 +103,7 @@ const BattleGamePage = () => {
           setIsBattleConnected(true);
           subscribeEnterRoom();
           subscribeEnemyProblem();
-          subsribeMyProblem();
+          subscribeMyProblem();
           subscribeRoundResult();
           subscribeTotalResult();
           console.log("배틀 서버 연결");
@@ -172,15 +172,18 @@ const BattleGamePage = () => {
 
   const selectEnemyProblem = (problemId) => {
     const endpoint = `/game/${roomId}/selectProblem`;
+    const headers = {
+      memberId: memberId.toString(),
+    };
     battleStompClient.current.send(
       endpoint,
-      { memberId: memberId },
+      headers,
       JSON.stringify({ problemId: problemId })
     );
     setSelectOpponentProblem(true);
   };
 
-  const subsribeMyProblem = () => {
+  const subscribeMyProblem = () => {
     const endpoint = `/room/${roomId}/${userId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       console.log(message);
