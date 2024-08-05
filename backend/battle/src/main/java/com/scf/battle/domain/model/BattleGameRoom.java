@@ -133,4 +133,8 @@ public class BattleGameRoom {
     public void setProblemForPlayerB(ProblemResponse.SelectProblemDTO selectProblemDTO) {
         this.problemForPlayerB = selectProblemDTO;
     }
+
+    public void leavePlayerB(){
+        playerB = null;
+    }
 }
