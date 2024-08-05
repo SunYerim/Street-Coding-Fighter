@@ -38,7 +38,7 @@ services:
     depends_on:
       - kafka  
     volumes:
-      - db_data_user:/var/lib/mysql/user
+      - db_data_user:/var/lib/mysql
 
   mariadb-problem:
     image: mariadb:latest
@@ -50,7 +50,7 @@ services:
     networks:
       - network
     volumes:
-      - db_data_problem:/var/lib/mysql/problem
+      - db_data_problem:/var/lib/mysql
 
   redis-user:
     image: redis:latest
