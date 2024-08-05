@@ -28,10 +28,8 @@ import store from "./store/store.js";
 import { useEffect } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
-import { useNavigate } from "react-router-dom";
 
 function App() {
-  const navigate = useNavigate();
   const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } =
     SoundStore();
   const { accessToken } = store((state) => ({
