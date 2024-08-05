@@ -90,8 +90,22 @@ const BattleGameListPage = () => {
         },
       });
 
+      console.log(res.data);
       setRoomId(roomId);
       setRoomPassword(password);
+      // [
+      //   {
+      //     "problemId": 1,
+      //     "question": "문제 내용",
+      //     "options": ["옵션1", "옵션2", "옵션3", "옵션4"]
+      //   },
+      //   {
+      //     "problemId": 2,
+      //     "question": "문제 내용",
+      //     "options": ["옵션1", "옵션2", "옵션3", "옵션4"]
+      //   }
+      // ]
+      // navigate() // 배틀 페이지로 이동
       setHostId("");
     } catch (error) {
       console.log(error);
@@ -125,16 +139,100 @@ const BattleGameListPage = () => {
   useEffect(() => {
     const getBattleRoomList = async function () {
       try {
-        const res = await authClient({
-          method: "GET",
-          url: `${baseURL}/battle/room`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        // const res = await authClient({
+        //   method: "GET",
+        //   url: `${baseURL}/battle`,
+        //   headers: {
+        //     Authorization: `Bearer ${accessToken}`,
+        //   },
+        // });
 
-        setBattleList(res.data);
-        setCurrentBattleList(res.data);
+        // console.log(res.data);
+
+        const dummyData = [
+          {
+            roomId: "room1",
+            hostId: 123,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room2",
+            hostId: 456,
+            title: "파이썬 1대1 너만 오면 고",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room3",
+            hostId: 789,
+            title: "파이썬 1대1 중수 이상만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: true,
+          },
+          {
+            roomId: "room4",
+            hostId: 101112,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room5",
+            hostId: 131415,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room6",
+            hostId: 161718,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room7",
+            hostId: 192021,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room8",
+            hostId: 222324,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room9",
+            hostId: 252627,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+          {
+            roomId: "room10",
+            hostId: 282930,
+            title: "파이썬 1대1 초보만",
+            curPlayer: 1,
+            maxPlayer: 2,
+            isLock: false,
+          },
+        ];
+        setBattleList(dummyData);
+        setCurrentBattleList(dummyData);
       } catch (error) {
         console.error("Failed to fetch record", error);
       }
