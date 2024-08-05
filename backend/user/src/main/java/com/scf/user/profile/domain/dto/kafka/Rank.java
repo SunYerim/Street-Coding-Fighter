@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Rank {
 
     // kafka에 쓰기 위함.
-    private Long memberId;
+    private Long userId;
     private String username;
     private int score;
     private int rank;
