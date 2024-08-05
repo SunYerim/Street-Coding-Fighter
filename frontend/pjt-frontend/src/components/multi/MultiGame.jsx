@@ -6,10 +6,14 @@ import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
 import MultiResultModal from "./MultiResultModal.jsx";
 import newSocket from "../game/server.js"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
+import store from "../../store/store.js";
 import axios from 'axios';
+
+import SockJS from "sockjs-client/dist/sockjs";
+import Stomp from "stompjs";
 
 import FillInTheBlank from "../game/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
@@ -22,22 +26,41 @@ const baseUrl = "http://localhost:8080"
 export default function MultiGame() {
   const navigate = useNavigate();
   const location = useLocation();
+  const chatStompClient = useRef(null);
+
+  const {
+    memberId,
+    userId,
+    name,
+    baseURL,
+    wsChat,
+  } = store((state) => ({
+    memberId: state.memberId,
+    userId: state.userId,
+    name: state.name,
+    baseURL: state.baseURL,
+    wsChat: state.wsChat,
+  }));
+
 
   const roomId = multiStore.getState().roomId;
-  const userId = multiStore.getState().userId;
   const username = multiStore.getState().username;
 
   const [socket, setSocket] = useState(null);
   const [start, setStart] = useState(0);
   const [hostId, setHostId] = useState(null);
   const [user, setUser] = useState(username);
+
   const [message, setMessage] = useState('');
-  const [messageList, setMessageList] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [isChatConnected, setIsChatConnected] = useState(false);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [problems, setProblems] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [selectedChoice, setSelectedChoice] = useState(null);
+  const chatEndRef = useRef(null);
 
+  const [selectedChoice, setSelectedChoice] = useState(null);
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
   // 시간을 담을 변수
@@ -72,13 +95,24 @@ export default function MultiGame() {
   };
 
   useEffect(() => {
+    const initializeConnections = async () => {
+      try {
+        await connect();
+        await enterChat();
+      } catch (error) {
+        console.log("Connection error:", error);
+        reconnectWebSocket();
+      }
+    };
+
+    initializeConnections();
+
     const roomId = multiStore.getState().roomId;
     const userId = multiStore.getState().userId;
     const username = multiStore.getState().username;
+    console.log(`Room ${roomId}, userId ${userId}, username: ${username}`);
 
     setUser(username);
-
-    console.log(`Room ${roomId}, userId ${userId}, username: ${username}`);
 
     const socketInstance = newSocket(roomId, userId, username);
     setSocket(socketInstance);
@@ -95,32 +129,18 @@ export default function MultiGame() {
           console.log(data.payload);
           setHostId(data.payload);
         }
-
-        setMessageList((prevMessageList) => [...prevMessageList, data]);
       } else {
         console.error('Received non-JSON message:', messageData);
-        setMessageList((prevMessageList) => [...prevMessageList, { text: messageData }]);
       }
     };
 
     return () => {
       socketInstance.close();
+      sendQuitMessage();
+      if (chatStompClient.current) chatStompClient.current.disconnect();
     };
   }, []);
 
-
-  const sendMessage = () => {
-    if (socket && message.trim()) {
-        const messageObj = {
-            type: 'chat',
-            content: {
-                text: message.trim()
-            }
-        };
-        socket.send(JSON.stringify(messageObj));
-        setMessage('');
-    }
-  };
 
   const handleChoiceSelection = (choiceId) => {
     setSelectedChoice(choiceId);
@@ -139,23 +159,6 @@ export default function MultiGame() {
     }
   };
 
-
-  // 3. 답보내기
-  // const submitAnswer = (answer) => {
-  //   socket.send(JSON.stringify({ event: 'solve', answer }));
-  // };
-
-  // const submitAnswer = (answer) => {
-  //   if (socket && answer.trim()) {
-  //       const messageObj = {
-  //           type: 'solve',
-  //           content: {
-  //               solve: answer.trim()
-  //           }
-  //       };
-  //       socket.send(JSON.stringify(messageObj));
-  //   }
-  // };
 
   const renderProblem = () => {
     const problem = problems[currentProblemIndex];
@@ -195,6 +198,108 @@ export default function MultiGame() {
   
     return <div><span>{count}</span></div>;
   }
+
+    // ---------------------- WebSocket ----------------------
+
+  // WebSocket 연결 및 초기화 함수
+  const connect = async () => {
+    const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+    chatStompClient.current = Stomp.over(chatSocket);
+
+    return new Promise((resolve, reject) => {
+      chatStompClient.current.connect(
+        {},
+        (frame) => {
+          console.log("Connected: " + frame);
+          console.log("chatStompClient: ", chatStompClient.current);
+          setIsChatConnected(true);
+          subscribeMessage();
+          enterChat(roomId, name);
+          console.log("채팅 서버 연결");
+          resolve();
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  };
+
+//   const enterRoom = (roomId, name) => {
+//     const chatMessage = {
+//       sender: "system",
+//       content: `${name} has entered the room.`,
+//       type: 'JOIN',
+//       roomId: roomId
+//   };
+//   chatStompClient.current.send(`/send/chat/${roomId}/enter`, {}, JSON.stringify(chatMessage));
+// }
+
+  const subscribeMessage = () => {
+    const endpoint = `/room/${roomId}`;
+    chatStompClient.current.subscribe(endpoint, (message) => {
+      const body = JSON.parse(message.body);
+      setChatMessages((prevMessages) => [
+        ...prevMessages,
+        body.type === "CHAT"
+          ? `${body.sender}: ${body.content}`
+          : `${body.content}`,
+      ]);
+    });
+  };
+
+  const sendMessage = async () => {
+    if (message.trim() === "") return;
+    console.log("send message");
+    const endpoint = `/send/chat/${roomId}`;
+    const chatMessage = {
+      sender: name,
+      content: message,
+      type: "CHAT",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+    setMessage("");
+  };
+
+  const enterChat = () => {
+    const endpoint = `/send/chat/${roomId}/enter`;
+    const enterDTO = {
+      sender: "system",
+      content: `${name}님이 입장하셨습니다.`,
+      type: "JOIN",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(enterDTO));
+  };
+
+  const sendQuitMessage = () => {
+    const endpoint = `/send/chat/${roomId}/leave`;
+    const chatMessage = {
+      sender: "system",
+      content: `${name}님이 퇴장하셨습니다.`,
+      type: "LEAVE",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+  };
+
+  const reconnectWebSocket = () => {
+    console.log("Reconnecting WebSocket...");
+    setTimeout(async () => {
+      try {
+        await connect();
+      } catch (error) {
+        console.error("Reconnection failed: ", error);
+        reconnectWebSocket(); // 재연결 시도
+      }
+    }, 3000); // 3초 후 재연결 시도
+  };
+
+
+
+
 
   return (
     <>
@@ -265,10 +370,10 @@ export default function MultiGame() {
               )}
               
             </div>
-            {/* <div className="multi-message-room">
-              <MessageContainer messageList={messageList} user={user} />
+            <div className="multi-message-room">
+              <MessageContainer chatMessages={chatMessages} user={user} />
             </div>
-              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
+              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
           </div>
         </div>
       </div>
