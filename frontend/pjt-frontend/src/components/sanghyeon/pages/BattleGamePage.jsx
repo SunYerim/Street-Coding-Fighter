@@ -86,7 +86,7 @@ const BattleGamePage = () => {
   let stompClient = null;
 
   const connect = () => {
-    const socket = new SockJS(`${baseURL}/ws-chat`);
+    const socket = new SockJS(`${baseURL}/ws-battle`);
     stompClient = Stomp.over(socket);
 
     stompClient.connect(
