@@ -170,7 +170,7 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    const endpoint = `/game/${roomId}/selectProblem`;
+    const endpoint = `/send/game/${roomId}/selectProblem`;
     const payload = {
       problemId: problemId,
       memberId: memberId, // payload에 memberId 추가
@@ -320,6 +320,18 @@ const BattleGamePage = () => {
   //   });
   // };
 
+  const reconnectWebSocket = () => {
+    console.log("Reconnecting WebSocket...");
+    setTimeout(async () => {
+      try {
+        await connect();
+      } catch (error) {
+        console.error("Reconnection failed: ", error);
+        reconnectWebSocket(); // 재연결 시도
+      }
+    }, 3000); // 3초 후 재연결 시도
+  };
+
   useEffect(() => {
     const initializeConnections = async () => {
       try {
@@ -328,6 +340,7 @@ const BattleGamePage = () => {
         await enterChat();
       } catch (error) {
         console.log("Connection error:", error);
+        reconnectWebSocket();
       }
     };
 
