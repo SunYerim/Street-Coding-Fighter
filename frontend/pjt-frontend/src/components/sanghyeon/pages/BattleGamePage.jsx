@@ -165,7 +165,8 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    if (battleStompClient && battleStompClient.connected) {
+    console.log(battleStompClient);
+    if (battleStompClient) {
       const endpoint = `/game/${roomId}/selectProblem`;
       battleStompClient.send(
         endpoint,
