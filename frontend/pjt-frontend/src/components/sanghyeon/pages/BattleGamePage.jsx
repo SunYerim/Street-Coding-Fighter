@@ -83,13 +83,16 @@ const BattleGamePage = () => {
 
   // ---------------------- WebSocket ----------------------
 
-  let stompClient = null;
+  let battleStompClient = null;
+  let chatStompClient = null;
 
   const connect = () => {
-    const socket = new SockJS(`${baseURL}/ws-battle`);
-    stompClient = Stomp.over(socket);
+    const battleSocket = new SockJS(`${baseURL}/ws-battle`);
+    const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+    battleStompClient = Stomp.over(battleSocket);
+    chatStompClient = Stomp.over(chatSocket);
 
-    stompClient.connect(
+    battleStompClient.connect(
       {},
       (frame) => {
         console.log("Connected: " + frame);
@@ -99,6 +102,17 @@ const BattleGamePage = () => {
         subsribeMyProblem();
         subscribeRoundResult();
         subscribeTotalResult();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    chatStompClient.connect(
+      {},
+      (frame) => {
+        console.log("Connected: " + frame);
+
         subscribeMessage();
       },
       (error) => {
@@ -108,13 +122,13 @@ const BattleGamePage = () => {
   };
 
   const enterRoom = () => {
-    if (stompClient && stompClient.connected) {
+    if (battleStompClient && battleStompClient.connected) {
       const joinRoomDTO = {
         userId: userId,
         username: name,
         roomPassword: roomPassword,
       };
-      stompClient.send(
+      battleStompClient.send(
         `${baseURL}/${wsBattle}/game/${roomId}/join`,
         {},
         JSON.stringify(joinRoomDTO)
@@ -126,7 +140,7 @@ const BattleGamePage = () => {
 
   const subscribeEnterRoom = () => {
     const endpoint = `${baseURL}/${wsBattle}/game/${roomId}/join`;
-    stompClient.subscribe(endpoint, (message) => {
+    battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
         ...prevMessages,
@@ -142,7 +156,7 @@ const BattleGamePage = () => {
 
   const subscribeEnemyProblem = () => {
     const endpoint = `${baseURL}/${wsBattle}/room/${roomId}/RoundChoiceProblem`;
-    stompClient.subscribe(endpoint, (message) => {
+    battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setEnemyProblems(body);
       openModal();
@@ -152,13 +166,17 @@ const BattleGamePage = () => {
 
   const selectEnemyProblem = (problemId) => {
     const endpoint = `${baseURL}/${wsBattle}/game/${roomId}/selectProblem`;
-    stompClient.send(endpoint, {}, JSON.stringify({ problemId: problemId }));
+    battleStompClient.send(
+      endpoint,
+      {},
+      JSON.stringify({ problemId: problemId })
+    );
     setSelectOpponentProblem(true);
   };
 
   const subsribeMyProblem = () => {
     const endpoint = `${baseURL}/${wsBattle}/room/${roomId}/${userId}`;
-    stompClient.subscribe(endpoint, (message) => {
+    battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setMyProblem(body);
       closeModal();
@@ -179,13 +197,13 @@ const BattleGamePage = () => {
       roomId: roomId,
       round: currentRound,
     };
-    stompClient.send(endpoint, {}, JSON.stringify(submitAnswerDTO));
+    battleStompClient.send(endpoint, {}, JSON.stringify(submitAnswerDTO));
   }, []);
 
   // 체력 반영 미완성
   const subscribeRoundResult = () => {
     const endpoint = `${baseURL}/${wsBattle}/room/${roomId}`;
-    stompClient.subscribe(endpoint, (message) => {
+    battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       console.log(body);
     });
@@ -193,7 +211,7 @@ const BattleGamePage = () => {
 
   const subscribeTotalResult = () => {
     const endpoint = `${baseURL}/${wsBattle}/room/${roomId}`;
-    stompClient.subscribe(endpoint, (message) => {
+    battleStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setGameEnded(true);
       setWinner(body.winner);
@@ -206,7 +224,7 @@ const BattleGamePage = () => {
   };
 
   const enterChat = () => {
-    if (stompClient && stompClient.connected) {
+    if (chatStompClient && chatStompClient.connected) {
       const endpoint = `${baseURL}/${wsChat}/send/chat/${roomId}/enter`;
       const enterDTO = {
         sender: name,
@@ -214,7 +232,7 @@ const BattleGamePage = () => {
         type: "JOIN",
         roomId: roomId,
       };
-      stompClient.send(endpoint, {}, JSON.stringify(enterDTO));
+      chatStompClient.send(endpoint, {}, JSON.stringify(enterDTO));
     } else {
       console.log("Not connected yet");
     }
@@ -239,12 +257,12 @@ const BattleGamePage = () => {
       type: "CHAT",
       roomId: roomId,
     };
-    stompClient.send(endpoint, {}, JSON.stringify(chatMessage));
+    chatStompClient.send(endpoint, {}, JSON.stringify(chatMessage));
   };
 
   const subscribeMessage = () => {
     const endpoint = `${baseURL}/${wsChat}/room/${roomId}`;
-    stompClient.subscribe(endpoint, (message) => {
+    chatStompClient.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
         ...prevMessages,
@@ -263,7 +281,7 @@ const BattleGamePage = () => {
       type: "LEAVE",
       roomId: roomId,
     };
-    stompClient.send(endpoint, {}, JSON.stringify(chatMessage));
+    chatStompClient.send(endpoint, {}, JSON.stringify(chatMessage));
   };
 
   // const subscribeQuitMessage = () => {
@@ -284,7 +302,8 @@ const BattleGamePage = () => {
 
     return () => {
       sendQuitMessage();
-      stompClient.disconnect();
+      battleStompClient.disconnect();
+      chatStompClient.disconnect();
     };
   }, []);
 

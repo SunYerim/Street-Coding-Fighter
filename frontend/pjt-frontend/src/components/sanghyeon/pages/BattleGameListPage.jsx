@@ -182,15 +182,7 @@ const BattleGameListPage = () => {
               placeholder="게임 라운드"
               required
             />
-            <button
-              // onClick={createBattleRoom}
-              onClick={() => {
-                setHostId(memberId);
-                navigate(`/battle-game`);
-              }}
-            >
-              결정
-            </button>
+            <button onClick={createBattleRoom}>결정</button>
           </div>
         </Modal>
         <Header />
@@ -211,8 +203,7 @@ const BattleGameListPage = () => {
                 <hr />
                 {currentBattleList.map((data, index) => (
                   <div
-                    // onClick={() => joinBattleRoom(data.roomId, data.isLock)}
-                    onClick={() => navigate(`/battle-game`)}
+                    onClick={() => joinBattleRoom(data.roomId, data.isLock)}
                     className="battle-room"
                     key={index}
                   >
