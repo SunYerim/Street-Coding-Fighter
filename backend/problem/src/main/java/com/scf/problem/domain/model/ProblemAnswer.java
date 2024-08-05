@@ -43,6 +43,15 @@ public class ProblemAnswer {
     private ProblemInfo problemInfo;
 
     public static ProblemAnswer create(ProblemRequest.ProblemAnswerDTO problemAnswerInfo, ProblemInfo problem, int idx) {
+
+        if (problem.getProblemChoices().isEmpty()) {
+            return ProblemAnswer.builder()
+                .blankPosition(problemAnswerInfo.getBlankPosition())
+                .correctAnswerText(problemAnswerInfo.getCorrectAnswerText())
+                .problemInfo(problem)
+                .build();
+        }
+
         return ProblemAnswer.builder()
             .blankPosition(problemAnswerInfo.getBlankPosition())
             .correctChoice(problem.getProblemChoices().get(idx))
