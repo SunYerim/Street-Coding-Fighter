@@ -27,11 +27,10 @@ public class ContentCheckUser {
     private int complete;
 
     @Column(name = "member_id")
-    private int memberId;
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
-
 
 }
