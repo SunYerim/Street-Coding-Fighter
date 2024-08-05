@@ -173,11 +173,11 @@ public class ProfileServiceImpl implements ProfileService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        // choiceText를 문자열로 변환
+        // choice를 문자열로 변환 (객관식, 주관식, 빈칸 모두 string으로 변환)
         String convertedChoiceText = ChoiceTextConverter.convertChoiceText(
             problemRequestDto.getChoiceText(), problemRequestDto.getChoice());
 
-        //Solved 엔티티 생성 -> dto 생성
+        //Solved 엔티티 생성
         Solved solved = new Solved();
         solved.setChoice(convertedChoiceText);
         solved.setCorrect(problemRequestDto.isCorrect());

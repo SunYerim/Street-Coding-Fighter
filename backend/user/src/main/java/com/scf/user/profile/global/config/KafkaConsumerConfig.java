@@ -1,5 +1,6 @@
 package com.scf.user.profile.global.config;
 
+import com.scf.user.profile.domain.dto.kafka.Solved;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -46,7 +47,27 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-    // 푼 문제 consumer config
+    // 푼 문제 consumer
+    @Bean
+    public ConsumerFactory<String, List<Solved>> solvedConsumerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, solvedGroupId);
+        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+            ErrorHandlingDeserializer.class);
+        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,
+            JsonDeserializer.class.getName());
+        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        return new DefaultKafkaConsumerFactory<>(configProps);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, List<Solved>> solvedKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, List<Solved>> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(solvedConsumerFactory());
+        return factory;
+    }
 
 
 }

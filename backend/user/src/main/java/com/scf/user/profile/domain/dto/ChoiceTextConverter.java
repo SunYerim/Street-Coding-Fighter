@@ -5,10 +5,10 @@ import java.util.StringJoiner;
 
 public class ChoiceTextConverter {
 
-    public static String convertChoiceText(Map<Integer, Integer> choiceTextMap, String text) {
+    public static String convertChoiceText(Map<Integer, Integer> choiceTextMap, String jugwan) {
         // 주관식
         if (choiceTextMap == null || choiceTextMap.isEmpty()) {
-            return text;
+            return jugwan;
         }
 
         // 객관식
