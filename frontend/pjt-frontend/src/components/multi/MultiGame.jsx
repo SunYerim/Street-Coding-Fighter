@@ -15,7 +15,8 @@ import FillInTheBlank from "../game/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
-const baseUrl = "https://www.ssafy11s.com"; // ssafy11s.com으로 수정하기
+// const baseUrl = "https://www.ssafy11s.com"; // ssafy11s.com으로 수정하기
+const baseUrl = "http://localhost:8080"
 
 
 export default function MultiGame() {
@@ -35,6 +36,7 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [problems, setProblems] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [selectedChoice, setSelectedChoice] = useState(null);
 
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
@@ -47,7 +49,15 @@ export default function MultiGame() {
 
   const handleStart = async () => {
     setStart(1);
-    const response = await axios.post(`${baseUrl}/multi/game/${roomId}/start`, { roomId }, { hostId });
+    const response = await axios.post(
+      `${baseUrl}/multi/game/${roomId}/start`,
+      null, // 요청 본문을 생략
+      {
+        headers: {
+          'memberId': hostId // 헤더에 hostId 추가
+        }
+      }
+    );
     console.log(response.data);
     setProblems(response.data);
   };  
@@ -78,11 +88,12 @@ export default function MultiGame() {
       if (isJsonString(messageData)) {
         const data = JSON.parse(messageData);
 
-        if (data.type === 'start_game') {
+        if (data.type === 'gameStart') { // 게임스타트
           setStart(1);
-          console.log(data.message); // "Game has started!" 메시지 출력
-        } else if (data.type === '') { // 방장바뀌는 타입
-          setHostId(data.hostId);
+          console.log(data.payload);
+        } else if (data.type === 'newHost') { // 방장바뀌는 타입
+          console.log(data.payload);
+          setHostId(data.payload);
         }
 
         setMessageList((prevMessageList) => [...prevMessageList, data]);
@@ -111,6 +122,23 @@ export default function MultiGame() {
     }
   };
 
+  const handleChoiceSelection = (choiceId) => {
+    setSelectedChoice(choiceId);
+    console.log('선택된 choice ID:', choiceId);
+    if (socket && choiceId.trim()) {
+      const messageObj = {
+          type: 'solve',
+          content: {
+              "problemType": "MULTIPLE_CHOICE",
+              "submitTime": 30-count,
+              "solve": (1, choiceId),
+              "solveText": null
+          }
+      };
+      socket.send(JSON.stringify(messageObj));
+    }
+  };
+
 
   // 3. 답보내기
   // const submitAnswer = (answer) => {
@@ -133,11 +161,11 @@ export default function MultiGame() {
     const problem = problems[currentProblemIndex];
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
-        return <FillInTheBlank problem={problem} submitTime={count} />;
+        return <FillInTheBlank problem={problem} onChoiceSelect={handleChoiceSelection} />;
       case "SHORT_ANSWER_QUESTION":
-        return <ShortAnswer problem={problem} submitTime={count} />;
+        return <ShortAnswer problem={problem} onChoiceSelect={handleChoiceSelection} />;
       case "MULTIPLE_CHOICE":
-        return <MultipleChoice problem={problem} submitTime={count} />;
+        return <MultipleChoice problem={problem} onChoiceSelect={handleChoiceSelection} />;
       default:
         return <div>Unknown problem type</div>;
     }
@@ -212,7 +240,7 @@ export default function MultiGame() {
                   )}
                 </div>
               ) : (
-                <div>
+                <div className="after-start">
                   {/* <div>
                     <GameResultModal  />
                   </div> */}

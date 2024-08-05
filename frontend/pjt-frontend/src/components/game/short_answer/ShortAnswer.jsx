@@ -2,7 +2,6 @@ import { borderRadius, fontSize, height, minWidth, padding, style } from '@mui/s
 import StyleToPythonCode from '../StyleToPythonCode';
 import "../../../css/MultiGame.css";
 import { useState } from 'react';
-import socket from "../server.js"
 
 const styles = {
   codeContainer: {

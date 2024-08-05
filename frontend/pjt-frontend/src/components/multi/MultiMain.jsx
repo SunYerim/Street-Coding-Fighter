@@ -11,11 +11,12 @@ export default function MultiMain() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
 
-  const baseUrl = "https://www.ssafy11s.com"
+  // const baseUrl = "https://www.ssafy11s.com"
+  const baseUrl = "localhost:8080";
 
   const loadData = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/multi/room`);
+      const response = await axios.get(`http://${baseUrl}/multi/room`);
       if (Array.isArray(response.data)) {
         setRooms(response.data);
       } else {

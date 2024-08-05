@@ -27,8 +27,7 @@ import StyleToPythonCode from '../StyleToPythonCode.jsx';
 
 const DragNDropQuiz = ({ problem }) => {
   const [blanks, setBlanks] = useState({});
-  const [choices, setChoices] = useState(problem.problemChoices); // 선택지를 리스트 객체로?
-
+  const [choices, setChoices] = useState(problem.problemChoices);
   const handleDrop = (blankId, choice) => {
     setBlanks((prevBlanks) => ({
       ...prevBlanks,
