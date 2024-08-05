@@ -5,9 +5,8 @@ import { CgProfile } from 'react-icons/cg';
 import { PiMouseRightClick, PiMouseLeftClick } from 'react-icons/pi';
 import { TypeAnimation } from 'react-type-animation';
 import { useParams, useNavigate } from 'react-router-dom';
-import SingleBanner from './SingleBanner.jsx';
 import SoundStore from '../../../stores/SoundStore.jsx';
-import SingleSoundStore from '../../../stores/SingleSoundStore.jsx';
+import SingleBanner from './SingleBanner.jsx';
 import ChatModal from './chat-modal/ChatModal.jsx';
 import axios from 'axios';
 import store from '../../../store/store';
@@ -51,6 +50,7 @@ export default function SinglePlay() {
   const navigate = useNavigate();
   const [dialogueList, setDialogueList] = useState(testDialogueList);
   const {completed} = SingleInfoStore();
+  const {switchBackgroundMusic, playBackgroundMusic, playEffectSound} = SoundStore();
   const getContent = () => {
     axios
       .get(`${store.baseUrl}/edu/${content_id}`)
@@ -64,10 +64,10 @@ export default function SinglePlay() {
         setLoading(false);
       });
   };
-
   useEffect(() => {
-    SoundStore.getState().stopBackgroundMusic();
-    SingleSoundStore.getState().playSingleBgm();
+    switchBackgroundMusic('single', (newBackgroundMusic) => {
+      newBackgroundMusic.play();
+    });
 
     const loadingTimer = setTimeout(() => {
       setLoading(false);
@@ -78,13 +78,12 @@ export default function SinglePlay() {
     }, 5000);
 
     return () => {
-      SingleSoundStore.getState().stopSingleBgm();
-      SoundStore.getState().playBackgroundMusic();
+      switchBackgroundMusic('main', (newBackgroundMusic) => {
+        newBackgroundMusic.play();
+      })
       clearTimeout(timer);
     };
   }, [content_id]);
-
-  const { playClickSoundSingle } = SingleSoundStore();
 
   const changePage = (increment) => {
     console.log('click');
@@ -97,12 +96,12 @@ export default function SinglePlay() {
     console.log(isModalOpen);
     // 채팅이 열려있으면 페이지 변경을 하지 않고 함수 종료
     if (isChatOpen) {
-      console.log(isChatOpen);
+      // console.log(isChatOpen);
       handleChatOpen();
       return;
     }
-    console.log('111');
-    console.log(page);
+    // console.log('111');
+    // console.log(page);
     if (increment) {
       if (page < dialogueList.length - 1) {
         setPage((prevPage) => prevPage + 1);
@@ -116,11 +115,11 @@ export default function SinglePlay() {
         setPage(0);
       }
     }
-    playClickSoundSingle();
+    playEffectSound('singleClickSound');
     console.log(page);
   };
   const handleChatOpen = () => {
-    console.log('chat handle');
+    // console.log('chat handle');
     if (isChatOpen) {
       setIsChatOpen(false); // 채팅 닫기
     } else {

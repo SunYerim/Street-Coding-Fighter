@@ -1,11 +1,10 @@
 import "../../../css/Header.css";
 import Setting from "./Setting";
-import memberIcon from "../../../../public/memberIcon.png";
 import { useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
-  const userIcon = "memberIcon.png";
+  const userIcon = "/memberIcon.png";
   return (
     <>
       <div className="header-container">
@@ -20,13 +19,13 @@ function Header() {
         >
           Street Coding Figther
         </h2>
-        <div className="header-icon">
+        <div  className="header-icon">
           <img
             onClick={() => {
               navigate("/profile");
             }}
             className="user-icon"
-            src={memberIcon}
+            src={userIcon}
             alt="memberIcon"
           />
           <Setting />
