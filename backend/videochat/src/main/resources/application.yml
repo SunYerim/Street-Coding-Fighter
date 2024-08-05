@@ -1,0 +1,21 @@
+openvidu:
+  url: http://localhost:4443/
+  secret: "test"
+
+server:
+  port: 8086
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+logging:
+  level:
+    root: INFO
+    com.scf: DEBUG
