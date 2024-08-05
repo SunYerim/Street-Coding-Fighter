@@ -63,11 +63,9 @@ public class SecurityConfig {
                         configuration.setAllowedOrigins(
                             Arrays.asList("http://localhost:5173",
                                 "https://ssafy11s.com","https://www.ssafy11s.com"));
-                        configuration.setAllowedMethods(
-                            Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(
-                            Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
                         configuration.setMaxAge(3600L);
 
