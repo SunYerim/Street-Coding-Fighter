@@ -260,6 +260,7 @@ const BattleGamePage = () => {
   // };
 
   const sendMessage = async () => {
+    if (message.trim === "") return;
     console.log("send message");
     const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
