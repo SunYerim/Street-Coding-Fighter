@@ -63,6 +63,7 @@ const BattleGameListPage = () => {
       });
 
       setBattleList(res.data);
+      setCurrentBattleList(res.data);
     } catch (error) {
       console.error("Failed to fetch record", error);
     }
