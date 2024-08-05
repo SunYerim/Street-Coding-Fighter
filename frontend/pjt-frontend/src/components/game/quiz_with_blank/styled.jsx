@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Blank = styled.div`
   display: inline-block;
@@ -11,5 +11,5 @@ const Blank = styled.div`
 
 const CodeBlock = styled.div`
   white-space: pre-wrap;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 `;

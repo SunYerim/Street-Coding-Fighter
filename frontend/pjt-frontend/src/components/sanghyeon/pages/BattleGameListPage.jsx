@@ -11,9 +11,24 @@ Modal.setAppElement("#root");
 const BattleGameListPage = () => {
   const navigate = useNavigate();
 
-  const { baseURL, accessToken, setAccessToken, memberId } = store((state) => ({
+  const {
+    baseURL,
+    accessToken,
+    setAccessToken,
+    memberId,
+    roomId,
+    setRoomId,
+    setHostId,
+    setRoomPassword,
+  } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
+    memberId: state.memberId,
+    roomId: state.roomId,
+    setRoomId: state.setRoomId,
+    setAccessToken: state.setAccessToken,
+    setHostId: state.setHostId,
+    setRoomPassword: state.setRoomPassword,
   }));
 
   const authClient = createAuthClient(
@@ -24,7 +39,7 @@ const BattleGameListPage = () => {
 
   const searchKeyword = useRef(null);
   const battleRoomTitle = useRef(null);
-  const battleRoomPassword = useRef(null);
+  const battleRoomPassword = useRef("");
   const battleRoomRound = useRef(null);
   const [battleList, setBattleList] = useState([]);
   const [currentBattleList, setCurrentBattleList] = useState([]);
@@ -54,12 +69,12 @@ const BattleGameListPage = () => {
   };
 
   const joinBattleRoom = async (roomId, isLock) => {
-    let password = null;
+    let password = "";
 
     if (isLock === true) {
       password = prompt("비밀번호를 입력하세요.");
 
-      if (password === null) {
+      if (password === null || password === "") {
         alert("비밀번호를 입력해주세요.");
         return;
       }
@@ -68,11 +83,16 @@ const BattleGameListPage = () => {
     try {
       const res = await authClient({
         method: "POST",
-        url: `${baseURL}/battle/game/${roomId}`,
+        url: `${baseURL}/battle/room/${roomId}`,
         data: password,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       console.log(res.data);
+      setRoomId(roomId);
+      setRoomPassword(password);
       // [
       //   {
       //     "problemId": 1,
@@ -86,6 +106,7 @@ const BattleGameListPage = () => {
       //   }
       // ]
       // navigate() // 배틀 페이지로 이동
+      setHostId("");
     } catch (error) {
       console.log(error);
     }
@@ -107,13 +128,16 @@ const BattleGameListPage = () => {
       });
 
       console.log(createRes);
+      setRoomId(createRes.data);
+      setHostId(memberId);
+      setRoomPassword(battleRoomPassword.current.value);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    const getRecord = async function () {
+    const getBattleRoomList = async function () {
       try {
         // const res = await authClient({
         //   method: "GET",
@@ -214,7 +238,7 @@ const BattleGameListPage = () => {
       }
     };
 
-    getRecord();
+    getBattleRoomList();
   }, []);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -234,34 +258,66 @@ const BattleGameListPage = () => {
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
           contentLabel="Example Modal"
-          className="modal"
+          className="battle-list-modal"
           overlayClassName="overlay"
         >
-          <h3>방 생성 설정</h3>
-          <input ref={battleRoomTitle} type="text" placeholder="방 제목" />
-          <input
-            ref={battleRoomPassword}
-            type="text"
-            placeholder="방 비밀번호"
-          />
-          <input ref={battleRoomRound} type="text" placeholder="게임 라운드" />
-          <button onClick={createBattleRoom}>방 만들기</button>
+          <div className="battle-list-modal-inner-container">
+            <h3>방 만들기</h3>
+            <hr />
+            <input
+              ref={battleRoomTitle}
+              type="text"
+              placeholder="방 제목"
+              required
+            />
+            <input
+              ref={battleRoomPassword}
+              type="text"
+              placeholder="방 비밀번호"
+            />
+            <input
+              ref={battleRoomRound}
+              type="text"
+              placeholder="게임 라운드"
+              required
+            />
+            <button
+              // onClick={createBattleRoom}
+              onClick={() => {
+                setHostId(memberId);
+                navigate(`/battle-game`);
+              }}
+            >
+              결정
+            </button>
+          </div>
         </Modal>
         <Header />
         <div className="battle-list-outer-outer-container">
           <div className="battle-list-outer-container">
             <div className="battle-list-title-container">
-              <h2 className="battle-list-title">방 목록</h2>
+              <h2 className="battle-list-title">1 vs 1</h2>
             </div>
             <div className="battle-list-side-container">
               <div className="battle-list-container">
+                <div className="battle-list-inner-title">
+                  <p>No.</p>
+                  <p>제목</p>
+                  <p>호스트</p>
+                  <p>인원</p>
+                  <p>공개 여부</p>
+                </div>
+                <hr />
                 {currentBattleList.map((data, index) => (
                   <div
-                    onClick={() => joinBattleRoom(data.roomId, data.isLock)}
+                    // onClick={() => joinBattleRoom(data.roomId, data.isLock)}
+                    onClick={() => navigate(`/battle-game`)}
                     className="battle-room"
                     key={index}
                   >
+                    <p>{index + 1}</p>
                     <p>{data.title}</p>
+                    <p>{data.hostId}</p>
                     <p>
                       {data.curPlayer} / {data.maxPlayer}
                     </p>

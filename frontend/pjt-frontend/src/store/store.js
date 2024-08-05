@@ -5,7 +5,10 @@ const store = create(
   persist(
     (set) => ({
       baseURL: "https://www.ssafy11s.com",
-      // baseURL: "localhost:8080",
+      // baseURL: "http://localhost:3000",
+
+      wsBattle: "ws-battle",
+      wsChat: "ws-chat",
 
       memberId: "",
       setMemberId: (memberId) => set({ memberId }),
@@ -47,6 +50,21 @@ const store = create(
 
       character: "",
       setCharacter: (character) => set({ character }),
+
+      roomId: "",
+      setRoomId: (roomId) => set({ roomId }),
+
+      hostId: "",
+      setHostId: (hostId) => set({ hostId }),
+
+      roomPassword: "",
+      setRoomPassword: (roomPassword) => set({ roomPassword }),
+
+      enemyId: "",
+      setEnemyId: (enemyId) => set({ enemyId }),
+
+      enemyName: "",
+      setEnemyName: (enemyName) => set({ enemyName }),
     }),
     {
       name: "userStorage",

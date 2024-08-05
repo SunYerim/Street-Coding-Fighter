@@ -23,19 +23,45 @@
 
 .battle-game-title-container {
   width: 100%;
-  margin-bottom: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  border: 2px solid white;
+  align-items: center;
+  position: relative;
 }
 
 .battle-game-title {
   margin: 0;
   color: white;
   letter-spacing: 2px;
-  border: 2px solid white;
   border-radius: 2px;
+  padding: 0 10px;
+}
+
+.health-bar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40%;
+  height: 20px;
+  background-color: red;
+  border-radius: 2px;
+  border: 3px solid white;
+}
+
+.health-bar:first-child {
+  left: 10px;
+}
+
+.health-bar:last-child {
+  right: 10px;
+}
+
+.health-bar-inner {
+  height: 100%;
+  background-color: yellow;
+  border-radius: 2px;
+  transition: width 1s ease; /* 애니메이션 추가 */
 }
 
 .battle-game-container {
@@ -54,8 +80,8 @@
   font-weight: bold;
   color: white;
   padding: 10px;
-  width: 250px;
-  min-width: 250px;
+  width: 220px;
+  min-width: 220px;
   height: auto;
 }
 
@@ -69,8 +95,8 @@
   font-weight: bold;
   color: white;
   padding: 10px;
-  width: 250px;
-  min-width: 250px;
+  width: 220px;
+  min-width: 220px;
 }
 
 .battle-game-inner-container {
@@ -83,7 +109,7 @@
   font-weight: bold;
   color: white;
   padding: 10px;
-  width: 60%;
+  width: 100%;
 }
 
 .battle-game-problem {
@@ -91,11 +117,6 @@
   height: 70%;
   border: 2px solid white;
   border-radius: 2px;
-}
-
-code * {
-  font: 1.2rem "Fira Code", monospace !important;
-  font-weight: bold !important;
 }
 
 .battle-game-answer {
@@ -135,8 +156,9 @@ code * {
 }
 
 .battle-game-left-cam {
-  width: 250px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -145,8 +167,9 @@ code * {
 }
 
 .battle-game-right-cam {
-  width: 250px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -157,7 +180,7 @@ code * {
 .battle-game-chatting-container {
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 100%;
   height: 60%;
   border: 1px solid white;
   margin: 10px;
@@ -171,8 +194,13 @@ code * {
   font-size: 1rem;
 }
 
+.battle-game-history-message {
+  word-wrap: break-word;
+}
+
 .battle-game-chatting-message {
   margin-top: 10px;
+  word-wrap: break-word;
 }
 
 .battle-game-chat-input {
@@ -206,4 +234,156 @@ code * {
   height: 60%;
   border: 1px solid white;
   margin: 10px;
+}
+
+.battle-game-history-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.battle-game-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 1rem;
+}
+
+.battle-game-history-message {
+  margin-top: 10px;
+}
+
+.battle-game-sub-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.battle-game-sub-title-player {
+  width: 45%;
+  text-align: center;
+}
+
+.battle-game-sub-title-player:first-of-type {
+  text-align: left;
+  margin-left: 30px;
+}
+
+.battle-game-sub-title-player:last-of-type {
+  text-align: right;
+  margin-right: 30px;
+}
+
+.battle-game-sub-title-timer {
+  text-align: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.battle-game-game-start-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.battle-game-game-start-title {
+}
+
+.battle-game-game-start-button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.battle-game-select-problem-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 60%;
+  max-height: 300px;
+  height: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.battle-game-select-problem-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+
+  text-align: center;
+}
+
+.battle-game-select-problem-container {
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+  height: 200px;
+  justify-content: center;
+}
+
+.battle-game-select-problem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 25%;
+  margin: 20px;
+}
+
+.battle-game-select-problem hr {
+  width: 80%;
+  margin: 10px;
+}
+
+.battle-game-result-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.battle-game-result-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.battle-game-result-content {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.battle-game-submit-answer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
