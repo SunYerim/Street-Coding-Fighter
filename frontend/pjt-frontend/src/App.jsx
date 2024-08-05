@@ -1,47 +1,44 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TitlePage from './components/sanghyeon/pages/TitlePage.jsx';
-import LoginPage from './components/sanghyeon/pages/LoginPage.jsx';
-import FindPasswordPage from './components/sanghyeon/pages/FindPasswordPage.jsx';
-import ChangePasswordPage from './components/sanghyeon/pages/ChangePasswordPage.jsx';
-import SignUpPage from './components/sanghyeon/pages/SignUpPage.jsx';
-import MainPage from './components/sanghyeon/pages/MainPage.jsx';
-import ProfilePage from './components/sanghyeon/pages/ProfilePage.jsx';
-import RecordPage from './components/sanghyeon/pages/RecordPage.jsx';
-import ReportPage from './components/sanghyeon/pages/ReportPage.jsx';
-import SolvedPage from './components/sanghyeon/pages/SolvedPage.jsx';
-import SingleMain from './components/single/SingleMain.jsx';
-import SinglePlay from './components/single/single-play/SinglePlay.jsx';
-import MultiMain from './components/multi/MultiMain.jsx';
-import MultiCreate from './components/multi/MultiCreate.jsx';
-import BattleCreate from './components/battle/BattleCreate.jsx';
-import BattleMain from './components/battle/BattleMain.jsx';
-import MultiGame from './components/multi/MultiGame.jsx';
-import BattleGame from './components/battle/BattleGame.jsx';
-import Ranking from './components/ranking/Ranking.jsx';
-import SelectProblem from './components/sanghyeon/pages/SelectProblem.jsx';
-import CharacterSelection from './components/sanghyeon/pages/CharacterSelection.jsx';
-import store from './store/store.js';
-import Loading from './components/loading/Loading.jsx';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import TitlePage from "./components/sanghyeon/pages/TitlePage.jsx";
+import LoginPage from "./components/sanghyeon/pages/LoginPage.jsx";
+import FindPasswordPage from "./components/sanghyeon/pages/FindPasswordPage.jsx";
+import ChangePasswordPage from "./components/sanghyeon/pages/ChangePasswordPage.jsx";
+import SignUpPage from "./components/sanghyeon/pages/SignUpPage.jsx";
+import MainPage from "./components/sanghyeon/pages/MainPage.jsx";
+import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
+import RecordPage from "./components/sanghyeon/pages/RecordPage.jsx";
+import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
+import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
+import SingleMain from "./components/single/SingleMain.jsx";
+import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
+import MultiMain from "./components/multi/MultiMain.jsx";
+import MultiCreate from "./components/multi/MultiCreate.jsx";
+import BattleCreate from "./components/battle/BattleCreate.jsx";
+import BattleMain from "./components/battle/BattleMain.jsx";
+import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
+import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
+import MultiGame from "./components/multi/MultiGame.jsx";
+import BattleGame from "./components/battle/BattleGame.jsx";
+import Ranking from "./components/ranking/Ranking.jsx";
+import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
+import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
+import store from "./store/store.js";
 
-import { useEffect, useState } from 'react';
-import SoundStore from './stores/SoundStore.jsx';
-import SolvedDetailPage from './components/sanghyeon/pages/SolvedDetailPage.jsx';
+import { useEffect } from "react";
+import SoundStore from "./stores/SoundStore.jsx";
+import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
+
 function App() {
-  const { initializeBackgroundMusic, stopBackgroundMusic, playBackgroundMusic ,isPlaying } = SoundStore();
-  const [isLoading, setIsLoading] = useState(true);
+  const { initializeBackgroundMusic, stopBackgroundMusic, isPlaying } =
+    SoundStore();
   const { accessToken } = store((state) => ({
     accessToken: state.accessToken,
   }));
 
   useEffect(() => {
     // 배경음악 초기화 및 재생
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log('loading end');
-      playBackgroundMusic();
-    
-    }, 2000);
+    initializeBackgroundMusic("/BGM-1.mp3");
 
     return () => {
       // 컴포넌트가 언마운트될 때 배경음악 정지
@@ -54,7 +51,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={isLoading ? <Loading /> : <TitlePage />} />
+          <Route path="/" element={<TitlePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/find-password" element={<FindPasswordPage />} />
           <Route path="/reset-password" element={<ChangePasswordPage />} />
@@ -120,6 +117,10 @@ function App() {
           />
           <Route
             path="/multi-game"
+            element={accessToken ? <MultiGame /> : <LoginPage />}
+          />
+          <Route
+            path="/multi-game/:room_id"
             element={accessToken ? <MultiGame /> : <LoginPage />}
           />
           <Route
