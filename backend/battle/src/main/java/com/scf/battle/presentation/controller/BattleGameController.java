@@ -60,9 +60,10 @@ public class BattleGameController {
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
                                       @RequestHeader Long memberId, @RequestHeader String username,
-                                      @RequestBody String roomPassword) {
+                                      @RequestBody RoomJoinPasswordDTO roomJoinPasswordDTO) {
         try {
-            battleGameService.joinRoom(roomId, memberId, username, roomPassword);
+            String password = roomJoinPasswordDTO.getPassword();
+            battleGameService.joinRoom(roomId, memberId, username, password);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
