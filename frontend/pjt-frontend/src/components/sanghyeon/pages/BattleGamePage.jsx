@@ -268,7 +268,8 @@ const BattleGamePage = () => {
   // };
 
   const sendMessage = () => {
-    if (isChatConnected && chatStompClient && chatStompClient.send) {
+    console.log("send message");
+    if (isChatConnected && chatStompClient?.connected) {
       const endpoint = `/send/chat/${roomId}`;
       const chatMessage = {
         sender: name,
