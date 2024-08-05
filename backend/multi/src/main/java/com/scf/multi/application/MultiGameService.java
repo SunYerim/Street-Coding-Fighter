@@ -307,4 +307,13 @@ public class MultiGameService {
 
         room.finishGame();
     }
+
+    public Player connectPlayer(String roomId, Long userId, String sessionId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        Player connectedPlayer = findPlayerByUserId(room, userId);
+        connectedPlayer.setSessionId(sessionId);
+
+        return connectedPlayer;
+    }
 }

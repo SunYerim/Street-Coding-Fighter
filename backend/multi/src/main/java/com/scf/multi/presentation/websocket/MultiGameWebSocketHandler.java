@@ -56,10 +56,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
         }
 
-        Player connectedPlayer = room.getPlayers().stream()
-            .filter(player -> player.getUserId().equals(userId)).findFirst()
-            .orElseThrow(() -> new BusinessException(userId, "userId", USER_NOT_FOUND));
-        connectedPlayer.setSessionId(session.getId());
+        Player connectedPlayer = multiGameService.connectPlayer(roomId, userId, session.getId());
 
         sessionRooms.put(session.getId(), roomId);
         rooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
@@ -80,7 +77,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         SolvedMessage solvedMessage = getSolvedMessage(textMessage);
 
-        Solved solved = multiGameService.addSolved(room, session.getId(), solvedMessage.getContent());
+        Solved solved = multiGameService.addSolved(room, session.getId(),
+            solvedMessage.getContent());
 
         int attainedScore = multiGameService.markSolution(roomId, solved); // 문제 채점
 
