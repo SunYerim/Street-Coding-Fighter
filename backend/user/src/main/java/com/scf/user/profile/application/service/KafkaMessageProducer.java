@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaMessageProducer {
 
-    private final KafkaTemplate<String, List<RenewExp>> kafkaTemplate;
+    private final KafkaTemplate<String, List<RenewExp>> renewExpKafkaTemplate;
 
     public void sendProcessedGameResults(List<RenewExp> renewExpList) {
         String topic = "renew-exp";
-        kafkaTemplate.send(topic, renewExpList);
+        renewExpKafkaTemplate.send(topic, renewExpList);
         System.out.println("Sent processed Exp: " + renewExpList);
     }
 

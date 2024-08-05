@@ -17,7 +17,7 @@ public class GameResultConsumer {
     private final ProfileService profileService;
 
     // battle 모드
-    @KafkaListener(topics = "game-result-battle")
+    @KafkaListener(topics = "game-result-battle", groupId = "game-results-group")
     public void processGameResults(GameResult gameResult) {
         // 유저의 경험치를 업데이트
         System.out.println("Processing game results: " + gameResult.getGameRank());
@@ -34,7 +34,7 @@ public class GameResultConsumer {
     }
 
     // multi 모드
-    @KafkaListener(topics = "game-result-multi")
+    @KafkaListener(topics = "game-result-multi", groupId = "game-results-group")
     public void processMultiGameResults(GameResult gameResult) {
         System.out.println("Processing multi game results: " + gameResult.getGameRank());
 

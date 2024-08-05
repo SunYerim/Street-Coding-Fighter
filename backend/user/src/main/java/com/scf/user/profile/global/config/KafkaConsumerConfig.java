@@ -1,9 +1,10 @@
 package com.scf.user.profile.global.config;
 
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
+
 import com.scf.user.profile.domain.dto.kafka.Rank;
 import java.util.HashMap;
 import java.util.List;

@@ -3,12 +3,8 @@ package com.scf.user.profile.application.service;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
-import com.scf.user.profile.domain.dto.ReportResponseDto;
-import com.scf.user.profile.domain.dto.SolvedProblemRequestDto;
-import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
+import com.scf.user.profile.domain.dto.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
-import com.scf.user.profile.domain.dto.kafka.Solved;
-import java.util.List;
 
 public interface ProfileService {
 
@@ -28,5 +24,5 @@ public interface ProfileService {
     void updateExp(Long memberId, int newExp);
 
     // 푼 문제를 등록
-    void submitSolved(Long memberId, SolvedProblemRequestDto problemRequestDto);
+    void submitSolved(Long memberId, SolvedProblemKafkaRequestDto problemRequestDto);
 }
