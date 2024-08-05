@@ -71,7 +71,7 @@ export default function MultiMain() {
               <button className="create-button" onClick={refreshPage}>Refresh</button>
             </div>
             <div>
-              <button className="create-button" onClick={() => navigate("/multi/create")}>Create</button>
+              <button className="create-button" onClick={() => navigate("/multi-create")}>Create</button>
             </div>
           </div>
         </div>

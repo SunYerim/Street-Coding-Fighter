@@ -61,7 +61,7 @@ function MultiRoom(props) {
     };
     
     try {
-      const response = await axios.post(`http://${baseUrl}/multi/room/${props.roomId}`, password, {
+      const response = await axios.post(`http://${baseUrl}/multi-game/${props.roomId}`, password, {
         headers: {
           ...headers,
           'Content-Type': 'text/plain'
@@ -71,7 +71,7 @@ function MultiRoom(props) {
         setRoomId(props.roomId);
         setUserId(userId);
         setUsername(username);
-        navigate(`/multi/room/${props.roomId}`);
+        navigate(`/multi-game/${props.roomId}`);
       } else {
         alert('Incorrect password');
       }
@@ -92,7 +92,7 @@ function MultiRoom(props) {
       setRoomId(props.roomId);
       setUserId(userId);
       setUsername(username);
-      navigate(`/multi/room/${props.roomId}`);
+      navigate(`/multi-game/${props.roomId}`);
     }
   };
 

@@ -120,6 +120,10 @@ function App() {
             element={accessToken ? <MultiGame /> : <LoginPage />}
           />
           <Route
+            path="/multi-game/:room_id"
+            element={accessToken ? <MultiGame /> : <LoginPage />}
+          />
+          <Route
             path="/single-main"
             element={accessToken ? <SingleMain /> : <LoginPage />}
           />
