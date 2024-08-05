@@ -8,6 +8,7 @@ import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.HistoryResponseDto;
 import com.scf.user.profile.domain.dto.ProblemResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
+import com.scf.user.profile.domain.dto.SolvedProblemRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import com.scf.user.profile.domain.entity.Record;
@@ -144,6 +145,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     }
 
+    // 경험치 업데이트
     @Override
     public void updateExp(Long memberId, int newExp) {
         // 멤버 정보 조회
@@ -158,5 +160,15 @@ public class ProfileServiceImpl implements ProfileService {
 
         System.out.println("경험치가 업데이트 되었습니다. " + memberId + ": " + newExp);
     }
+
+    @Override
+    public void submitSolved(Long memberId, SolvedProblemRequestDto problemRequestDto) {
+        // 멤버 정보를 조회
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+    }
+
+
 
 }
