@@ -1,48 +1,52 @@
 import React from "react";
 import S from "./styled";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import SingleInfoStore from "../../../stores/SingleInfoStore";
+import store from "../../../store/store";
 
-const courses = [
-  { id: 0, content_type: "변수와 자료형", title: "변수" },
-  { id: 1, content_type: "변수와 자료형", title: "자료형" },
-  { id: 2, content_type: "연산자", title: "연산자" },
-  { id: 3, content_type: "입출력", title: "표준입출력" },
-  { id: 4, content_type: "입출력", title: "파일입출력" },
-  { id: 5, content_type: "제어구조", title: "반복문" },
-  { id: 6, content_type: "제어구조", title: "조건문" },
-  { id: 7, content_type: "자료구조", title: "1차원 리스트" },
-  { id: 8, content_type: "자료구조", title: "2차원 리스트" },
-  { id: 9, content_type: "함수", title: "함수의 활용" },
-  { id: 10, content_type: "알고리즘", title: "탐색" },
-  { id: 11, content_type: "알고리즘", title: "정렬" },
-];
-
-const completed = [
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  false,
-  false,
-  false,
-  false,
-  false,
-];
-let nIdx = 0;
-completed.forEach((e, i) => {
-  if (e & !completed[i + 1]) {
-    nIdx = i + 1;
-  }
-});
 const rowList = [0, 1, 2, 3];
+
 export default function EpisodeList({ rownum }) {
   const navigate = useNavigate();
-  const [nextIndex, setNextIndex] = useState(nIdx);
-  
+  const [nextIndex, setNextIndex] = useState(0);
+  const { completed, courses, setCompleted } = SingleInfoStore();
+
+  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 데이터 요청
+  useEffect(() => {
+    // 비동기 함수 정의
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${store.baseUrl}}/edu`);
+        const data = response.data;
+        console.log(data)
+        // 받아온 데이터를 상태로 설정
+        setCompleted(data.completed);
+        
+        const nidx = data.completed.findIndex((e) => e.complete === 0);
+        setNextIndex(nidx);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    // 비동기 함수, 호출 연결하면 이부분 주석해제 해야됩니다!!!!
+    // fetchData();
+  }, []);
+
+  const handleClick = (id) => () => {
+    const isCompleted = completed[id];
+    console.log(isCompleted);
+    const firstFalseIndex = completed.indexOf(false);
+    if (firstFalseIndex === -1 || id <= firstFalseIndex || isCompleted) {
+      console.log(id);
+      navigate(`/single-play/${id}`);
+    } else {
+      // alert("이전 에피소드를 먼저 클리어해주세요.");
+    }
+  };
+
   return (
     <>
       {rowList.map((r) => (
@@ -54,9 +58,9 @@ export default function EpisodeList({ rownum }) {
                 <React.Fragment key={e.id}>
                   <S.CheckPoint
                     key={`checkpoint-${e.id}`}
-                    $completed={completed[e.id]}
+                    $completed={completed[e.id].complete}
                     $isNext={e.id === nextIndex}
-                    onClick = {()=>{navigate(`/single-play/${e.id}`)}}
+                    onClick={handleClick(e.id)}
                   >
                     {e.id + 1}. {e.title}
                     {index === array.length - 1 && r < 3 ? (
