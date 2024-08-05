@@ -1,5 +1,6 @@
 package com.scf.multi.global.config;
 
+import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
 import java.util.List;
@@ -29,12 +30,12 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, List<Rank>> resultDTOProducerFactory() {
+    public ProducerFactory<String, GameResult> resultDTOProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs(Rank.class));
     }
 
     @Bean
-    public KafkaTemplate<String, List<Rank>> resultDTOKafkaTemplate() {
+    public KafkaTemplate<String, GameResult> resultDTOKafkaTemplate() {
         return new KafkaTemplate<>(resultDTOProducerFactory());
     }
 
