@@ -18,6 +18,10 @@ const courses = [
 const completed = {
   contentList: [
     {
+      contentId: 0,
+      complete: 1, // 수강 완료
+    },
+    {
       contentId: 1,
       complete: 1, // 수강 완료
     },
@@ -59,10 +63,6 @@ const completed = {
     },
     {
       contentId: 11,
-      complete: 0, // 수강 완료
-    },
-    {
-      contentId: 12,
       complete: 0, // 수강 완료
     },
   ],

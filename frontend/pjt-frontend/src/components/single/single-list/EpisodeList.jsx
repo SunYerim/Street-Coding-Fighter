@@ -2,28 +2,42 @@ import React from "react";
 import S from "./styled";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import SingleInfoStore from "../../../stores/SingleInfoStore";
+import store from "../../../store/store";
 
 const rowList = [0, 1, 2, 3];
 
 export default function EpisodeList({ rownum }) {
   const navigate = useNavigate();
   const [nextIndex, setNextIndex] = useState(0);
-  const { completed, courses } = SingleInfoStore();
-  useEffect(() =>{
-    const nidx = completed.findIndex((e, i, a)=>{
-      console.log(e)
-      return (e.complete === 0)
-    })
-    // console.log(nidx);
-    setNextIndex(nidx);
-  })
-  
+  const { completed, courses, setCompleted } = SingleInfoStore();
+
+  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 데이터 요청
+  useEffect(() => {
+    // 비동기 함수 정의
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${store.baseUrl}}/edu`);
+        const data = response.data;
+        console.log(data)
+        // 받아온 데이터를 상태로 설정
+        setCompleted(data.completed);
+        
+        const nidx = data.completed.findIndex((e) => e.complete === 0);
+        setNextIndex(nidx);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    // 비동기 함수, 호출 연결하면 이부분 주석해제 해야됩니다!!!!
+    // fetchData();
+  }, []);
+
   const handleClick = (id) => () => {
-    // 클릭한 에피소드의 completed 상태
     const isCompleted = completed[id];
     console.log(isCompleted);
-    // 첫 번째 false가 아닌 경우는 예외로 허용
     const firstFalseIndex = completed.indexOf(false);
     if (firstFalseIndex === -1 || id <= firstFalseIndex || isCompleted) {
       console.log(id);

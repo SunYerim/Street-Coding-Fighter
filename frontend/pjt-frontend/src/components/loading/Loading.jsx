@@ -7,10 +7,10 @@ const Loading = () => {
     2: { moving: '/characters/movingGreenSlime.gif', stop: '/characters/greenSlime.png' },
     3: { moving: '/characters/movingIceSlime.gif', stop: '/characters/iceSlime.png' },
     4: { moving: '/characters/movingThunderSlime.gif', stop: '/characters/thunderSlime.png' },
-    5: { moving: '/characters/movingNyangSlime.gif', stop: '/characters/fireSlime.png' },
+    5: { moving: '/characters/movingNyanSlime.gif', stop: '/characters/fireSlime.png' },
   };
   const tipNum = Math.floor(Math.random() * sampleTips.length);
-  const characterNum = Math.floor(Math.random() * Object.keys(characters).length);
+  const characterNum = Math.floor(Math.random() * Object.keys(characters).length) + 1;
   return (
     <div style={styles.loading}>
       <div style={styles.tip}>
@@ -19,7 +19,7 @@ const Loading = () => {
       </div>
       <div style={styles.loadingMessage}>
         <p>Now Loading...</p>
-        <img style={styles.characterContainer} src={characters[characterNum]?.moving} alt="character" />
+        <img style={styles.characterContainer} src={characters[characterNum]?.moving} alt={characterNum} />
       </div>
     </div>
   );

@@ -9,6 +9,9 @@ const PlayView = styled.div`
   background-image: url('/background-single.png');
   background-size: cover;
   color: black;
+  z-index : 0;
+  -webkit-user-select:none;
+
 `;
 
 const ImageBox = styled.div`

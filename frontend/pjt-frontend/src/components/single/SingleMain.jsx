@@ -11,15 +11,18 @@ import SingleInfoStore from '../../stores/SingleInfoStore.jsx';
 export default function SingleMain() {
   const { setCompleted } = SingleInfoStore();
   const navigate = useNavigate();
-  // const getSingleInfo = () => {
-  //   axios({
-  //     method: 'get',
-  //     url: `${store.baseUrl}/edu`,
-  //   }).then((res) => {
-  //     console.log(res.data);
-  //     setCompleted(res.data);
-  //   });
-  // };
+  const getSingleInfo = () => {
+    axios({
+      method: 'get',
+      url: `${store.baseUrl}/edu`,
+      headers: {
+        "Authorization" : `Bearer ${store.accessToken}`	
+      }
+    }).then((res) => {
+      console.log(res.data);
+      setCompleted(res.data);
+    });
+  };
   // useEffect(() => {getSingleInfo()});
   return (
     <div id="container">
