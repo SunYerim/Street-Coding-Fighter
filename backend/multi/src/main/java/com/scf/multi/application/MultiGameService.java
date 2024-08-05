@@ -173,9 +173,7 @@ public class MultiGameService {
         List<Problem> problems = room.getProblems();
         Problem problem = problems.get(room.getRound());
 
-        Player player = room.getPlayers().stream()
-            .filter(p -> p.getSessionId().equals(sessionId)).findFirst()
-            .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
+        Player player = findPlayerBySessionId(room, sessionId);
 
         Solved solved = Solved
             .builder()
@@ -205,6 +203,12 @@ public class MultiGameService {
             .filter(p -> p.getUserId().equals(userId))
             .findFirst()
             .orElseThrow(() -> new BusinessException(userId, "userId", USER_NOT_FOUND));
+    }
+
+    private Player findPlayerBySessionId(MultiGameRoom room, String sessionId) {
+        return room.getPlayers().stream()
+            .filter(p -> p.getSessionId().equals(sessionId)).findFirst()
+            .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
     }
 
     private boolean isAnswerCorrect(Problem problem, Solved solved) {
@@ -325,5 +329,28 @@ public class MultiGameService {
         if (room.getIsStart()) {
             throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
         }
+    }
+
+    public Player handlePlayerExit(String roomId, String sessionId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        Player exitPlayer = findPlayerBySessionId(room, sessionId);
+        room.exitRoom(exitPlayer);
+
+        return exitPlayer;
+    }
+
+    public Player rotateHost(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        Player newHost = room.getPlayers().stream()
+            .findFirst()
+            .orElseThrow(() -> new BusinessException(null, "newHost", USER_NOT_FOUND));
+        newHost.setIsHost(true);
+        room.updateHost(newHost);
+
+        return newHost;
     }
 }

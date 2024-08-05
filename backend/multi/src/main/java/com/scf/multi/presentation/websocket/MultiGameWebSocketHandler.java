@@ -93,43 +93,14 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         throws Exception {
 
         String roomId = rooms.get(session.getId());
-        MultiGameRoom room = multiGameService.findOneById(roomId);
-        Player exitPlayer = room.getPlayers().stream()
-            .filter(p -> p.getSessionId().equals(session.getId())).findFirst()
-            .orElseThrow(
-                () -> new BusinessException(session.getId(), "sessionId", USER_NOT_FOUND));
-        room.exitRoom(exitPlayer);
 
-        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
-        if (roomSessions != null) {
+        Player exitPlayer = multiGameService.handlePlayerExit(roomId, session.getId());
 
-            roomSessions.remove(session); // 나간 유저 방에서 삭제
-
-            if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
-                sessionRooms.remove(roomId);
-                multiGameService.deleteRoom(roomId);
-            }
-        }
+        removePlayerFromRoom(session, roomId);
 
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
-        if (exitPlayer.getIsHost() && !sessionRooms.get(roomId).isEmpty()) { // 방장 rotate
-            Optional<WebSocketSession> newHostSession = sessionRooms.get(roomId).stream()
-                .findFirst(); // 방에 연결된 플레이어 session 찾기
-            String sessionId = newHostSession.get().getId();
-
-            Player newHost = room.getPlayers().stream() // 방에 sessionId와 동일한 플레이어 찾기
-                .filter(player -> player.getSessionId().equals(sessionId)).findFirst()
-                .orElseThrow(
-                    () -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
-
-            newHost.setIsHost(true); // 방장으로 설정
-            room.updateHost(newHost); // 방장 정보 업데이트
-
-            broadcastMessageToRoom(roomId, "newHost",
-                newHost.getUserId()); // 새로운 방장 broadCasting
-        }
-
+        hostRotateIfNecessary(roomId, exitPlayer);
     }
 
     private void broadcastMessageToRoom(String roomId, String type, Object payload)
@@ -186,6 +157,28 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             }
 
             room.getCurSubmitCount().set(0);
+        }
+    }
+
+    private void hostRotateIfNecessary(String roomId, Player exitPlayer) throws Exception {
+        if (exitPlayer.getIsHost() && !rooms.get(roomId).isEmpty()) {
+
+            Player newHost = multiGameService.rotateHost(roomId);
+
+            broadcastMessageToRoom(roomId, "newHost", newHost.getUserId()); // 새로운 방장 broadcasting
+        }
+    }
+
+    private void removePlayerFromRoom(WebSocketSession session, String roomId) {
+        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
+        if (roomSessions != null) {
+
+            roomSessions.remove(session); // 나간 유저 방에서 삭제
+
+            if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
+                sessionRooms.remove(roomId);
+                multiGameService.deleteRoom(roomId);
+            }
         }
     }
 }
