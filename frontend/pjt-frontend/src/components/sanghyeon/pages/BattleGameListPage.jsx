@@ -87,12 +87,14 @@ const BattleGameListPage = () => {
         data: password,
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "text/plain",
         },
       });
 
       setRoomId(roomId);
       setRoomPassword(password);
       setHostId("");
+      navigate("/battle-game");
     } catch (error) {
       console.log(error);
     }
@@ -214,7 +216,7 @@ const BattleGameListPage = () => {
                     <p>
                       {data.curPlayer} / {data.maxPlayer}
                     </p>
-                    <p>{data.isLock ? "Private" : "Public"}</p>
+                    <p>{data.isLock === false ? "Private" : "Public"}</p>
                   </div>
                 ))}
               </div>
