@@ -84,7 +84,7 @@ const DragNDropQuiz = () => {
     } else {
       setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
     }
-  }, [problem.problemContent, blanks, choices, choiceMap]); // problemContent와 관련된 의존성 배열 업데이트
+  }, [problem, blanks, choices, choiceMap]); // problemContent와 관련된 의존성 배열 업데이트
 
   const handleDrop = (blankId, choiceText) => {
     const choiceId = choiceMap[choiceText];
