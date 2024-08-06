@@ -39,6 +39,7 @@ const BattleGamePage = () => {
     setEnemyName,
     normalQuit,
     setNormalQuit,
+    blankSolve,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -57,6 +58,7 @@ const BattleGamePage = () => {
     setEnemyName: state.setEnemyName,
     normalQuit: state.normalQuit,
     setNormalQuit: state.setNormalQuit,
+    blankSolve: state.blankSolve,
   }));
 
   const authClient = createAuthClient(
@@ -221,15 +223,13 @@ const BattleGamePage = () => {
   const submitAnswer = () => {
     const endpoint = `/send/game/${roomId}/answer`;
     const submitAnswerDTO = {
+      problemType: myProblem.problemType,
       problemId: myProblem.problemId,
       userId: memberId,
-      solve: {
-        1: "answer1",
-        2: "answer2",
-      },
-      submitTime: count,
-      roomId: roomId,
-      round: currentRound,
+      solve: blankSolve,
+      submitTime: 30 - count,
+      solveText: null,
+      round: currentRound - 1,
     };
     battleStompClient.current.send(
       endpoint,

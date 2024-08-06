@@ -68,6 +68,9 @@ const store = create(
 
       enemyName: "",
       setEnemyName: (enemyName) => set({ enemyName }),
+
+      blankSolve: {},
+      setBlankSolve: (blankSolve) => set({ blankSolve }),
     }),
     {
       name: "userStorage",
