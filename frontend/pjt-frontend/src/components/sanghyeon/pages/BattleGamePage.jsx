@@ -99,21 +99,21 @@ const BattleGamePage = () => {
     return new Promise((resolve, reject) => {
       battleStompClient.current.connect(
         {},
-        (frame) => {
+        async (frame) => {
           console.log("Connected: " + frame);
-          setIsBattleConnected(true);
-          subscribeEnterRoom();
-          subscribeEnemyProblem();
-          subscribeMyProblem();
-          subscribeResult();
+          await setIsBattleConnected(true);
+          await subscribeEnterRoom();
+          await subscribeEnemyProblem();
+          await subscribeMyProblem();
+          await subscribeResult();
           console.log("배틀 서버 연결");
 
           chatStompClient.current.connect(
             {},
-            (frame) => {
+            async (frame) => {
               console.log("Connected: " + frame);
-              setIsChatConnected(true);
-              subscribeMessage();
+              await setIsChatConnected(true);
+              await subscribeMessage();
               console.log("채팅 서버 연결");
               resolve();
             },
@@ -148,29 +148,69 @@ const BattleGamePage = () => {
     );
   };
 
-  const subscribeEnterRoom = () => {
-    const endpoint = `/game/${roomId}/join`;
-    battleStompClient.current.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        `${body.username}님이 입장하셨습니다.`,
-      ]);
+  // const subscribeEnterRoom = () => {
+  //   const endpoint = `/game/${roomId}/join`;
+  //   battleStompClient.current.subscribe(endpoint, (message) => {
+  //     const body = JSON.parse(message.body);
+  //     setChatMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       `${body.username}님이 입장하셨습니다.`,
+  //     ]);
 
-      if (body.memberId !== memberId) {
-        setEnemyId(body.memberId);
-        setEnemyName(body.username);
+  //     if (body.memberId !== memberId) {
+  //       setEnemyId(body.memberId);
+  //       setEnemyName(body.username);
+  //     }
+  //   });
+  // };
+
+  const subscribeEnterRoom = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        const endpoint = `/game/${roomId}/join`;
+        battleStompClient.current.subscribe(endpoint, (message) => {
+          const body = JSON.parse(message.body);
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            `${body.username}님이 입장하셨습니다.`,
+          ]);
+
+          if (body.memberId !== memberId) {
+            setEnemyId(body.memberId);
+            setEnemyName(body.username);
+          }
+          resolve();
+        });
+      } catch (error) {
+        reject(error);
       }
     });
   };
 
+  // const subscribeEnemyProblem = () => {
+  //   const endpoint = `/room/${roomId}/RoundChoiceProblem`;
+  //   battleStompClient.current.subscribe(endpoint, (message) => {
+  //     const body = JSON.parse(message.body);
+  //     setEnemyProblems(body);
+  //     openModal();
+  //     setCurrentRound((prevRound) => prevRound + 1);
+  //   });
+  // };
+
   const subscribeEnemyProblem = () => {
-    const endpoint = `/room/${roomId}/RoundChoiceProblem`;
-    battleStompClient.current.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      setEnemyProblems(body);
-      openModal();
-      setCurrentRound((prevRound) => prevRound + 1);
+    return new Promise((resolve, reject) => {
+      try {
+        const endpoint = `/room/${roomId}/RoundChoiceProblem`;
+        battleStompClient.current.subscribe(endpoint, (message) => {
+          const body = JSON.parse(message.body);
+          setEnemyProblems(body);
+          openModal();
+          setCurrentRound((prevRound) => prevRound + 1);
+          resolve();
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   };
 
@@ -185,13 +225,29 @@ const BattleGamePage = () => {
     setSelectOpponentProblem(true);
   };
 
+  // const subscribeMyProblem = () => {
+  //   const endpoint = `/room/${roomId}/${memberId}`;
+  //   battleStompClient.current.subscribe(endpoint, (message) => {
+  //     console.log(message);
+  //     const body = JSON.parse(message.body);
+  //     setMyProblem(body);
+  //     setSelectMyProblem(true);
+  //   });
+  // };
+
   const subscribeMyProblem = () => {
-    const endpoint = `/room/${roomId}/${memberId}`;
-    battleStompClient.current.subscribe(endpoint, (message) => {
-      console.log(message);
-      const body = JSON.parse(message.body);
-      setMyProblem(body);
-      setSelectMyProblem(true);
+    return new Promise((resolve, reject) => {
+      try {
+        const endpoint = `/room/${roomId}/${memberId}`;
+        battleStompClient.current.subscribe(endpoint, (message) => {
+          const body = JSON.parse(message.body);
+          setMyProblem(body);
+          setSelectMyProblem(true);
+          resolve();
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   };
 
@@ -224,24 +280,52 @@ const BattleGamePage = () => {
   }, []);
 
   // 체력 반영 미완성
-  const subscribeResult = () => {
-    const endpoint = `/room/${roomId}`;
-    battleStompClient.current.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      if (message.body === "boom") {
-        alert("The host left the room");
-        navigate("/battle-list");
-      } else if (body.result) {
-        setGameEnded(true);
-        setWinner(body.winner);
-        setLoser(body.loser);
+  // const subscribeResult = () => {
+  //   const endpoint = `/room/${roomId}`;
+  //   battleStompClient.current.subscribe(endpoint, (message) => {
+  //     const body = JSON.parse(message.body);
+  //     if (message.body === "boom") {
+  //       alert("The host left the room");
+  //       navigate("/battle-list");
+  //     } else if (body.result) {
+  //       setGameEnded(true);
+  //       setWinner(body.winner);
+  //       setLoser(body.loser);
 
-        setTimeout(() => {
-          navigate("/battle-list");
-        }, 5);
-      } else {
-        console.log(body);
-        // 체력 업데이트 반영
+  //       setTimeout(() => {
+  //         navigate("/battle-list");
+  //       }, 5);
+  //     } else {
+  //       console.log(body);
+  //       // 체력 업데이트 반영
+  //     }
+  //   });
+  // };
+
+  const subscribeResult = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        const endpoint = `/room/${roomId}`;
+        battleStompClient.current.subscribe(endpoint, (message) => {
+          const body = JSON.parse(message.body);
+          if (message.body === "boom") {
+            alert("The host left the room");
+            navigate("/battle-list");
+          } else if (body.result) {
+            setGameEnded(true);
+            setWinner(body.winner);
+            setLoser(body.loser);
+
+            setTimeout(() => {
+              navigate("/battle-list");
+            }, 5);
+          } else {
+            console.log(body);
+          }
+          resolve();
+        });
+      } catch (error) {
+        reject(error);
       }
     });
   };
@@ -271,16 +355,36 @@ const BattleGamePage = () => {
     setMessage("");
   };
 
+  // const subscribeMessage = () => {
+  //   const endpoint = `/room/${roomId}`;
+  //   chatStompClient.current.subscribe(endpoint, (message) => {
+  //     const body = JSON.parse(message.body);
+  //     setChatMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       body.type === "CHAT"
+  //         ? `${body.sender}: ${body.content}`
+  //         : `${body.content}`,
+  //     ]);
+  //   });
+  // };
+
   const subscribeMessage = () => {
-    const endpoint = `/room/${roomId}`;
-    chatStompClient.current.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        body.type === "CHAT"
-          ? `${body.sender}: ${body.content}`
-          : `${body.content}`,
-      ]);
+    return new Promise((resolve, reject) => {
+      try {
+        const endpoint = `/room/${roomId}`;
+        chatStompClient.current.subscribe(endpoint, (message) => {
+          const body = JSON.parse(message.body);
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            body.type === "CHAT"
+              ? `${body.sender}: ${body.content}`
+              : `${body.content}`,
+          ]);
+          resolve();
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   };
 
@@ -324,6 +428,9 @@ const BattleGamePage = () => {
     initializeConnections();
 
     return () => {
+      // 재연결 시도 횟수 제한 추가
+      alert("서버와의 연결이 끊겼습니다.");
+      navigate("/battle-list");
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
@@ -407,10 +514,10 @@ const BattleGamePage = () => {
   };
 
   const renderQuestion = (problem) => {
-    switch (problem.type) {
-      case "빈 칸 채우기":
+    switch (problem.problemType) {
+      case "FILL_IN_THE_BLANK":
         return <DragNDropQuiz problem={problem} />;
-      case "주관식":
+      case "SHORT_ANSWER_QUESTION":
         return <ShortAnswer problem={problem} />;
       default:
         return <div>Unknown problem type</div>;
