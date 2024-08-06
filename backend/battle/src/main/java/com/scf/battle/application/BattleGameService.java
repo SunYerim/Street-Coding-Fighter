@@ -2,9 +2,11 @@ package com.scf.battle.application;
 
 import com.scf.battle.domain.dto.Problem.*;
 import com.scf.battle.domain.dto.Room.CreateRoomDTO;
+import com.scf.battle.domain.dto.Room.ResultRoomDTO;
 import com.scf.battle.domain.dto.User.FightDTO;
 import com.scf.battle.domain.dto.User.Player;
 import com.scf.battle.domain.dto.User.Solved;
+import com.scf.battle.domain.enums.GameResultType;
 import com.scf.battle.domain.enums.ProblemType;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
@@ -28,6 +30,7 @@ public class BattleGameService {
 
     private final BattleGameRepository battleGameRepository;
     private final ProblemService problemService;
+    private final KafkaService kafkaService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -236,5 +239,36 @@ public class BattleGameService {
         else{//아닌경우
             room.leavePlayerB();
         }
+    }
+
+    public void determineWinner(BattleGameRoom room) {
+
+        int playerAHp = room.getPlayerA().getHp();
+        int playerBHp = room.getPlayerB().getHp();
+
+        Long winnerId = null;
+        Long loserId = null;
+        GameResultType determineValue = GameResultType.DRAW;
+        if (playerAHp > playerBHp) {
+            determineValue = GameResultType.PLAYER_A_WINS;
+            winnerId = room.getPlayerA().getUserId();
+            loserId = room.getPlayerB().getUserId();
+        } else if (playerBHp > playerAHp) {
+            determineValue = GameResultType.PLAYER_B_WINS;
+            winnerId = room.getPlayerB().getUserId();
+            loserId = room.getPlayerA().getUserId();
+        } // 무승부는 null 값
+
+        Map<String, Long> result = Map.of(
+            "winner", winnerId != null ? winnerId : -1,
+            "loser", loserId != null ? loserId : -1
+        );
+        kafkaService.sendToKafkaSolved(room); // kafka에게 유저별 문제 풀이 보내기
+        kafkaService.sendToKafkaGameResult(room, determineValue); // kafka에게 게임 결과 보내기
+        // 게임이 끝났으므로 클라이언트에게 알림
+        messagingTemplate.convertAndSend("/room/" + room.getRoomId(), new ResultRoomDTO(result));
+
+        // BattleGameRoom 삭제
+        removeRoom(room.getRoomId());
     }
 }
