@@ -2,10 +2,10 @@ package com.scf.battle.presentation.websocket;
 
 import com.scf.battle.application.BattleGameService;
 import com.scf.battle.application.KafkaService;
+import com.scf.battle.domain.dto.Problem.ProblemRequestDTO;
 import com.scf.battle.domain.dto.Problem.ProblemResponse;
 import com.scf.battle.domain.dto.Problem.ProblemSelectDTO;
 import com.scf.battle.domain.dto.Room.JoinRoomSocketResponseDTO;
-import com.scf.battle.domain.dto.Room.ResultRoomDTO;
 import com.scf.battle.domain.dto.User.FightDTO;
 import com.scf.battle.domain.dto.Room.JoinRoomRequestDTO;
 import com.scf.battle.domain.dto.User.Player;
@@ -41,8 +41,16 @@ public class BattleSocketController {
     }
 
     @MessageMapping("/game/{roomId}/answer")
-    public void handleQuizAnswer(@DestinationVariable String roomId, Solved solved) {
+    public void handleQuizAnswer(@DestinationVariable String roomId, ProblemRequestDTO problemRequestDTO) {
         BattleGameRoom room = battleGameService.findById(roomId);
+        Solved solved = Solved.builder().
+            problemId(problemRequestDTO.getProblemId())
+            .userId(problemRequestDTO.getUserId())
+            .solve(problemRequestDTO.getSolve())
+            .solveText(problemRequestDTO.getSolveText())
+            .submitTime(problemRequestDTO.getSubmitTime())
+            .round(problemRequestDTO.getRound())
+            .build();
         System.out.println("Received payload: " + solved.toString());
         FightDTO fightDTO = battleGameService.markSolution(roomId, solved.getUserId(), solved);
         System.out.println("fightDTO: " + fightDTO.toString());
