@@ -6,7 +6,7 @@ import com.scf.battle.domain.enums.ProblemType;
 import lombok.Builder;
 import lombok.Data;
 
-public class ProblemResponse {
+public class ProblemResponseDTO {
 
     @Data
     @Builder
