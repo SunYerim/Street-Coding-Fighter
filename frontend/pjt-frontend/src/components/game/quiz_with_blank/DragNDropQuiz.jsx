@@ -53,8 +53,10 @@ const DragNDropQuiz = (problem) => {
     }));
   };
 
+  const problemContent = problem.problemContent.content;
+
   let modifiedContent = reactStringReplace(
-    problem.problemContent.content,
+    problemContent,
     /\$blank(\d+)\$/g,
     (match, i) => {
       return (
