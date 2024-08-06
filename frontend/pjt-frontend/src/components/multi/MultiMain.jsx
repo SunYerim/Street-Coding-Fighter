@@ -5,18 +5,27 @@ import MultiRoom from "../game/MultiRoom.jsx";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
+import store from '../../store/store.js';
 
 export default function MultiMain() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
 
-  // const baseUrl = "www.ssafy11s.com"
-  const baseUrl = "localhost:8080";
+  const {
+    memberId,
+    userId,
+    name,
+    baseURL,
+  } = store((state) => ({
+    memberId: state.memberId,
+    userId: state.userId,
+    name: state.name,
+    baseURL: state.baseURL,
+  }));
 
   const loadData = async () => {
     try {
-      const response = await axios.get(`http://${baseUrl}/multi/room`);
+      const response = await axios.get(`${baseURL}/multi/room`);
       if (Array.isArray(response.data)) {
         setRooms(response.data);
       } else {
