@@ -21,7 +21,7 @@ const Header = ({ type = "default" }) => {
 
       const quitRes = await axios({
         method: "POST",
-        url: `${baseURL}/battle/room/${roomId}`,
+        url: `${baseURL}/battle/room/${roomId}/leave`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

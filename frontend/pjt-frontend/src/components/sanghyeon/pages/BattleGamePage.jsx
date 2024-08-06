@@ -136,7 +136,7 @@ const BattleGamePage = () => {
 
   const enterRoom = () => {
     const joinRoomDTO = {
-      userId: userId,
+      userId: memberId,
       username: name,
       roomPassword: roomPassword,
     };
@@ -156,8 +156,8 @@ const BattleGamePage = () => {
         `${body.username}님이 입장하셨습니다.`,
       ]);
 
-      if (body.userId !== userId) {
-        setEnemyId(body.userId);
+      if (body.memberId !== memberId) {
+        setEnemyId(body.memberId);
         setEnemyName(body.username);
       }
     });
@@ -185,7 +185,7 @@ const BattleGamePage = () => {
   };
 
   const subscribeMyProblem = () => {
-    const endpoint = `/room/${roomId}/${userId}`;
+    const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       console.log(message);
       const body = JSON.parse(message.body);
@@ -202,7 +202,7 @@ const BattleGamePage = () => {
     const endpoint = `/send/game/${roomId}/answer`;
     const submitAnswerDTO = {
       problemId: myProblem.problemId,
-      userId: userId,
+      userId: memberId,
       solve: {},
       submitTime: count,
       roomId: roomId,
@@ -446,6 +446,8 @@ const BattleGamePage = () => {
     }
   };
 
+  const customProblem = {};
+
   return (
     <>
       <div className="battle-game-entire-container">
@@ -464,7 +466,7 @@ const BattleGamePage = () => {
                 </div>
               </div>
               <div className="battle-game-result-content">
-                {winner === userId ? "승리했습니다!" : "패배했습니다."}
+                {winner === memberId ? "승리했습니다!" : "패배했습니다."}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 방 목록 화면으로 이동합니다.
@@ -538,8 +540,8 @@ const BattleGamePage = () => {
                     {battleHistory.map((data, index) => (
                       <div className="battle-game-history-message" key={index}>
                         {data.isAttack === true
-                          ? `${data.userId}님이 플레이어 2님에게 ${data.power}만큼 데미지를 주었습니다.`
-                          : `${data.userId}님이 ${data.power}만큼 체력을 회복하였습니다.`}
+                          ? `${data.memberId}님이 플레이어 2님에게 ${data.power}만큼 데미지를 주었습니다.`
+                          : `${data.memberId}님이 ${data.power}만큼 체력을 회복하였습니다.`}
                       </div>
                     ))}
                     <div ref={battleHistoryEndRef} />
@@ -549,6 +551,7 @@ const BattleGamePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
+                    {/* {renderQuestion(customProblem)} */}
                     {renderQuestion(myProblem)}
                     <button
                       onClick={handleSubmit}
