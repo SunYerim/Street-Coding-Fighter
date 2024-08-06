@@ -122,20 +122,17 @@ public class MultiGameService {
 
     public Solved addSolved(MultiGameRoom room, String sessionId, Content content) {
 
-        List<Problem> problems = room.getProblems();
-        Problem problem = problems.get(room.getRound());
-
         Player player = findPlayerBySessionId(room, sessionId);
+        Problem currentProblem  = getCurrentProblem(room);
 
         Solved solved = Solved
             .builder()
             .userId(player.getUserId())
-            .problemId(problem.getProblemId())
+            .problemId(currentProblem.getProblemId())
             .solve(content.getSolve())
             .solveText(content.getSolveText())
             .submitTime(content.getSubmitTime())
             .build();
-
         player.addSolved(solved);
 
         return solved;
