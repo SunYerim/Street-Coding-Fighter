@@ -92,9 +92,9 @@ const Setting = () => {
     try {
       const logoutRes = await authClient({
         method: "POST",
-        url: `${baseURL}/user/logout`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+        url: `${baseURL}/user/public/logout`,
+        data: {
+          memberId: memberId,
         },
       });
       setAccessToken(null);
