@@ -14,7 +14,7 @@ import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
 
 import Modal from "react-modal";
 //음악 변경부분입니다. 아래 SoundStore import 해야됨
-import SoundStore from "../../stores/SoundStore.jsx"
+import SoundStore from "../../../stores/SoundStore.jsx"
 
 
 Modal.setAppElement("#root");

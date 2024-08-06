@@ -28,7 +28,7 @@ export default function Ranking() {
         rankingObj['total'] = totalRes.data;
         rankingObj['weekly'] = weeklyRes.data;
         rankingObj['daily'] = dailyRes.data;
-
+        console.log(rankingObj)
         setRankingList(rankingObj);
       } catch (error) {
         console.error("Error fetching ranking data:", error);
