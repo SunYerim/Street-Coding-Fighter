@@ -17,7 +17,6 @@ const MessageContainer = ({ chatMessages, username }) => {
   return (
     <div>
       {chatMessages.map((message, index) => {
-        console.log(message);
         return (
           <Container key={ message._id || index } className="message-container">
             {message.sender === "system" ? (
