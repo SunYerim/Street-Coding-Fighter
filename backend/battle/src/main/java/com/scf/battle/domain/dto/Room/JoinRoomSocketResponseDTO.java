@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinRoomUserDTO {
+public class JoinRoomSocketResponseDTO {
     private Long userId;
     private String username;
 }
