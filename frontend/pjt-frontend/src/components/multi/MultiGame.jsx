@@ -86,7 +86,8 @@ export default function MultiGame() {
       null, // 요청 본문을 생략
       {
         headers: {
-          'memberId': hostId // 헤더에 hostId 추가
+          Authorization: `Bearer ${accessToken}`,
+          // 'memberId': hostId, // 헤더에 hostId 추가
         }
       }
     );

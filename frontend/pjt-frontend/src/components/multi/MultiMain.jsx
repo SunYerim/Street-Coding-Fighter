@@ -23,9 +23,19 @@ export default function MultiMain() {
     baseURL: state.baseURL,
   }));
 
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
+
   const loadData = async () => {
     try {
-      const response = await axios.get(`${baseURL}/multi/room`);
+      const response = await axios.get(`${baseURL}/multi/room`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      });
       if (Array.isArray(response.data)) {
         setRooms(response.data);
       } else {
