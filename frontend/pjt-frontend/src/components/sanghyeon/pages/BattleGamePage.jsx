@@ -77,7 +77,7 @@ const BattleGamePage = () => {
   const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
   const [gameStart, setGameStart] = useState(false);
-  const [myProblem, setMyProblem] = useState(null);
+  const [myProblem, setMyProblem] = useState({});
   const [selectMyProblem, setSelectMyProblem] = useState(false);
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -199,13 +199,13 @@ const BattleGamePage = () => {
   };
 
   const subscribeMyProblem = () => {
+    x;
     const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
-      console.log(typeof message);
-      console.log(typeof message.body);
-      console.log(message.body.problemType);
-      setMyProblem(message.body);
-      console.log("My Problem: ", message.body);
+      // console.log(typeof message); object
+      // console.log(typeof message.body); string
+      // console.log(message.body.problemType); undefined
+      setMyProblem(JSON.parse(message.body));
       setSelectMyProblem(true);
     });
   };
@@ -535,7 +535,7 @@ const BattleGamePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
-                    {myProblem && renderQuestion(myProblem)}
+                    {renderQuestion(myProblem)}
                     <button
                       onClick={handleSubmit}
                       className="battle-game-submit-answer"
