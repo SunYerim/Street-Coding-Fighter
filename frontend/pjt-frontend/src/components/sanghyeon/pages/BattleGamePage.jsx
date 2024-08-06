@@ -199,7 +199,6 @@ const BattleGamePage = () => {
   };
 
   const subscribeMyProblem = () => {
-    x;
     const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       // console.log(typeof message); object
