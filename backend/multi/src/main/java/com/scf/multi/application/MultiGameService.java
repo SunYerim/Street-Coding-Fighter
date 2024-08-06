@@ -33,6 +33,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MultiGameService {
 
+    private static final int MAX_SUBMIT_TIME = 30;
+    private static final int BASE_SCORE = 1000;
+    private static final int STREAK_BONUS = 75;
+
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
     private final ApplicationEventPublisher eventPublisher;
@@ -321,14 +325,10 @@ public class MultiGameService {
     }
 
     private int calculateScore(int streakCount, int submitTime) {
-
-        if (submitTime > 30) {
+        if (submitTime > MAX_SUBMIT_TIME) {
             throw new BusinessException(submitTime, "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
 
-        int score = 1000 * (30 - submitTime);
-        score += (streakCount * 75);
-
-        return score;
+        return BASE_SCORE * (MAX_SUBMIT_TIME - submitTime) + (streakCount * STREAK_BONUS);
     }
 }
