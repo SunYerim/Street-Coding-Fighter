@@ -45,12 +45,23 @@ export default function MultiCreate() {
       };
   
       const title = data.target.title.value;
-      const maxPlayer = data.target.maxPlayer.value;
       const password = data.target.password.value;
       const gameRound = data.target.gameRound.value;
+      const maxPlayer = data.target.maxPlayer.value;
+
+      const maxPlayerInt = parseInt(maxPlayer, 10);
+      const gameRoundInt = parseInt(gameRound, 10);
 
 
-      const response = await axios.post(`${baseURL}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
+      const response = await axios.post(`${baseURL}/multi/room`, 
+        { 
+          title, 
+          password, 
+          gameRound: gameRoundInt, 
+          maxPlayer: maxPlayerInt 
+        }, 
+        { headers }
+      );
       const roomId = response.data;
       setRoomId(roomId);
       navigate(`/multi-game/${roomId}`, { state: { hostId: userId } } );  
