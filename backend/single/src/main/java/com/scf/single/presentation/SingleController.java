@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("edu")
+@RequestMapping("single")
 @Slf4j
 @RequiredArgsConstructor
 public class SingleController {
