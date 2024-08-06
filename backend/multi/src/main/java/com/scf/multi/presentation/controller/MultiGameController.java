@@ -4,6 +4,7 @@ import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.room.RoomResponse;
+import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
@@ -120,7 +121,11 @@ public class MultiGameController {
             .submitTime(20)
             .build();
 
-        kafkaMessageProducer.sendResult(List.of(hermesRank, jackRank));
+        GameResult gameResult = GameResult.builder()
+            .gameRank(List.of(hermesRank, jackRank))
+            .build();
+
+        kafkaMessageProducer.sendResult(gameResult);
         kafkaMessageProducer.sendSolved(List.of(hermesSolved1, hermesSolved2));
         kafkaMessageProducer.sendSolved(List.of(jackSolved1, jackSolved2));
 
