@@ -1,12 +1,12 @@
 spring:
   application:
-    name: scf
+    name: scf-single
 
   datasource:
-    url: jdbc:mariadb://localhost:3306/scf_db?characterEncoding=utf8mb4
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: ed9658pi
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
