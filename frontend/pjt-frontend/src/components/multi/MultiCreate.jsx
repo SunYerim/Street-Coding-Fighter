@@ -6,21 +6,32 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
 import store from '../../store/store.js';
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 
 export default function MultiCreate() {
   const navigate = useNavigate();
 
   const {
+    accessToken,
+    setAccessToken,
     memberId,
     userId,
     name,
     baseURL,
   } = store((state) => ({
     memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
     userId: state.userId,
     name: state.name,
     baseURL: state.baseURL,
   }));
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
   const setRoomId = multiStore((state) => state.setRoomId);
 
@@ -45,22 +56,11 @@ export default function MultiCreate() {
       // };
   
       const title = data.target.title.value;
+      const maxPlayer = data.target.maxPlayer.value;
       const password = data.target.password.value;
       const gameRound = data.target.gameRound.value;
-      const maxPlayer = data.target.maxPlayer.value;
 
-      const maxPlayerInt = parseInt(maxPlayer, 10);
-      const gameRoundInt = parseInt(gameRound, 10);
-
-
-      const response = await axios.post(`${baseURL}/multi/room`, 
-        { 
-          title, 
-          password, 
-          gameRound: gameRoundInt, 
-          maxPlayer: maxPlayerInt 
-        }
-      );
+      const response = await axios.post(`${baseURL}/multi/room`, { title, maxPlayer, password, gameRound }, { Authorization: `Bearer ${accessToken}` });
       const roomId = response.data;
       setRoomId(roomId);
       navigate(`/multi-game/${roomId}`, { state: { hostId: userId } } );  

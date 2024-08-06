@@ -10,6 +10,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
 import store from "../../store/store.js";
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 import axios from 'axios';
 
 import SockJS from "sockjs-client/dist/sockjs";
@@ -26,16 +27,26 @@ export default function MultiGame() {
   const chatStompClient = useRef(null);
 
   const {
+    accessToken,
+    setAccessToken,
     memberId,
     userId,
     name,
     baseURL,
   } = store((state) => ({
     memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
     userId: state.userId,
     name: state.name,
     baseURL: state.baseURL,
   }));
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
 
   const roomId = multiStore.getState().roomId;

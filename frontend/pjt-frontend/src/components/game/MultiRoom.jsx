@@ -7,22 +7,33 @@ import lock from '/lock.svg'
 import unlock from '/unlock.svg'
 import multiStore from '../../stores/multiStore.jsx';
 import store from '../../store/store.js';
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 
 function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
+    accessToken,
+    setAccessToken,
     memberId,
     userId,
     name,
     baseURL,
   } = store((state) => ({
     memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
     userId: state.userId,
     name: state.name,
     baseURL: state.baseURL,
   }));
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
   const [errorMessage, setErrorMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -60,23 +71,15 @@ function MultiRoom(props) {
 
   const handleSubmit = async (password) => {
     console.log(password);
-    const headers = {
-      'memberId': userId,
-      'username': name
-    };
+    // const headers = {
+    //   'memberId': userId,
+    //   'username': name
+    // };
     
     try {
       console.log(props.roomId);
       console.log(password);
-      console.log(headers);
-      const response = await axios.post(`${baseURL}/multi/room/${props.roomId}`, password, headers
-        // {
-        //   headers: {
-        //   ...headers,
-        //   'Content-Type': 'text/plain'
-        //   }
-        // }
-      );
+      const response = await axios.post(`${baseURL}/multi/room/${props.roomId}`, password, { Authorization: `Bearer ${accessToken}` });
       if (response.status === 200) {
         // setUserId(userId);
         // setUsername(username);
