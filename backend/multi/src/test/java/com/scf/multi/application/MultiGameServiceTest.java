@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -33,6 +34,9 @@ class MultiGameServiceTest {
 
     @Mock
     private ProblemService problemService;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     private MultiGameService multiGameService;
