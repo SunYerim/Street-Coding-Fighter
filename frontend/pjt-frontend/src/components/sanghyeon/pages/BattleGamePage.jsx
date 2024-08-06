@@ -256,6 +256,7 @@ const BattleGamePage = () => {
       {},
       JSON.stringify(submitAnswerDTO)
     );
+    setAnswerSubmitted(true);
   };
 
   // 체력 반영 미완성
@@ -383,7 +384,7 @@ const BattleGamePage = () => {
   }, [battleHistory]);
 
   useEffect(() => {
-    if (count === 0) {
+    if (count === 0 && answerSubmitted === false) {
       submitAnswer();
     }
   }, [count]);
