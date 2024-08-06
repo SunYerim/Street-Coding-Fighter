@@ -6,7 +6,7 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-public class ResultRoomDTO {
+public class RoomResultResponseDTO {
     private Map<String, Long> result;
 
 }
