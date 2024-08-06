@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Solved {
 
     private Long problemId;
-    private Long memberId;
+    private Long userId;
     private Map<Integer, Integer> solve;
     private String solveText;
     private Integer submitTime;

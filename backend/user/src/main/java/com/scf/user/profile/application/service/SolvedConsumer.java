@@ -24,7 +24,7 @@ public class SolvedConsumer {
         solvedProblemKafkaRequestDto.setChoiceText(solved.getSolve()); // 빈칸, 객관식
 
         // 사용자가 푼 문제를 db에 저장시킵니다.
-        profileService.submitSolved(solved.getMemberId(), solvedProblemKafkaRequestDto);
+        profileService.submitSolved(solved.getUserId(), solvedProblemKafkaRequestDto);
     }
 
 }

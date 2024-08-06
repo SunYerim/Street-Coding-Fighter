@@ -13,7 +13,7 @@ public class KafkaMessageProducer {
     private final KafkaTemplate<String, List<RenewExp>> renewExpKafkaTemplate;
 
     public void sendProcessedGameResults(List<RenewExp> renewExpList) {
-        String topic = "renew-exp";
+        String topic = "user-exp";
         renewExpKafkaTemplate.send(topic, renewExpList);
         System.out.println("Sent processed Exp: " + renewExpList);
     }

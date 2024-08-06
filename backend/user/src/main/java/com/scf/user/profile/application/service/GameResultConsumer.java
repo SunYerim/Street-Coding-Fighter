@@ -30,6 +30,10 @@ public class GameResultConsumer {
         int expA = profileService.getProfileInfo(playerA).getExp();
         int expB = profileService.getProfileInfo(playerB).getExp();
 
+        // username
+        String playerAName = profileService.getProfileInfo(playerA).getName();
+        String playerBName = profileService.getProfileInfo(playerB).getName();
+
         List<Integer> players = calculateBattleExp(win);
 
         // 경험치를 업데이트.
@@ -41,8 +45,8 @@ public class GameResultConsumer {
 
         // 처리된 데이터를 다시 전송
         List<RenewExp> renewExpList = new ArrayList<>();
-        renewExpList.add(new RenewExp(playerA, newExpA));
-        renewExpList.add(new RenewExp(playerB, newExpB));
+        renewExpList.add(new RenewExp(playerA, playerAName, newExpA));
+        renewExpList.add(new RenewExp(playerB, playerBName, newExpB));
 
         kafkaMessageProducer.sendProcessedGameResults(renewExpList);
 
@@ -71,6 +75,7 @@ public class GameResultConsumer {
 
         for (Rank rank : ranks) {
             Long memberId = rank.getUserId();
+            String name = rank.getUsername();
 
             // 기존 경험치
             int currentExp = profileService.getProfileInfo(memberId).getExp();
@@ -82,7 +87,7 @@ public class GameResultConsumer {
             profileService.updateExp(memberId, newExp);
 
             // 갱신된 경험치 정보를 DTO에 담기
-            RenewExp renewExp = new RenewExp(memberId, newExp);
+            RenewExp renewExp = new RenewExp(memberId, name, newExp);
             updatedExpList.add(renewExp);
         }
 

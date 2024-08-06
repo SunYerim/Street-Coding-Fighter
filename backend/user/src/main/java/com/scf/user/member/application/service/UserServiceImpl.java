@@ -1,6 +1,7 @@
 package com.scf.user.member.application.service;
 
 
+import com.scf.user.member.application.client.ContentClient;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.dto.TokenDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
@@ -30,17 +31,19 @@ public class UserServiceImpl implements UserService {
     private final CharacterRepository characterRepository;
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ContentClient contentClient;
 
     @Autowired
     public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
         UserRepository userRepository, CharacterRepository characterRepository,
         @Lazy JwtTokenProvider jwtTokenProvider,
-        RedisService redisService) {
+        RedisService redisService, ContentClient contentClient) {
         this.authenticationProviderService = authenticationProviderService;
         this.userRepository = userRepository;
         this.characterRepository = characterRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisService = redisService;
+        this.contentClient = contentClient;
     }
 
     @Override
@@ -58,6 +61,10 @@ public class UserServiceImpl implements UserService {
 
         // Member 엔티티 저장
         Member savedMember = userRepository.save(member);
+
+        // 수강완료 여부 초기화 요청
+        contentClient.initializeCompletionStatus(savedMember.getId())
+            .block();
 
         // Character 생성
         Character character = new Character();
