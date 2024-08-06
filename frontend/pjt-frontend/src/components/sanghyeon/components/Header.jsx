@@ -27,8 +27,8 @@ const Header = ({ type = "default" }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      alert("방 나가기에 성공했습니다.");
       setNormalQuit(true);
+      alert("방 나가기에 성공했습니다.");
       navigate("/battle-list");
     } catch (error) {
       alert("방 나가기에 실패했습니다.");

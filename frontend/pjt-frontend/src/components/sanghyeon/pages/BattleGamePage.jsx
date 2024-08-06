@@ -216,7 +216,10 @@ const BattleGamePage = () => {
     const submitAnswerDTO = {
       problemId: myProblem.problemId,
       userId: memberId,
-      solve: {},
+      solve: {
+        1: "answer1",
+        2: "answer2",
+      },
       submitTime: count,
       roomId: roomId,
       round: currentRound,
