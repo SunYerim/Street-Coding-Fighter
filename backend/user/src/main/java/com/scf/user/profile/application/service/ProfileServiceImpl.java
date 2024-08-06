@@ -3,16 +3,20 @@ package com.scf.user.profile.application.service;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
 import com.scf.user.profile.application.client.ProblemClient;
+import com.scf.user.profile.domain.dto.ChoiceTextConverter;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.HistoryResponseDto;
 import com.scf.user.profile.domain.dto.ProblemResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
+import com.scf.user.profile.domain.dto.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import com.scf.user.profile.domain.entity.Record;
 import com.scf.user.profile.domain.entity.Solved;
+import com.scf.user.profile.domain.repository.SolvedRepository;
 import com.scf.user.profile.global.exception.ProblemNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +27,14 @@ import org.springframework.stereotype.Service;
 public class ProfileServiceImpl implements ProfileService {
 
     private final UserRepository userRepository;
+    private final SolvedRepository solvedRepository;
     private final ProblemClient problemClient;
 
     // 프로필 정보 조회
     @Override
-    public ProfileResponseDto getProfileInfo(String memberId) {
+    public ProfileResponseDto getProfileInfo(Long memberId) {
         // 멤버 정보 조회
-        Member member = userRepository.findById(Long.parseLong(memberId))
+        Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         // 프로필 DTO 생성
@@ -141,6 +146,46 @@ public class ProfileServiceImpl implements ProfileService {
             .solvedCount(solvedProblemDtoList.size())
             .list(solvedProblemDtoList)
             .build();
+
+    }
+
+    // 경험치 업데이트
+    @Override
+    public void updateExp(Long memberId, int newExp) {
+        // 멤버 정보 조회
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        // 새로운 경험치로 업데이트
+        member.getCharacter().setExp(newExp);
+
+        // 변경사항을 저장
+        userRepository.save(member);
+
+        System.out.println("경험치가 업데이트 되었습니다. " + memberId + ": " + newExp);
+    }
+
+    @Override
+    @Transactional
+    public void submitSolved(Long memberId, SolvedProblemKafkaRequestDto problemRequestDto) {
+        // 멤버 정보를 조회
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        // choice를 문자열로 변환 (객관식, 주관식, 빈칸 모두 string으로 변환)
+        String convertedChoiceText = ChoiceTextConverter.convertChoiceText(
+            problemRequestDto.getChoiceText(), problemRequestDto.getChoice());
+
+        //Solved 엔티티 생성
+        Solved solved = new Solved();
+        solved.setChoice(convertedChoiceText);
+        solved.setCorrect(problemRequestDto.isCorrect());
+        solved.setProblemId(
+            problemRequestDto.getProblemId());
+        solved.setMember(member);
+
+        // Solved 엔티티 저장
+        solvedRepository.save(solved);
 
     }
 
