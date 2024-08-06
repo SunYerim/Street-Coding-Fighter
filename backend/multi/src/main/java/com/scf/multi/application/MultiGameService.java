@@ -305,6 +305,11 @@ public class MultiGameService {
 
     private boolean compareMultipleChoice(Solved solved, List<ProblemAnswer> answers) {
         Map<Integer, Integer> solve = solved.getSolve();
+
+        if (solve == null) {
+            return false;
+        }
+
         ProblemChoice correctChoice = answers.getFirst().getCorrectChoice();
 
         return correctChoice.getChoiceId().equals(solve.get(1));
@@ -312,11 +317,20 @@ public class MultiGameService {
 
     private boolean compareShortAnswer(Solved solved, List<ProblemAnswer> answers) {
         String correctAnswerText = answers.getFirst().getCorrectAnswerText();
+
+        if (correctAnswerText == null) {
+            return false;
+        }
+
         return correctAnswerText.equals(solved.getSolveText());
     }
 
     private boolean compareFillInTheBlank(Solved solved, List<ProblemAnswer> answers) {
         Map<Integer, Integer> solve = solved.getSolve();
+
+        if (solve == null) {
+            return false;
+        }
 
         return answers.stream().allMatch(answer ->
             solve.containsKey(answer.getBlankPosition()) &&
