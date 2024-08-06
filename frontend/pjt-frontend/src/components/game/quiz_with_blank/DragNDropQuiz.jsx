@@ -19,6 +19,13 @@ const DragNDropQuiz = (problem) => {
   }));
 
   useEffect(() => {
+    console.log(problem);
+    console.log(typeof problem);
+    console.log(problem.problemContent);
+    console.log(typeof problem.problemContent);
+  }, []);
+
+  useEffect(() => {
     if (problem && problem.problemChoices) {
       // problem.problemChoices 배열에서 choiceText와 choiceId를 매핑합니다.
       const choiceTexts = problem.problemChoices.map(
