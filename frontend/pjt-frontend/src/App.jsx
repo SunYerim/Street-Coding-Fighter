@@ -5,7 +5,8 @@ import LoginPage from "./components/sanghyeon/pages/LoginPage.jsx";
 import FindPasswordPage from "./components/sanghyeon/pages/FindPasswordPage.jsx";
 import ChangePasswordPage from "./components/sanghyeon/pages/ChangePasswordPage.jsx";
 import SignUpPage from "./components/sanghyeon/pages/SignUpPage.jsx";
-import MainPage from "./components/sanghyeon/pages/MainPage.jsx";
+import MainPage from "./components/main-page/MainPage.jsx";
+//mainpage 경로 수정했습니다. //
 import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
 import RecordPage from "./components/sanghyeon/pages/RecordPage.jsx";
 import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
@@ -17,7 +18,8 @@ import MultiCreate from "./components/multi/MultiCreate.jsx";
 import BattleCreate from "./components/battle/BattleCreate.jsx";
 import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
-import BattleGame from "./components/battle/BattleGame.jsx";
+import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
+import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
@@ -28,12 +30,7 @@ import { useEffect, useState } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
 function App() {
-  const {
-    initializeBackgroundMusic,
-    stopBackgroundMusic,
-    playBackgroundMusic,
-    isPlaying,
-  } = SoundStore();
+  const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
   const { accessToken } = store((state) => ({
     accessToken: state.accessToken,
@@ -46,20 +43,17 @@ function App() {
       console.log("loading end");
       playBackgroundMusic();
     }, 2000);
-
-    return () => {
-      // 컴포넌트가 언마운트될 때 배경음악 정지
-      console.log("stop music");
-      stopBackgroundMusic();
-    };
-  }, [initializeBackgroundMusic, stopBackgroundMusic]);
+  }, []);
 
   return (
     <>
       <Router>
         <Routes>
           <Route path="/" element={isLoading ? <Loading /> : <TitlePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={accessToken ? <MainPage /> : <LoginPage />}
+          />
           <Route path="/find-password" element={<FindPasswordPage />} />
           <Route path="/reset-password" element={<ChangePasswordPage />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -99,6 +93,15 @@ function App() {
           <Route
             path="/battle"
             element={accessToken ? <BattleMain /> : <LoginPage />}
+          />
+          <Route
+            path="/battle-list"
+            element={accessToken ? <BattleGameListPage /> : <LoginPage />}
+            // element={<BattleGameListPage />}
+          />
+          <Route
+            path="/battle-game"
+            element={accessToken ? <BattleGamePage /> : <LoginPage />}
           />
           <Route
             path="/battle-create"

@@ -73,7 +73,7 @@ export default function EpisodeList({ rownum }) {
                   {index < array.length - 1 ? (
                     <S.Path
                       key={`path-${e.id}`}
-                      $completed={completed[e.id + 1]}
+                      $completed={completed[e.id]?.complete}
                     />
                   ) : null}
                 </React.Fragment>

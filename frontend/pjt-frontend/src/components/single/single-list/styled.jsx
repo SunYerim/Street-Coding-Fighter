@@ -26,7 +26,7 @@ align-items: center;
 border-radius: 10%;
 transition: background-color 0.3s;
 cursor: pointer;
-background-color: ${(props) => (props.$completed ? '#12486B' : 'gray')};
+background-color: ${(props) => (props.$completed ? 'rgba(18,72,107, 0.8)' : 'gray')};
 border: ${(props) => (props.$isNext ? '2px solid white' : null)};
 &:hover {
   background-color: rgba(83, 92, 145, 1);

@@ -8,11 +8,11 @@ import SoundStore from '../../../stores/SoundStore';
 function TitlePage() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
-  const { playClickSound } = SoundStore();
+  const { playEffectSound } = SoundStore();
   const handleClick = () =>{
     navigate('/login');
     console.log('play click')
-    playClickSound();
+    playEffectSound('btnClickSound');
   }
   return (
     <>

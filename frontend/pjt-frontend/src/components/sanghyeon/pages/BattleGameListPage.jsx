@@ -20,6 +20,7 @@ const BattleGameListPage = () => {
     setRoomId,
     setHostId,
     setRoomPassword,
+    setNormalQuit,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -29,6 +30,7 @@ const BattleGameListPage = () => {
     setAccessToken: state.setAccessToken,
     setHostId: state.setHostId,
     setRoomPassword: state.setRoomPassword,
+    setNormalQuit: state.setNormalQuit,
   }));
 
   const authClient = createAuthClient(
@@ -63,6 +65,8 @@ const BattleGameListPage = () => {
       });
 
       setBattleList(res.data);
+      console.log(res.data);
+      setCurrentBattleList(res.data);
     } catch (error) {
       console.error("Failed to fetch record", error);
     }
@@ -74,12 +78,13 @@ const BattleGameListPage = () => {
       return;
     }
 
-    let password = "";
+    let inputPassword = "null";
+    // 비밀번호가 없는 경우 초기화
 
     if (isLock === true) {
-      password = prompt("비밀번호를 입력하세요.");
+      inputPassword = prompt("비밀번호를 입력하세요.");
 
-      if (password === null || password === "") {
+      if (inputPassword === null || inputPassword === "") {
         alert("비밀번호를 입력해주세요.");
         return;
       }
@@ -89,16 +94,18 @@ const BattleGameListPage = () => {
       const res = await authClient({
         method: "POST",
         url: `${baseURL}/battle/room/${roomId}`,
-        ...(password !== "" && { data: password }),
+        data: {
+          password: inputPassword,
+        },
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "text/plain",
         },
       });
 
       setRoomId(roomId);
-      setRoomPassword(password);
+      setRoomPassword(inputPassword);
       setHostId("");
+      setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
       console.log(error);
@@ -133,6 +140,7 @@ const BattleGameListPage = () => {
       setRoomId(createRes.data);
       setHostId(memberId);
       setRoomPassword(battleRoomPassword.current.value);
+      setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
       console.log(error);

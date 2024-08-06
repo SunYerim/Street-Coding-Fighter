@@ -17,6 +17,8 @@ import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const BattleGamePage = () => {
+  const battleStompClient = useRef(null);
+  const chatStompClient = useRef(null);
   const navigate = useNavigate();
 
   const {
@@ -35,6 +37,8 @@ const BattleGamePage = () => {
     setEnemyId,
     enemyName,
     setEnemyName,
+    normalQuit,
+    setNormalQuit,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -51,6 +55,8 @@ const BattleGamePage = () => {
     setEnemyId: state.setEnemyId,
     enemyName: state.enemyName,
     setEnemyName: state.setEnemyName,
+    normalQuit: state.normalQuit,
+    setNormalQuit: state.setNormalQuit,
   }));
 
   const authClient = createAuthClient(
@@ -62,18 +68,17 @@ const BattleGamePage = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [battleHistory, setBattleHistory] = useState([]);
   const [message, setMessage] = useState("");
-  const [ws, setWs] = useState(null);
   const chatEndRef = useRef(null);
   const battleHistoryEndRef = useRef(null);
-  const [player1Health, setPlayer1Health] = useState(100);
-  const [player2Health, setPlayer2Health] = useState(100);
+  const [myHealth, setMyHealth] = useState(100);
+  const [enemyHealth, setEnemy2Health] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
   const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
-  const [timerEnded, setTimerEnded] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [myProblem, setMyProblem] = useState(null);
+  const [selectMyProblem, setSelectMyProblem] = useState(false);
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [winner, setWinner] = useState("");
@@ -83,72 +88,135 @@ const BattleGamePage = () => {
 
   // ---------------------- WebSocket ----------------------
 
-  let battleStompClient = null;
-  let chatStompClient = null;
+  // WebSocket 연결 및 초기화 함수
 
   const connect = () => {
-    const battleSocket = new SockJS(`${baseURL}/ws-battle`);
-    const chatSocket = new SockJS(`${baseURL}/ws-chat`);
-    battleStompClient = Stomp.over(battleSocket);
-    chatStompClient = Stomp.over(chatSocket);
+    return new Promise((resolve, reject) => {
+      const battleSocket = new SockJS(`${baseURL}/ws-battle`);
+      const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+      battleStompClient.current = Stomp.over(battleSocket);
+      chatStompClient.current = Stomp.over(chatSocket);
 
-    battleStompClient.connect(
-      {},
-      (frame) => {
-        console.log("Connected: " + frame);
+      let battleConnected = false;
+      let chatConnected = false;
 
-        subscribeEnterRoom();
-        subscribeEnemyProblem();
-        subsribeMyProblem();
-        subscribeRoundResult();
-        subscribeTotalResult();
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+      // 배틀 서버 연결
+      battleStompClient.current.connect(
+        {},
+        (frame) => {
+          console.log("Connected to Battle Server: " + frame);
+          subscribeEnterRoom();
+          subscribeEnemyProblem();
+          subscribeMyProblem(); // Typo fixed: changed from subsribeMyProblem to subscribeMyProblem
+          subscribeResult();
 
-    chatStompClient.connect(
-      {},
-      (frame) => {
-        console.log("Connected: " + frame);
+          battleConnected = true;
+          if (battleConnected && chatConnected) {
+            resolve(); // 두 서버가 모두 연결되면 Promise를 해결합니다.
+          }
+        },
+        (error) => {
+          console.log("Battle server connection error:", error);
+          reject(error); // 연결 실패 시 Promise 거부
+        }
+      );
 
-        subscribeMessage();
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+      console.log("배틀 서버 연결 시도");
+
+      // 채팅 서버 연결
+      chatStompClient.current.connect(
+        {},
+        (frame) => {
+          console.log("Connected to Chat Server: " + frame);
+
+          subscribeMessage();
+
+          console.log("채팅 서버 연결");
+
+          chatConnected = true;
+          if (battleConnected && chatConnected) {
+            resolve(); // 두 서버가 모두 연결되면 Promise를 해결합니다.
+          }
+        },
+        (error) => {
+          console.log("Chat server connection error:", error);
+          reject(error); // 연결 실패 시 Promise 거부
+        }
+      );
+
+      console.log("채팅 서버 연결 시도");
+    });
   };
 
+  // const connect = async () => {
+  //   const battleSocket = new SockJS(`${baseURL}/ws-battle`);
+  //   const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+  //   battleStompClient.current = Stomp.over(battleSocket);
+  //   chatStompClient.current = Stomp.over(chatSocket);
+
+  //   return new Promise((resolve, reject) => {
+  //     battleStompClient.current.connect(
+  //       {},
+  //       (frame) => {
+  //         console.log("Connected: " + frame);
+  //         setIsBattleConnected(true);
+  //         subscribeEnterRoom();
+  //         subscribeEnemyProblem();
+  //         subscribeMyProblem();
+  //         subscribeResult();
+  //         console.log("배틀 서버 연결");
+
+  //         chatStompClient.current.connect(
+  //           {},
+  //           (frame) => {
+  //             console.log("Connected: " + frame);
+  //             setIsChatConnected(true);
+  //             subscribeMessage();
+  //             console.log("채팅 서버 연결");
+  //             resolve();
+  //           },
+  //           (error) => {
+  //             console.log(error);
+  //             setIsChatConnected(false);
+  //             reconnectWebSocket();
+  //             reject(error);
+  //           }
+  //         );
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //         setIsBattleConnected(false);
+  //         reconnectWebSocket();
+  //         reject(error);
+  //       }
+  //     );
+  //   });
+  // };
+
   const enterRoom = () => {
-    if (battleStompClient && battleStompClient.connected) {
-      const joinRoomDTO = {
-        userId: userId,
-        username: name,
-        roomPassword: roomPassword,
-      };
-      battleStompClient.send(
-        `$/game/${roomId}/join`,
-        {},
-        JSON.stringify(joinRoomDTO)
-      );
-    } else {
-      console.log("Not connected yet");
-    }
+    const joinRoomDTO = {
+      userId: memberId,
+      username: name,
+      roomPassword: roomPassword,
+    };
+    battleStompClient.current.send(
+      `/game/${roomId}/join`,
+      {},
+      JSON.stringify(joinRoomDTO)
+    );
   };
 
   const subscribeEnterRoom = () => {
     const endpoint = `/game/${roomId}/join`;
-    battleStompClient.subscribe(endpoint, (message) => {
+    battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
       ]);
 
-      if (body.userId !== userId) {
-        setEnemyId(body.userId);
+      if (body.memberId !== memberId) {
+        setEnemyId(body.memberId);
         setEnemyName(body.username);
       }
     });
@@ -156,7 +224,7 @@ const BattleGamePage = () => {
 
   const subscribeEnemyProblem = () => {
     const endpoint = `/room/${roomId}/RoundChoiceProblem`;
-    battleStompClient.subscribe(endpoint, (message) => {
+    battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setEnemyProblems(body);
       openModal();
@@ -165,118 +233,112 @@ const BattleGamePage = () => {
   };
 
   const selectEnemyProblem = (problemId) => {
-    console.log(battleStompClient);
-    if (battleStompClient) {
-      const endpoint = `/game/${roomId}/selectProblem`;
-      battleStompClient.send(
-        endpoint,
-        {},
-        JSON.stringify({ problemId: problemId })
-      );
-      setSelectOpponentProblem(true);
-    } else {
-      console.log("Not connected yet");
-    }
+    const endpoint = `/send/game/${roomId}/selectProblem`;
+    const payload = {
+      problemId: problemId,
+      memberId: memberId, // payload에 memberId 추가
+    };
+
+    battleStompClient.current.send(endpoint, {}, JSON.stringify(payload));
+    setSelectOpponentProblem(true);
   };
 
-  const subsribeMyProblem = () => {
-    const endpoint = `/room/${roomId}/${userId}`;
-    battleStompClient.subscribe(endpoint, (message) => {
+  const subscribeMyProblem = () => {
+    const endpoint = `/room/${roomId}/${memberId}`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
       console.log(message);
       const body = JSON.parse(message.body);
       setMyProblem(body);
-      closeModal();
-      setSelectOpponentProblem(false);
-      setGameStart(true);
-      startTimer();
+      setSelectMyProblem(true);
     });
   };
+
+  useEffect(() => {
+    if (selectOpponentProblem && selectMyProblem) {
+      setSelectMyProblem(false);
+      setSelectOpponentProblem(false);
+      closeModal();
+      setGameStart(true);
+      setAnswerSubmitted(false);
+      startTimer();
+    }
+  }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
 
   // 답변 제출 미완성
-  const submitAnswer = useCallback(() => {
-    if (battleStompClient && battleStompClient.connected) {
-      const endpoint = `/game/${roomId}/answer`;
-      const submitAnswerDTO = {
-        problemId: myProblem.problemId,
-        userId: userId,
-        solve: {},
-        submitTime: count,
-        roomId: roomId,
-        round: currentRound,
-      };
-      battleStompClient.send(endpoint, {}, JSON.stringify(submitAnswerDTO));
-    } else {
-      console.log("Not connected yet");
-    }
-  }, []);
-
-  // 체력 반영 미완성
-  const subscribeRoundResult = () => {
-    const endpoint = `/room/${roomId}`;
-    battleStompClient.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      console.log(body);
-    });
+  const submitAnswer = () => {
+    const endpoint = `/send/game/${roomId}/answer`;
+    const submitAnswerDTO = {
+      problemId: myProblem.problemId,
+      userId: memberId,
+      solve: {
+        1: "answer1",
+        2: "answer2",
+      },
+      submitTime: count,
+      roomId: roomId,
+      round: currentRound,
+    };
+    battleStompClient.current.send(
+      endpoint,
+      {},
+      JSON.stringify(submitAnswerDTO)
+    );
   };
 
-  const subscribeTotalResult = () => {
+  // 체력 반영 미완성
+  const subscribeResult = () => {
     const endpoint = `/room/${roomId}`;
-    battleStompClient.subscribe(endpoint, (message) => {
+    battleStompClient.current.subscribe(endpoint, (message) => {
+      console.log(message);
+      // if (message.body === "boom") {
+      //   alert("The host left the room");
+      //   navigate("/battle-list");
+      // }
       const body = JSON.parse(message.body);
-      setGameEnded(true);
-      setWinner(body.winner);
-      setLoser(body.loser);
 
-      setTimeout(() => {
-        navigate("/battle-list");
-      }, 5);
+      if (body.result && typeof body.result === "object") {
+        setGameEnded(true);
+        setWinner(body.result.winner);
+        setLoser(body.result.loser);
+
+        setTimeout(() => {
+          navigate("/battle-list");
+        }, 5);
+      } else {
+        console.log(body);
+        // 체력 업데이트 반영
+      }
     });
   };
 
   const enterChat = () => {
-    if (chatStompClient && chatStompClient.connected) {
-      const endpoint = `/send/chat/${roomId}/enter`;
-      const enterDTO = {
-        sender: name,
-        content: `${name}님이 입장하셨습니다.`,
-        type: "JOIN",
-        roomId: roomId,
-      };
-      chatStompClient.send(endpoint, {}, JSON.stringify(enterDTO));
-    } else {
-      console.log("Not connected yet");
-    }
+    const endpoint = `/send/chat/${roomId}/enter`;
+    const enterDTO = {
+      sender: name,
+      content: `${name}님이 입장하셨습니다.`,
+      type: "JOIN",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(enterDTO));
   };
 
-  // const subscribeEnterMessage = () => {
-  //   const endpoint = `${baseURL}/${wsChat}/send/chat/${roomId}/enter`;
-  //   stompClient.subscribe(endpoint, (message) => {
-  //     const body = JSON.parse(message.body);
-  //     setChatMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       `${body.sender}님이 입장하셨습니다.`,
-  //     ]);
-  //   });
-  // };
-
-  const sendMessage = () => {
-    if (chatStompClient && chatStompClient.connected) {
-      const endpoint = `/send/chat/${roomId}`;
-      const chatMessage = {
-        sender: name,
-        content: message,
-        type: "CHAT",
-        roomId: roomId,
-      };
-      chatStompClient.send(endpoint, {}, JSON.stringify(chatMessage));
-    } else {
-      console.log("Not connected yet");
-    }
+  const sendMessage = async () => {
+    if (message.trim() === "") return;
+    console.log("send message");
+    const endpoint = `/send/chat/${roomId}`;
+    const chatMessage = {
+      sender: name,
+      content: message,
+      type: "CHAT",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+    setMessage("");
   };
 
   const subscribeMessage = () => {
     const endpoint = `/room/${roomId}`;
-    chatStompClient.subscribe(endpoint, (message) => {
+    chatStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setChatMessages((prevMessages) => [
         ...prevMessages,
@@ -288,40 +350,52 @@ const BattleGamePage = () => {
   };
 
   const sendQuitMessage = () => {
-    if (chatStompClient && chatStompClient.connected) {
-      const endpoint = `/send/chat/${roomId}/leave`;
-      const chatMessage = {
-        sender: name,
-        content: `${name}님이 퇴장하셨습니다.`,
-        type: "LEAVE",
-        roomId: roomId,
-      };
-      chatStompClient.send(endpoint, {}, JSON.stringify(chatMessage));
-    } else {
-      console.log("Not connected yet");
-    }
+    const endpoint = `/send/chat/${roomId}/leave`;
+    const chatMessage = {
+      sender: name,
+      content: `${name}님이 퇴장하셨습니다.`,
+      type: "LEAVE",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
   };
 
-  // const subscribeQuitMessage = () => {
-  //   const endpoint = `${baseURL}/${wsChat}/room/${roomId}`;
-  //   stompClient.subscribe(endpoint, (message) => {
-  //     const body = JSON.parse(message.body);
-  //     setChatMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       `${body.sender}님이 퇴장하셨습니다.`,
-  //     ]);
-  //   });
-  // };
+  const reconnectWebSocket = () => {
+    console.log("Reconnecting WebSocket...");
+    setTimeout(async () => {
+      try {
+        await connect();
+        await enterRoom();
+        await enterChat();
+      } catch (error) {
+        console.error("Reconnection failed: ", error);
+        reconnectWebSocket(); // 재연결 시도
+      }
+    }, 3000); // 3초 후 재연결 시도
+  };
 
   useEffect(() => {
-    connect();
-    enterRoom();
-    enterChat();
+    const initializeConnections = async () => {
+      try {
+        await connect();
+        await enterRoom();
+        await enterChat();
+      } catch (error) {
+        console.log("Connection error:", error);
+        reconnectWebSocket();
+      }
+    };
+
+    initializeConnections();
 
     return () => {
+      if (normalQuit === false) {
+        alert("호스트와의 연결이 끊겼습니다.");
+      }
+
       sendQuitMessage();
-      battleStompClient.disconnect();
-      chatStompClient.disconnect();
+      if (battleStompClient.current) battleStompClient.current.disconnect();
+      if (chatStompClient.current) chatStompClient.current.disconnect();
     };
   }, []);
 
@@ -341,19 +415,7 @@ const BattleGamePage = () => {
     }
   }, [count]);
 
-  useEffect(() => {
-    if (gameEnded && count2 === 0) {
-      navigate("/battle-list");
-    } else if (gameEnded === true) {
-      const timer = setInterval(() => {
-        setCount2((prevCount) => prevCount - 1);
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [count2, navigate]);
-
-  const [modalIsOpen, setModalIsOpen] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -402,15 +464,17 @@ const BattleGamePage = () => {
   };
 
   const renderQuestion = (problem) => {
-    switch (problem.type) {
-      case "빈 칸 채우기":
+    switch (problem.problemType) {
+      case "FILL_IN_THE_BLANK":
         return <DragNDropQuiz problem={problem} />;
-      case "주관식":
+      case "SHORT_ANSWER_QUESTION":
         return <ShortAnswer problem={problem} />;
       default:
         return <div>Unknown problem type</div>;
     }
   };
+
+  const customProblem = {};
 
   return (
     <>
@@ -430,7 +494,7 @@ const BattleGamePage = () => {
                 </div>
               </div>
               <div className="battle-game-result-content">
-                {winner === userId ? "승리했습니다!" : "패배했습니다."}
+                {winner === memberId ? "승리했습니다!" : "패배했습니다."}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 방 목록 화면으로 이동합니다.
@@ -472,21 +536,21 @@ const BattleGamePage = () => {
             </>
           )}
         </Modal>
-        <Header />
+        <Header type="Game" />
         <div className="battle-game-outer-outer-container">
           <div className="battle-game-outer-container">
             <div className="battle-game-title-container">
               <div className="health-bar">
                 <div
                   className="health-bar-inner"
-                  style={{ width: `${player1Health}%` }}
+                  style={{ width: `${myHealth}%` }}
                 ></div>
               </div>
               <h2 className="battle-game-title">Round {currentRound}</h2>
               <div className="health-bar">
                 <div
                   className="health-bar-inner"
-                  style={{ width: `${player2Health}%` }}
+                  style={{ width: `${enemyHealth}%` }}
                 ></div>
               </div>
             </div>
@@ -504,8 +568,8 @@ const BattleGamePage = () => {
                     {battleHistory.map((data, index) => (
                       <div className="battle-game-history-message" key={index}>
                         {data.isAttack === true
-                          ? `${data.userId}님이 플레이어 2님에게 ${data.power}만큼 데미지를 주었습니다.`
-                          : `${data.userId}님이 ${data.power}만큼 체력을 회복하였습니다.`}
+                          ? `${data.memberId}님이 플레이어 2님에게 ${data.power}만큼 데미지를 주었습니다.`
+                          : `${data.memberId}님이 ${data.power}만큼 체력을 회복하였습니다.`}
                       </div>
                     ))}
                     <div ref={battleHistoryEndRef} />
@@ -561,13 +625,20 @@ const BattleGamePage = () => {
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="메시지를 입력하세요"
                       onKeyUp={(e) => {
-                        if (e.key === "Enter") {
+                        if (e.key === "Enter" && message.trim() !== "") {
                           e.preventDefault();
                           sendMessage();
                         }
                       }}
                     />
-                    <button type="button" onClick={sendMessage}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (message.trim() !== "") {
+                          sendMessage();
+                        }
+                      }}
+                    >
                       전송
                     </button>
                   </div>
