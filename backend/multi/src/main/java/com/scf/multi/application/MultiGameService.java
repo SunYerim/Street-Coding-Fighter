@@ -97,7 +97,8 @@ public class MultiGameService {
         validateProblem(problem);
 
         boolean isCorrect = isAnswerCorrect(problem, solved);
-        int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(), solved.getSubmitTime());
+        int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(),
+            solved.getSubmitTime());
 
         updateScoreBoard(room, player, score);
         updateLeaderBoard(room, player, score);
@@ -123,7 +124,7 @@ public class MultiGameService {
     public Solved addSolved(MultiGameRoom room, String sessionId, Content content) {
 
         Player player = findPlayerBySessionId(room, sessionId);
-        Problem currentProblem  = getCurrentProblem(room);
+        Problem currentProblem = getCurrentProblem(room);
 
         Solved solved = Solved
             .builder()
@@ -139,18 +140,12 @@ public class MultiGameService {
     }
 
     public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
-        for (Player player : room.getPlayers()) {
-            List<Solved> solveds = player.getSolveds();
-            if (solveds != null) {
-                kafkaMessageProducer.sendSolved(solveds);
-            }
-        }
 
-        GameResult gameResult = GameResult.builder()
-            .gameRank(gameRank)
-            .build();
-        kafkaMessageProducer.sendResult(gameResult);
+        room.getPlayers().forEach(player ->
+            Optional.ofNullable(player.getSolveds()).ifPresent(kafkaMessageProducer::sendSolved)
+        );
 
+        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());
         room.finishGame();
     }
 
