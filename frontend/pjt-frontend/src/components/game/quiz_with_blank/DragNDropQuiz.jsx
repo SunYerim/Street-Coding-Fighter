@@ -107,6 +107,7 @@ const DragNDropQuiz = (problem) => {
 
   return (
     <>
+      {problem}
       <DndProvider backend={HTML5Backend}>
         <div>
           {modifiedContent && (

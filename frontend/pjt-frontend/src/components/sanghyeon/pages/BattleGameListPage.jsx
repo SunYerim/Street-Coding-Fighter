@@ -21,6 +21,8 @@ const BattleGameListPage = () => {
     setHostId,
     setRoomPassword,
     setNormalQuit,
+    setEnemyId,
+    setEnemyName,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -31,6 +33,8 @@ const BattleGameListPage = () => {
     setHostId: state.setHostId,
     setRoomPassword: state.setRoomPassword,
     setNormalQuit: state.setNormalQuit,
+    setEnemyId: state.setEnemyId,
+    setEnemyName: state.setEnemyName,
   }));
 
   const authClient = createAuthClient(
@@ -104,7 +108,8 @@ const BattleGameListPage = () => {
 
       setRoomId(roomId);
       setRoomPassword(inputPassword);
-      setHostId("");
+      setEnemyId(res.data.memberId);
+      setEnemyName(res.data.username);
       setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
