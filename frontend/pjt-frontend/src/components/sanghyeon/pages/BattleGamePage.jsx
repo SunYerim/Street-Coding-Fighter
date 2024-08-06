@@ -60,6 +60,7 @@ const BattleGamePage = () => {
     normalQuit,
     setNormalQuit,
     blankSolve,
+    setMyBlankProblem,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -79,6 +80,7 @@ const BattleGamePage = () => {
     normalQuit: state.normalQuit,
     setNormalQuit: state.setNormalQuit,
     blankSolve: state.blankSolve,
+    setMyBlankProblem: state.setMyBlankProblem,
   }));
 
   const authClient = createAuthClient(
@@ -224,6 +226,7 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       setMyProblem(JSON.parse(message.body));
+      setMyBlankProblem(JSON.parse(message.body));
       setSelectMyProblem(true);
     });
   };
@@ -438,12 +441,11 @@ const BattleGamePage = () => {
   };
 
   const renderQuestion = (problem) => {
-    console.log(problem.problemType);
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
-        return <DragNDropQuiz problem={problem} />;
+        return <DragNDropQuiz />;
       case "SHORT_ANSWER_QUESTION":
-        return <ShortAnswer problem={problem} />;
+        return <ShortAnswer />;
       default:
         return <div>Unknown problem type</div>;
     }

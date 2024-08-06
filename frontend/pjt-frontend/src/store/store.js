@@ -71,6 +71,9 @@ const store = create(
 
       blankSolve: {},
       setBlankSolve: (blankSolve) => set({ blankSolve }),
+
+      myBlankProblem: {},
+      setMyBlankProblem: (myBlankProblem) => set({ myBlankProblem }),
     }),
     {
       name: "userStorage",
