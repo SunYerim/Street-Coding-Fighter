@@ -37,6 +37,8 @@ const BattleGamePage = () => {
     setEnemyId,
     enemyName,
     setEnemyName,
+    normalQuit,
+    setNormalQuit,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -53,6 +55,8 @@ const BattleGamePage = () => {
     setEnemyId: state.setEnemyId,
     enemyName: state.enemyName,
     setEnemyName: state.setEnemyName,
+    normalQuit: state.normalQuit,
+    setNormalQuit: state.setNormalQuit,
   }));
 
   const authClient = createAuthClient(
@@ -86,7 +90,6 @@ const BattleGamePage = () => {
 
   const [isBattleConnected, setIsBattleConnected] = useState(false);
   const [isChatConnected, setIsChatConnected] = useState(false);
-  const [normalQuit, setNormalQuit] = useState(false);
 
   // ---------------------- WebSocket ----------------------
 
@@ -273,17 +276,63 @@ const BattleGamePage = () => {
     setMessage("");
   };
 
-  const subscribeMessage = () => {
+  // const subscribeMessage = () => {
+  //   const endpoint = `/room/${roomId}`;
+  //   chatStompClient.current.subscribe(endpoint, (message) => {
+  //     const body = JSON.parse(message.body);
+  //     setChatMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       body.type === "CHAT"
+  //         ? `${body.sender}: ${body.content}`
+  //         : `${body.content}`,
+  //     ]);
+  //   });
+  // };
+
+  const subscribeMessage = async (retryCount = 5, retryDelay = 1000) => {
+    if (!chatStompClient.current) {
+      console.error("Chat WebSocket client is not initialized.");
+      return;
+    }
+
     const endpoint = `/room/${roomId}`;
-    chatStompClient.current.subscribe(endpoint, (message) => {
-      const body = JSON.parse(message.body);
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        body.type === "CHAT"
-          ? `${body.sender}: ${body.content}`
-          : `${body.content}`,
-      ]);
-    });
+
+    const attemptSubscribe = (attempt) => {
+      try {
+        chatStompClient.current.subscribe(endpoint, (message) => {
+          try {
+            const body = JSON.parse(message.body);
+            setChatMessages((prevMessages) => [
+              ...prevMessages,
+              body.type === "CHAT"
+                ? `${body.sender}: ${body.content}`
+                : `${body.content}`,
+            ]);
+          } catch (error) {
+            console.error("Error parsing message:", error);
+          }
+        });
+
+        console.log("Successfully subscribed to chat messages.");
+      } catch (error) {
+        console.error("Subscription attempt failed:", error);
+
+        if (attempt < retryCount) {
+          setTimeout(() => {
+            console.log(
+              `Retrying subscription (${attempt + 1}/${retryCount})...`
+            );
+            attemptSubscribe(attempt + 1);
+          }, retryDelay);
+        } else {
+          console.error(
+            "Max retries reached. Could not subscribe to chat messages."
+          );
+        }
+      }
+    };
+
+    attemptSubscribe(0); // Start the first attempt
   };
 
   const sendQuitMessage = () => {
@@ -295,7 +344,6 @@ const BattleGamePage = () => {
       roomId: roomId,
     };
     chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
-    setNormalQuit(true);
   };
 
   const reconnectWebSocket = () => {
