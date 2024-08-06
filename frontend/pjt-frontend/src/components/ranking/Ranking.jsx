@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export default function Ranking() {
   const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
-  
+  const { baseURL } = store();
   useEffect(() => {
     const fetchRankingData = async () => {
       // const tempUrl = 'http://192.168.30.171:8080';
@@ -20,9 +20,9 @@ export default function Ranking() {
           // axios.get(`${tempUrl}/rank/total`),
           // axios.get(`${tempUrl}/rank/weekly`),
           // axios.get(`${tempUrl}/rank/daily`),
-          axios.get(`${store.BaseUrl}/rank/total`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
-          axios.get(`${store.BaseUrl}/rank/weekly`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
-          axios.get(`${store.BaseUrl}/rank/daily`).then(res => console.log(res.data)).catch((err) => console.log(err)),
+          axios.get(`${baseURL}/rank/total`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
+          axios.get(`${baseURL}/rank/weekly`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
+          axios.get(`${baseURL}/rank/daily`).then(res => console.log(res.data)).catch((err) => console.log(err)),
         ]);
 
         rankingObj['total'] = totalRes.data;

@@ -11,13 +11,14 @@ import SingleInfoStore from '../../stores/SingleInfoStore.jsx';
 import Header from '../sanghyeon/components/Header.jsx';
 export default function SingleMain() {
   const { setCompleted } = SingleInfoStore();
+  const {baseURL, accessToken} = store()
   const navigate = useNavigate();
   const getSingleInfo = () => {
     axios({
       method: 'get',
-      url: `${store.baseUrl}/single`,
+      url: `${baseURL}/single`,
       headers: {
-        "Authorization" : `Bearer ${store.accessToken}`	
+        "Authorization" : `Bearer ${accessToken}`	
       }
     }).then((res) => {
       console.log(res.data);
