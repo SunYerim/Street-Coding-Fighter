@@ -81,4 +81,17 @@ public class SingleServiceImpl implements SingleService {
             contentCheckUserRepository.save(newRecord);
         }
     }
+
+    @Override
+    @Transactional
+    public void initializeCompletionStatus(Long memberId) {
+        List<Content> contents = contentRepository.findAll();
+        for (Content content : contents) {
+            ContentCheckUser contentCheckUser = new ContentCheckUser();
+            contentCheckUser.setMemberId(memberId);
+            contentCheckUser.setContent(content);
+            contentCheckUser.setComplete(0);
+            contentCheckUserRepository.save(contentCheckUser);
+        }
+    }
 }

@@ -65,4 +65,12 @@ public class SingleController {
         }
     }
 
+    // 수강여부 초기화
+    @PostMapping("/public/{memberId}")
+    public ResponseEntity<?> requestInitializeContent(@PathVariable("memberId") Long memberId) {
+        singleService.initializeCompletionStatus(memberId);
+        return ResponseEntity.ok().build();
+    }
+
+
 }
