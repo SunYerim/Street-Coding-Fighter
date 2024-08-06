@@ -23,6 +23,7 @@ import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.infrastructure.KafkaMessageProducer;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,13 +48,8 @@ public class MultiGameService {
 
     public MultiGameRoom findOneById(String roomId) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        if (room == null) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
-        }
-
-        return room;
+        return Optional.ofNullable(multiGameRepository.findOneById(roomId))
+            .orElseThrow(() -> new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND));
     }
 
     public String createRoom(Long userId, String username, CreateRoomDTO createRoomDTO) {
