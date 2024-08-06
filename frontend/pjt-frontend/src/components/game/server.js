@@ -1,6 +1,6 @@
 
 import multiStore from '../../stores/multiStore.jsx';
-const baseUrl = "https://www.ssafy11s.com";
+const baseUrl = "wss://www.ssafy11s.com";
 
 const newSocket = () => {
   const roomId = multiStore.getState().roomId;
