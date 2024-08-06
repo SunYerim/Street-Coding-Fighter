@@ -88,7 +88,7 @@ export default function MultiGame() {
         }
       }
     );
-    console.log(response.data);
+    // console.log(response.data);
     setProblems(response.data);
   };  
 
@@ -116,7 +116,7 @@ export default function MultiGame() {
     initializeConnections();
 
     const roomId = multiStore.getState().roomId;
-    console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
+    // console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
 
     const socketInstance = newSocket(roomId, memberId, name);
     setSocket(socketInstance);
@@ -293,12 +293,12 @@ export default function MultiGame() {
       chatStompClient.current.connect(
         {},
         (frame) => {
-          console.log("Connected: " + frame);
-          console.log("chatStompClient: ", chatStompClient.current);
+          // console.log("Connected: " + frame);
+          // console.log("chatStompClient: ", chatStompClient.current);
           // setIsChatConnected(true);
           subscribeMessage();
           // enterChat(roomId, name);
-          console.log("채팅 서버 연결");
+          // console.log("채팅 서버 연결");
           resolve();
         },
         (error) => {
@@ -337,7 +337,7 @@ export default function MultiGame() {
   const sendMessage = async (event) => {
     event.preventDefault();
     if (message.trim() === "") return;
-    console.log("send message");
+    // console.log("send message");
     const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
       sender: name,
