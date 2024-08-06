@@ -58,11 +58,12 @@ public class MultiGameService {
 
         MultiGameRoom room = createRoomDTO.toEntity(roomId, userId, username);
 
+        // 게임을 생성하면 방장을 방에 참가 시킴
         Player hostPlayer = createHostPlayer(userId, username);
-
         room.add(createRoomDTO.getPassword(), hostPlayer);
 
         multiGameRepository.addRoom(room);
+
         return roomId;
     }
 
