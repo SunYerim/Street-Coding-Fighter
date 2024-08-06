@@ -29,6 +29,7 @@ logging:
             com.scf.user.infrastructure.security.LoginFilter: debug
 
 server:
+  port: 8086
   error:
     include-message: always
     include-binding-errors: always
