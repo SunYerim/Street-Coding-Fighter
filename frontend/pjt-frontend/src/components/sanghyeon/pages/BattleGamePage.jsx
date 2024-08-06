@@ -118,12 +118,16 @@ const BattleGamePage = () => {
             },
             (error) => {
               console.log(error);
+              setIsChatConnected(false);
+              reconnectWebSocket();
               reject(error);
             }
           );
         },
         (error) => {
           console.log(error);
+          setIsBattleConnected(false);
+          reconnectWebSocket();
           reject(error);
         }
       );
@@ -195,7 +199,7 @@ const BattleGamePage = () => {
 
   // 답변 제출 미완성
   const submitAnswer = useCallback(() => {
-    const endpoint = `/game/${roomId}/answer`;
+    const endpoint = `/send/game/${roomId}/answer`;
     const submitAnswerDTO = {
       problemId: myProblem.problemId,
       userId: userId,
@@ -325,6 +329,8 @@ const BattleGamePage = () => {
     setTimeout(async () => {
       try {
         await connect();
+        await enterRoom();
+        await enterChat();
       } catch (error) {
         console.error("Reconnection failed: ", error);
         reconnectWebSocket(); // 재연결 시도
@@ -500,7 +506,7 @@ const BattleGamePage = () => {
             </>
           )}
         </Modal>
-        <Header />
+        <Header type="Game" />
         <div className="battle-game-outer-outer-container">
           <div className="battle-game-outer-container">
             <div className="battle-game-title-container">
