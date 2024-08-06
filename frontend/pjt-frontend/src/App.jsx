@@ -26,9 +26,9 @@ import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.
 import store from "./store/store.js";
 import Loading from "./components/loading/Loading.jsx";
 
-import { useEffect, useState } from 'react';
-import SoundStore from './stores/SoundStore.jsx';
-import SolvedDetailPage from './components/sanghyeon/pages/SolvedDetailPage.jsx';
+import { useEffect, useState } from "react";
+import SoundStore from "./stores/SoundStore.jsx";
+import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
 function App() {
   const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
@@ -40,9 +40,9 @@ function App() {
     // 배경음악 초기화 및 재생
     setTimeout(() => {
       setIsLoading(false);
-      console.log('loading end');
+      console.log("loading end");
       playBackgroundMusic();
-    }, 2000);    
+    }, 2000);
   }, []);
 
   return (
@@ -50,19 +50,40 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={isLoading ? <Loading /> : <TitlePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={accessToken ? <MainPage /> : <LoginPage />}
+          />
           <Route path="/find-password" element={<FindPasswordPage />} />
           <Route path="/reset-password" element={<ChangePasswordPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signup-character" element={<CharacterSelection />} />
-          <Route path="/ranking" element={accessToken ? <Ranking /> : <LoginPage />} />
+          <Route
+            path="/ranking"
+            element={accessToken ? <Ranking /> : <LoginPage />}
+          />
           <Route path="/main" element={<MainPage />} />
           {/* <Route path="/main" element={accessToken ? <MainPage /> : <LoginPage />} /> */}
-          <Route path="/profile" element={accessToken ? <ProfilePage /> : <LoginPage />} />
-          <Route path="/record" element={accessToken ? <RecordPage /> : <LoginPage />} />
-          <Route path="/report" element={accessToken ? <ReportPage /> : <LoginPage />} />
-          <Route path="/solved" element={accessToken ? <SolvedPage /> : <LoginPage />} />
-          <Route path="/solved/:solvedId" element={accessToken ? <SolvedDetailPage /> : <LoginPage />} />
+          <Route
+            path="/profile"
+            element={accessToken ? <ProfilePage /> : <LoginPage />}
+          />
+          <Route
+            path="/record"
+            element={accessToken ? <RecordPage /> : <LoginPage />}
+          />
+          <Route
+            path="/report"
+            element={accessToken ? <ReportPage /> : <LoginPage />}
+          />
+          <Route
+            path="/solved"
+            element={accessToken ? <SolvedPage /> : <LoginPage />}
+          />
+          <Route
+            path="/solved/:solvedId"
+            element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
+          />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
           <Route path="/multi" element={<MultiMain />} />
           <Route
@@ -93,7 +114,10 @@ function App() {
           <Route path="/single-main" element={<SingleMain />} />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
           <Route path="/single-play/:content_id" element={<SinglePlay />} />
-          <Route path="/multi-game-select" element={accessToken ? <SelectProblem /> : <LoginPage />} />
+          <Route
+            path="/multi-game-select"
+            element={accessToken ? <SelectProblem /> : <LoginPage />}
+          />
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
