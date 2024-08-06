@@ -82,7 +82,7 @@ const BattleGameListPage = () => {
       return;
     }
 
-    let inputPassword = "null";
+    let inputPassword = "ssafy";
     // 비밀번호가 없는 경우 초기화
 
     if (isLock === true) {
