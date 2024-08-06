@@ -534,7 +534,7 @@ const BattleGamePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
-                    {renderQuestion(JSON.parse(myProblem))}
+                    {renderQuestion(myProblem)}
                     <button
                       onClick={handleSubmit}
                       className="battle-game-submit-answer"
