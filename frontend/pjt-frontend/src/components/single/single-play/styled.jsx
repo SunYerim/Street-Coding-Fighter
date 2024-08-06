@@ -9,9 +9,8 @@ const PlayView = styled.div`
   background-image: url('/background-single.png');
   background-size: cover;
   color: black;
-  z-index : 0;
-  -webkit-user-select:none;
-
+  z-index: 0;
+  -webkit-user-select: none;
 `;
 
 const ImageBox = styled.div`
@@ -20,7 +19,6 @@ const ImageBox = styled.div`
   left: 0px;
   width: 100vw;
   height: 100%;
-  
 `;
 const DialogueSection = styled.div`
   width: 100%;
@@ -28,11 +26,8 @@ const DialogueSection = styled.div`
   background-color: #212121;
   position: fixed;
   bottom: 0px;
- background: linear-gradient(
-    rgba(240, 240, 240, 0.0),
-    rgba(25, 42, 81, 0.7),
-    rgba(25, 42, 81, 0.9)
-  );`;
+  background: linear-gradient(rgba(240, 240, 240, 0), rgba(25, 42, 81, 0.7), rgba(25, 42, 81, 0.9));
+`;
 const DialogueBox = styled.div`
   position: fixed;
   bottom: 10px;
@@ -114,7 +109,19 @@ const ImageContentBox = styled.div`
   justify-content: center;
   margin: 10px;
 `;
-
+const MenuContainer = styled.div`
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+`;
+const MenuButton = styled.div`
+  background-color: yellow;
+  border-radius: 40%;
+  border: 1px solid black;
+  cursor: pointer;
+`;
 const S = {
   PlayView,
   DialogueSection,
@@ -129,5 +136,7 @@ const S = {
   CharacterName,
   ImageBox,
   ImageContentBox,
+  MenuContainer,
+  MenuButton,
 };
 export default S;

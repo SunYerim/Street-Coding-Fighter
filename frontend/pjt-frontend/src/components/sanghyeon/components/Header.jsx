@@ -1,10 +1,22 @@
-import "../../../css/Header.css";
-import Setting from "./Setting";
-import { useNavigate } from "react-router-dom";
+import '../../../css/Header.css';
+import Setting from './Setting';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function Header() {
   const navigate = useNavigate();
-  const userIcon = "/memberIcon.png";
+  const userIcon = '/memberIcon.png';
+  const settingIcon = '/settingIcon.png';
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   return (
     <>
       <div className="header-container">
@@ -14,23 +26,24 @@ function Header() {
         <h2
           className="header-title"
           onClick={() => {
-            navigate("/main");
+            navigate('/main');
           }}
         >
           Street Coding Figther
         </h2>
-        <div  className="header-icon">
+        <div className="header-icon">
           <img
             onClick={() => {
-              navigate("/profile");
+              navigate('/profile');
             }}
             className="user-icon"
             src={userIcon}
             alt="memberIcon"
           />
-          <Setting />
+          <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
         </div>
       </div>
+      <Setting isOpen={modalIsOpen} onClose={closeModal} />
     </>
   );
 }

@@ -13,6 +13,7 @@ import store from '../../../store/store';
 import Loading from '../../loading/Loading.jsx';
 import ReactModal from 'react-modal';
 import SingleInfoStore from '../../../stores/SingleInfoStore.jsx';
+import Setting from '../../sanghyeon/components/Setting.jsx';
 const testDialogueList = [
   {
     page_no: 0,
@@ -49,8 +50,8 @@ export default function SinglePlay() {
   const { content_id } = useParams();
   const navigate = useNavigate();
   const [dialogueList, setDialogueList] = useState(testDialogueList);
-  const {completed} = SingleInfoStore();
-  const {switchBackgroundMusic, playBackgroundMusic, playEffectSound} = SoundStore();
+  const { completed } = SingleInfoStore();
+  const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   const getContent = () => {
     axios
       .get(`${store.baseUrl}/edu/${content_id}`)
@@ -80,7 +81,7 @@ export default function SinglePlay() {
     return () => {
       switchBackgroundMusic('main', (newBackgroundMusic) => {
         newBackgroundMusic.play();
-      })
+      });
       clearTimeout(timer);
     };
   }, [content_id]);
@@ -131,16 +132,15 @@ export default function SinglePlay() {
     setIsModalOpen(false);
   };
 
-
   const goToList = () => {
-    if(!completed[content_id]?.complete){
+    if (!completed[content_id]?.complete) {
       axios({
         method: 'post',
         url: `${store.baseUrl}/edu`,
         headers: {
-          "Authorization" : `Bearer ${store.accessToken}`	
-        }
-      })
+          Authorization: `Bearer ${store.accessToken}`,
+        },
+      });
     }
     navigate('/single-main');
   };
@@ -284,6 +284,12 @@ export default function SinglePlay() {
         <button onClick={goToList}>학습 완료</button>
         <button onClick={handleCloseModal}>닫기</button>
       </ReactModal>
+      <S.MenuContainer>
+        <S.MenuButton>
+          {/* <Setting></Setting> */}
+        </S.MenuButton>
+        <S.MenuButton></S.MenuButton>
+      </S.MenuContainer>
     </S.PlayView>
   );
 }

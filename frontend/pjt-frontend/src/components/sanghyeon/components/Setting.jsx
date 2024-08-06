@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import '../../../css/Setting.css'; // 이 파일은 필요 없을 수 있습니다
@@ -10,7 +9,6 @@ import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa'; //react-icons import
 import VolumeSlider from './VolumeSlider.jsx';
 
 Modal.setAppElement('#root');
-const settingIcon = '/settingIcon.png';
 
 const styles = {
   modal: {
@@ -59,7 +57,7 @@ const styles = {
   },
 };
 
-const Setting = () => {
+const Setting = ({ isOpen, onClose }) => {
   const { accessToken, setAccessToken, baseURL, memberId, setMemberId } = store((state) => ({
     accessToken: state.accessToken,
     setAccessToken: state.setAccessToken,
@@ -70,16 +68,7 @@ const Setting = () => {
   const { setBgmVolume, setEffectVolume, bgmVolume, effectVolume } = SoundStore();
 
   const navigate = useNavigate();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const authClient = createAuthClient(baseURL, () => accessToken, setAccessToken);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
 
   const logout = async () => {
     try {
@@ -101,27 +90,26 @@ const Setting = () => {
 
   return (
     <div>
-      <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        isOpen={isOpen}
+        onRequestClose={onClose}
         contentLabel="Example Modal"
         style={{ content: styles.modal, overlay: styles.overlay }}
       >
         <div className="setting-container">
           <div style={styles.settingTitle}>
             <h2 style={styles.settingTitleText}>Setting</h2>
-            <img onClick={closeModal} style={styles.settingClose} src="/close.png" alt="close-setting" />
+            <img onClick={onClose} style={styles.settingClose} src="/close.png" alt="close-setting" />
           </div>
           <hr />
           <div className="settings">
             <div style={styles.setting}>
               BGM Volume
-              <VolumeSlider volume={bgmVolume*100} handler={setBgmVolume} />
+              <VolumeSlider volume={bgmVolume * 100} handler={setBgmVolume} />
             </div>
             <div style={styles.setting}>
               Effect Volume
-              <VolumeSlider volume={effectVolume*100} handler={setEffectVolume} />
+              <VolumeSlider volume={effectVolume * 100} handler={setEffectVolume} />
             </div>
             <p style={styles.setting} onClick={() => navigate('/')}>
               Back to Title
