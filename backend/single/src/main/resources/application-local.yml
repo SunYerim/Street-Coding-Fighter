@@ -10,12 +10,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true  # Shows SQL statements in the console
     properties:
       hibernate:
-        jdbc:
-          time_zone: UTC
-    show-sql: true
-
+        dialect: org.hibernate.dialect.MariaDBDialect
 
 logging:
   level:
