@@ -111,17 +111,84 @@ const ImageContentBox = styled.div`
 `;
 const MenuContainer = styled.div`
   position: fixed;
+  display: flex;
   top: 10px;
   right: 10px;
-  width: 40px;
-  height: 40px;
 `;
 const MenuButton = styled.div`
-  background-color: yellow;
+  width: 40px;
+  height: 40px;
+
+  background-color: #e4f0f6;
+  color: #466398;
   border-radius: 40%;
-  border: 1px solid black;
+  border: 2px solid #466398;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  margin: 0px 3px;
+  &:hover {
+    background-color: #466398;
+    color: #e4f0f6;
+  }
 `;
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+const ModalContent = styled.div`
+  text-align: center;
+`;
+const ModalButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+`;
+const CompleteButton = styled.button`
+  margin-right: 1rem;
+  padding: 10px 20px;
+  background-color: #76DCFE;
+  color: #233551;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+   &:hover {
+    background-color: #466398;
+    color: #e4f0f6;
+  }
+`;
+const CancelButton = styled.button`
+  padding: 10px 20px;
+  background-color: #D1E7EF;
+  color: #233551;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #466398;
+    color: #e4f0f6;
+  }
+`;
+const ChatButton = styled.button`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  background: #fff;
+  &:hover {
+    background-color: #466398;
+    color: #e4f0f6;
+  }
+`;
+
 const S = {
   PlayView,
   DialogueSection,
@@ -138,5 +205,11 @@ const S = {
   ImageContentBox,
   MenuContainer,
   MenuButton,
+  ModalButtons,
+  CompleteButton,
+  CancelButton,
+  ModalHeader,
+  ModalContent,
+  ChatButton,
 };
 export default S;
