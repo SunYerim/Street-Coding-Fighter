@@ -79,5 +79,5 @@ const Header = ({ type = "default" }) => {
     </>
   );
 };
-
+}
 export default Header;
