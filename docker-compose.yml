@@ -47,10 +47,28 @@ services:
       MYSQL_DATABASE: problem_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
     networks:
       - network
     volumes:
       - db_data_problem:/var/lib/mysql
+
+  mariadb-single:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: single_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ed9658pi
+    ports:
+      - "3308:3306"
+    networks:
+      - network
+    depends_on:
+      - kafka  
+    volumes:
+      - db_data_single:/var/lib/mysql
 
   redis-user:
     image: redis:latest
@@ -205,6 +223,26 @@ services:
     networks:
       - network
 
+  single-server:
+    image: zlxldgus123/single
+    depends_on:
+      - mariadb-single
+    environment:
+      SPRING_APPLICATION_NAME: scf
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-single:3306/single_db?characterEncoding=utf8mb4
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ed9658pi
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+      LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+    ports:
+      - "8086:8086"
+    networks:
+      - network
+
 networks:
   network:
     external: true
@@ -213,3 +251,4 @@ networks:
 volumes:
   db_data_user:
   db_data_problem:
+  db_data_single:
