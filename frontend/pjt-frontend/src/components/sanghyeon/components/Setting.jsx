@@ -59,7 +59,7 @@ const styles = {
   },
 };
 
-const Setting = () => {
+const Setting = ({ isOpen, onClose }) => {
   const { accessToken, setAccessToken, baseURL, memberId, setMemberId } = store(
     (state) => ({
       accessToken: state.accessToken,
@@ -100,12 +100,6 @@ const Setting = () => {
 
   return (
     <div>
-      <img
-        onClick={openModal}
-        className="setting-icon"
-        src={settingIcon}
-        alt="settingIcon"
-      />
       <Modal
         isOpen={isOpen}
         onRequestClose={onClose}
@@ -116,7 +110,7 @@ const Setting = () => {
           <div style={styles.settingTitle}>
             <h2 style={styles.settingTitleText}>Setting</h2>
             <img
-              onClick={closeModal}
+              onClick={onClose}
               style={styles.settingClose}
               src="/close.png"
               alt="close-setting"
