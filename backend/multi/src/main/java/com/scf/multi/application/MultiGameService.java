@@ -88,22 +88,22 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public int markSolution(String roomId, Solved solved) {
+    public void validateRoom(String roomId) {
 
-        MultiGameRoom room = findRoom(roomId);
-        Player player = findPlayerByUserId(room, solved.getUserId());
-        Problem problem = getCurrentProblem(room);
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        validateProblem(problem);
+        if (room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
+        }
+    }
 
-        boolean isCorrect = isAnswerCorrect(problem, solved);
-        int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(),
-            solved.getSubmitTime());
+    public Player connectPlayer(String roomId, Long userId, String sessionId) {
 
-        updateScoreBoard(room, player, score);
-        updateLeaderBoard(room, player, score);
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        Player connectedPlayer = findPlayerByUserId(room, userId);
+        connectedPlayer.setSessionId(sessionId);
 
-        return score;
+        return connectedPlayer;
     }
 
     public List<ProblemResponse.ListDTO> startGame(String roomId, Long userId) {
@@ -139,6 +139,24 @@ public class MultiGameService {
         return solved;
     }
 
+    public int markSolution(String roomId, Solved solved) {
+
+        MultiGameRoom room = findRoom(roomId);
+        Player player = findPlayerByUserId(room, solved.getUserId());
+        Problem problem = getCurrentProblem(room);
+
+        validateProblem(problem);
+
+        boolean isCorrect = isAnswerCorrect(problem, solved);
+        int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(),
+            solved.getSubmitTime());
+
+        updateScoreBoard(room, player, score);
+        updateLeaderBoard(room, player, score);
+
+        return score;
+    }
+
     public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
 
         room.getPlayers().forEach(player ->
@@ -147,24 +165,6 @@ public class MultiGameService {
 
         kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());
         room.finishGame();
-    }
-
-    public Player connectPlayer(String roomId, Long userId, String sessionId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-        Player connectedPlayer = findPlayerByUserId(room, userId);
-        connectedPlayer.setSessionId(sessionId);
-
-        return connectedPlayer;
-    }
-
-    public void validateRoom(String roomId) {
-
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        if (room.getIsStart()) {
-            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
-        }
     }
 
     public Player handlePlayerExit(String roomId, String sessionId) {
@@ -292,48 +292,32 @@ public class MultiGameService {
     private boolean compareWith(ProblemType problemType, Solved solved,
         List<ProblemAnswer> answers) {
 
-        switch (problemType) {
-            case MULTIPLE_CHOICE -> { // 객관식
+        return switch (problemType) {
+            case MULTIPLE_CHOICE -> compareMultipleChoice(solved, answers);
+            case SHORT_ANSWER_QUESTION -> compareShortAnswer(solved, answers);
+            case FILL_IN_THE_BLANK -> compareFillInTheBlank(solved, answers);
+        };
+    }
 
-                Map<Integer, Integer> solve = solved.getSolve();
+    private boolean compareMultipleChoice(Solved solved, List<ProblemAnswer> answers) {
+        Map<Integer, Integer> solve = solved.getSolve();
+        ProblemChoice correctChoice = answers.getFirst().getCorrectChoice();
 
-                ProblemChoice correctChoice = answers.getFirst().getCorrectChoice();
+        return correctChoice.getChoiceId().equals(solve.get(1));
+    }
 
-                if (!correctChoice.getChoiceId().equals(solve.get(1))) {
-                    return false;
-                }
-            }
-            case SHORT_ANSWER_QUESTION -> { // 주관식
+    private boolean compareShortAnswer(Solved solved, List<ProblemAnswer> answers) {
+        String correctAnswerText = answers.getFirst().getCorrectAnswerText();
+        return correctAnswerText.equals(solved.getSolveText());
+    }
 
-                String correctAnswerText = answers.getFirst().getCorrectAnswerText();
+    private boolean compareFillInTheBlank(Solved solved, List<ProblemAnswer> answers) {
+        Map<Integer, Integer> solve = solved.getSolve();
 
-                if (!correctAnswerText.equals(solved.getSolveText())) {
-                    return false;
-                }
-            }
-            case FILL_IN_THE_BLANK -> { // 빈칸 채우기
-
-                Map<Integer, Integer> solve = solved.getSolve();
-
-                for (ProblemAnswer answer : answers) {
-
-                    int blankNum = answer.getBlankPosition();
-
-                    if (!solve.containsKey(blankNum)) {
-                        return false;
-                    }
-
-                    int selectedChoiceId = solve.get(blankNum);
-                    int correctChoiceId = answer.getCorrectChoice().getChoiceId();
-
-                    if (selectedChoiceId != correctChoiceId) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return answers.stream().allMatch(answer ->
+            solve.containsKey(answer.getBlankPosition()) &&
+                solve.get(answer.getBlankPosition()).equals(answer.getCorrectChoice().getChoiceId())
+        );
     }
 
     private int calculateScore(int streakCount, int submitTime) {
