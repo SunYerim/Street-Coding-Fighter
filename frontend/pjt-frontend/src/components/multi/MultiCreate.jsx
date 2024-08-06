@@ -50,21 +50,24 @@ export default function MultiCreate() {
       const password = data.target.password.value;
       const gameRound = data.target.gameRound.value;
 
-      const response = await axios.post(
-        `${baseURL}/multi/room`,
-        { title, maxPlayer, password, gameRound },
-        {
+      // const response = await axios.post(
+      //   `${baseURL}/multi/room`, { title, maxPlayer, password, gameRound }, { Authorization: `Bearer ${accessToken}` });
+      
+        const response = await authClient({
+          method: "POST",
+          url: `${baseURL}/multi/room`,
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      );
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: { title, maxPlayer, password, gameRound },
+        });
+
       const roomId = response.data;
       setRoomId(roomId);
       navigate(`/multi-game/${roomId}`, { state: { hostId: userId } } );  
 
 
-    } catch (error) {
+    } catch (error) { 
       console.error("Error creating room:", error);
     }
   }
