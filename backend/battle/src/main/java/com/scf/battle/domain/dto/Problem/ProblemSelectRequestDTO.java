@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProblemSelectDTO {
+public class ProblemSelectRequestDTO {
     private long problemId;
     private long memberId;
 
