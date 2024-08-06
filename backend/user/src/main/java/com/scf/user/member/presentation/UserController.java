@@ -3,6 +3,7 @@ package com.scf.user.member.presentation;
 import com.scf.user.member.application.service.PasswordResetService;
 import com.scf.user.member.application.service.RedisService;
 import com.scf.user.member.application.service.UserService;
+import com.scf.user.member.domain.dto.LogoutDto;
 import com.scf.user.member.domain.dto.PasswordResetRequestDto;
 import com.scf.user.member.domain.dto.TokenDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
@@ -73,9 +74,9 @@ public class UserController {
     }
 
     // 로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("memberId") String memberId) {
-        redisService.deleteValue(memberId); // Redis에서 삭제
+    @PostMapping("/public/logout")
+    public ResponseEntity<?> logout(@RequestBody LogoutDto logoutDto) {
+        redisService.deleteValue(String.valueOf(logoutDto.getMemberId())); // Redis에서 삭제
         return ResponseEntity.ok("로그아웃이 성공적으로 되었습니다.");
     }
 
