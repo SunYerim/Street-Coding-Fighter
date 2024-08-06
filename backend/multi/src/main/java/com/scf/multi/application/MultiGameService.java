@@ -38,18 +38,11 @@ public class MultiGameService {
     private final KafkaMessageProducer kafkaMessageProducer;
 
     public List<RoomResponse.ListDTO> findAllRooms() {
-        List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
 
-        return rooms.stream().map(room ->
-            RoomResponse.ListDTO.builder()
-                .roomId(room.getRoomId())
-                .title(room.getTitle())
-                .hostname(room.getHostname())
-                .maxPlayer(room.getMaxPlayer())
-                .curPlayer(room.getPlayers().size())
-                .isLock(room.getPassword() != null)
-                .build()
-        ).toList();
+        return multiGameRepository.findAllRooms()
+            .stream()
+            .map(this::mapToRoomListDTO)
+            .toList();
     }
 
     public MultiGameRoom findOneById(String roomId) {
@@ -244,6 +237,17 @@ public class MultiGameService {
         room.updateHost(newHost);
 
         return newHost;
+    }
+
+    private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
+        return RoomResponse.ListDTO.builder()
+            .roomId(room.getRoomId())
+            .title(room.getTitle())
+            .hostname(room.getHostname())
+            .maxPlayer(room.getMaxPlayer())
+            .curPlayer(room.getPlayers().size())
+            .isLock(room.getPassword() != null)
+            .build();
     }
 
     private MultiGameRoom findRoom(String roomId) {
