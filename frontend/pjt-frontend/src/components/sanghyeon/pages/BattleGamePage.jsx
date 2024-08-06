@@ -419,6 +419,7 @@ const BattleGamePage = () => {
   };
 
   const renderQuestion = (problem) => {
+    console.log(problem);
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
         return <DragNDropQuiz problem={problem} />;
@@ -534,7 +535,7 @@ const BattleGamePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
-                    {renderQuestion(myProblem)}
+                    {myProblem && renderQuestion(myProblem)}
                     <button
                       onClick={handleSubmit}
                       className="battle-game-submit-answer"
