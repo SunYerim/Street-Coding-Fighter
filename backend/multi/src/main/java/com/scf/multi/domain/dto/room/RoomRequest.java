@@ -1,5 +1,6 @@
 package com.scf.multi.domain.dto.room;
 
+import com.scf.multi.domain.model.MultiGameRoom;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +31,19 @@ public class RoomRequest {
         @Min(value = 5, message = "최소 5라운드 이상을 선택해야 합니다.")
         @Max(value = 20, message = "최대 20라운드까지 가능합니다.")
         private Integer gameRound;
+
+        public MultiGameRoom toEntity(String roomId, Long userId, String username) {
+
+            return MultiGameRoom.builder()
+                .roomId(roomId)
+                .hostId(userId)
+                .hostname(username)
+                .title(title)
+                .maxPlayer(maxPlayer)
+                .password(password)
+                .playRound(gameRound)
+                .build();
+        }
     }
 
 }
