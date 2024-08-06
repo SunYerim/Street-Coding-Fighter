@@ -6,33 +6,51 @@ import axios from "axios";
 import lock from '/lock.svg'
 import unlock from '/unlock.svg'
 import multiStore from '../../stores/multiStore.jsx';
+import store from '../../store/store.js';
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 
 function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const baseUrl = "localhost:8080";
+  const {
+    accessToken,
+    setAccessToken,
+    memberId,
+    userId,
+    name,
+    baseURL,
+  } = store((state) => ({
+    memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    userId: state.userId,
+    name: state.name,
+    baseURL: state.baseURL,
+  }));
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
   const [errorMessage, setErrorMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const setRoomId = multiStore((state) => state.setRoomId);
-  const setUserId = multiStore((state) => state.setUserId);
-  const setUsername = multiStore((state) => state.setUsername);
+  // const setUserId = multiStore((state) => state.setUserId);
+  // const setUsername = multiStore((state) => state.setUsername);
 
-  const [userId, setLocalUserId] = useState(null);
-  const [username, setLocalUsername] = useState(null);
+  // useEffect(() => {
+  //   const userIdFromStore = multiStore.getState().userId;
+  //   const usernameFromStore = multiStore.getState().username;
 
-  useEffect(() => {
-    const userIdFromStore = multiStore.getState().userId;
-    const usernameFromStore = multiStore.getState().username;
+  //   setLocalUserId(userIdFromStore);
+  //   setLocalUsername(usernameFromStore);
 
-    setLocalUserId(userIdFromStore);
-    setLocalUsername(usernameFromStore);
-
-    setUserId(userIdFromStore);
-    setUsername(usernameFromStore);
-  }, [setUserId, setUsername]);
+  //   setUserId(userIdFromStore);
+  //   setUsername(usernameFromStore);
+  // }, [setUserId, setUsername]);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -51,26 +69,20 @@ function MultiRoom(props) {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const password = event.target.password.value;
+  const handleSubmit = async (password) => {
     console.log(password);
-    const headers = {
-      'memberId': userId,
-      'username': username
-    };
+    // const headers = {
+    //   'memberId': userId,
+    //   'username': name
+    // };
     
     try {
-      const response = await axios.post(`http://${baseUrl}/multi-game/${props.roomId}`, password, {
-        headers: {
-          ...headers,
-          'Content-Type': 'text/plain'
-        }
-      });
+      console.log(props.roomId);
+      console.log(password);
+      const response = await axios.post(`${baseURL}/multi/room/${props.roomId}`, password, { Authorization: `Bearer ${accessToken}` });
       if (response.status === 200) {
-        setRoomId(props.roomId);
-        setUserId(userId);
-        setUsername(username);
+        // setUserId(userId);
+        // setUsername(username);
         navigate(`/multi-game/${props.roomId}`);
       } else {
         alert('Incorrect password');
@@ -90,8 +102,8 @@ function MultiRoom(props) {
       handleOpenModal();
     } else {
       setRoomId(props.roomId);
-      setUserId(userId);
-      setUsername(username);
+      // setUserId(userId);
+      // setUsername(username);
       navigate(`/multi-game/${props.roomId}`);
     }
   };
