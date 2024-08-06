@@ -202,6 +202,7 @@ const BattleGamePage = () => {
       setSelectOpponentProblem(false);
       closeModal();
       setGameStart(true);
+      setAnswerSubmitted(false);
       startTimer();
     }
   }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
@@ -232,10 +233,10 @@ const BattleGamePage = () => {
       if (message.body === "boom") {
         alert("The host left the room");
         navigate("/battle-list");
-      } else if (body.result) {
+      } else if (body.result && typeof body.result === "object") {
         setGameEnded(true);
-        setWinner(body.winner);
-        setLoser(body.loser);
+        setWinner(body.result.winner);
+        setLoser(body.result.loser);
 
         setTimeout(() => {
           navigate("/battle-list");
@@ -351,18 +352,6 @@ const BattleGamePage = () => {
       submitAnswer();
     }
   }, [count]);
-
-  useEffect(() => {
-    if (gameEnded && count2 === 0) {
-      navigate("/battle-list");
-    } else if (gameEnded === true) {
-      const timer = setInterval(() => {
-        setCount2((prevCount) => prevCount - 1);
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [count2, navigate]);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
