@@ -5,31 +5,35 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
+import store from '../../store/store.js';
 
 export default function MultiCreate() {
   const navigate = useNavigate();
 
+  const {
+    memberId,
+    userId,
+    name,
+    baseURL,
+  } = store((state) => ({
+    memberId: state.memberId,
+    userId: state.userId,
+    name: state.name,
+    baseURL: state.baseURL,
+  }));
+
   const setRoomId = multiStore((state) => state.setRoomId);
-  const setUserId = multiStore((state) => state.setUserId);
-  const setUsername = multiStore((state) => state.setUsername);
 
-  //*** ssafy11s.com으로 수정하기
-  const baseUrl = "www.ssafy11s.com";
-  // const baseUrl = "localhost:8080"
+  // useEffect(() => {
+  //   const userIdFromStore = multiStore.getState().userId;
+  //   const usernameFromStore = multiStore.getState().username;
 
-  const [userId, setLocalUserId] = useState(null);
-  const [username, setLocalUsername] = useState(null);
+  //   setLocalUserId(userIdFromStore);
+  //   setLocalUsername(usernameFromStore);
 
-  useEffect(() => {
-    const userIdFromStore = multiStore.getState().userId;
-    const usernameFromStore = multiStore.getState().username;
-
-    setLocalUserId(userIdFromStore);
-    setLocalUsername(usernameFromStore);
-
-    setUserId(userIdFromStore);
-    setUsername(usernameFromStore);
-  }, [setUserId, setUsername]);
+  //   setUserId(userIdFromStore);
+  //   setUsername(usernameFromStore);
+  // }, [setUserId, setUsername]);
 
   const createMultiRoom = async (data) => {
     data.preventDefault();
@@ -37,7 +41,7 @@ export default function MultiCreate() {
     try {
       const headers = {
         'memberId': userId,
-        'username': username
+        'username': name
       };
   
       const title = data.target.title.value;
@@ -46,7 +50,7 @@ export default function MultiCreate() {
       const gameRound = data.target.gameRound.value;
 
 
-      const response = await axios.post(`https://${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
+      const response = await axios.post(`${baseURL}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
       const roomId = response.data;
       setRoomId(roomId);
       navigate(`/multi-game/${roomId}`, { state: { hostId: userId } } );  

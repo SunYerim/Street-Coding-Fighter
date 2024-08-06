@@ -19,9 +19,6 @@ import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
-// const baseUrl = "www.ssafy11s.com"; // ssafy11s.com으로 수정하기
-// const baseUrl = "localhost:8080"
-
 
 export default function MultiGame() {
   const navigate = useNavigate();
@@ -33,13 +30,11 @@ export default function MultiGame() {
     userId,
     name,
     baseURL,
-    wsChat,
   } = store((state) => ({
     memberId: state.memberId,
     userId: state.userId,
     name: state.name,
     baseURL: state.baseURL,
-    wsChat: state.wsChat,
   }));
 
 
@@ -74,9 +69,9 @@ export default function MultiGame() {
   }, [location.state]);
 
   const handleStart = async () => {
-    setStart(1);
+    setStart(1);  
     const response = await axios.post(
-      `https://${baseURL}/multi/game/${roomId}/start`,
+      `${baseURL}/multi/game/${roomId}/start`,
       null, // 요청 본문을 생략
       {
         headers: {
@@ -291,7 +286,7 @@ export default function MultiGame() {
 
   // WebSocket 연결 및 초기화 함수
   const connect = async () => {
-    const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+    const chatSocket = new SockJS(`https://www.ssafy11s.com/ws-chat`);
     chatStompClient.current = Stomp.over(chatSocket);
 
     return new Promise((resolve, reject) => {
