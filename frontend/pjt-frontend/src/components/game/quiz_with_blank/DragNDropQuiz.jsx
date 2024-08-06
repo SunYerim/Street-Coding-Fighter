@@ -8,15 +8,24 @@ import { DndProvider } from "react-dnd";
 import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import store from "../../../store/store.js";
 
-const DragNDropQuiz = (problem) => {
+const DragNDropQuiz = () => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
-  const { blankSolve, setBlankSolve } = store((state) => ({
+  const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
+
+  const { blankSolve, setBlankSolve, myBlankProblem } = store((state) => ({
     blankSolve: state.blankSolve,
     setBlankSolve: state.setBlankSolve,
+    myBlankProblem: state.myBlankProblem,
   }));
+
+  useEffect(() => {
+    // store에서 문제 데이터를 가져오는 함수 호출
+    const problemData = myBlankProblem; // 또는 store.getState().problem과 같은 방식으로 직접 접근할 수 있음
+    setProblem(problemData);
+  }, [myBlankProblem]);
 
   useEffect(() => {
     if (problem && problem.problemChoices) {
@@ -107,7 +116,6 @@ const DragNDropQuiz = (problem) => {
 
   return (
     <>
-      {problem}
       <DndProvider backend={HTML5Backend}>
         <div>
           {modifiedContent && (
