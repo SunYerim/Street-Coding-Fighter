@@ -211,7 +211,7 @@ const BattleGamePage = () => {
   }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
 
   // 답변 제출 미완성
-  const submitAnswer = useCallback(() => {
+  const submitAnswer = () => {
     const endpoint = `/send/game/${roomId}/answer`;
     const submitAnswerDTO = {
       problemId: myProblem.problemId,
@@ -229,17 +229,19 @@ const BattleGamePage = () => {
       {},
       JSON.stringify(submitAnswerDTO)
     );
-  }, []);
+  };
 
   // 체력 반영 미완성
   const subscribeResult = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
+      // if (message.body === "boom") {
+      //   alert("The host left the room");
+      //   navigate("/battle-list");
+      // }
       const body = JSON.parse(message.body);
-      if (message.body === "boom") {
-        alert("The host left the room");
-        navigate("/battle-list");
-      } else if (body.result && typeof body.result === "object") {
+
+      if (body.result && typeof body.result === "object") {
         setGameEnded(true);
         setWinner(body.result.winner);
         setLoser(body.result.loser);
