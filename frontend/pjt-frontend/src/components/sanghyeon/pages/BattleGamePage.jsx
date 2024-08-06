@@ -201,10 +201,9 @@ const BattleGamePage = () => {
   const subscribeMyProblem = () => {
     const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
-      console.log(message);
-      const body = JSON.parse(message.body);
-      setMyProblem(body);
-      console.log("My Problem: ", body);
+      console.log(message.body);
+      setMyProblem(message.body);
+      console.log("My Problem: ", message.body);
       setSelectMyProblem(true);
     });
   };
