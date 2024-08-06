@@ -43,7 +43,7 @@ const DragNDropQuiz = () => {
       // 각 블랭크에 대한 초기화
       const initialBlanks = {};
       for (let i = 1; i <= problem.problemChoices.length; i++) {
-        initialBlanks[i] = null; // 각 블랭크의 초기값을 null로 설정
+        initialBlanks[i] = "ssafy"; // 각 블랭크의 초기값을 null로 설정
       }
       setBlanks(initialBlanks);
     }
@@ -55,7 +55,6 @@ const DragNDropQuiz = () => {
     }
   }, [blanks]);
 
-  // problemContent의 값을 기반으로 modifiedContent를 재계산합니다.
   useEffect(() => {
     if (problem && problem.problemContent && problem.problemContent.content) {
       const problemContent = problem.problemContent.content;
