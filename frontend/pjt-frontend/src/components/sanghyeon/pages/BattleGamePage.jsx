@@ -76,6 +76,7 @@ const BattleGamePage = () => {
   const [timerEnded, setTimerEnded] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [myProblem, setMyProblem] = useState(null);
+  const [selectMyProblem, setSelectMyProblem] = useState(false);
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [winner, setWinner] = useState("");
@@ -190,12 +191,19 @@ const BattleGamePage = () => {
       console.log(message);
       const body = JSON.parse(message.body);
       setMyProblem(body);
-      closeModal();
-      setSelectOpponentProblem(false);
-      setGameStart(true);
-      startTimer();
+      setSelectMyProblem(true);
     });
   };
+
+  useEffect(() => {
+    if (selectOpponentProblem && selectMyProblem) {
+      setSelectMyProblem(false);
+      setSelectOpponentProblem(false);
+      closeModal();
+      setGameStart(true);
+      startTimer();
+    }
+  }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
 
   // 답변 제출 미완성
   const submitAnswer = useCallback(() => {
@@ -220,8 +228,7 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
-
-      if (body === "boom") {
+      if (message.body === "boom") {
         alert("The host left the room");
         navigate("/battle-list");
       } else if (body.result) {
@@ -239,20 +246,6 @@ const BattleGamePage = () => {
     });
   };
 
-  // const subscribeTotalResult = () => {
-  //   const endpoint = `/room/${roomId}`;
-  //   battleStompClient.current.subscribe(endpoint, (message) => {
-  //     const body = JSON.parse(message.body);
-  //     setGameEnded(true);
-  //     setWinner(body.winner);
-  //     setLoser(body.loser);
-
-  //     setTimeout(() => {
-  //       navigate("/battle-list");
-  //     }, 5);
-  //   });
-  // };
-
   const enterChat = () => {
     const endpoint = `/send/chat/${roomId}/enter`;
     const enterDTO = {
@@ -263,17 +256,6 @@ const BattleGamePage = () => {
     };
     chatStompClient.current.send(endpoint, {}, JSON.stringify(enterDTO));
   };
-
-  // const subscribeEnterMessage = () => {
-  //   const endpoint = `${baseURL}/${wsChat}/send/chat/${roomId}/enter`;
-  //   stompClient.subscribe(endpoint, (message) => {
-  //     const body = JSON.parse(message.body);
-  //     setChatMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       `${body.sender}님이 입장하셨습니다.`,
-  //     ]);
-  //   });
-  // };
 
   const sendMessage = async () => {
     if (message.trim() === "") return;
@@ -312,17 +294,6 @@ const BattleGamePage = () => {
     };
     chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
   };
-
-  // const subscribeQuitMessage = () => {
-  //   const endpoint = `${baseURL}/${wsChat}/room/${roomId}`;
-  //   stompClient.subscribe(endpoint, (message) => {
-  //     const body = JSON.parse(message.body);
-  //     setChatMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       `${body.sender}님이 퇴장하셨습니다.`,
-  //     ]);
-  //   });
-  // };
 
   const reconnectWebSocket = () => {
     console.log("Reconnecting WebSocket...");
