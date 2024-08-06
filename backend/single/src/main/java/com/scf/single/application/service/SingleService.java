@@ -17,4 +17,6 @@ public interface SingleService {
     // 각 content 수강 등록
     void markContentAsCompleted(ContentCompletionRequestDto requestDto);
 
+    // 수강 여부를 초기화
+    void initializeCompletionStatus(Long memberId);
 }
