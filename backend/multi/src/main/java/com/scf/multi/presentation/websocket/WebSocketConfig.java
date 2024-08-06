@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new MultiGameWebSocketHandler(multiGameService), "/multi")
+        registry.addHandler(new MultiGameWebSocketHandler(multiGameService), "/ws-multi")
             .addInterceptors(new HttpHandshakeInterceptor())
             .setAllowedOrigins("*"); // Cross-Origin 설정
     }
