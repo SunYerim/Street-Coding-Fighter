@@ -14,8 +14,8 @@ export default function MultiCreate() {
   const setUsername = multiStore((state) => state.setUsername);
 
   //*** ssafy11s.com으로 수정하기
-  // const baseUrl = "www.ssafy11s.com";
-  const baseUrl = "localhost:8080"
+  const baseUrl = "www.ssafy11s.com";
+  // const baseUrl = "localhost:8080"
 
   const [userId, setLocalUserId] = useState(null);
   const [username, setLocalUsername] = useState(null);

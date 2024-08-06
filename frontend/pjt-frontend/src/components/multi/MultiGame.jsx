@@ -20,7 +20,7 @@ import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
 // const baseUrl = "www.ssafy11s.com"; // ssafy11s.com으로 수정하기
-const baseUrl = "localhost:8080"
+// const baseUrl = "localhost:8080"
 
 
 export default function MultiGame() {
@@ -76,7 +76,7 @@ export default function MultiGame() {
   const handleStart = async () => {
     setStart(1);
     const response = await axios.post(
-      `http://${baseUrl}/multi/game/${roomId}/start`,
+      `http://${baseURL}/multi/game/${roomId}/start`,
       null, // 요청 본문을 생략
       {
         headers: {

@@ -11,8 +11,8 @@ function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const baseUrl = "localhost:8080";
-  // const baseUrl = "www.ssafy11s.com"
+  // const baseUrl = "localhost:8080";
+  const baseUrl = "www.ssafy11s.com";
 
   const [errorMessage, setErrorMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
