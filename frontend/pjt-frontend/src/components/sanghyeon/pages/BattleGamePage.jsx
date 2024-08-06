@@ -86,6 +86,7 @@ const BattleGamePage = () => {
 
   const [isBattleConnected, setIsBattleConnected] = useState(false);
   const [isChatConnected, setIsChatConnected] = useState(false);
+  const [normalQuit, setNormalQuit] = useState(false);
 
   // ---------------------- WebSocket ----------------------
 
@@ -293,6 +294,7 @@ const BattleGamePage = () => {
       roomId: roomId,
     };
     chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+    setNormalQuit(true);
   };
 
   const reconnectWebSocket = () => {
@@ -324,6 +326,10 @@ const BattleGamePage = () => {
     initializeConnections();
 
     return () => {
+      if (normalQuit === false) {
+        alert("호스트와의 연결이 끊겼습니다.");
+      }
+
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
@@ -407,10 +413,10 @@ const BattleGamePage = () => {
   };
 
   const renderQuestion = (problem) => {
-    switch (problem.type) {
-      case "빈 칸 채우기":
+    switch (problem.problemType) {
+      case "FILL_IN_THE_BLANK":
         return <DragNDropQuiz problem={problem} />;
-      case "주관식":
+      case "SHORT_ANSWER_QUESTION":
         return <ShortAnswer problem={problem} />;
       default:
         return <div>Unknown problem type</div>;
