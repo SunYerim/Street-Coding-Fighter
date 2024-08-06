@@ -1,5 +1,10 @@
 package com.scf.multi.application;
 
+import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
+import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
+
+import com.scf.multi.domain.dto.user.GameResult;
+import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomResponse;
@@ -15,6 +20,7 @@ import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.domain.repository.MultiGameRepository;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
+import com.scf.multi.infrastructure.KafkaMessageProducer;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +35,7 @@ public class MultiGameService {
     private final MultiGameRepository multiGameRepository;
     private final ProblemService problemService;
     private final ApplicationEventPublisher eventPublisher;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     public List<RoomResponse.ListDTO> findAllRooms() {
         List<MultiGameRoom> rooms = multiGameRepository.findAllRooms();
@@ -113,31 +120,19 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public int markSolution(String roomId, Player player, Solved solved) {
+    public int markSolution(String roomId, Solved solved) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-        List<Problem> problems = room.getProblems();
-        Problem problem = problems.get(room.getRound());
+        MultiGameRoom room = findRoom(roomId);
+        Player player = findPlayerByUserId(room, solved.getUserId());
+        Problem problem = getCurrentProblem(room);
 
-        if (problem == null) {
-            throw new BusinessException(null, "problem", ErrorCode.PROBLEM_NOT_FOUND);
-        }
+        validateProblem(problem);
 
-        // 문제의 정답 가져오기
-        List<ProblemAnswer> answers = problem.getProblemAnswers();
-        ProblemType problemType = problem.getProblemType();
+        boolean isCorrect = isAnswerCorrect(problem, solved);
+        int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(), solved.getSubmitTime());
 
-        // 점수 계산
-        boolean isCorrect = compareWith(problemType, solved, answers);
-        int score = 0;
-        if (isCorrect) {
-            score = calculateScore(player.getStreakCount(), solved.getSubmitTime());
-        }
-
-        solved.setIsCorrect(isCorrect);
-
-        room.updateScoreBoard(player.getUserId(), score);
-        room.updateLeaderBoard(player.getUserId(), score);
+        updateScoreBoard(room, player, score);
+        updateLeaderBoard(room, player, score);
 
         return score;
     }
@@ -173,19 +168,131 @@ public class MultiGameService {
             .toList();
     }
 
-    public Solved makeSolved(MultiGameRoom room, Long userId, Content content) {
+    public Solved addSolved(MultiGameRoom room, String sessionId, Content content) {
 
         List<Problem> problems = room.getProblems();
         Problem problem = problems.get(room.getRound());
 
-        return Solved
+        Player player = findPlayerBySessionId(room, sessionId);
+
+        Solved solved = Solved
             .builder()
-            .userId(userId)
+            .userId(player.getUserId())
             .problemId(problem.getProblemId())
             .solve(content.getSolve())
             .solveText(content.getSolveText())
             .submitTime(content.getSubmitTime())
             .build();
+
+        player.addSolved(solved);
+
+        return solved;
+    }
+
+    public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
+        for (Player player : room.getPlayers()) {
+            List<Solved> solveds = player.getSolveds();
+            if (solveds != null) {
+                kafkaMessageProducer.sendSolved(solveds);
+            }
+        }
+
+        GameResult gameResult = GameResult.builder()
+            .gameRank(gameRank)
+            .build();
+        kafkaMessageProducer.sendResult(gameResult);
+
+        room.finishGame();
+    }
+
+    public Player connectPlayer(String roomId, Long userId, String sessionId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        Player connectedPlayer = findPlayerByUserId(room, userId);
+        connectedPlayer.setSessionId(sessionId);
+
+        return connectedPlayer;
+    }
+
+    public void validateRoom(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        if (room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
+        }
+    }
+
+    public Player handlePlayerExit(String roomId, String sessionId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        Player exitPlayer = findPlayerBySessionId(room, sessionId);
+        room.exitRoom(exitPlayer);
+
+        return exitPlayer;
+    }
+
+    public Player rotateHost(String roomId) {
+
+        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+
+        Player newHost = room.getPlayers().stream()
+            .findFirst()
+            .orElseThrow(() -> new BusinessException(null, "newHost", USER_NOT_FOUND));
+        newHost.setIsHost(true);
+        room.updateHost(newHost);
+
+        return newHost;
+    }
+
+    private MultiGameRoom findRoom(String roomId) {
+        return multiGameRepository.findOneById(roomId);
+    }
+
+    private Problem getCurrentProblem(MultiGameRoom room) {
+        List<Problem> problems = room.getProblems();
+        return problems.get(room.getRound());
+    }
+
+    private Player findPlayerByUserId(MultiGameRoom room, Long userId) {
+        return room.getPlayers().stream()
+            .filter(p -> p.getUserId().equals(userId))
+            .findFirst()
+            .orElseThrow(() -> new BusinessException(userId, "userId", USER_NOT_FOUND));
+    }
+
+    private Player findPlayerBySessionId(MultiGameRoom room, String sessionId) {
+        return room.getPlayers().stream()
+            .filter(p -> p.getSessionId().equals(sessionId)).findFirst()
+            .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
+    }
+
+    private boolean isAnswerCorrect(Problem problem, Solved solved) {
+        List<ProblemAnswer> answers = problem.getProblemAnswers();
+        ProblemType problemType = problem.getProblemType();
+        return compareWith(problemType, solved, answers);
+    }
+
+    private void validateProblem(Problem problem) {
+        if (problem == null) {
+            throw new BusinessException(null, "problem", ErrorCode.PROBLEM_NOT_FOUND);
+        }
+    }
+
+    private int calculateScoreIfCorrect(boolean isCorrect, int streakCount, int submitTime) {
+        if (isCorrect) {
+            return calculateScore(streakCount, submitTime);
+        }
+        return 0;
+    }
+
+    private void updateScoreBoard(MultiGameRoom room, Player player, int score) {
+        room.updateScoreBoard(player.getUserId(), score);
+    }
+
+    private void updateLeaderBoard(MultiGameRoom room, Player player, int score) {
+        room.updateLeaderBoard(player.getUserId(), score);
     }
 
     private boolean compareWith(ProblemType problemType, Solved solved,
