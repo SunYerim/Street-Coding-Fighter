@@ -1,12 +1,19 @@
 package com.scf.battle.presentation.controller;
 
 import com.scf.battle.application.BattleGameService;
+import com.scf.battle.application.KafkaService;
 import com.scf.battle.domain.dto.Room.CreateRoomDTO;
+import com.scf.battle.domain.dto.Room.JoinRoomResponseDTO;
 import com.scf.battle.domain.dto.Room.RoomJoinPasswordDTO;
 import com.scf.battle.domain.dto.Room.RoomResponseDTO;
+import com.scf.battle.domain.dto.User.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.global.error.exception.BusinessException;
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +34,7 @@ import java.util.stream.Collectors;
 public class BattleGameController {
 
     private final BattleGameService battleGameService;
-
+    private final KafkaService kafkaService;
     @GetMapping("/room")
     public ResponseEntity<?> roomList() { // room list로 묶어서 return
         List<BattleGameRoom> rooms = battleGameService.findAllRooms();
@@ -65,7 +72,8 @@ public class BattleGameController {
         try {
             String password = roomJoinPasswordDTO.getPassword();
             battleGameService.joinRoom(roomId, memberId, username, password);
-            return new ResponseEntity<>(HttpStatus.OK);
+            BattleGameRoom room = battleGameService.findById(roomId);
+            return new ResponseEntity<>(new JoinRoomResponseDTO(room.getPlayerA().getUsername(), room.getPlayerA().getUserId()), HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         }
@@ -99,6 +107,48 @@ public class BattleGameController {
             battleGameService.leaveRoom(memberId, roomId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
+    }
+
+
+    @PostMapping("/test/kafka/userSolved")
+    public ResponseEntity<?> testKafkaUserSolved(){
+        List<Solved> testUser = new ArrayList<>();
+
+        Map<Integer, Integer> solveMap1 = new HashMap<>();
+        solveMap1.put(1, 100);
+        solveMap1.put(2, 200);
+
+        Solved solved1 = Solved.builder()
+            .problemId(1L)
+            .userId(101L)
+            .solve(solveMap1)
+            .solveText("Solution for problem 1")
+            .submitTime(1627549200)
+            .round(1)
+            .build();
+
+        testUser.add(solved1);
+
+        try {
+            kafkaService.testSendToKafkaSolved(testUser);
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        }
+        catch (BusinessException e){
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
+    }
+    @PostMapping("/test/kafka/gameResult")
+    public ResponseEntity<?> testSendToKafkaGameResult(){
+
+        try {
+            kafkaService.testSendToKafkaGameResult();
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        }
+        catch (BusinessException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         }
     }
