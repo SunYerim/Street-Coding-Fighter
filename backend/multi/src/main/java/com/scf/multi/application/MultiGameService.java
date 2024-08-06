@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 public class MultiGameService {
 
     private static final int MAX_SUBMIT_TIME = 30;
-    private static final int BASE_SCORE = 1000;
+    private static final int BASE_SCORE = 10;
     private static final int STREAK_BONUS = 75;
 
     private final MultiGameRepository multiGameRepository;
