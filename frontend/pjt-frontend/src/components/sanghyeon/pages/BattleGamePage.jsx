@@ -204,6 +204,7 @@ const BattleGamePage = () => {
       console.log(message);
       const body = JSON.parse(message.body);
       setMyProblem(body);
+      console.log("My Problem: ", body);
       setSelectMyProblem(true);
     });
   };
