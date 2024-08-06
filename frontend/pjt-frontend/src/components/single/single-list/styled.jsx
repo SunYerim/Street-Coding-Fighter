@@ -16,44 +16,76 @@ const RowBeetween = styled.div`
 `;
 
 const CheckPoint = styled.div`
-position: relative;
-width: 170px;
-height: 100%;
-background-color: red;
-display: flex;
-justify-content: center;
-align-items: center;
-border-radius: 10%;
-transition: background-color 0.3s;
-cursor: pointer;
-background-color: ${(props) => (props.$completed ? 'rgba(18,72,107, 0.8)' : 'gray')};
-border: ${(props) => (props.$isNext ? '2px solid white' : null)};
-&:hover {
-  background-color: rgba(83, 92, 145, 1);
+  position: relative;
+  width: 170px;
+  height: 100%;
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10%;
+  transition: background-color 0.3s;
+  cursor: pointer;
+  background-color: ${(props) => (props.$completed ? '#02285A' : 'gray')};
+  border: ${(props) => (props.$isNext ? '2px solid white' : null)};
+  &:hover {
+    background-color: rgba(83, 92, 145, 1);
   }
-  `;
-  
-  const Path = styled.div`
+`;
+
+const Path = styled.div`
   width: 50px;
   height: 10px;
-  background-color: ${(props) => (props.$completed ? '#419197' : 'gray')};
+  background-color: ${(props) => (props.$completed ? '#4F4F4F' : 'gray')};
+  position: relative;
   transition: background-color 0.3s;
-  `;
-  
-  const VerticalPath = styled.div`
-  width : 10px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-image: linear-gradient(to right, white 50%, transparent 50%);
+    background-size: 10px 2px;
+    transform: translateY(-50%);
+  }
+`;
+
+const VerticalPath = styled.div`
+  width: 10px;
   height: 50px;
-    background-color: ${(props) => (props.$completed ? '#419197' : 'gray')};
-    transition: background-color 0.3s;
-    position : absolute;
-    top : 100%
-  `;
-  const S = {
-    Row,
-    CheckPoint,
-    Path,
-    RowBeetween,
-    VerticalPath,
-  };
-  
-  export default S;
+  background-color: ${(props) => (props.$completed ? '#4F4F4F' : 'gray')};
+  transition: background-color 0.3s;
+  position: absolute;
+  top: 100%;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background-image: linear-gradient(to bottom, white 50%, transparent 50%);
+    background-size: 2px 10px;
+    transform: translateX(-50%);
+  }
+`;
+const CharacterImage = styled.div`
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  top: -120%
+`;
+const S = {
+  Row,
+  CheckPoint,
+  Path,
+  RowBeetween,
+  VerticalPath,
+  CharacterImage,
+};
+
+export default S;

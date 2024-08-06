@@ -2,6 +2,7 @@ import '../../../css/Header.css';
 import Setting from './Setting';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { MdOutlineKeyboardBackspace } from "react-icons/md";
 
 function Header() {
   const navigate = useNavigate();
@@ -20,9 +21,9 @@ function Header() {
   return (
     <>
       <div className="header-container">
-        <button className="header-back-button" onClick={() => navigate(-1)}>
-          뒤로 가기 (임시)
-        </button>
+        <div className="header-back-button" onClick={() => navigate('/main')}>
+        <MdOutlineKeyboardBackspace />
+        </div>
         <h2
           className="header-title"
           onClick={() => {

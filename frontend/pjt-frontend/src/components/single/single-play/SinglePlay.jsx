@@ -59,10 +59,11 @@ export default function SinglePlay() {
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   const getContent = () => {
     axios
-      .get(`${store.baseUrl}/edu/${content_id}`)
+      .get(`${store.baseUrl}/single/${content_id}`)
       .then((response) => {
         const data = response.data;
         setDialogueList(data.dialogueList);
+        // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
         setLoading(true);
       })
       .catch((error) => {
@@ -75,10 +76,9 @@ export default function SinglePlay() {
       'single',
       (newBackgroundMusic) => {
         newBackgroundMusic.play();
-      },
-      []
+      }
     );
-
+    getContent();
     const loadingTimer = setTimeout(() => {
       setLoading(false);
     }, 2000);

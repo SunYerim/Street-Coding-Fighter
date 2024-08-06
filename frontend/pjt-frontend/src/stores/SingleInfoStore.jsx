@@ -47,11 +47,11 @@ const completed = {
     },
     {
       contentId: 7,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 8,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 9,
