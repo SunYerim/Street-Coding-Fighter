@@ -15,7 +15,7 @@ export default function SingleMain() {
   const getSingleInfo = () => {
     axios({
       method: 'get',
-      url: `${store.baseUrl}/edu`,
+      url: `${store.baseUrl}/single`,
       headers: {
         "Authorization" : `Bearer ${store.accessToken}`	
       }
@@ -24,13 +24,13 @@ export default function SingleMain() {
       setCompleted(res.data);
     });
   };
-  // useEffect(() => {getSingleInfo()});
+  useEffect(() => {getSingleInfo()}, []);
   return (
   <>
   <Header />
     <div id="container">
       <TitleDiv>
-        <h1>Tutorials</h1>
+        <h1>Single Play</h1>
       </TitleDiv>
       <EpisodeList rownum={3}></EpisodeList>
     </div>

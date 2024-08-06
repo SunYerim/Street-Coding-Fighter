@@ -1,11 +1,24 @@
-import "../../../css/Header.css";
-import Setting from "./Setting";
-import { useNavigate } from "react-router-dom";
+import '../../../css/Header.css';
+import Setting from './Setting';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
 import store from "../../../store/store.js";
 
+
 const Header = ({ type = "default" }) => {
   const navigate = useNavigate();
+  const userIcon = '/memberIcon.png';
+  const settingIcon = '/settingIcon.png';
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
   const userIcon = "/memberIcon.png";
   const { baseURL, accessToken, roomId, setNormalQuit } = store((state) => ({
     baseURL: state.baseURL,
@@ -39,16 +52,13 @@ const Header = ({ type = "default" }) => {
   return (
     <>
       <div className="header-container">
-        <button
-          className="header-back-button"
-          onClick={type === "Game" ? quitBattleRoom : () => navigate(-1)}
-        >
-          뒤로 가기 (임시)
-        </button>
+        <div className="header-back-button" onClick={type === "Game" ? quitBattleRoom : () => navigate('/main')}>
+        <MdOutlineKeyboardBackspace />
+        </div>
         <h2
           className="header-title"
           onClick={() => {
-            navigate("/main");
+            navigate('/main');
           }}
         >
           Street Coding Figther
@@ -56,15 +66,16 @@ const Header = ({ type = "default" }) => {
         <div className="header-icon">
           <img
             onClick={() => {
-              navigate("/profile");
+              navigate('/profile');
             }}
             className="user-icon"
             src={userIcon}
             alt="memberIcon"
           />
-          <Setting />
+          <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
         </div>
       </div>
+      <Setting isOpen={modalIsOpen} onClose={closeModal} />
     </>
   );
 };

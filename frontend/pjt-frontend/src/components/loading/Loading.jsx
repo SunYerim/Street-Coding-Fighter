@@ -1,7 +1,16 @@
 import { style, textAlign, width } from '@mui/system';
 
 const Loading = () => {
-  const sampleTips = ['tip1', 'tip2', 'tip3', 'tip4', 'tip5', 'tip6'];
+  const sampleTips = [
+    '배열의 인덱스는 0부터 시작합니다.',
+    '=는 값을 할당하고 ==는 값을 비교합니다.',
+    '의미 있는 변수 이름이 코드를 더 이해하기 쉽게 만듭니다.',
+    '세미콜론(;)은 많은 언어에서 문장의 끝을 표시합니다.',
+    '공백과 들여쓰기는 코드의 가독성을 높입니다.',
+    '함수는 코드의 재사용성을 높여줍니다.',
+    '주석을 사용하여 코드의 중요한 부분을 설명할 수 있습니다.',
+    '효율적인 코드를 위해 알고리즘과 자료구조를 공부하는 것이 중요합니다.',
+  ];
   const characters = {
     1: { moving: '/characters/movingFireSlime.gif', stop: '/characters/fireSlime.png' },
     2: { moving: '/characters/movingGreenSlime.gif', stop: '/characters/greenSlime.png' },
@@ -54,9 +63,9 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'end',
   },
-  tip:{
-    textAlign: 'center'
-  }
+  tip: {
+    textAlign: 'center',
+  },
 };
 
 export default Loading;

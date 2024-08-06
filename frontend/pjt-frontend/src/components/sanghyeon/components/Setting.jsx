@@ -80,14 +80,6 @@ const Setting = () => {
     setAccessToken
   );
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
   const logout = async () => {
     try {
       const logoutRes = await authClient({
@@ -115,8 +107,8 @@ const Setting = () => {
         alt="settingIcon"
       />
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        isOpen={isOpen}
+        onRequestClose={onClose}
         contentLabel="Example Modal"
         style={{ content: styles.modal, overlay: styles.overlay }}
       >
