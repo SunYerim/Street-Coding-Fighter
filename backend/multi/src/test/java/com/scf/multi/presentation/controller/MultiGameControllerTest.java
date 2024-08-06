@@ -24,6 +24,7 @@ import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.problem.ProblemType;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.model.MultiGameRoom;
+import com.scf.multi.infrastructure.KafkaMessageProducer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -48,6 +49,9 @@ class MultiGameControllerTest {
 
     @MockBean
     private MultiGameService multiGameService;
+
+    @MockBean
+    private KafkaMessageProducer kafkaMessageProducer;
 
     @Autowired
     private ObjectMapper objectMapper;
