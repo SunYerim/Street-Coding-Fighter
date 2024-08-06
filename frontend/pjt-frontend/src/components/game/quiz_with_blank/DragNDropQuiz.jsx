@@ -26,7 +26,9 @@ const testQuizContent = {
 
 const DragNDropQuiz = (problem) => {
   const [blanks, setBlanks] = useState({});
-  const [choices, setChoices] = useState(Object.values(problem.problemChoices));
+  const [choices, setChoices] = useState(
+    Object.values(problem.problemContent.problemChoices)
+  );
 
   const handleDrop = (blankId, choice) => {
     setBlanks((prevBlanks) => ({
