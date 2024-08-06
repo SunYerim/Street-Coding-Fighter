@@ -88,8 +88,6 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-
-
     public int markSolution(String roomId, Solved solved) {
 
         MultiGameRoom room = findRoom(roomId);
@@ -109,17 +107,9 @@ public class MultiGameService {
 
     public List<ProblemResponse.ListDTO> startGame(String roomId, Long userId) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        MultiGameRoom room = findOneById(roomId);
 
-        if (room == null) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
-        }
-
-        List<Problem> problems = problemService.getProblems(room.getPlayRound());
-
-        if (problems == null || problems.isEmpty()) {
-            throw new BusinessException(null, "problems", ErrorCode.PROBLEM_NOT_FOUND);
-        }
+        List<Problem> problems = fetchProblems(room);
 
         room.gameStart(problems, userId);
         eventPublisher.publishEvent(new GameStartedEvent(roomId));
@@ -247,6 +237,15 @@ public class MultiGameService {
 
     private MultiGameRoom findRoom(String roomId) {
         return multiGameRepository.findOneById(roomId);
+    }
+
+    private List<Problem> fetchProblems(MultiGameRoom room) {
+        List<Problem> problems = problemService.getProblems(room.getPlayRound());
+
+        if (problems == null || problems.isEmpty()) {
+            throw new BusinessException(null, "problems", ErrorCode.PROBLEM_NOT_FOUND);
+        }
+        return problems;
     }
 
     private Problem getCurrentProblem(MultiGameRoom room) {
