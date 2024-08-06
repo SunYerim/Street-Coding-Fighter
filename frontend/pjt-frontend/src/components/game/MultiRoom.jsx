@@ -84,10 +84,12 @@ function MultiRoom(props) {
         { password }, // 요청 본문에 password 포함
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'text/plain',
           }
         }
       );
+
       if (response.status === 200) {
         // setUserId(userId);
         // setUsername(username);
