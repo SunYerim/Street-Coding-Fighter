@@ -32,19 +32,9 @@ export default function MultiCreate() {
     () => accessToken,
     setAccessToken
   );
+  
 
   const setRoomId = multiStore((state) => state.setRoomId);
-
-  // useEffect(() => {
-  //   const userIdFromStore = multiStore.getState().userId;
-  //   const usernameFromStore = multiStore.getState().username;
-
-  //   setLocalUserId(userIdFromStore);
-  //   setLocalUsername(usernameFromStore);
-
-  //   setUserId(userIdFromStore);
-  //   setUsername(usernameFromStore);
-  // }, [setUserId, setUsername]);
 
   const createMultiRoom = async (data) => {
     data.preventDefault();
