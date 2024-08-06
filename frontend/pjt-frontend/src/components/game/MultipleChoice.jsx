@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import '../../css/Problem.css';
 
-const MultipleChoice = ({ problem }) => {
+const MultipleChoice = ({ problem, onChoiceSelect  }) => {
+  const [selectedChoice, setSelectedChoice] = useState(null);
+
+  const handleChoiceClick = (choiceId) => {
+    setSelectedChoice(choiceId);
+    onChoiceSelect(choiceId);  // choiceId를 부모 컴포넌트로 전달
+  };
+
   return (
-    <div>
-      <h2>{problem.title}</h2>
-      <p>{problem.problemContent.content}</p>
-      {problem.problemChoices.map((choice) => (
-        <div key={choice.choiceId}>
-          <input type="radio" id={choice.choiceId} name="choice" value={choice.choiceId} />
-          <label htmlFor={choice.choiceId}>{choice.choiceText}</label>
+    <>
+      <div className='problem-container'>
+        <div className='problem-content'>
+          <h2>{problem.title}</h2>
+          <p>{problem.problemContent.content}</p>
         </div>
-      ))}
-    </div>
+          {problem.problemChoices.map((choice) => (
+            <button
+              className='choice-button'
+              key={choice.choiceId}
+              onClick={() => handleChoiceClick(choice.choiceId)}
+            >
+              {choice.choiceText}
+            </button>
+          ))}
+      </div>
+    </>
   );
 };
 

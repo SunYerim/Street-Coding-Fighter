@@ -5,7 +5,7 @@ const store = create(
   persist(
     (set) => ({
       baseURL: "https://www.ssafy11s.com",
-      // baseURL: "http://localhost:3000",
+      // baseURL: "http://localhost:8080",
 
       wsBattle: "ws-battle",
       wsChat: "ws-chat",
@@ -33,6 +33,9 @@ const store = create(
 
       exp: 0,
       setExp: (exp) => set({ exp }),
+
+      normalQuit: false,
+      setNormalQuit: (normalQuit) => set({ normalQuit }),
 
       registerInfo: {
         userId: "",

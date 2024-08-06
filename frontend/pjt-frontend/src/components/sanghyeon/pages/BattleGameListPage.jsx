@@ -20,6 +20,7 @@ const BattleGameListPage = () => {
     setRoomId,
     setHostId,
     setRoomPassword,
+    setNormalQuit,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -29,6 +30,7 @@ const BattleGameListPage = () => {
     setAccessToken: state.setAccessToken,
     setHostId: state.setHostId,
     setRoomPassword: state.setRoomPassword,
+    setNormalQuit: state.setNormalQuit,
   }));
 
   const authClient = createAuthClient(
@@ -88,8 +90,6 @@ const BattleGameListPage = () => {
       }
     }
 
-    console.log(inputPassword);
-
     try {
       const res = await authClient({
         method: "POST",
@@ -105,6 +105,7 @@ const BattleGameListPage = () => {
       setRoomId(roomId);
       setRoomPassword(inputPassword);
       setHostId("");
+      setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
       console.log(error);
@@ -139,6 +140,7 @@ const BattleGameListPage = () => {
       setRoomId(createRes.data);
       setHostId(memberId);
       setRoomPassword(battleRoomPassword.current.value);
+      setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
       console.log(error);

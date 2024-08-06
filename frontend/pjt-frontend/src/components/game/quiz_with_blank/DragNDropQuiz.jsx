@@ -24,10 +24,10 @@ const testQuizContent = {
   },
 };
 
-const DragNDropQuiz = ({ problem }) => {
+const DragNDropQuiz = (problem) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState(
-    Object.values(testQuizContent.choices)
+    Object.values(problem.problemContent.problemChoices)
   );
 
   const handleDrop = (blankId, choice) => {
@@ -39,15 +39,15 @@ const DragNDropQuiz = ({ problem }) => {
     // setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
 
-  const handleSubmit = () => {
-    const isCorrect = Object.keys(testQuizContent.answer).every((key) => {
-      return testQuizContent.answer[key] === blanks[key];
-    });
-    alert("정답 제출");
-  };
+  // const handleSubmit = () => {
+  //   const isCorrect = Object.keys(testQuizContent.answer).every((key) => {
+  //     return testQuizContent.answer[key] === blanks[key];
+  //   });
+  //   alert("정답 제출");
+  // };
 
   let modifiedContent = reactStringReplace(
-    testQuizContent.content,
+    problem.problemContent.content,
     /\$blank(\d+)\$/g,
     (match, i) => {
       return (
@@ -107,7 +107,7 @@ const DragNDropQuiz = ({ problem }) => {
             return <Choice key={`choice-${idx}`} choice={choice} />;
           })}
         </ChoiceContainer>
-        <button
+        {/* <button
           style={styles.submitButton}
           onMouseOver={(e) =>
             (e.currentTarget.style.backgroundColor =
@@ -120,7 +120,7 @@ const DragNDropQuiz = ({ problem }) => {
           onClick={handleSubmit}
         >
           제출
-        </button>
+        </button> */}
       </DndProvider>
     </>
   );

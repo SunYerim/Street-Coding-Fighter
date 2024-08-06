@@ -5,53 +5,69 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
+import store from '../../store/store.js';
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 
 export default function MultiCreate() {
   const navigate = useNavigate();
 
+  const {
+    accessToken,
+    setAccessToken,
+    memberId,
+    userId,
+    name,
+    baseURL,
+  } = store((state) => ({
+    memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    userId: state.userId,
+    name: state.name,
+    baseURL: state.baseURL,
+  }));
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
+  
+
   const setRoomId = multiStore((state) => state.setRoomId);
-  const setUserId = multiStore((state) => state.setUserId);
-  const setUsername = multiStore((state) => state.setUsername);
-
-  //*** ssafy11s.com으로 수정하기
-  const baseUrl = "https://www.ssafy11s.com";
-
-  const [userId, setLocalUserId] = useState(null);
-  const [username, setLocalUsername] = useState(null);
-
-  useEffect(() => {
-    const userIdFromStore = multiStore.getState().userId;
-    const usernameFromStore = multiStore.getState().username;
-
-    setLocalUserId(userIdFromStore);
-    setLocalUsername(usernameFromStore);
-
-    setUserId(userIdFromStore);
-    setUsername(usernameFromStore);
-  }, [setUserId, setUsername]);
 
   const createMultiRoom = async (data) => {
     data.preventDefault();
     
     try {
-      const headers = {
-        'memberId': userId,
-        'username': username
-      };
+      // const headers = {
+      //   'memberId': userId,
+      //   'username': name
+      // };
   
       const title = data.target.title.value;
       const maxPlayer = data.target.maxPlayer.value;
       const password = data.target.password.value;
       const gameRound = data.target.gameRound.value;
 
+      // const response = await axios.post(
+      //   `${baseURL}/multi/room`, { title, maxPlayer, password, gameRound }, { Authorization: `Bearer ${accessToken}` });
+      
+        const response = await authClient({
+          method: "POST",
+          url: `${baseURL}/multi/room`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: { title, maxPlayer, password, gameRound },
+        });
 
-      const response = await axios.post(`${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
       const roomId = response.data;
       setRoomId(roomId);
       navigate(`/multi-game/${roomId}`, { state: { hostId: userId } } );  
 
 
-    } catch (error) {
+    } catch (error) { 
       console.error("Error creating room:", error);
     }
   }
