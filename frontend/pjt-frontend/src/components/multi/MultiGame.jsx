@@ -48,10 +48,7 @@ export default function MultiGame() {
     setAccessToken
   );
 
-
-  const roomId = multiStore.getState().roomId;
-  // const userId = multiStore.getState().userId;
-  // const username = multiStore.getState().username;
+  const { roomId } = location.state;
 
   const [socket, setSocket] = useState(null);
   const [start, setStart] = useState(0);
@@ -118,12 +115,8 @@ export default function MultiGame() {
 
     initializeConnections();
 
-    const roomId = multiStore.getState().roomId;
-    // const userId = multiStore.getState().userId;
-    // const username = multiStore.getState().username;
+    // const roomId = multiStore.getState().roomId;
     console.log(`Room ${roomId}, userId ${userId}, username: ${name}`);
-
-    // setUser(username);
 
     const socketInstance = newSocket(roomId, userId, name);
     setSocket(socketInstance);
