@@ -19,13 +19,6 @@ const DragNDropQuiz = (problem) => {
   }));
 
   useEffect(() => {
-    console.log(problem);
-    console.log(typeof problem);
-    console.log(problem.problemContent);
-    console.log(typeof problem.problemContent);
-  }, []);
-
-  useEffect(() => {
     if (problem && problem.problemChoices) {
       // problem.problemChoices 배열에서 choiceText와 choiceId를 매핑합니다.
       const choiceTexts = problem.problemChoices.map(
@@ -82,7 +75,7 @@ const DragNDropQuiz = (problem) => {
     } else {
       setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
     }
-  }, [problem.problemContent]); // problemContent의 변경에 따라 이 useEffect가 실행됨
+  }, [problem.problemContent, blanks, choices, choiceMap]); // problemContent와 관련된 의존성 배열 업데이트
 
   const handleDrop = (blankId, choiceText) => {
     const choiceId = choiceMap[choiceText];
@@ -116,7 +109,9 @@ const DragNDropQuiz = (problem) => {
     <>
       <DndProvider backend={HTML5Backend}>
         <div>
-          <StyleToPythonCode codeString={modifiedContent} />
+          {modifiedContent && (
+            <StyleToPythonCode codeString={modifiedContent} />
+          )}
         </div>
 
         <ChoiceContainer>
@@ -124,20 +119,6 @@ const DragNDropQuiz = (problem) => {
             return <Choice key={`choice-${idx}`} choice={choice} />;
           })}
         </ChoiceContainer>
-        {/* <button
-          style={styles.submitButton}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              styles.submitButtonHover.backgroundColor)
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              styles.submitButton.backgroundColor)
-          }
-          onClick={handleSubmit}
-        >
-          제출
-        </button> */}
       </DndProvider>
     </>
   );
