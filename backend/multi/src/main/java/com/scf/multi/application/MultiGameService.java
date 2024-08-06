@@ -116,15 +116,7 @@ public class MultiGameService {
 
         // problem -> problemList
         return problems.stream()
-            .map(problem -> ProblemResponse.ListDTO.builder()
-                .problemId(problem.getProblemId())
-                .title(problem.getTitle())
-                .problemType(problem.getProblemType())
-                .category(problem.getCategory())
-                .difficulty(problem.getDifficulty())
-                .problemContent(problem.getProblemContent())
-                .problemChoices(problem.getProblemChoices())
-                .build())
+            .map(this::mapToProblemListDTO)
             .toList();
     }
 
@@ -246,6 +238,18 @@ public class MultiGameService {
             throw new BusinessException(null, "problems", ErrorCode.PROBLEM_NOT_FOUND);
         }
         return problems;
+    }
+
+    private ProblemResponse.ListDTO mapToProblemListDTO(Problem problem) {
+        return ProblemResponse.ListDTO.builder()
+            .problemId(problem.getProblemId())
+            .title(problem.getTitle())
+            .problemType(problem.getProblemType())
+            .category(problem.getCategory())
+            .difficulty(problem.getDifficulty())
+            .problemContent(problem.getProblemContent())
+            .problemChoices(problem.getProblemChoices())
+            .build();
     }
 
     private Problem getCurrentProblem(MultiGameRoom room) {
