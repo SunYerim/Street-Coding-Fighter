@@ -12,7 +12,7 @@ const newSocket = (roomId, memberId, name) => {
   //   name: state.name,
   //   memberId: state.memberId,
   // }));
-  const baseUrl = "wss://www.ssafy11s.com";
+  const baseUrl = "https://www.ssafy11s.com";
 
   const url = `${baseUrl}/multi?roomId=${roomId}&userId=${memberId}&username=${name}`;
   console.log(url);
