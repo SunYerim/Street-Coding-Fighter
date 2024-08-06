@@ -12,7 +12,7 @@ public class ProblemClient {
 
     public ProblemClient(WebClient.Builder webClientBuilder) {
         // 임시 url 지정
-        this.webClient = webClientBuilder.baseUrl("http://localhost/api/problem").build();
+        this.webClient = webClientBuilder.baseUrl("http://ssafy11s.com/problem").build();
     }
 
     // 문제 상세 조회
