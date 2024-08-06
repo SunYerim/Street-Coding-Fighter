@@ -33,7 +33,6 @@ export default function MultiCreate() {
     setAccessToken
   );
   
-
   const setRoomId = multiStore((state) => state.setRoomId);
 
   const createMultiRoom = async (data) => {

@@ -278,11 +278,6 @@ export default function MultiGame() {
       }
     }, [count, isSumbit, problemType]);
 
-    // // 라운드 종료시 모달창 띄우기
-    // useEffect(() => {
-    //   setModalOpen(true);
-
-    // }, []);
   
     return <div><span>{count}</span></div>;
   }

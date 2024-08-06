@@ -40,20 +40,6 @@ function MultiRoom(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  // const setUserId = multiStore((state) => state.setUserId);
-  // const setUsername = multiStore((state) => state.setUsername);
-
-  // useEffect(() => {
-  //   const userIdFromStore = multiStore.getState().userId;
-  //   const usernameFromStore = multiStore.getState().username;
-
-  //   setLocalUserId(userIdFromStore);
-  //   setLocalUsername(usernameFromStore);
-
-  //   setUserId(userIdFromStore);
-  //   setUsername(usernameFromStore);
-  // }, [setUserId, setUsername]);
-
   const openModal = () => {
     setModalIsOpen(true);
   };

@@ -5,13 +5,11 @@ const baseUrl = "wss://www.ssafy11s.com";
 
 const newSocket = () => {
   const roomId = multiStore.getState().roomId;
-  
+
   const {
-    userId,
     memberId,
     name,
   } = store((state) => ({
-    userId: state.userId,
     name: state.name,
     memberId: state.memberId,
   }));
