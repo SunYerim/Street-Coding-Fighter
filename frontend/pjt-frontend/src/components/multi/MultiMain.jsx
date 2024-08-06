@@ -6,6 +6,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import store from '../../store/store.js';
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 
 export default function MultiMain() {
   const navigate = useNavigate();
