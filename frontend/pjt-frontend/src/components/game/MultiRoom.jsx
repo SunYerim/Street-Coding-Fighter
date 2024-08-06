@@ -13,7 +13,7 @@ function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const setRoomId = multiStore((state) => state.setRoomId);
+  const setRoomId = multiStore((state) => state.setRoomId);
 
   const {
     accessToken,

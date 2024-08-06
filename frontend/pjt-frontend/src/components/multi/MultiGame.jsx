@@ -116,9 +116,9 @@ export default function MultiGame() {
     initializeConnections();
 
     const roomId = multiStore.getState().roomId;
-    console.log(`Room ${roomId}, userId ${userId}, username: ${name}`);
+    console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
 
-    const socketInstance = newSocket(roomId, userId, name);
+    const socketInstance = newSocket(roomId, memberId, name);
     setSocket(socketInstance);
 
     socketInstance.onmessage = (event) => {
@@ -422,7 +422,7 @@ export default function MultiGame() {
                   {/* <button className="game-start-button" onClick={handleStart}>
                     Start
                   </button> */}
-                  { hostId == userId ? (
+                  { hostId == memberId ? (
                     <button className="game-start-button" onClick={handleStart}>
                       Start
                     </button>
