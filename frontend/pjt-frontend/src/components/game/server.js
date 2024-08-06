@@ -1,13 +1,19 @@
 
 import multiStore from '../../stores/multiStore.jsx';
+import store from '../../store/store.js';
 const baseUrl = "wss://www.ssafy11s.com";
 
 const newSocket = () => {
   const roomId = multiStore.getState().roomId;
-  const userId = multiStore.getState().userId;
-  const username = multiStore.getState().username;
+  const {
+    userId,
+    name,
+  } = store((state) => ({
+    userId: state.userId,
+    name: state.name,
+  }));
 
-  const url = `${baseUrl}/multi?roomId=${roomId}&userId=${userId}&username=${username}`;
+  const url = `${baseUrl}/multi?roomId=${roomId}&userId=${userId}&username=${name}`;
   console.log(url);
   const socket = new WebSocket(url);
 
