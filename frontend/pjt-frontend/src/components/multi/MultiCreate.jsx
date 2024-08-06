@@ -1,8 +1,6 @@
 import "../../index.css";
 import "../../css/GameMain.css";
 import "../../css/GameCreate.css";
-import axios from "axios";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
 import store from '../../store/store.js';
