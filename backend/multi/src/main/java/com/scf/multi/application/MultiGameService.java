@@ -80,22 +80,15 @@ public class MultiGameService {
 
     public void joinRoom(String roomId, String roomPassword, Long userId, String username) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
-
-        if (room == null) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
-        }
+        MultiGameRoom room = findOneById(roomId);
 
         boolean isHost = room.getHostId().equals(userId);
 
-        Player player = Player.builder()
-            .userId(userId)
-            .username(username)
-            .isHost(isHost)
-            .streakCount(0)
-            .build();
+        Player player = createPlayer(userId, username, isHost);
         room.add(roomPassword, player);
     }
+
+
 
     public int markSolution(String roomId, Solved solved) {
 
@@ -239,6 +232,15 @@ public class MultiGameService {
             .userId(userId)
             .username(username)
             .isHost(true)
+            .streakCount(0)
+            .build();
+    }
+
+    private Player createPlayer(Long userId, String username, boolean isHost) {
+        return Player.builder()
+            .userId(userId)
+            .username(username)
+            .isHost(isHost)
             .streakCount(0)
             .build();
     }
