@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import reactStringReplace from 'react-string-replace';
-import Choice from './Choice';
-import Blank from './Blank';
-import ChoiceContainer from './ChoiceContainer';
+import Choice from './Choice.jsx';
+import Blank from './Blank.jsx';
+import ChoiceContainer from './ChoiceContainer.jsx';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import StyleToPythonCode from '../StyleToPythonCode.jsx';
@@ -25,7 +25,7 @@ import StyleToPythonCode from '../StyleToPythonCode.jsx';
 //   },
 // };
 
-const DragNDropQuiz = ({ problem }) => {
+const DragNDropQuiz = ({ problem, onFillBlank }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState(problem.problemChoices);
   const handleDrop = (blankId, choice) => {
@@ -37,11 +37,12 @@ const DragNDropQuiz = ({ problem }) => {
     // setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
 
-  const handleSubmit = () => {
-    const isCorrect = Object.keys(problem.problemAnswers.answer).every((key) => {
-      return problem.problemAnswers.answer[key] === blanks[key];
-    });
-    alert('정답 제출');
+  const handleSubmit = (onFillBlank) => {
+    onFillBlank(blanks);
+    // const isCorrect = Object.keys(problem.problemAnswers.answer).every((key) => {
+    //   return problem.problemAnswers.answer[key] === blanks[key];
+    // });
+    // alert('정답 제출');
   };
 
   let modifiedContent = reactStringReplace(problem.problemContent.content, /\$blank(\d+)\$/g, (match, i) => {

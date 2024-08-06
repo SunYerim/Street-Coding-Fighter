@@ -3,7 +3,7 @@ import "../../css/MessageContainer.css";
 import { motion } from "framer-motion";
 import { Container } from "@mui/system";
 
-const MessageContainer = ({ chatMessages, user }) => {
+const MessageContainer = ({ chatMessages, username }) => {
   const messageEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -17,13 +17,14 @@ const MessageContainer = ({ chatMessages, user }) => {
   return (
     <div>
       {chatMessages.map((message, index) => {
+        console.log(message);
         return (
           <Container key={ message._id || index } className="message-container">
             {message.sender === "system" ? (
               <div className="system-message-container">
-                <p className="system-message">{message.chat}</p>
+                <p className="system-message">{message.content}</p>
               </div>
-            ) : message.sender === user ? (
+            ) : message.sender === username ? (
               <div className="my-message-container">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
