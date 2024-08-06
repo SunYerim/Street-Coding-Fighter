@@ -20,9 +20,9 @@ export default function Ranking() {
           // axios.get(`${tempUrl}/rank/total`),
           // axios.get(`${tempUrl}/rank/weekly`),
           // axios.get(`${tempUrl}/rank/daily`),
-          axios.get(`${store.BaseUrl}/rank/total`),
-          axios.get(`${store.BaseUrl}/rank/weekly`),
-          axios.get(`${store.BaseUrl}/rank/daily`),
+          axios.get(`${store.BaseUrl}/rank/total`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
+          axios.get(`${store.BaseUrl}/rank/weekly`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
+          axios.get(`${store.BaseUrl}/rank/daily`).then(res => console.log(res.data)).catch((err) => console.log(err)),
         ]);
 
         rankingObj['total'] = totalRes.data;
