@@ -14,6 +14,7 @@ import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
 import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import { MdClosedCaptionDisabled } from "react-icons/md";
 
 const CharacterSelection = () => {
   const navigate = useNavigate();
@@ -108,7 +109,7 @@ const CharacterSelection = () => {
         method: "POST",
         url: `${baseURL}/user/public/join`,
         data: updatedRegisterInfo,
-      });
+      })
 
       alert("회원가입이 완료되었습니다.");
       navigate("/login");

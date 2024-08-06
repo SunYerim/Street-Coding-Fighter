@@ -20,11 +20,31 @@ import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
+//음악 변경부분입니다. 아래 SoundStore import 해야됨
+import SoundStore from "../../stores/SoundStore.jsx"
+
 
 export default function MultiGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const chatStompClient = useRef(null);
+  //-------------------게임페이지 들어왔을 때 음악변경-------------//
+  const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
+  useEffect(() => {
+    switchBackgroundMusic(
+      'single',
+      (newBackgroundMusic) => {
+        newBackgroundMusic.play();
+      }
+    );
+    return () => {
+      switchBackgroundMusic('main', (newBackgroundMusic) => {
+        newBackgroundMusic.play();
+      });
+    };
+  }, []);
+
+  // --------------------------페이지에서 나가면 다시 음악바뀝니다.-----------------------//
 
   const {
     accessToken,
