@@ -68,16 +68,14 @@ const BattleGamePage = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [battleHistory, setBattleHistory] = useState([]);
   const [message, setMessage] = useState("");
-  const [ws, setWs] = useState(null);
   const chatEndRef = useRef(null);
   const battleHistoryEndRef = useRef(null);
-  const [player1Health, setPlayer1Health] = useState(100);
-  const [player2Health, setPlayer2Health] = useState(100);
+  const [myHealth, setMyHealth] = useState(100);
+  const [enemyHealth, setEnemy2Health] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
   const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
-  const [timerEnded, setTimerEnded] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [myProblem, setMyProblem] = useState(null);
   const [selectMyProblem, setSelectMyProblem] = useState(false);
@@ -88,56 +86,112 @@ const BattleGamePage = () => {
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
 
-  const [isBattleConnected, setIsBattleConnected] = useState(false);
-  const [isChatConnected, setIsChatConnected] = useState(false);
-
   // ---------------------- WebSocket ----------------------
 
   // WebSocket 연결 및 초기화 함수
-  const connect = async () => {
-    const battleSocket = new SockJS(`${baseURL}/ws-battle`);
-    const chatSocket = new SockJS(`${baseURL}/ws-chat`);
-    battleStompClient.current = Stomp.over(battleSocket);
-    chatStompClient.current = Stomp.over(chatSocket);
 
+  const connect = () => {
     return new Promise((resolve, reject) => {
+      const battleSocket = new SockJS(`${baseURL}/ws-battle`);
+      const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+      battleStompClient.current = Stomp.over(battleSocket);
+      chatStompClient.current = Stomp.over(chatSocket);
+
+      let battleConnected = false;
+      let chatConnected = false;
+
+      // 배틀 서버 연결
       battleStompClient.current.connect(
         {},
         (frame) => {
-          console.log("Connected: " + frame);
-          setIsBattleConnected(true);
+          console.log("Connected to Battle Server: " + frame);
           subscribeEnterRoom();
           subscribeEnemyProblem();
-          subscribeMyProblem();
+          subscribeMyProblem(); // Typo fixed: changed from subsribeMyProblem to subscribeMyProblem
           subscribeResult();
-          console.log("배틀 서버 연결");
 
-          chatStompClient.current.connect(
-            {},
-            (frame) => {
-              console.log("Connected: " + frame);
-              setIsChatConnected(true);
-              subscribeMessage();
-              console.log("채팅 서버 연결");
-              resolve();
-            },
-            (error) => {
-              console.log(error);
-              setIsChatConnected(false);
-              reconnectWebSocket();
-              reject(error);
-            }
-          );
+          battleConnected = true;
+          if (battleConnected && chatConnected) {
+            resolve(); // 두 서버가 모두 연결되면 Promise를 해결합니다.
+          }
         },
         (error) => {
-          console.log(error);
-          setIsBattleConnected(false);
-          reconnectWebSocket();
-          reject(error);
+          console.log("Battle server connection error:", error);
+          reject(error); // 연결 실패 시 Promise 거부
         }
       );
+
+      console.log("배틀 서버 연결 시도");
+
+      // 채팅 서버 연결
+      chatStompClient.current.connect(
+        {},
+        (frame) => {
+          console.log("Connected to Chat Server: " + frame);
+
+          subscribeMessage();
+
+          console.log("채팅 서버 연결");
+
+          chatConnected = true;
+          if (battleConnected && chatConnected) {
+            resolve(); // 두 서버가 모두 연결되면 Promise를 해결합니다.
+          }
+        },
+        (error) => {
+          console.log("Chat server connection error:", error);
+          reject(error); // 연결 실패 시 Promise 거부
+        }
+      );
+
+      console.log("채팅 서버 연결 시도");
     });
   };
+
+  // const connect = async () => {
+  //   const battleSocket = new SockJS(`${baseURL}/ws-battle`);
+  //   const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+  //   battleStompClient.current = Stomp.over(battleSocket);
+  //   chatStompClient.current = Stomp.over(chatSocket);
+
+  //   return new Promise((resolve, reject) => {
+  //     battleStompClient.current.connect(
+  //       {},
+  //       (frame) => {
+  //         console.log("Connected: " + frame);
+  //         setIsBattleConnected(true);
+  //         subscribeEnterRoom();
+  //         subscribeEnemyProblem();
+  //         subscribeMyProblem();
+  //         subscribeResult();
+  //         console.log("배틀 서버 연결");
+
+  //         chatStompClient.current.connect(
+  //           {},
+  //           (frame) => {
+  //             console.log("Connected: " + frame);
+  //             setIsChatConnected(true);
+  //             subscribeMessage();
+  //             console.log("채팅 서버 연결");
+  //             resolve();
+  //           },
+  //           (error) => {
+  //             console.log(error);
+  //             setIsChatConnected(false);
+  //             reconnectWebSocket();
+  //             reject(error);
+  //           }
+  //         );
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //         setIsBattleConnected(false);
+  //         reconnectWebSocket();
+  //         reject(error);
+  //       }
+  //     );
+  //   });
+  // };
 
   const enterRoom = () => {
     const joinRoomDTO = {
@@ -282,63 +336,17 @@ const BattleGamePage = () => {
     setMessage("");
   };
 
-  // const subscribeMessage = () => {
-  //   const endpoint = `/room/${roomId}`;
-  //   chatStompClient.current.subscribe(endpoint, (message) => {
-  //     const body = JSON.parse(message.body);
-  //     setChatMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       body.type === "CHAT"
-  //         ? `${body.sender}: ${body.content}`
-  //         : `${body.content}`,
-  //     ]);
-  //   });
-  // };
-
-  const subscribeMessage = async (retryCount = 5, retryDelay = 1000) => {
-    if (!chatStompClient.current) {
-      console.error("Chat WebSocket client is not initialized.");
-      return;
-    }
-
+  const subscribeMessage = () => {
     const endpoint = `/room/${roomId}`;
-
-    const attemptSubscribe = (attempt) => {
-      try {
-        chatStompClient.current.subscribe(endpoint, (message) => {
-          try {
-            const body = JSON.parse(message.body);
-            setChatMessages((prevMessages) => [
-              ...prevMessages,
-              body.type === "CHAT"
-                ? `${body.sender}: ${body.content}`
-                : `${body.content}`,
-            ]);
-          } catch (error) {
-            console.error("Error parsing message:", error);
-          }
-        });
-
-        console.log("Successfully subscribed to chat messages.");
-      } catch (error) {
-        console.error("Subscription attempt failed:", error);
-
-        if (attempt < retryCount) {
-          setTimeout(() => {
-            console.log(
-              `Retrying subscription (${attempt + 1}/${retryCount})...`
-            );
-            attemptSubscribe(attempt + 1);
-          }, retryDelay);
-        } else {
-          console.error(
-            "Max retries reached. Could not subscribe to chat messages."
-          );
-        }
-      }
-    };
-
-    attemptSubscribe(0); // Start the first attempt
+    chatStompClient.current.subscribe(endpoint, (message) => {
+      const body = JSON.parse(message.body);
+      setChatMessages((prevMessages) => [
+        ...prevMessages,
+        body.type === "CHAT"
+          ? `${body.sender}: ${body.content}`
+          : `${body.content}`,
+      ]);
+    });
   };
 
   const sendQuitMessage = () => {
@@ -535,14 +543,14 @@ const BattleGamePage = () => {
               <div className="health-bar">
                 <div
                   className="health-bar-inner"
-                  style={{ width: `${player1Health}%` }}
+                  style={{ width: `${myHealth}%` }}
                 ></div>
               </div>
               <h2 className="battle-game-title">Round {currentRound}</h2>
               <div className="health-bar">
                 <div
                   className="health-bar-inner"
-                  style={{ width: `${player2Health}%` }}
+                  style={{ width: `${enemyHealth}%` }}
                 ></div>
               </div>
             </div>
@@ -571,7 +579,6 @@ const BattleGamePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
-                    {/* {renderQuestion(customProblem)} */}
                     {renderQuestion(myProblem)}
                     <button
                       onClick={handleSubmit}
