@@ -85,8 +85,7 @@ function MultiRoom(props) {
       );
 
       if (response.status === 200) {
-        // setUserId(userId);
-        // setUsername(username);
+        setRoomId(props.roomId);
         navigate(`/multi-game/${props.roomId}`);
       } else {
         alert('Incorrect password');
@@ -106,8 +105,6 @@ function MultiRoom(props) {
       handleOpenModal();
     } else {
       setRoomId(props.roomId);
-      // setUserId(userId);
-      // setUsername(username);
       navigate(`/multi-game/${props.roomId}`);
     }
   };
