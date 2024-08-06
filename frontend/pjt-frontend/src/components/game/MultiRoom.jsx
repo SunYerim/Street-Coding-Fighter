@@ -69,12 +69,14 @@ function MultiRoom(props) {
       console.log(props.roomId);
       console.log(password);
       console.log(headers);
-      const response = await axios.post(`${baseURL}/multi/room/${props.roomId}`, password, {
-        headers: {
-          ...headers,
-          'Content-Type': 'text/plain'
-        }
-      });
+      const response = await axios.post(`${baseURL}/multi/room/${props.roomId}`, password, headers
+        // {
+        //   headers: {
+        //   ...headers,
+        //   'Content-Type': 'text/plain'
+        //   }
+        // }
+      );
       if (response.status === 200) {
         // setUserId(userId);
         // setUsername(username);
