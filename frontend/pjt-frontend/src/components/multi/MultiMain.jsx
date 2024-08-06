@@ -13,12 +13,16 @@ export default function MultiMain() {
   const [rooms, setRooms] = useState([]);
 
   const {
+    accessToken,
+    setAccessToken,
     memberId,
     userId,
     name,
     baseURL,
   } = store((state) => ({
     memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
     userId: state.userId,
     name: state.name,
     baseURL: state.baseURL,
