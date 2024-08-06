@@ -12,6 +12,7 @@ const DragNDropQuiz = (problem) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
+  const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
   const { blankSolve, setBlankSolve } = store((state) => ({
     blankSolve: state.blankSolve,
     setBlankSolve: state.setBlankSolve,
@@ -45,6 +46,37 @@ const DragNDropQuiz = (problem) => {
     }
   }, [blanks]);
 
+  // problemContent의 값을 기반으로 modifiedContent를 재계산합니다.
+  useEffect(() => {
+    if (problem && problem.problemContent && problem.problemContent.content) {
+      const problemContent = problem.problemContent.content;
+
+      const newModifiedContent = reactStringReplace(
+        problemContent,
+        /\$blank(\d+)\$/g,
+        (match, i) => {
+          return (
+            <Blank key={match} id={match} onDrop={handleDrop}>
+              {blanks[match]
+                ? choices.find(
+                    (choice) =>
+                      choice ===
+                      Object.keys(choiceMap).find(
+                        (key) => choiceMap[key] === blanks[match]
+                      )
+                  )
+                : ""}
+            </Blank>
+          );
+        }
+      );
+
+      setModifiedContent(newModifiedContent);
+    } else {
+      setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
+    }
+  }, [problem.problemContent]); // problemContent의 변경에 따라 이 useEffect가 실행됨
+
   const handleDrop = (blankId, choiceText) => {
     const choiceId = choiceMap[choiceText];
     setBlanks((prevBlanks) => ({
@@ -52,28 +84,6 @@ const DragNDropQuiz = (problem) => {
       [blankId]: choiceId,
     }));
   };
-
-  const problemContent = problem.problemContent.content;
-
-  let modifiedContent = reactStringReplace(
-    problemContent,
-    /\$blank(\d+)\$/g,
-    (match, i) => {
-      return (
-        <Blank key={match} id={match} onDrop={handleDrop}>
-          {blanks[match]
-            ? choices.find(
-                (choice) =>
-                  choice ===
-                  Object.keys(choiceMap).find(
-                    (key) => choiceMap[key] === blanks[match]
-                  )
-              )
-            : ""}
-        </Blank>
-      );
-    }
-  );
 
   const styles = {
     quizContainer: {
