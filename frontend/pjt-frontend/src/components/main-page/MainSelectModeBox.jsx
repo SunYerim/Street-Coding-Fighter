@@ -13,7 +13,7 @@ function MainSelectModeBox(props) {
     } else if (mode === "1 vs 1") {
       navigate("/battle-list");
     } else if (mode === "랭킹") {
-      alert(`${mode}`);
+      navigate("/ranking");
     }
     playEffectSound('clickSound'); // 클릭 시 소리 재생
   };

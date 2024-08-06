@@ -58,9 +58,13 @@ function App() {
           <Route path="/reset-password" element={<ChangePasswordPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signup-character" element={<CharacterSelection />} />
-          <Route
+          {/* <Route
             path="/ranking"
             element={accessToken ? <Ranking /> : <LoginPage />}
+          /> */}
+          <Route
+            path="/ranking"
+            element={<Ranking />}
           />
           <Route path="/main" element={<MainPage />} />
           {/* <Route path="/main" element={accessToken ? <MainPage /> : <LoginPage />} /> */}
