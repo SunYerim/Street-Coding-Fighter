@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -33,6 +34,9 @@ class MultiGameServiceTest {
 
     @Mock
     private ProblemService problemService;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     private MultiGameService multiGameService;
@@ -53,12 +57,14 @@ class MultiGameServiceTest {
             .userId(1L)
             .username("Host")
             .isHost(true)
+            .streakCount(2)
             .build();
 
         otherPlayer = Player.builder()
             .userId(2L)
             .username("Player2")
             .isHost(false)
+            .streakCount(2)
             .build();
 
         room = MultiGameRoom.builder()
@@ -164,20 +170,21 @@ class MultiGameServiceTest {
         when(multiGameRepository.findOneById(anyString())).thenReturn(room);
 
         Solved solved = Solved.builder()
+            .userId(1L)
             .solve(Map.of(1, 1, 2, 2, 3, 3))
             .solveText(null)
             .submitTime(20) // Within time limit
             .build();
 
         // When
-        int score = multiGameService.markSolution(room.getRoomId(), Player.builder().userId(1L).streakCount(2).build(), solved);
+        int score = multiGameService.markSolution(room.getRoomId(), solved);
 
         // Then
         assertTrue(score > 0);
     }
 
     @Test
-    @DisplayName("빈칸 문제를 채점하고 점수를 옳바르게 계산해야 한다.")
+    @DisplayName("주관식 문제를 채점하고 점수를 옳바르게 계산해야 한다.")
     void markShortAnswerQuestionSolutionTest() {
 
         // Given
@@ -189,13 +196,14 @@ class MultiGameServiceTest {
         when(multiGameRepository.findOneById(anyString())).thenReturn(room);
 
         Solved solved = Solved.builder()
+            .userId(1L)
             .solve(null)
             .solveText("test answer")
             .submitTime(20) // Within time limit
             .build();
 
         // When
-        int score = multiGameService.markSolution(room.getRoomId(), Player.builder().userId(1L).streakCount(2).build(), solved);
+        int score = multiGameService.markSolution(room.getRoomId(), solved);
 
         // Then
         assertTrue(score > 0);

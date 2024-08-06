@@ -4,10 +4,15 @@ import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.room.RoomResponse;
+import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.dto.user.Player;
+import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
+import com.scf.multi.infrastructure.KafkaMessageProducer;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MultiGameController {
 
     private final MultiGameService multiGameService;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     @GetMapping("/room")
     public ResponseEntity<List<RoomResponse.ListDTO>> roomList() {
@@ -66,5 +72,63 @@ public class MultiGameController {
         List<ProblemResponse.ListDTO> problems = multiGameService.startGame(roomId, memberId);
 
         return new ResponseEntity<>(problems, HttpStatus.OK);
+    }
+
+    @GetMapping("/kafka/test")
+    public ResponseEntity<Void> test() {
+
+        Rank hermesRank = Rank.builder()
+            .userId(1L)
+            .username("Hermes")
+            .score(150)
+            .build();
+
+        Rank jackRank = Rank.builder()
+            .userId(2L)
+            .username("Jack")
+            .score(100)
+            .build();
+
+        Solved hermesSolved1 = Solved.builder() // 주관식
+            .solveText("hermes test answer")
+            .problemId(1L)
+            .userId(1L)
+            .solve(null)
+            .submitTime(10)
+            .build();
+
+        Solved hermesSolved2 = Solved.builder() // 빈칸
+            .solveText(null)
+            .problemId(2L)
+            .userId(1L)
+            .solve(Map.of(1, 1, 2, 2))
+            .submitTime(10)
+            .build();
+
+        Solved jackSolved1 = Solved.builder() // 주관식
+            .solveText("jack test answer")
+            .problemId(1L)
+            .userId(1L)
+            .solve(null)
+            .submitTime(10)
+            .build();
+
+        Solved jackSolved2 = Solved.builder() // 빈칸
+            .solveText(null)
+            .problemId(2L)
+            .userId(1L)
+            .solve(Map.of(1, 4, 2, 1))
+            .submitTime(20)
+            .build();
+
+        GameResult gameResult = GameResult.builder()
+            .gameRank(List.of(hermesRank, jackRank))
+            .build();
+
+        kafkaMessageProducer.sendResult(gameResult);
+        kafkaMessageProducer.sendSolved(List.of(hermesSolved1, hermesSolved2));
+        kafkaMessageProducer.sendSolved(List.of(jackSolved1, jackSolved2));
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

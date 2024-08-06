@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Message {
+public class SolvedMessage {
 
     private String type;
     private Content content;

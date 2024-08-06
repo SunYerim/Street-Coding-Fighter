@@ -1,6 +1,6 @@
 package com.scf.multi.infrastructure;
 
-import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.dto.user.Solved;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ public class KafkaMessageProducer {
 
     private final KafkaTemplate<String, List<Solved>> solvedKafkaTemplate;
 
-    private final KafkaTemplate<String, List<Rank>> resultKafkaTemplate;
+    private final KafkaTemplate<String, GameResult> resultKafkaTemplate;
 
     public void sendSolved(List<Solved> solved) {
         String topic = "solved";
@@ -21,10 +21,10 @@ public class KafkaMessageProducer {
         System.out.println("Sent SolvedDTO: " + solved);
     }
 
-    public void sendResult(List<Rank> rank) {
-        String topic = "game-result";
-        resultKafkaTemplate.send(topic, rank);
-        System.out.println("Sent ResultDTO: " + rank);
+    public void sendResult(GameResult gameResult) {
+        String topic = "game-result-multi";
+        resultKafkaTemplate.send(topic, gameResult);
+        System.out.println("Sent ResultDTO: " + gameResult);
     }
 }
 

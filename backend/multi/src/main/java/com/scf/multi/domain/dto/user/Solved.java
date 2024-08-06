@@ -14,13 +14,15 @@ public class Solved {
     private Map<Integer, Integer> solve;
     private String solveText;
     private Integer submitTime;
+    private Boolean isCorrect;
 
     @Builder
-    public Solved(Long problemId, Long userId, Map<Integer, Integer> solve, String solveText, Integer submitTime) {
+    public Solved(Long problemId, Long userId, Map<Integer, Integer> solve, String solveText, Integer submitTime, Boolean isCorrect) {
         this.problemId = problemId;
         this.userId = userId;
         this.solve = solve;
         this.solveText = solveText;
         this.submitTime = submitTime;
+        this.isCorrect = isCorrect;
     }
 }
