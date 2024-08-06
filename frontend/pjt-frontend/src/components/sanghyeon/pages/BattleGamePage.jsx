@@ -148,51 +148,6 @@ const BattleGamePage = () => {
     });
   };
 
-  // const connect = async () => {
-  //   const battleSocket = new SockJS(`${baseURL}/ws-battle`);
-  //   const chatSocket = new SockJS(`${baseURL}/ws-chat`);
-  //   battleStompClient.current = Stomp.over(battleSocket);
-  //   chatStompClient.current = Stomp.over(chatSocket);
-
-  //   return new Promise((resolve, reject) => {
-  //     battleStompClient.current.connect(
-  //       {},
-  //       (frame) => {
-  //         console.log("Connected: " + frame);
-  //         setIsBattleConnected(true);
-  //         subscribeEnterRoom();
-  //         subscribeEnemyProblem();
-  //         subscribeMyProblem();
-  //         subscribeResult();
-  //         console.log("배틀 서버 연결");
-
-  //         chatStompClient.current.connect(
-  //           {},
-  //           (frame) => {
-  //             console.log("Connected: " + frame);
-  //             setIsChatConnected(true);
-  //             subscribeMessage();
-  //             console.log("채팅 서버 연결");
-  //             resolve();
-  //           },
-  //           (error) => {
-  //             console.log(error);
-  //             setIsChatConnected(false);
-  //             reconnectWebSocket();
-  //             reject(error);
-  //           }
-  //         );
-  //       },
-  //       (error) => {
-  //         console.log(error);
-  //         setIsBattleConnected(false);
-  //         reconnectWebSocket();
-  //         reject(error);
-  //       }
-  //     );
-  //   });
-  // };
-
   const enterRoom = () => {
     const joinRoomDTO = {
       userId: memberId,

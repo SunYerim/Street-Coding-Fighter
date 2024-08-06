@@ -24,11 +24,9 @@ const testQuizContent = {
   },
 };
 
-const DragNDropQuiz = ({ problem }) => {
+const DragNDropQuiz = (problem) => {
   const [blanks, setBlanks] = useState({});
-  const [choices, setChoices] = useState(
-    Object.values(testQuizContent.choices)
-  );
+  const [choices, setChoices] = useState(Object.values(problem.problemChoices));
 
   const handleDrop = (blankId, choice) => {
     setBlanks((prevBlanks) => ({
@@ -39,15 +37,15 @@ const DragNDropQuiz = ({ problem }) => {
     // setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
 
-  const handleSubmit = () => {
-    const isCorrect = Object.keys(testQuizContent.answer).every((key) => {
-      return testQuizContent.answer[key] === blanks[key];
-    });
-    alert("정답 제출");
-  };
+  // const handleSubmit = () => {
+  //   const isCorrect = Object.keys(testQuizContent.answer).every((key) => {
+  //     return testQuizContent.answer[key] === blanks[key];
+  //   });
+  //   alert("정답 제출");
+  // };
 
   let modifiedContent = reactStringReplace(
-    testQuizContent.content,
+    problem.problemContent.content,
     /\$blank(\d+)\$/g,
     (match, i) => {
       return (
