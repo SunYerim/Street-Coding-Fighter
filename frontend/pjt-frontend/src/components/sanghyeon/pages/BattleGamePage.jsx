@@ -235,6 +235,7 @@ const BattleGamePage = () => {
   const subscribeResult = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
+      console.log(message);
       // if (message.body === "boom") {
       //   alert("The host left the room");
       //   navigate("/battle-list");
