@@ -16,7 +16,7 @@ export default function MultiMain() {
 
   const loadData = async () => {
     try {
-      const response = await axios.get(`http://${baseUrl}/multi/room`);
+      const response = await axios.get(`https://${baseUrl}/multi/room`);
       if (Array.isArray(response.data)) {
         setRooms(response.data);
       } else {

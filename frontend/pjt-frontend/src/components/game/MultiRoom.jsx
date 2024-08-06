@@ -62,7 +62,7 @@ function MultiRoom(props) {
     };
     
     try {
-      const response = await axios.post(`http://${baseUrl}/multi-game/${props.roomId}`, password, {
+      const response = await axios.post(`https://${baseUrl}/multi-game/${props.roomId}`, password, {
         headers: {
           ...headers,
           'Content-Type': 'text/plain'

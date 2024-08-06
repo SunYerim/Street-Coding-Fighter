@@ -46,7 +46,7 @@ export default function MultiCreate() {
       const gameRound = data.target.gameRound.value;
 
 
-      const response = await axios.post(`http://${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
+      const response = await axios.post(`https://${baseUrl}/multi/room`, { title, maxPlayer, password, gameRound }, { headers });
       const roomId = response.data;
       setRoomId(roomId);
       navigate(`/multi-game/${roomId}`, { state: { hostId: userId } } );  

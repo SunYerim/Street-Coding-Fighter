@@ -76,7 +76,7 @@ export default function MultiGame() {
   const handleStart = async () => {
     setStart(1);
     const response = await axios.post(
-      `http://${baseURL}/multi/game/${roomId}/start`,
+      `https://${baseURL}/multi/game/${roomId}/start`,
       null, // 요청 본문을 생략
       {
         headers: {
