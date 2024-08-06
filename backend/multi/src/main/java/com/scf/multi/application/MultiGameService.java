@@ -56,22 +56,9 @@ public class MultiGameService {
 
         String roomId = UUID.randomUUID().toString();
 
-        MultiGameRoom room = MultiGameRoom.builder()
-            .roomId(roomId)
-            .hostId(userId)
-            .hostname(username)
-            .title(createRoomDTO.getTitle())
-            .maxPlayer(createRoomDTO.getMaxPlayer())
-            .password(createRoomDTO.getPassword())
-            .playRound(createRoomDTO.getGameRound())
-            .build();
+        MultiGameRoom room = createRoomDTO.toEntity(roomId, userId, username);
 
-        Player hostPlayer = Player.builder()
-            .userId(userId)
-            .username(username)
-            .isHost(true)
-            .streakCount(0)
-            .build();
+        Player hostPlayer = createHostPlayer(userId, username);
 
         room.add(createRoomDTO.getPassword(), hostPlayer);
 
@@ -243,6 +230,15 @@ public class MultiGameService {
             .maxPlayer(room.getMaxPlayer())
             .curPlayer(room.getPlayers().size())
             .isLock(room.getPassword() != null)
+            .build();
+    }
+
+    private Player createHostPlayer(Long userId, String username) {
+        return Player.builder()
+            .userId(userId)
+            .username(username)
+            .isHost(true)
+            .streakCount(0)
             .build();
     }
 
