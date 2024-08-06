@@ -7,10 +7,11 @@ import store from "../../../store/store.js";
 const Header = ({ type = "default" }) => {
   const navigate = useNavigate();
   const userIcon = "/memberIcon.png";
-  const { baseURL, accessToken, roomId } = store((state) => ({
+  const { baseURL, accessToken, roomId, setNormalQuit } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
     roomId: state.roomId,
+    setNormalQuit: state.setNormalQuit,
   }));
 
   const quitBattleRoom = async () => {
@@ -27,6 +28,7 @@ const Header = ({ type = "default" }) => {
         },
       });
       alert("방 나가기에 성공했습니다.");
+      setNormalQuit(true);
       navigate("/battle-list");
     } catch (error) {
       alert("방 나가기에 실패했습니다.");

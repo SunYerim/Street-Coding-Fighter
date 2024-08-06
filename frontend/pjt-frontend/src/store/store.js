@@ -34,6 +34,9 @@ const store = create(
       exp: 0,
       setExp: (exp) => set({ exp }),
 
+      normalQuit: false,
+      setNormalQuit: (normalQuit) => set({ normalQuit }),
+
       registerInfo: {
         userId: "",
         name: "",
