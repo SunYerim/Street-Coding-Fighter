@@ -107,7 +107,7 @@ const DragNDropQuiz = ({ problem }) => {
             return <Choice key={`choice-${idx}`} choice={choice} />;
           })}
         </ChoiceContainer>
-        <button
+        {/* <button
           style={styles.submitButton}
           onMouseOver={(e) =>
             (e.currentTarget.style.backgroundColor =
@@ -120,7 +120,7 @@ const DragNDropQuiz = ({ problem }) => {
           onClick={handleSubmit}
         >
           제출
-        </button>
+        </button> */}
       </DndProvider>
     </>
   );
