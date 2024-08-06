@@ -70,18 +70,12 @@ function MultiRoom(props) {
   };
 
   const handleSubmit = async (password) => {
-    console.log(password);
-    // const headers = {
-    //   'memberId': userId,
-    //   'username': name
-    // };
     
     try {
-      console.log(props.roomId);
-      console.log(password);
+
       const response = await axios.post(
         `${baseURL}/multi/room/${props.roomId}`,
-        { password }, // 요청 본문에 password 포함
+        password,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
