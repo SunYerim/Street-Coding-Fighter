@@ -202,6 +202,8 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       console.log(message.body);
+      console.log(message.body.problemType);
+      console.log(JSON.parse(message.body));
       setMyProblem(message.body);
       console.log("My Problem: ", message.body);
       setSelectMyProblem(true);
@@ -419,7 +421,7 @@ const BattleGamePage = () => {
   };
 
   const renderQuestion = (problem) => {
-    console.log(problem);
+    console.log(problem.problemType);
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
         return <DragNDropQuiz problem={problem} />;
@@ -429,8 +431,6 @@ const BattleGamePage = () => {
         return <div>Unknown problem type</div>;
     }
   };
-
-  const customProblem = {};
 
   return (
     <>
