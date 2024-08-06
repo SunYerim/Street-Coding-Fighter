@@ -144,7 +144,7 @@ h4 {
   border-radius: 10px;
 }
 
-.multi-play-room {
+/* .multi-play-room {
   position: absolute;
   left: 260px;
   top: 2%;
@@ -152,7 +152,7 @@ h4 {
   height: 425px;
   border: 3px solid black;
   border-radius: 10px;
-}
+} */
 
 .multi-message-room {
   overflow-y: auto;
@@ -227,4 +227,14 @@ h4 {
 
 .multi-button:hover {
   background-color: #eee;
+}
+
+.after-start {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 90%;
+  height: 90%;
+  border: 3px solid rgba(255, 255, 255, 0);
+  border-radius: 10px;
 }
