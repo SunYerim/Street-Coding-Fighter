@@ -39,10 +39,10 @@ export default function MultiCreate() {
     data.preventDefault();
     
     try {
-      const headers = {
-        'memberId': userId,
-        'username': name
-      };
+      // const headers = {
+      //   'memberId': userId,
+      //   'username': name
+      // };
   
       const title = data.target.title.value;
       const password = data.target.password.value;
@@ -59,8 +59,7 @@ export default function MultiCreate() {
           password, 
           gameRound: gameRoundInt, 
           maxPlayer: maxPlayerInt 
-        }, 
-        { headers }
+        }
       );
       const roomId = response.data;
       setRoomId(roomId);
