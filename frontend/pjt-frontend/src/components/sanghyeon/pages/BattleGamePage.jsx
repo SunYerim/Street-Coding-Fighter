@@ -303,16 +303,12 @@ const BattleGamePage = () => {
   const subscribeResult = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
-      console.log(message);
-      // if (message.body === "boom") {
-      //   alert("The host left the room");
-      //   navigate("/battle-list");
-      // }
       const body = JSON.parse(message.body);
 
       console.log(body);
 
       if (body.result && typeof body.result === "object") {
+        console.log("여기");
         setWinner(body.result.winner);
         setLoser(body.result.loser);
         setGameEnded(true);
