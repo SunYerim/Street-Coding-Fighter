@@ -89,11 +89,9 @@ export default function MultiGame() {
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          // 'memberId': hostId, // 헤더에 hostId 추가
         }
       }
     );
-    console.log(response.data);
   };
 
   const isJsonString = (str) => {
@@ -128,34 +126,36 @@ export default function MultiGame() {
 
     socketInstance.onmessage = (event) => {
       const messageData = event.data;
-      if (isJsonString(messageData)) {
+      // if (isJsonString(messageData)) {
         const data = JSON.parse(messageData);
 
         // Multi socket 통신 타입별 정리
-        if (data.type === 'gameStart') { // 게임스타트
-          setStart(1);
-          console.log(data.payload);
-          const parsedPayload = JSON.parse(data.payload);
-          setProblems(parsedPayload);
-          console.log('parsedPayload: ', parsedPayload)
-          console.log('parsedPayload.data: ', parsedPayload.data)
-        } else if (data.type === 'newHost') { // 방장바뀌는 타입
-          console.log(data.payload);
-          setHostId(data.payload);
-        } else if (data.type === 'attainScore') {
-          console.log(`얻은 점수: ${data.payload}`);
-        } else if (data.type === 'gameRank') {
-          setRankList(data.payload);
-          setTimerEnded(true);
-          console.log('전체랭킹: ',rankList);
-        } else if (data.type === 'roundRank') { 
-          setRoundRankList(data.payload);
-          console.log('라운드랭킹: ',roundRankList);
-        }
-      } else {
-        console.error('Received non-JSON message:', messageData);
-        console.log('Received non-JSON message:', messageData);
+      if (data.type === 'gameStart') { // 게임스타트
+        console.log("Game started 신호는 왔음");
+        setStart(1);
+        console.log(data.payload);
+        const parsedPayload = JSON.parse(data.payload);
+        setProblems(parsedPayload);
+        console.log('parsedPayload: ', parsedPayload)
+        console.log('parsedPayload.data: ', parsedPayload.data)
+      } else if (data.type === 'newHost') { // 방장바뀌는 타입
+        console.log(data.payload);
+        setHostId(data.payload);
+      } else if (data.type === 'attainScore') {
+        console.log(`얻은 점수: ${data.payload}`);
+      } else if (data.type === 'gameRank') {
+        setRankList(data.payload);
+        setTimerEnded(true);
+        console.log('전체랭킹: ',rankList);
+      } else if (data.type === 'roundRank') { 
+        setRoundRankList(data.payload);
+        console.log('라운드랭킹: ',roundRankList);
       }
+      // } else {
+      //   console.log("이거 json 맞는데?", messageData);
+      //   console.error('Received non-JSON message:', messageData);
+      //   console.log('Received non-JSON message:', messageData);
+      // }
     };
 
     return () => {
