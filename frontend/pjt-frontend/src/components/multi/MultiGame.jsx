@@ -26,12 +26,6 @@ export default function MultiGame() {
   const location = useLocation();
   const chatStompClient = useRef(null);
 
-  const {
-    problemList,
-  } = multiStore((state) => ({
-    setProblemList: state.setProblemList,
-  }));
-
   // 유저정보 받아오기
   const {
     accessToken,
