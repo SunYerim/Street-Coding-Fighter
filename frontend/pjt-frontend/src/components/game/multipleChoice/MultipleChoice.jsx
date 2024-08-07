@@ -14,10 +14,12 @@ const styles = {
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
   },
   choiceContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    margin: "10px",
+    width: "40vw",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr", // 두 열로 설정
+    gap: "10px",
+    justifyContent: "center",
+    margin: "20px auto",
   },
   choiceButton: {
     display: "inline-block",
@@ -91,9 +93,9 @@ const MultipleChoice = () => {
     setSelectedChoice(multipleChoiceSolve); // 로컬 저장소의 값을 컴포넌트 상태에 반영
   }, [multipleChoiceSolve]);
 
-  const handleChoiceSelect = (choiceId, value) => {
+  const handleChoiceSelect = (choiceId) => {
     setSelectedChoice(choiceId); // 선택된 choiceId를 상태에 저장
-    setMultipleChoiceSolve(value); // 선택된 값을 로컬 저장소에 저장
+    setMultipleChoiceSolve(choiceId); // 선택된 값을 로컬 저장소에 저장
   };
 
   return (
@@ -108,7 +110,7 @@ const MultipleChoice = () => {
         <div style={styles.choiceContainer}>
           {problem &&
             problem.problemChoices &&
-            problem.problemChoices.map((choice) => (
+            problem.problemChoices.map((choice, index) => (
               <button
                 key={choice.choiceId}
                 style={{
@@ -116,11 +118,9 @@ const MultipleChoice = () => {
                   backgroundColor:
                     selectedChoice === choice.choiceId ? "#0056b3" : "#007bff",
                 }}
-                onClick={() =>
-                  handleChoiceSelect(choice.choiceId, choice.choiceText)
-                }
+                onClick={() => handleChoiceSelect(choice.choiceId)}
               >
-                {choice.choiceText}
+                {index + 1}. {choice.choiceText}
               </button>
             ))}
         </div>

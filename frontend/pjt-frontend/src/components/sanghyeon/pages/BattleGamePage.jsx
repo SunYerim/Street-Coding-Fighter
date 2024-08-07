@@ -230,8 +230,11 @@ const BattleGamePage = () => {
         case "SHORT_ANSWER_QUESTION":
           setMyShortAnswerProblem(responseProblem);
           break;
-        default:
+        case "MULTIPLE_CHOICE":
           setMyMultipleChoiceProblem(responseProblem);
+          break;
+        default:
+          console.log("Unknown problem type");
       }
       setSelectMyProblem(true);
     });
@@ -263,10 +266,12 @@ const BattleGamePage = () => {
         solveData = null;
         solveText = shortAnswerSolve === "" ? "ssafy" : shortAnswerSolve;
         break;
-      default:
-        solveData =
-          multipleChoiceSolve[1] === "" ? { 1: "ssafy" } : multipleChoiceSolve;
+      case "MULTIPLE_CHOICE":
+        solveData = { 1: multipleChoiceSolve };
         solveText = null;
+        break;
+      default:
+        console.log("Unknown problem type");
         break;
     }
 
@@ -531,11 +536,11 @@ const BattleGamePage = () => {
                 </div>
               </div>
               <div className="battle-game-result-content">
-                {winner === memberId || winner === enemyId
-                  ? winner === memberId
-                    ? "승리했습니다!"
-                    : "패배했습니다."
-                  : "무승부입니다."}
+                {winner === -1
+                  ? "무승부입니다."
+                  : winner === memberId
+                  ? "승리하셨습니다."
+                  : "패배하셨습니다."}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 방 목록 화면으로 이동합니다.
@@ -608,7 +613,11 @@ const BattleGamePage = () => {
                     <div className="battle-game-history-title">전투 기록</div>
                     {battleHistory.map((data, index) => (
                       <div className="battle-game-history-message" key={index}>
-                        {data.isAttack === true
+                        {data.power === 0
+                          ? data.userId === memberId
+                            ? `${name}님이 문제를 틀리셨습니다.`
+                            : `${enemyName}님이 문제를 틀리셨습니다.`
+                          : data.isAttack === true
                           ? `${
                               data.userId === memberId ? name : enemyName
                             }님이 ${
@@ -639,17 +648,17 @@ const BattleGamePage = () => {
                     <div className="battle-game-game-start-title">
                       게임 시작 전입니다.
                     </div>
-                    {hostId === "" ? (
-                      <div className="battle-game-game-start-waiting">
-                        대기 중...
-                      </div>
-                    ) : (
+                    {hostId === memberId ? (
                       <button
                         onClick={handleStart}
                         className="battle-game-game-start-button"
                       >
                         게임 시작
                       </button>
+                    ) : (
+                      <div className="battle-game-game-start-waiting">
+                        대기 중...
+                      </div>
                     )}
                   </div>
                 )}

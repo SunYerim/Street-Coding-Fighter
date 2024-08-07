@@ -26,6 +26,8 @@ import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.
 import store from "./store/store.js";
 import Loading from "./components/loading/Loading.jsx";
 
+import MultipleChoice from "./components/game/multipleChoice/MultipleChoice.jsx";
+
 import { useEffect, useState } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
@@ -62,10 +64,7 @@ function App() {
             path="/ranking"
             element={accessToken ? <Ranking /> : <LoginPage />}
           /> */}
-          <Route
-            path="/ranking"
-            element={<Ranking />}
-          />
+          <Route path="/ranking" element={<Ranking />} />
           <Route path="/main" element={<MainPage />} />
           {/* <Route path="/main" element={accessToken ? <MainPage /> : <LoginPage />} /> */}
           <Route
@@ -90,10 +89,7 @@ function App() {
           />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
           <Route path="/multi" element={<MultiMain />} />
-          <Route
-            path="/multi-create"
-            element={<MultiCreate />}
-          />
+          <Route path="/multi-create" element={<MultiCreate />} />
           <Route
             path="/battle"
             element={accessToken ? <BattleMain /> : <LoginPage />}
@@ -122,6 +118,7 @@ function App() {
             path="/multi-game-select"
             element={accessToken ? <SelectProblem /> : <LoginPage />}
           />
+          <Route path="/multiple-choice" element={<MultipleChoice />} />
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
