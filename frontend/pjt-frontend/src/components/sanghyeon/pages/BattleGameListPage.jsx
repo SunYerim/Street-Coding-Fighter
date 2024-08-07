@@ -165,10 +165,11 @@ const BattleGameListPage = () => {
 
         if (res.status === 204) {
           setBattleList([]);
+          setCurrentBattleList([]);
         } else {
           setBattleList(res.data);
+          setCurrentBattleList(res.data);
         }
-        setCurrentBattleList(res.data);
       } catch (error) {
         console.error("Failed to fetch record", error);
       }
