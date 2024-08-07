@@ -74,6 +74,12 @@ const ShortAnswer = (problem) => {
     }
   }, [problem]);
 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setAnswer(value);
+    setShortAnswerSolve(value); // 입력값을 로컬 저장소에 저장
+  };
+
   return (
     <>
       <h2>주관식 문제</h2>
@@ -82,7 +88,12 @@ const ShortAnswer = (problem) => {
           <StyleToPythonCode codeString={modifiedContent} />
         </div>
         <div style={styles.inputDiv}>
-          <input style={styles.answerInput} type="text" />
+          <input
+            style={styles.answerInput}
+            type="text"
+            value={answer}
+            onChange={handleInputChange}
+          />
         </div>
       </div>
     </>
