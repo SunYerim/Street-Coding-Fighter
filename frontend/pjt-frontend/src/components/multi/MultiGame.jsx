@@ -135,7 +135,9 @@ export default function MultiGame() {
         if (data.type === 'gameStart') { // 게임스타트
           setStart(1);
           console.log(data.payload);
-          setProblems(data.payload);
+          const parsedPayload = JSON.parse(data.payload);
+          setProblems(parsedPayload);
+          console.log(problems)
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);

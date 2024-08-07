@@ -13,7 +13,13 @@ function MultiRoom(props) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const setRoomId = multiStore((state) => state.setRoomId);
+  const {
+    roomId,
+    setRoomId,
+  } = multiStore((state) => ({
+    roomId: state.roomId,
+    setRoomId: state.setRoomId,
+  }));
 
   const {
     accessToken,
@@ -58,9 +64,7 @@ function MultiRoom(props) {
   };
 
   const handleSubmit = async (password) => {
-    
     try {
-
       const response = await axios.post(
         `${baseURL}/multi/room/${props.roomId}`,
         password,
