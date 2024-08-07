@@ -23,8 +23,8 @@ export default function SingleMain() {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((res) => {
-        console.log(res.data);
-        setCompleted(res.data);
+        console.log(res.data.contentList);
+        setCompleted(res.data.contentList);
       });
     };
     getSingleInfo();
