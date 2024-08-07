@@ -15,7 +15,7 @@ export default function EpisodeList({ rownum }) {
   const { completed, courses, setCompleted } = SingleInfoStore();
   const { playEffectSound } = SoundStore();
   // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 데이터 요청
-  const nextIndex = completed.findIndex((e) => {
+  const nextIndex = completed?.findIndex((e) => {
     console.log(e);
     return e.complete === 0;
   });
