@@ -251,7 +251,7 @@ export default function MultiGame() {
           content: {
               "problemType": "MULTIPLE_CHOICE",
               "submitTime": 30-count,
-              "solve": {1 : choiceId},
+              "solve": { 1 : choiceId },
               "solveText": null
           }
       };
@@ -500,7 +500,7 @@ export default function MultiGame() {
           <div className="multi-game-right">
             <div className="multi-round">
               { playing ? (
-                <h1>{ currentProblemIndex+1 } / { problemList.length }</h1>
+                <h1>{ currentProblemIndex + 1 } / { problemList.length }</h1>
               ) : (
                 <h1>Round</h1>
               )}
@@ -512,8 +512,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal roundRankList={roundRank} />}
-      {resultModalOpen && <MultiResultModal rankList={gameRank} />}
+      {modalOpen && <MultiResultModal userList={roundRank} />}
+      {resultModalOpen && <MultiResultModal userList={gameRank} />}
     </>
   );
 }
