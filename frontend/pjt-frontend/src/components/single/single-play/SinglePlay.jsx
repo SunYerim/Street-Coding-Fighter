@@ -156,7 +156,7 @@ export default function SinglePlay() {
     if (isFinish && !completed[content_id]?.complete) {
       axios({
         method: 'post',
-        url: `${baseURL}/edu`,
+        url: `${baseURL}/single`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
