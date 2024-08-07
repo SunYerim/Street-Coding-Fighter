@@ -192,6 +192,8 @@ const BattleGamePage = () => {
         `${body.username}님이 입장하셨습니다.`,
       ]);
 
+      console.log(body);
+
       if (body.memberId !== memberId) {
         setEnemyId(body.memberId);
         setEnemyName(body.username);
