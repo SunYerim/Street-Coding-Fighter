@@ -17,7 +17,6 @@ spring:
 
   data:
     redis:
-      host: redis-rank
       port: 6379
 
 logging:
