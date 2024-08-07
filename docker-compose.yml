@@ -249,4 +249,4 @@ networks:
 volumes:
   db_data_user:
   db_data_problem:
-  db_data_single:
+  db_data_edu:
