@@ -8,6 +8,7 @@ import com.scf.single.domain.dto.ContentDetailResponsesDto;
 import com.scf.single.domain.dto.ContentListResponseDto;
 import com.scf.single.domain.dto.ContentListResponsesDto;
 import com.scf.single.domain.dto.MemberDto;
+import com.scf.single.domain.dto.ScriptCreateRequestListDto;
 import com.scf.single.domain.entity.Content;
 import com.scf.single.domain.entity.ContentCheckUser;
 import com.scf.single.domain.entity.Script;
@@ -132,5 +133,30 @@ public class SingleServiceImpl implements SingleService {
                 contentCheckUserRepository.save(contentCheckUser);
             }
         });
+    }
+
+    // 스크립트를 생성
+    @Override
+    @Transactional
+    public void createScript(ScriptCreateRequestListDto scriptCreateRequestListDto,
+        int contentId) {
+        // content 아이디를 찾습니다.
+        Content content = contentRepository.findById(contentId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 콘텐츠를 찾을 수 없습니다."));
+
+        // 해당 content에 script를 추가합니다.
+        List<Script> scripts = scriptCreateRequestListDto.getScriptCreateList().stream()
+            .map(scriptCreateRequestDto -> {
+                Script script = new Script();
+                script.setContent(content);
+                script.setPageNo(scriptCreateRequestDto.getPageNo());
+                script.setScriptContent(scriptCreateRequestDto.getScriptContent());
+                script.setAction(script.getAction());
+                script.setImageCount(scriptCreateRequestDto.getImageCount());
+                return script;
+            }).collect(Collectors.toList());
+
+        // db에 저장
+        scriptRepository.saveAll(scripts);
     }
 }
