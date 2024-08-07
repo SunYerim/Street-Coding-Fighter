@@ -155,6 +155,8 @@ public class MultiGameService {
         int score = calculateScoreIfCorrect(isCorrect, player.getStreakCount(),
             solved.getSubmitTime());
 
+        solved.setIsCorrect(isCorrect);
+
         updateScoreBoard(room, player, score);
         updateLeaderBoard(room, player, score);
 
