@@ -6,6 +6,7 @@ import com.scf.user.member.application.service.UserService;
 import com.scf.user.member.domain.dto.LogoutDto;
 import com.scf.user.member.domain.dto.PasswordResetRequestDto;
 import com.scf.user.member.domain.dto.TokenDto;
+import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
 import com.scf.user.member.domain.dto.UserPasswordRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
@@ -144,5 +145,12 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    // 유저 전체 리스트 조회
+    @GetMapping("/public/list")
+    public ResponseEntity<?> getList() {
+        UserInfoListResponseDto userInfoListResponseDto = userService.sendUserList();
+        return ResponseEntity.ok(userInfoListResponseDto);
     }
 }
