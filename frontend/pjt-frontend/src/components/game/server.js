@@ -22,6 +22,8 @@ const newSocket = async (roomId, memberId, name) => {
 
   socket.onmessage = (event) => {
     console.log('WebSocket message received:', event.data);
+    const data = event.data
+    console.log('data.type: ', data.type)
     if (data.type === 'gameStart') { // 게임스타트
       console.log("Game started 신호는 왔음");
       setStart(1);
