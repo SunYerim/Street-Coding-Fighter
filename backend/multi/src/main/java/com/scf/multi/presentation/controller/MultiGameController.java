@@ -67,11 +67,11 @@ public class MultiGameController {
     }
 
     @PostMapping("/game/{roomId}/start")
-    public ResponseEntity<List<ProblemResponse.ListDTO>> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
+    public ResponseEntity<Void> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
 
-        List<ProblemResponse.ListDTO> problems = multiGameService.startGame(roomId, memberId);
+        multiGameService.startGame(roomId, memberId);
 
-        return new ResponseEntity<>(problems, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/kafka/test")
