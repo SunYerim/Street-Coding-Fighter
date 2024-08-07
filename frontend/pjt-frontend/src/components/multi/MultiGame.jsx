@@ -127,6 +127,7 @@ export default function MultiGame() {
 
     socketInstance.onmessage = (event) => {
       const messageData = event.data;
+      console.log("Message received:", messageData);
       if (isJsonString(messageData)) {
         const data = JSON.parse(messageData);
 
