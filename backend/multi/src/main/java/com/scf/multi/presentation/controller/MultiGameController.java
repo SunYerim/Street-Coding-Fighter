@@ -1,7 +1,6 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.room.RoomResponse;
 import com.scf.multi.domain.dto.user.GameResult;
@@ -67,11 +66,11 @@ public class MultiGameController {
     }
 
     @PostMapping("/game/{roomId}/start")
-    public ResponseEntity<List<ProblemResponse.ListDTO>> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
+    public ResponseEntity<Void> gameStart(@PathVariable String roomId, @RequestHeader Long memberId) {
 
-        List<ProblemResponse.ListDTO> problems = multiGameService.startGame(roomId, memberId);
+        multiGameService.startGame(roomId, memberId);
 
-        return new ResponseEntity<>(problems, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/kafka/test")
