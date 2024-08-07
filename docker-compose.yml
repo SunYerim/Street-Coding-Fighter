@@ -54,11 +54,11 @@ services:
     volumes:
       - db_data_problem:/var/lib/mysql
 
-  mariadb-single:
+  mariadb-edu:
     image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: single_db
+      MYSQL_DATABASE: edu_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
@@ -68,7 +68,7 @@ services:
     depends_on:
       - kafka  
     volumes:
-      - db_data_single:/var/lib/mysql
+      - db_data_edu:/var/lib/mysql
 
   redis-user:
     image: redis:latest
@@ -229,8 +229,7 @@ services:
       - mariadb-single
       - chat-server
     environment:
-      SPRING_APPLICATION_NAME: scf
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-single:3306/single_db?characterEncoding=utf8mb4
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-edu:3306/edu_db?characterEncoding=utf8mb4
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
