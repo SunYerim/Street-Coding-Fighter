@@ -47,13 +47,7 @@ const ShortAnswer = () => {
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
   const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
 
-  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store(
-    (state) => ({
-      shortAnswerSolve: state.shortAnswerSolve,
-      setShortAnswerSolve: state.setShortAnswerSolve,
-      myShortAnswerProblem: state.myShortAnswerProblem,
-    })
-  );
+const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store()
 
   useEffect(() => {
     // store에서 문제 데이터를 가져오는 함수 호출
@@ -62,7 +56,9 @@ const ShortAnswer = () => {
   }, [myShortAnswerProblem]);
 
   useEffect(() => {
+    console.log('start')
     if (problem && problem.problemContent && problem.problemContent.content) {
+      console.log('if 문 안으로 들ㄹ어와')
       const problemContent = problem.problemContent.content;
       const newModifiedContent = reactStringReplace(
         problemContent,
