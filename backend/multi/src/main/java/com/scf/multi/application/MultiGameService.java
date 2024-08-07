@@ -110,7 +110,7 @@ public class MultiGameService {
         return connectedPlayer;
     }
 
-    public List<ProblemResponse.ListDTO> startGame(String roomId, Long userId) {
+    public void startGame(String roomId, Long userId) {
 
         MultiGameRoom room = findOneById(roomId);
 
@@ -118,11 +118,6 @@ public class MultiGameService {
 
         room.gameStart(problems, userId);
         eventPublisher.publishEvent(new GameStartedEvent(roomId));
-
-        // problem -> problemList
-        return problems.stream()
-            .map(this::mapToProblemListDTO)
-            .toList();
     }
 
     public Solved addSolved(MultiGameRoom room, String sessionId, Content content) {
@@ -346,5 +341,15 @@ public class MultiGameService {
         }
 
         return BASE_SCORE * (MAX_SUBMIT_TIME - submitTime) + (streakCount * STREAK_BONUS);
+    }
+
+    public List<ProblemResponse.ListDTO> getProblems(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        // problem -> problemList
+        return room.getProblems().stream()
+            .map(this::mapToProblemListDTO)
+            .toList();
     }
 }
