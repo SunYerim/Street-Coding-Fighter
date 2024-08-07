@@ -311,6 +311,10 @@ const BattleGamePage = () => {
         console.log("여기");
         setWinner(body.result.winner);
         setLoser(body.result.loser);
+
+        openModal();
+        closeModal();
+
         setGameEnded(true);
 
         setTimeout(() => {
@@ -400,7 +404,13 @@ const BattleGamePage = () => {
 
     initializeConnections();
 
-    return () => {
+    // 클린업 함수는 비동기 함수로 직접 정의할 수 없으므로
+    // 비동기 작업을 수행할 내부 함수를 정의하고 호출합니다.
+    const cleanup = async () => {
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      await delay(5000);
+
       if (normalQuit === false) {
         alert("호스트와의 연결이 끊겼습니다.");
       }
@@ -408,6 +418,11 @@ const BattleGamePage = () => {
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
+    };
+
+    // return 내부에서 cleanup 함수를 호출
+    return () => {
+      cleanup();
     };
   }, []);
 
