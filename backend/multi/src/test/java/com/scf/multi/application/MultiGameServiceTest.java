@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.problem.ProblemAnswer;
@@ -220,7 +221,9 @@ class MultiGameServiceTest {
         when(problemService.getProblems(anyInt())).thenReturn(problems);
 
         // When
-        List<ProblemResponse.ListDTO> problemList = multiGameService.startGame(room.getRoomId(), 1L);
+        multiGameService.startGame(room.getRoomId(), 1L);
+
+        List<ListDTO> problemList = multiGameService.getProblems(room.getRoomId());
 
         // Then
         assertNotNull(problemList);
