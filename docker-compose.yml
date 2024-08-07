@@ -236,6 +236,9 @@ services:
 
 networks:
   network:
+    external: true
+    driver: bridge
+
 
 volumes:
   db_data_user:
