@@ -74,6 +74,19 @@ const store = create(
 
       myBlankProblem: {},
       setMyBlankProblem: (myBlankProblem) => set({ myBlankProblem }),
+
+      shortAnswerSolve: "",
+      setShortSolve: (shortSolve) => set({ shortSolve }),
+
+      myShortAnswerProblem: {},
+      setMyShortAnswerProblem: (myShortProblem) => set({ myShortProblem }),
+
+      multipleChoiceSolve: {},
+      setMultipleSolve: (multipleSolve) => set({ multipleSolve }),
+
+      myMultipleChoiceProblem: {},
+      setMyMultipleChoiceProblem: (myMultipleProblem) =>
+        set({ myMultipleProblem }),
     }),
     {
       name: "userStorage",

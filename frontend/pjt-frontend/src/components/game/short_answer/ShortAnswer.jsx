@@ -8,8 +8,8 @@ import {
 } from "@mui/system";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
-import { useState } from "react";
-import socket from "../server.js";
+import { useState, useEffect } from "react";
+import store from "../../store/store";
 
 const styles = {
   codeContainer: {
@@ -49,36 +49,40 @@ const styles = {
   },
 };
 const ShortAnswer = (problem) => {
-  const [answer, setAnswer] = useState("");
-  const onInputChange = (e) => {
-    setAnswer(e.target.value);
-  };
-  const handleKeyDown = (e) => {
-    if (e.key == "Enter") {
-      handleSubmit();
+  const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
+  const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
+
+  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store(
+    (state) => ({
+      shortAnswerSolve: state.shortAnswerSolve,
+      setShortAnswerSolve: state.setShortAnswerSolve,
+      myShortAnswerProblem: state.myShortAnswerProblem,
+    })
+  );
+
+  useEffect(() => {
+    // store에서 문제 데이터를 가져오는 함수 호출
+    const problemData = myShortAnswerProblem; // 또는 store.getState().problem과 같은 방식으로 직접 접근할 수 있음
+    setProblem(problemData);
+  }, [myShortAnswerProblem]);
+
+  useEffect(() => {
+    if (problem && problem.problemContent && problem.problemContent.content) {
+      setModifiedContent(problem.problemContent.content);
+    } else {
+      setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
     }
-  };
-  const handleSubmit = () => {
-    // 여기 제출하는 함수 작성하시면 됩니다!
-    alert(`${answer}제출됨`);
-  };
+  }, [problem]);
+
   return (
     <>
-      <h2>객관식 문제</h2>
+      <h2>주관식 문제</h2>
       <div className="multi-game-playing">
         <div style={styles.codeContainer}>
-          <StyleToPythonCode codeString={problem.problemContent.content} />
+          <StyleToPythonCode codeString={modifiedContent} />
         </div>
         <div style={styles.inputDiv}>
-          <input
-            style={styles.answerInput}
-            type="text"
-            onChange={onInputChange}
-            onKeyDown={handleKeyDown}
-          />
-          <button className="multi-button" onClick={handleSubmit}>
-            제출
-          </button>
+          <input style={styles.answerInput} type="text" />
         </div>
       </div>
     </>

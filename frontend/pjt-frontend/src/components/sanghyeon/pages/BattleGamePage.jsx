@@ -14,23 +14,20 @@ import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
 
 import Modal from "react-modal";
 //음악 변경부분입니다. 아래 SoundStore import 해야됨
-import SoundStore from "../../../stores/SoundStore.jsx"
-
+import SoundStore from "../../../stores/SoundStore.jsx";
 
 Modal.setAppElement("#root");
 
 const BattleGamePage = () => {
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
-  const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
+  const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
+    SoundStore();
   useEffect(() => {
-    switchBackgroundMusic(
-      'single',
-      (newBackgroundMusic) => {
-        newBackgroundMusic.play();
-      }
-    );
+    switchBackgroundMusic("single", (newBackgroundMusic) => {
+      newBackgroundMusic.play();
+    });
     return () => {
-      switchBackgroundMusic('main', (newBackgroundMusic) => {
+      switchBackgroundMusic("main", (newBackgroundMusic) => {
         newBackgroundMusic.play();
       });
     };
@@ -61,6 +58,8 @@ const BattleGamePage = () => {
     setNormalQuit,
     blankSolve,
     setMyBlankProblem,
+    shortAnswerSolve,
+    setMyShortAnswerProblem,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -81,6 +80,8 @@ const BattleGamePage = () => {
     setNormalQuit: state.setNormalQuit,
     blankSolve: state.blankSolve,
     setMyBlankProblem: state.setMyBlankProblem,
+    shortAnswerSolve: state.shortAnswerSolve,
+    setMyShortAnswerProblem: state.setMyShortAnswerProblem,
   }));
 
   const authClient = createAuthClient(
@@ -226,7 +227,19 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/${memberId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       setMyProblem(JSON.parse(message.body));
-      setMyBlankProblem(JSON.parse(message.body));
+
+      const responseProblem = JSON.parse(message.body);
+
+      switch (responseProblem.problemType) {
+        case "FILL_IN_THE_BLANK":
+          setMyBlankProblem(responseProblem);
+          break;
+        case "SHORT_ANSWER_QUESTION":
+          setMyShortAnswerProblem(responseProblem);
+          break;
+        default:
+          break;
+      }
       setSelectMyProblem(true);
     });
   };
