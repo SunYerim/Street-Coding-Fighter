@@ -28,10 +28,10 @@ public class RedisConfig {
 
 
     @Bean
-    public RedisTemplate<String, UserExp> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, UserExp> redisTemplate() {
 
         RedisTemplate<String, UserExp> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
 
         GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
 
