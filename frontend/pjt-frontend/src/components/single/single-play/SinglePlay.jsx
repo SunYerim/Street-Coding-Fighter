@@ -59,11 +59,16 @@ export default function SinglePlay() {
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   const { baseURL, accessToken, memberId } = store();
   const getContent = () => {
-    axios
-      .get(`${baseURL}/single/${content_id}`)
+    axios({
+      method: 'get',
+      url: `${baseURL}/single/${content_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
       .then((response) => {
-        console.log(content_id)
-        console.log(`${store.baseUrl}/single/${content_id}`)
+        console.log(content_id);
+        console.log(`${store.baseUrl}/single/${content_id}`);
         const data = response.data;
         setDialogueList(data.dialogueList);
         // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
@@ -75,12 +80,9 @@ export default function SinglePlay() {
       });
   };
   useEffect(() => {
-    switchBackgroundMusic(
-      'single',
-      (newBackgroundMusic) => {
-        newBackgroundMusic.play();
-      }
-    );
+    switchBackgroundMusic('single', (newBackgroundMusic) => {
+      newBackgroundMusic.play();
+    });
     getContent();
     const loadingTimer = setTimeout(() => {
       setLoading(false);
@@ -145,10 +147,10 @@ export default function SinglePlay() {
   };
   const openExitModal = () => {
     setIsExitModalOpen(true);
-  }
+  };
   const closeExitModal = () => {
     setIsExitModalOpen(false);
-  }
+  };
   const goToList = (isFinish) => {
     if (isFinish && !completed[content_id]?.complete) {
       axios({
@@ -301,7 +303,7 @@ export default function SinglePlay() {
         <div style={styles.modalContent}>
           <h2>학습을 완료하시겠습니까?</h2>
           <div style={styles.modalButtons}>
-            <S.CompleteButton onClick={()=>goToList(true)}>학습 완료</S.CompleteButton>
+            <S.CompleteButton onClick={() => goToList(true)}>학습 완료</S.CompleteButton>
             <S.CancelButton onClick={handleCloseModal}>돌아가기</S.CancelButton>
           </div>
         </div>
