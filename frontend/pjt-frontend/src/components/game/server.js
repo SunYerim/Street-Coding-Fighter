@@ -1,4 +1,14 @@
+import multiStore from '../../stores/multiStore.jsx';
+
 const newSocket = async (roomId, memberId, name) => {
+
+  const {
+    problems,
+    start,
+  } = multiStore((state) => ({
+    setProblems: state.setProblems,
+    setStart: state.setStart,
+  }));
 
   const baseUrl = "wss://www.ssafy11s.com";
 
@@ -12,6 +22,15 @@ const newSocket = async (roomId, memberId, name) => {
 
   socket.onmessage = (event) => {
     console.log('WebSocket message received:', event.data);
+    if (data.type === 'gameStart') { // 게임스타트
+      console.log("Game started 신호는 왔음");
+      setStart(1);
+      console.log(data.payload);
+      const parsedPayload = JSON.parse(data.payload);
+      setProblems(parsedPayload);
+      console.log('parsedPayload: ', parsedPayload)
+      console.log('parsedPayload.data: ', parsedPayload.data)
+    }
   };
 
   socket.onclose = (event) => {

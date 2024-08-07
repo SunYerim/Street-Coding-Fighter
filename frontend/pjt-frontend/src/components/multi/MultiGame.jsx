@@ -26,6 +26,14 @@ export default function MultiGame() {
   const location = useLocation();
   const chatStompClient = useRef(null);
 
+  const {
+    problems,
+    start,
+  } = multiStore((state) => ({
+    setProblems: state.setProblems,
+    setStart: state.setStart,
+  }));
+
   // 유저정보 받아오기
   const {
     accessToken,
@@ -53,7 +61,7 @@ export default function MultiGame() {
   const roomId = multiStore.getState().roomId;
 
   const [socket, setSocket] = useState(null);
-  const [start, setStart] = useState(0);
+  // const [start, setStart] = useState(0);
   const [hostId, setHostId] = useState(null);
 
   const [message, setMessage] = useState('');
@@ -62,7 +70,7 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
-  const [problems, setProblems] = useState([]);
+  // const [problems, setProblems] = useState([]);
   const [problemType, setProblemType] = useState('');
   const [isSubmit, setIsSubmit] = useState(false);
   const [userList, setUserList] = useState([]);
@@ -123,66 +131,45 @@ export default function MultiGame() {
     // console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
 
     const socketInstance = newSocket(roomId, memberId, name);
+    setSocket(socketInstance);
 
-    if (socketInstance) {
-      console.log("Socket initialized:", socketInstance);
+    socketInstance.onmessage = (event) => {
+      const messageData = event.data;
+      console.log("Message received:", messageData);
+      if (isJsonString(messageData)) {
+        const data = JSON.parse(messageData);
 
-      socketInstance.onopen = () => {
-        console.log("WebSocket connection opened.");
-      };
-
-      socketInstance.onmessage = (event) => {
-        const messageData = event.data;
-        console.log("Message received:", messageData); // 디버깅을 위한 로그
-        if (isJsonString(messageData)) {
-          const data = JSON.parse(messageData);
-
-          // Multi socket 통신 타입별 정리
-          if (data.type === 'gameStart') {
-            console.log("Game started 신호는 왔음");
-            setStart(1);
-            console.log(data.payload);
-            const parsedPayload = JSON.parse(data.payload);
-            setProblems(parsedPayload);
-            console.log('parsedPayload: ', parsedPayload);
-            console.log('parsedPayload.data: ', parsedPayload.data);
-          } else if (data.type === 'newHost') {
-            console.log(data.payload);
-            setHostId(data.payload);
-          } else if (data.type === 'attainScore') {
-            console.log(`얻은 점수: ${data.payload}`);
-          } else if (data.type === 'gameRank') {
-            setRankList(data.payload);
-            setTimerEnded(true);
-            console.log('전체랭킹: ', rankList);
-          } else if (data.type === 'roundRank') {
-            setRoundRankList(data.payload);
-            console.log('라운드랭킹: ', roundRankList);
-          }
-        } else {
-          console.log("이거 json 맞는데?", messageData);
-          console.error('Received non-JSON message:', messageData);
-          console.log('Received non-JSON message:', messageData);
+        // Multi socket 통신 타입별 정리
+        if (data.type === 'gameStart') { // 게임스타트
+          console.log("Game started 신호는 왔음");
+          setStart(1);
+          console.log(data.payload);
+          const parsedPayload = JSON.parse(data.payload);
+          setProblems(parsedPayload);
+          console.log('parsedPayload: ', parsedPayload)
+          console.log('parsedPayload.data: ', parsedPayload.data)
+        } else if (data.type === 'newHost') { // 방장바뀌는 타입
+          console.log(data.payload);
+          setHostId(data.payload);
+        } else if (data.type === 'attainScore') {
+          console.log(`얻은 점수: ${data.payload}`);
+        } else if (data.type === 'gameRank') {
+          setRankList(data.payload);
+          setTimerEnded(true);
+          console.log('전체랭킹: ',rankList);
+        } else if (data.type === 'roundRank') { 
+          setRoundRankList(data.payload);
+          console.log('라운드랭킹: ',roundRankList);
         }
-      };
-
-      socketInstance.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
-
-      socketInstance.onclose = () => {
-        console.log("WebSocket connection closed.");
-      };
-
-      setSocket(socketInstance); // socket 상태에 저장
-    } else {
-      console.error("Failed to initialize socket.");
-    }
+      } else {
+        console.log("이거 json 맞는데?", messageData);
+        console.error('Received non-JSON message:', messageData);
+        console.log('Received non-JSON message:', messageData);
+      }
+    };
 
     return () => {
-      if (socketInstance) {
-        socketInstance.close();
-      }
+      socketInstance.close();
       sendQuitMessage();
       if (chatStompClient.current) chatStompClient.current.disconnect();
     };
