@@ -62,7 +62,7 @@ public class SecurityConfig {
 
                         configuration.setAllowedOrigins(
                             Arrays.asList("http://localhost:5173",
-                                "https://ssafy11s.com","https://www.ssafy11s.com"));
+                                "https://ssafy11s.com", "https://www.ssafy11s.com"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -80,7 +80,7 @@ public class SecurityConfig {
                 .requestMatchers("/user/public/login", "/user/public/join",
                     "/user/public/validate/**", "/user/public/request-verification-code",
                     "/user/public/request-verification", "/user/public/change-password",
-                    "/user/public/reissue")
+                    "/user/public/reissue", "user/public/list")
                 .permitAll()
 
                 .anyRequest().authenticated())
