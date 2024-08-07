@@ -20,6 +20,9 @@ const newSocket = (roomId, memberId, name) => {
 
   socket.onopen = () => {
     console.log('WebSocket connection established');
+    setInterval(() => {
+      console.log('bufferedAmount:', socket.bufferedAmount);
+    }, 1000);
   };
 
   socket.onmessage = (event) => {
