@@ -26,7 +26,7 @@ const testDialogueList = [
   },
   {
     page_no: 1,
-    script_content: '두번째 페이지 줄 \n 두번째 줄 \n 세번째 줄',
+    script_content: '두번째 페이지 줄 \n 두번째 줄 \n 세번째 줄1111',
     action: 1,
     imageCount: 1,
   },
@@ -39,7 +39,7 @@ const testDialogueList = [
   {
     page_no: 4,
     script_content: '네번째 페이지 \n 두번째 줄 \n 세번째 줄',
-    action: 3,
+    action: 1,
     imageCount: 1,
   },
 ];
@@ -60,6 +60,9 @@ export default function SinglePlay() {
   const { baseURL, accessToken, memberId } = store();
   const [showCharacter, setShowCharacter] = useState(false) //캐릭터 보이기/안보이기 상태 추가
   const [isClickable, setIsClickable] = useState(true);
+//캐릭터 애니메이션 상태 추가
+  const [isVibrating, setIsVibrating] = useState(false);
+  const [isCloseUp, setIsCloseUp] = useState(false)
 
   const getContent = () => {
     axios
@@ -146,6 +149,13 @@ export default function SinglePlay() {
       } else {
         setPage(0);
       }
+    }
+    if(dialogueList[page].action == 1){
+      setIsVibrating(true);
+      console.log('vibrating')
+      setTimeout(()=>{
+        setIsVibrating(false)
+      },2000)
     }
     playEffectSound('singleClickSound');
     console.log(page);
@@ -263,6 +273,7 @@ export default function SinglePlay() {
             style={{
               left: currentDialogue.imageCount > 0 ? '10vw' : '30vw',
             }}
+            $isVibrating = {isVibrating}
           />
         </S.ImageBox>
         {showDialogue && (

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const PlayView = styled.div`
   position: fixed;
@@ -79,10 +79,23 @@ const DialogueBodyRight = styled.div`
 const DialogueContent = styled.div`
   /* 버튼 스타일을 여기에 추가하세요 */
   margin-left: 10px;
-  width : 100%;
+  width: 100%;
+`;
+// 캐릭터 움직이는 애니메이션 추가...!
+const vibration = keyframes`
+  from {
+    transform: rotate(1deg);
+  }
+  to {
+    transform: rotate(-1deg);
+`;
+
+const vibratingAnimation = css`
+  animation: ${vibration} 0.1s infinite;
 `;
 
 const CharacterImage = styled.img`
+  // animation: ${(props) => (props.$isVibrating ? vibratingAnimation : null)};
   position: fixed;
   height: 70vh;
   bottom: 0px;
@@ -152,19 +165,19 @@ const ModalButtons = styled.div`
 const CompleteButton = styled.button`
   margin-right: 1rem;
   padding: 10px 20px;
-  background-color: #76DCFE;
+  background-color: #76dcfe;
   color: #233551;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-   &:hover {
+  &:hover {
     background-color: #466398;
     color: #e4f0f6;
   }
 `;
 const CancelButton = styled.button`
   padding: 10px 20px;
-  background-color: #D1E7EF;
+  background-color: #d1e7ef;
   color: #233551;
   border: none;
   border-radius: 5px;
