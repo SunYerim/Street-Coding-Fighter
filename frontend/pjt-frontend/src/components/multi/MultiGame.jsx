@@ -466,7 +466,7 @@ export default function MultiGame() {
             </div>
             <div className="multi-rank-table">
               {
-                rankList.map((user, i) => {
+                gameRank.map((user, i) => {
                   return <UserRank rank={user.rank} name={user.name} score={user.score} key={i} />
                 })
               }
@@ -526,7 +526,7 @@ function UserRank(props) {
     <>
       <div className="multi-rank-items">
         <h3>{props.rank}</h3>
-        <h3>{props.name}</h3>
+        <h3>{props.username}</h3>
         <h4>{props.score}</h4>
       </div>
     </>

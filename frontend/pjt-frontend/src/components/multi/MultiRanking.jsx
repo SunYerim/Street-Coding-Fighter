@@ -8,7 +8,7 @@ const MultiRanking = ({userList}) => {
         <PodiumPlayerContainer>
           {userList[1] ? (
             <>
-              <div>{userList[1].name}</div>
+              <div>{userList[1].username}</div>
               <div>{userList[1].score}</div>
             </>
           ) : (
@@ -21,7 +21,7 @@ const MultiRanking = ({userList}) => {
         <PodiumPlayerContainer>
           {userList[0] ? (
             <>
-              <div>{userList[0].name}</div>
+              <div>{userList[0].username}</div>
               <div>{userList[0].score}</div>
             </>
           ) : (
@@ -34,7 +34,7 @@ const MultiRanking = ({userList}) => {
         <PodiumPlayerContainer>
           {userList[2] ? (
             <>
-              <div>{userList[2].name}</div>
+              <div>{userList[2].username}</div>
               <div>{userList[2].score}</div>
             </>
           ) : (
