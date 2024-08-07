@@ -301,6 +301,8 @@ const BattleGamePage = () => {
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
 
+      console.log(body);
+
       if (body.result && typeof body.result === "object") {
         setWinner(body.result.winner);
         setLoser(body.result.loser);
@@ -314,19 +316,25 @@ const BattleGamePage = () => {
           navigate("/battle-list");
         }, 5000);
       } else {
-        if (body.isAttack === true) {
-          setEnemyHealth((prevHealth) => prevHealth - body.power);
+        console.log(name);
+        const myName = body.userId === memberId ? name : enemyName;
+        const yourName = body.userId === memberId ? enemyName : name;
+        const power = body.power;
+        const isAttack = body.isAttack;
+
+        if (isAttack === true) {
+          setEnemyHealth((prevHealth) => prevHealth - power);
           setBattleHistory((prevHistory) => [
             ...prevHistory,
-            `${name}님이 ${enemyName}님에게 ${body.power}만큼 데미지를 주었습니다.`,
+            `${myName}님이 ${yourName}님에게 ${power}만큼 데미지를 주었습니다.`,
           ]);
         } else {
           setMyHealth((prevHealth) =>
-            prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+            prevHealth + power > 100 ? 100 : prevHealth + power
           );
           setBattleHistory((prevHistory) => [
             ...prevHistory,
-            `${name}님이 ${body.power}만큼 체력을 회복하였습니다.`,
+            `${myName}님이 ${power}만큼 체력을 회복하였습니다.`,
           ]);
         }
       }
