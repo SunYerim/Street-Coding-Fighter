@@ -1,11 +1,7 @@
 package com.scf.multi.presentation.websocket;
 
-import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
-import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
-
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
-import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.SolvedMessage;
 import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
@@ -13,13 +9,10 @@ import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
-import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.global.utils.JsonConverter;
-import com.scf.multi.infrastructure.KafkaMessageProducer;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;

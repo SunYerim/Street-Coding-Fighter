@@ -1,7 +1,6 @@
 package com.scf.multi.presentation.controller;
 
 import com.scf.multi.application.MultiGameService;
-import com.scf.multi.domain.dto.problem.ProblemResponse;
 import com.scf.multi.domain.dto.room.RoomRequest;
 import com.scf.multi.domain.dto.room.RoomResponse;
 import com.scf.multi.domain.dto.user.GameResult;
