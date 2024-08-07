@@ -162,7 +162,7 @@ services:
   rank-server:
     image: zlxldgus123/rank
     depends_on:
-      - redis-rank
+      - redis-user
       - kafka
       - multi-server
     environment:
