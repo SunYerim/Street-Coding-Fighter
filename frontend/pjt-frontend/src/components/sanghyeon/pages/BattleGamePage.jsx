@@ -521,7 +521,11 @@ const BattleGamePage = () => {
                 </div>
               </div>
               <div className="battle-game-result-content">
-                {winner === memberId ? "승리했습니다!" : "패배했습니다."}
+                {winner === memberId || winner === enemyId
+                  ? winner === memberId
+                    ? "승리했습니다!"
+                    : "패배했습니다."
+                  : "무승부입니다."}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 방 목록 화면으로 이동합니다.
