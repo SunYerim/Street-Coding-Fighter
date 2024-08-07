@@ -168,13 +168,13 @@ const store = create(
       setMyBlankProblem: (myBlankProblem) => set({ myBlankProblem }),
 
       shortAnswerSolve: "",
-      setShortSolve: (shortSolve) => set({ shortSolve }),
+      setShortAnswertSolve: (shortSolve) => set({ shortSolve }),
 
       myShortAnswerProblem: testShortAnswerProblem,
       setMyShortAnswerProblem: (myShortProblem) => set({ myShortProblem }),
 
       multipleChoiceSolve: {},
-      setMultipleSolve: (multipleSolve) => set({ multipleSolve }),
+      setMultipleChoiceSolve: (multipleSolve) => set({ multipleSolve }),
 
       myMultipleChoiceProblem: testMultipleChoiceProblem,
       setMyMultipleChoiceProblem: (myMultipleProblem) =>
