@@ -20,6 +20,7 @@ import SoundStore from "../../../stores/SoundStore.jsx";
 Modal.setAppElement("#root");
 
 const BattleGamePage = () => {
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
     SoundStore();
@@ -315,11 +316,12 @@ const BattleGamePage = () => {
         openModal();
         closeModal();
 
+        setNormalQuit(true);
         setGameEnded(true);
 
         setTimeout(() => {
           navigate("/battle-list");
-        }, 5);
+        }, 5000);
       } else {
         console.log(body);
         // 체력 업데이트 반영
@@ -407,13 +409,13 @@ const BattleGamePage = () => {
     // 클린업 함수는 비동기 함수로 직접 정의할 수 없으므로
     // 비동기 작업을 수행할 내부 함수를 정의하고 호출합니다.
     const cleanup = async () => {
-      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
       await delay(5000);
 
       if (normalQuit === false) {
         alert("호스트와의 연결이 끊겼습니다.");
       }
+
+      await delay(5000);
 
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
