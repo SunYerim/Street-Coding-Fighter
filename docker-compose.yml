@@ -226,7 +226,7 @@ services:
   single-server:
     image: zlxldgus123/single
     depends_on:
-      - mariadb-single
+      - mariadb-edu
       - chat-server
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-edu:3306/edu_db?characterEncoding=utf8mb4
