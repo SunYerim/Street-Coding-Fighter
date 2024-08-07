@@ -25,7 +25,7 @@ const BattleGamePage = () => {
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
     SoundStore();
   useEffect(() => {
-    switchBackgroundMusic("single", (newBackgroundMusic) => {
+    switchBackgroundMusic("multi", (newBackgroundMusic) => {
       newBackgroundMusic.play();
     });
     return () => {

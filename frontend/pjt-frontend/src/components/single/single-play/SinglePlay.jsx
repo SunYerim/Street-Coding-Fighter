@@ -248,7 +248,8 @@ export default function SinglePlay() {
         </S.ImageBox>
         {showDialogue && (
           <S.DialogueSection>
-            <ChatButton></ChatButton>
+            {/* <ChatButton></ChatButton> */} 
+            {/* 채팅 버튼 비활성화 */}
             <S.DialogueBox>
               <S.DialogueHeader>
                 <S.CharacterName>
