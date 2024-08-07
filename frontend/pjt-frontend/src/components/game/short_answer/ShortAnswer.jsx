@@ -9,7 +9,7 @@ import {
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
 import { useState, useEffect } from "react";
-import store from "../../store/store";
+import store from "../../../store/store.js";
 
 const styles = {
   codeContainer: {
