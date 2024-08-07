@@ -276,7 +276,7 @@ class MultiGameServiceTest {
 
         // Then
         assertNotNull(problemList);
-        assertEquals(2, problemList.size());
+        assertEquals(3, problemList.size());
     }
 
     @Test
