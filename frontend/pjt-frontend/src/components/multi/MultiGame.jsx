@@ -25,6 +25,42 @@ export default function MultiGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const chatStompClient = useRef(null);
+  
+  // 게임정보 불러오기
+  const {
+    roomId,
+    playing,
+    setPlaying,
+    problemList,
+    setProblemList,
+    clearProblemList,
+    roundRank,
+    setRoundRank,
+    clearRoundRank,
+    gameRank,
+    setGameRank,
+    clearGameRank,
+    problemType,
+    setProblemType,
+    clearProblemType,
+  } = multiStore((state) => ({
+    roomId: state.roomId,
+    playing: state.playing,
+    setPlaying: state.setPlaying,
+    setRoomId: state.setRoomId,
+    problemList: state.problemList,
+    setProblemList: state.setProblemList,
+    roundRank: state.roundRank,
+    setRoundRank: state.setRoundRank,
+    gameRank: state.gameRank,
+    setGameRank: state.setGameRank,
+    problemType: state.problemType,
+    setProblemType: state.setProblemType,
+    clearProblemList: state.clearProblemList,
+    clearRoundRank: state.clearRoundRank,
+    clearGameRank: state.clearGameRank,
+    clearProblemType: state.clearProblemType,
+  }));
 
   // 유저정보 받아오기
   const {
@@ -50,10 +86,7 @@ export default function MultiGame() {
     setAccessToken
   );
 
-  const roomId = multiStore.getState().roomId;
-
   const [socket, setSocket] = useState(null);
-  const [start, setStart] = useState(false);
   const [hostId, setHostId] = useState(null);
 
   const [message, setMessage] = useState('');
@@ -62,18 +95,13 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
-  const [problems, setProblems] = useState([]);
-  const [problemType, setProblemType] = useState('');
   const [isSubmit, setIsSubmit] = useState(false);
-  const [userList, setUserList] = useState([]);
-  const [rankList, setRankList] = useState([]);
-  const [roundRankList, setRoundRankList] = useState([]);
-  const chatEndRef = useRef(null);
-
+  
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
-
+  
   const [count, setCount] = useState(30);
+  
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -82,14 +110,13 @@ export default function MultiGame() {
 
   // 게임시작
   const handleStart = async () => {
-    setStart(true);  
+    setPlaying(true);  
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
-      null, // 요청 본문을 생략
+      null,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          // 'memberId': hostId, // 헤더에 hostId 추가
         }
       }
     );
@@ -119,7 +146,7 @@ export default function MultiGame() {
 
     initializeConnections();
 
-    const roomId = multiStore.getState().roomId;
+    // const roomId = multiStore.getState().roomId;
     // console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
 
     const socketInstance = newSocket(roomId, memberId, name);
@@ -132,26 +159,45 @@ export default function MultiGame() {
 
         // Multi socket 통신 타입별 정리
         if (data.type === 'gameStart') { // 게임스타트
-          setStart(true);
+          setPlaying(true);
           console.log(data.payload);
-          setProblems(data.payload);
+          setProblemList(data.payload);
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
         } else if (data.type === 'attainScore') {
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === 'gameRank') {
-          setRankList(data.payload);
+          setGameRank(data.payload);
           setTimerEnded(true);
           console.log('전체랭킹: ', data.payload);
+          if (currentProblemIndex < problemList.length - 1) {
+            // 모달 열고 4초 대기
+            setModalOpen(true);
+            setTimeout(() => {
+              setModalOpen(false);
+            }, 4000);
+    
+            // 문제번호++, 제출상태 초기화
+            setCurrentProblemIndex(currentProblemIndex + 1);
+            setIsSubmit(false);
+          } else {
+            setResultModalOpen(true);
+            setTimeout(() => {
+              setResultModalOpen(false);
+              setPlaying(false);
+              clearGameRank();
+              clearRoundRank();
+              clearProblemList();
+              clearProblemType();
+            }, 4000);
+          }
         } else if (data.type === 'roundRank') { 
-          setRoundRankList(data.payload);
+          setRoundRank(data.payload);
           console.log('라운드랭킹: ', data.payload);
         }
       } else {
-        console.log("이거 json 맞는데?", messageData);
         console.error('Received non-JSON message:', messageData);
-        console.log('Received non-JSON message:', messageData);
       }
     };
 
@@ -163,43 +209,43 @@ export default function MultiGame() {
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  // 문제 받기
+  // 문제 타입 바꾸기
   useEffect(() => {
-    if (problems.length > 0) {
-      setProblemType(problems[currentProblemIndex].problemType);
+    if (problemList.length > 0) {
+      setProblemType(problemList[currentProblemIndex].problemType);
     }
-  }, [problems, currentProblemIndex]);
+  }, [currentProblemIndex]);
 
 
   // 라운드 종료 후 랭킹 모달 표시
-  useEffect(() => {
-    if (start && !modalOpen && timerEnded) {
-      if (currentProblemIndex < problems.length - 1) {
-        // 모달 열고 4초 대기
-        setModalOpen(true);
-        setTimeout(() => {
-          setModalOpen(false);
-        }, 4000);
+  // useEffect(() => {
+  //   if (playing && !modalOpen && timerEnded) {
+  //     if (currentProblemIndex < problemList.length - 1) {
+  //       // 모달 열고 4초 대기
+  //       setModalOpen(true);
+  //       setTimeout(() => {
+  //         setModalOpen(false);
+  //       }, 4000);
 
-        // 문제번호++, 제출상태 초기화
-        setCurrentProblemIndex(currentProblemIndex + 1);
-        setIsSubmit(false);
-      } else {
-        setResultModalOpen(true);
-        setTimeout(() => {
-          setResultModalOpen(false);
-          setStart(false);
-        }, 4000);
-      }
-    }
-  }, [rankList]);
+  //       // 문제번호++, 제출상태 초기화
+  //       setCurrentProblemIndex(currentProblemIndex + 1);
+  //       setIsSubmit(false);
+  //     } else {
+  //       setResultModalOpen(true);
+  //       setTimeout(() => {
+  //         setResultModalOpen(false);
+  //         setPlaying(false);
+  //       }, 4000);
+  //     }
+  //   }
+  // }, [roundRank]);
 
 
 
   // 객관식 답변제출
   const handleChoiceSelection = (choiceId) => {
     console.log('선택된 choice ID:', choiceId);
-    if (socket && choiceId) {
+    if (socket) {
       const messageObj = {
           type: 'solve',
           content: {
@@ -217,7 +263,7 @@ export default function MultiGame() {
   // 단답식 답변제출
   const handleShortAnswer = (answer) => {
     console.log('제출한 답:', answer);
-    if (socket && answer) {
+    if (socket) {
       const messageObj = {
           type: 'solve',
           content: {
@@ -235,7 +281,7 @@ export default function MultiGame() {
   // 빈칸 답변제출
   const handleBlankAnswer = (blankList) => {
     console.log('제출한 답:', blankList);
-    if (socket && blankList) {
+    if (socket) {
       const messageObj = {
           type: 'solve',
           content: {
@@ -251,7 +297,7 @@ export default function MultiGame() {
   };
 
   const renderProblem = () => {
-    const problem = problems[currentProblemIndex];
+    const problem = problemList[currentProblemIndex];
     return problem ? (
       <>
         {problem.problemType === "FILL_IN_THE_BLANK" && (
@@ -310,7 +356,7 @@ export default function MultiGame() {
             console.log("Unknown problem type: " + problemType);
         }
       }
-    }, [count, problemType]);
+    }, [count]);
 
   
     return <div><span>{count}</span></div>;
@@ -411,8 +457,7 @@ export default function MultiGame() {
         <div className="multi-game-main">
           <div className="multi-game-left">
             <div className="multi-timer">
-              {/* start가 1이고 모달이 열려 있지 않으며 타이머가 종료되지 않은 경우에만 타이머를 렌더링 */}
-              {start && !modalOpen && !timerEnded && (
+              {playing && !modalOpen && !timerEnded && (
                 <Timer setTimerEnded={setTimerEnded} />
               )}
             </div>
@@ -425,7 +470,7 @@ export default function MultiGame() {
             </div>
           </div>
           <div className="multi-game-center">
-            {!start ? (
+            {!playing ? (
                 <div className="before-start">
                   <h1>. . . Waiting for start . . .</h1>
                   { hostId == memberId ? (
@@ -434,7 +479,7 @@ export default function MultiGame() {
                     </button>
                   ) : (
                     <div>
-                      {/* <MultiResultModal roundRankList={roundRankList} /> */}
+                      <h2>방장만 시작가능!</h2>
                     </div>
                   )}
                 </div>
@@ -446,8 +491,7 @@ export default function MultiGame() {
                     </div>
                   ) : (
                     <div>
-                      {problems.length > 0 && renderProblem()}
-                      {modalOpen && <MultiResultModal roundRankList={roundRankList} />}
+                      {problemList.length > 0 && renderProblem()}
                     </div>
                   )}
               </div>
@@ -455,8 +499,8 @@ export default function MultiGame() {
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              { start ? (
-                <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
+              { playing ? (
+                <h1>{ currentProblemIndex+1 } / { problemList.length }</h1>
               ) : (
                 <h1>Round</h1>
               )}
@@ -468,8 +512,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
-      {resultModalOpen && <MultiResultModal rankList={rankList} />}
+      {modalOpen && <MultiResultModal roundRankList={roundRank} />}
+      {resultModalOpen && <MultiResultModal rankList={gameRank} />}
     </>
   );
 }
