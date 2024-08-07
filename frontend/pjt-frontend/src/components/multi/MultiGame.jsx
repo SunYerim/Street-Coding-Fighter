@@ -310,7 +310,7 @@ export default function MultiGame() {
             console.log("Unknown problem type: " + problemType);
         }
       }
-    }, [count, isSubmit, problemType]);
+    }, [count, problemType]);
 
   
     return <div><span>{count}</span></div>;
@@ -440,14 +440,16 @@ export default function MultiGame() {
                 </div>
               ) : (
                 <div className="after-start">
-                  {/* <div>
-                    <GameResultModal  />
-                  </div> */}
-                  
-                  {/* Playing Games! */}
-                  {problems.length > 0 && renderProblem()}
-                  {/* {timerEnded && submitAnswer(null)} */}
-                  {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
+                  {isSubmit ? (
+                    <div>
+                      <h2>Submitted!</h2>
+                    </div>
+                  ) : (
+                    <div>
+                      {problems.length > 0 && renderProblem()}
+                      {modalOpen && <MultiResultModal roundRankList={roundRankList} />}
+                    </div>
+                  )}
               </div>
               )}
           </div>
@@ -466,7 +468,7 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal roundRankList={roundRankList} />}
+      {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
       {resultModalOpen && <MultiResultModal rankList={rankList} />}
     </>
   );
