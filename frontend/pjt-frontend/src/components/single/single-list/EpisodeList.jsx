@@ -6,43 +6,19 @@ import axios from 'axios';
 import SingleInfoStore from '../../../stores/SingleInfoStore';
 import store from '../../../store/store';
 import SoundStore from '../../../stores/SoundStore';
-import { MdFlag } from "react-icons/md";
+import { MdFlag } from 'react-icons/md';
 
 const rowList = [0, 1, 2, 3];
 
 export default function EpisodeList({ rownum }) {
   const navigate = useNavigate();
-  const [nextIndex, setNextIndex] = useState(0);
   const { completed, courses, setCompleted } = SingleInfoStore();
   const { playEffectSound } = SoundStore();
   // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 데이터 요청
-  useEffect(() => {
-    // console.log(completed);
-    const nidx = completed.findIndex((e) => {
-      // console.log(e)
-      return e.complete === 0;
-    });
-    setNextIndex(nidx);
-    // console.log(nextIndex);
-    // 비동기 함수 정의
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get(`${store.baseUrl}}/edu`);
-    //     const data = response.data;
-    //     console.log(data)
-    //     // 받아온 데이터를 상태로 설정
-    //     setCompleted(data.completed);
-
-    // const nidx = data.completed.findIndex((e) => e.complete === 0);
-    //     setNextIndex(nidx);
-    //   } catch (error) {
-    //     console.error("Error fetching data: ", error);
-    //   }
-    // };
-
-    // 비동기 함수, 호출 연결하면 이부분 주석해제 해야됩니다!!!!
-    // fetchData();
-  }, []);
+  const nextIndex = completed.findIndex((e) => {
+    console.log(e);
+    return e.complete === 0;
+  });
   const characterSource = [
     '/characters/movingGreenSlime.gif',
     '/characters/movingIceSlime.gif',
@@ -91,15 +67,14 @@ export default function EpisodeList({ rownum }) {
                   {e.id === nextIndex ? (
                     <S.CharacterImage>
                       <img src={characterSource[store.registerInfo?.characterType]} />
-                      <img src={characterSource[0]} style={{height : '100px'}}/>
+                      <img src={characterSource[0]} style={{ height: '100px' }} />
                     </S.CharacterImage>
                   ) : null}
                   {e.id === 11 ? (
-                    <div style={{position : 'absolute', top :'-50%', right : '-10px', color : 'red', fontSize : '2rem'}}>
-                      
-                      <MdFlag/>
+                    <div style={{ position: 'absolute', top: '-50%', right: '-10px', color: 'red', fontSize: '2rem' }}>
+                      <MdFlag />
                     </div>
-                  ):null}
+                  ) : null}
                 </S.CheckPoint>
                 {index < array.length - 1 ? (
                   <S.Path key={`path-${e.id}`} $completed={completed[e.id]?.complete} />
