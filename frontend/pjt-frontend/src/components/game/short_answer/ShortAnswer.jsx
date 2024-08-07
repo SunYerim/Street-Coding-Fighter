@@ -1,14 +1,6 @@
-import {
-  borderRadius,
-  fontSize,
-  height,
-  minWidth,
-  padding,
-  style,
-} from "@mui/system";
+import { useState, useEffect } from "react";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
-import { useState, useEffect } from "react";
 import store from "../../../store/store.js";
 
 const styles = {
@@ -48,9 +40,11 @@ const styles = {
     marginLeft: "20px",
   },
 };
+
 const ShortAnswer = () => {
   const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
+  const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
 
   const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store(
     (state) => ({
@@ -74,9 +68,13 @@ const ShortAnswer = () => {
     }
   }, [problem]);
 
+  useEffect(() => {
+    setAnswer(shortAnswerSolve); // 로컬 저장소의 값을 컴포넌트 상태에 반영
+  }, [shortAnswerSolve]);
+
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setAnswer(value);
+    setAnswer(value); // 입력값을 상태에 저장
     setShortAnswerSolve(value); // 입력값을 로컬 저장소에 저장
   };
 
