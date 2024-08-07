@@ -68,9 +68,13 @@ const BattleGameListPage = () => {
         },
       });
 
-      setBattleList(res.data);
-      console.log(res.data);
-      setCurrentBattleList(res.data);
+      if (res.status === 204) {
+        setBattleList([]);
+        setCurrentBattleList([]);
+      } else {
+        setBattleList(res.data);
+        setCurrentBattleList(res.data);
+      }
     } catch (error) {
       console.error("Failed to fetch record", error);
     }
@@ -105,6 +109,8 @@ const BattleGameListPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+
+      console.log(res.data);
 
       setRoomId(roomId);
       setRoomPassword(inputPassword);

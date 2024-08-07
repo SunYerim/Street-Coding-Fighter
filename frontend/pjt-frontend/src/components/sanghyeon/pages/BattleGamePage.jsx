@@ -234,7 +234,7 @@ const BattleGamePage = () => {
       setMyProblem(JSON.parse(message.body));
 
       const responseProblem = JSON.parse(message.body);
-
+      console.log(responseProblem);
       switch (responseProblem.problemType) {
         case "FILL_IN_THE_BLANK":
           setMyBlankProblem(responseProblem);
@@ -310,10 +310,12 @@ const BattleGamePage = () => {
       // }
       const body = JSON.parse(message.body);
 
+      console.log(body);
+
       if (body.result && typeof body.result === "object") {
-        setGameEnded(true);
         setWinner(body.result.winner);
         setLoser(body.result.loser);
+        setGameEnded(true);
 
         setTimeout(() => {
           navigate("/battle-list");
