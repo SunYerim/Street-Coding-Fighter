@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import reactStringReplace from "react-string-replace";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
@@ -43,74 +43,34 @@ const styles = {
 };
 
 const ShortAnswer = () => {
-  const [answer, setAnswer] = useState(''); // 입력값을 저장할 상태 추가
-  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store();
-
-  
+  const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
+  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } =
+    store();
+  const currentAnswer = useRef("");
 
   // console.log(myShortAnswerProblem);
 
   const problemContent = myShortAnswerProblem?.problemContent?.content;
 
-  const modifiedContent = reactStringReplace(problemContent, /\$blank(\d+)\$/g, (match, i) => (
-    <span key={match}>
-      <input style={styles.answerInput} type="text" value={answer} onChange={handleInputChange} />
-    </span>
-  ));
-  const handleInputChange = (e) => {
-    const value = e.target.value;
+  const modifiedContent = reactStringReplace(
+    problemContent,
+    /\$blank(\d+)\$/g,
+    (match, i) => (
+      <span key={match}>
+        <input
+          style={styles.answerInput}
+          type="text"
+          ref={currentAnswer}
+          onChange={(e) => handleInputChange(e)}
+        />
+      </span>
+    )
+  );
+  const handleInputChange = () => {
+    const value = currentAnswer.current.value;
     setAnswer(value); // 입력값을 상태에 저장
-    setShortAnswerSolve(value === '' ? 'ssafy' : value); // 입력값을 로컬 저장소에 저장
+    setShortAnswerSolve(value === "" ? "ssafy" : value); // 입력값을 로컬 저장소에 저장
   };
-
-
-  // ------ 아래부터 원래 있던거, 위에는 테스트용 --------//
-//   const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
-//   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
-//   const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
-
-// const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store()
-
-//   useEffect(() => {
-//     // store에서 문제 데이터를 가져오는 함수 호출
-//     const problemData = myShortAnswerProblem; // 또는 store.getState().problem과 같은 방식으로 직접 접근할 수 있음
-//     setProblem(problemData);
-//   }, [myShortAnswerProblem]);
-
-//   useEffect(() => {
-//     console.log('start')
-//     if (problem && problem.problemContent && problem.problemContent.content) {
-//       console.log('if 문 안으로 들ㄹ어와')
-//       const problemContent = problem.problemContent.content;
-//       const newModifiedContent = reactStringReplace(
-//         problemContent,
-//         /\$blank(\d+)\$/g,
-//         (match, i) => (
-//           <span key={match}>
-//             <input
-//               style={styles.answerInput}
-//               type="text"
-//               value={answer}
-//               onChange={handleInputChange}
-//             />
-//           </span>
-//         )
-//       );
-//       setModifiedContent(newModifiedContent);
-//     } else {
-//       setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
-//     }
-//   }, [problem]);
-
-//   useEffect(() => {
-//     setAnswer(shortAnswerSolve); // 로컬 저장소의 값을 컴포넌트 상태에 반영
-//   }, [shortAnswerSolve]);
-
-//   const handleInputChange = (e) => {
-//     const value = e.target.value;
-//     setAnswer(value); // 입력값을 상태에 저장
-//     setShortAnswerSolve(value === "" ? "ssafy" : value); // 입력값을 로컬 저장소에 저장
-//   };
 
   return (
     <>
@@ -125,8 +85,8 @@ const ShortAnswer = () => {
           <input
             style={styles.answerInput}
             type="text"
-            value={answer}
-            onChange={handleInputChange}
+            ref={currentAnswer}
+            onChange={(e) => handleInputChange(e)}
           />
         </div>
       </div>
