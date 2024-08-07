@@ -312,12 +312,11 @@ const BattleGamePage = () => {
         console.log("여기");
         setWinner(body.result.winner);
         setLoser(body.result.loser);
+        setGameEnded(true);
+        setNormalQuit(true);
 
         openModal();
         closeModal();
-
-        setNormalQuit(true);
-        setGameEnded(true);
 
         setTimeout(() => {
           navigate("/battle-list");

@@ -1,14 +1,94 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-const testProblem = {
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+const testBlankProblem = {
+  problemId: 5,
+  title: "파이썬 반복문 활용 문제",
+  problemType: "FILL_IN_THE_BLANK",
+  category: "Programming",
+  difficulty: 3,
+  problemContent: {
+    problemId: 5,
+    content:
+      "다음 파이썬 코드를 완성하세요.\n\n```python\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n```\n\n빈칸에 알맞은 내용을 채우세요.",
+    numberOfBlanks: 2,
+  },
+  problemChoices: [
+    {
+      choiceId: 14,
+      problemId: 5,
+      choiceText: "number",
+    },
+    {
+      choiceId: 13,
+      problemId: 5,
+      choiceText: "num",
+    },
+    {
+      choiceId: 15,
+      problemId: 5,
+      choiceText: "numbers",
+    },
+    {
+      choiceId: 17,
+      problemId: 5,
+      choiceText: "i",
+    },
+    {
+      choiceId: 16,
+      problemId: 5,
+      choiceText: "nums",
+    },
+  ],
+};
+
+const testMultipleChoiceProblem = {
+  problemId: 2,
+  title: "배열의 최대값 찾기",
+  problemType: "MULTIPLE_CHOICE",
+  category: "알고리즘",
+  difficulty: 2,
+  problemContent: {
+    problemId: 2,
+    content:
+      "배열이 주어질 때, 배열의 요소 중 가장 큰 값을 찾아서 반환하는 프로그램을 작성하세요. 배열은 정수로만 구성되어 있으며, 배열의 크기는 1 이상 100 이하입니다.",
+    numberOfBlanks: 0,
+  },
+  problemChoices: [
+    {
+      choiceId: 4,
+      problemId: 2,
+      choiceText: "배열의 요소를 모두 더한 값을 반환한다.",
+    },
+    {
+      choiceId: 1,
+      problemId: 2,
+      choiceText: "배열을 정렬한 후 마지막 요소를 반환한다.",
+    },
+    {
+      choiceId: 2,
+      problemId: 2,
+      choiceText: "배열의 각 요소를 반복하며 가장 큰 값을 추적하여 반환한다.",
+    },
+    {
+      choiceId: 3,
+      problemId: 2,
+      choiceText:
+        "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+    },
+  ],
+};
+
+const testShortAnswerProblem = {
   problemId: 8,
-  title: '문자열 슬라이싱 문제',
-  problemType: 'SHORT_ANSWER_QUESTION',
-  category: '문자열',
+  title: "문자열 슬라이싱 문제",
+  problemType: "SHORT_ANSWER_QUESTION",
+  category: "문자열",
   difficulty: 1,
   problemContent: {
     problemId: 8,
-    content: "# 다음 코드를 실행했을 때 출력될 값을 적으시오.\ns = 'Python Programming'\nprint(s[0:6])",
+    content:
+      "# 다음 코드를 실행했을 때 출력될 값을 적으시오.\ns = 'Python Programming'\nprint(s[0:6])",
     numberOfBlanks: 0,
   },
   problemChoices: [],
@@ -16,28 +96,28 @@ const testProblem = {
 const store = create(
   persist(
     (set) => ({
-      baseURL: 'https://www.ssafy11s.com',
+      baseURL: "https://www.ssafy11s.com",
       // baseURL: "http://localhost:8080",
 
-      wsBattle: 'ws-battle',
-      wsChat: 'ws-chat',
+      wsBattle: "ws-battle",
+      wsChat: "ws-chat",
 
-      memberId: '',
+      memberId: "",
       setMemberId: (memberId) => set({ memberId }),
 
-      userId: '',
+      userId: "",
       setUserId: (userId) => set({ userId }),
 
-      name: '',
+      name: "",
       setName: (name) => set({ name }),
 
-      email: '',
+      email: "",
       setEmail: (email) => set({ email }),
 
-      schoolName: '',
+      schoolName: "",
       setSchoolName: (schoolName) => set({ schoolName }),
 
-      birth: '',
+      birth: "",
       setBirth: (birth) => set({ birth }),
 
       accessToken: null,
@@ -50,57 +130,58 @@ const store = create(
       setNormalQuit: (normalQuit) => set({ normalQuit }),
 
       registerInfo: {
-        userId: '',
-        name: '',
-        password: '',
-        email: '',
-        schoolName: '',
-        birth: '',
-        characterType: '',
+        userId: "",
+        name: "",
+        password: "",
+        email: "",
+        schoolName: "",
+        birth: "",
+        characterType: "",
       },
       setRegisterInfo: (registerInfo) => set({ registerInfo }),
 
-      code: '',
+      code: "",
       setCode: (code) => set({ code }),
 
-      character: '',
+      character: "",
       setCharacter: (character) => set({ character }),
 
-      roomId: '',
+      roomId: "",
       setRoomId: (roomId) => set({ roomId }),
 
-      hostId: '',
+      hostId: "",
       setHostId: (hostId) => set({ hostId }),
 
-      roomPassword: '',
+      roomPassword: "",
       setRoomPassword: (roomPassword) => set({ roomPassword }),
 
-      enemyId: '',
+      enemyId: "",
       setEnemyId: (enemyId) => set({ enemyId }),
 
-      enemyName: '',
+      enemyName: "",
       setEnemyName: (enemyName) => set({ enemyName }),
 
       blankSolve: {},
       setBlankSolve: (blankSolve) => set({ blankSolve }),
 
-      myBlankProblem: {},
+      myBlankProblem: testBlankProblem,
       setMyBlankProblem: (myBlankProblem) => set({ myBlankProblem }),
 
-      shortAnswerSolve: '',
+      shortAnswerSolve: "",
       setShortSolve: (shortSolve) => set({ shortSolve }),
 
-      myShortAnswerProblem: testProblem,
+      myShortAnswerProblem: testShortAnswerProblem,
       setMyShortAnswerProblem: (myShortProblem) => set({ myShortProblem }),
 
       multipleChoiceSolve: {},
       setMultipleSolve: (multipleSolve) => set({ multipleSolve }),
 
-      myMultipleChoiceProblem: {},
-      setMyMultipleChoiceProblem: (myMultipleProblem) => set({ myMultipleProblem }),
+      myMultipleChoiceProblem: testMultipleChoiceProblem,
+      setMyMultipleChoiceProblem: (myMultipleProblem) =>
+        set({ myMultipleProblem }),
     }),
     {
-      name: 'userStorage',
+      name: "userStorage",
       getStorage: () => localStorage,
     }
   )
