@@ -9,5 +9,5 @@ public class ProblemContent {
 
     private Long problemId;
     private String content;
-    private Integer numberOfBlank;
+    private Integer numberOfBlanks;
 }

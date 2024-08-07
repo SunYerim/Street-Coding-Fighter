@@ -1,15 +1,16 @@
 package com.scf.battle.presentation.controller;
 
-import com.scf.battle.application.BattleGameService;
+import com.scf.battle.application.BattleSocketService;
+import com.scf.battle.application.GameService;
 import com.scf.battle.application.KafkaService;
+import com.scf.battle.application.RoomService;
 import com.scf.battle.domain.dto.Room.CreateRoomDTO;
 import com.scf.battle.domain.dto.Room.JoinRoomResponseDTO;
-import com.scf.battle.domain.dto.Room.RoomJoinPasswordDTO;
+import com.scf.battle.domain.dto.Room.JoinRoomRequestDTO;
 import com.scf.battle.domain.dto.Room.RoomResponseDTO;
 import com.scf.battle.domain.dto.User.Solved;
 import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.global.error.exception.BusinessException;
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,53 +27,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/battle")
 public class BattleGameController {
 
-    private final BattleGameService battleGameService;
+    private final RoomService roomService;
+    private final GameService gameService;
+    private final BattleSocketService battleSocketService;
     private final KafkaService kafkaService;
+
     @GetMapping("/room")
-    public ResponseEntity<?> roomList() { // room list로 묶어서 return
-        List<BattleGameRoom> rooms = battleGameService.findAllRooms();
-        List<RoomResponseDTO> roomResponseDTOS = rooms.stream()
-                .map(room -> RoomResponseDTO.builder()
-                        .roomId(room.getRoomId())
-                        .hostId(room.getHostId())
-                        .title(room.getTitle())
-                        .maxPlayer(2)
-                        .curPlayer(room.getPlayerB() != null && room.getPlayerB().getUserId() != null ? 2 : 1)
-                        .isLock(room.getPassword() != null)
-                        .build())
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(roomResponseDTOS, HttpStatus.OK);
+    public ResponseEntity<List<RoomResponseDTO>> roomList() {
+        List<BattleGameRoom> rooms = roomService.findAllRooms();
+        if (rooms.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+        List<RoomResponseDTO> roomResponseDTOS = roomService.convertToRoomResponseDTOs(rooms);
+        return ResponseEntity.ok(roomResponseDTOS); // 200 OK
     }
+
+
 
     @GetMapping("/room/{roomId}")
     public ResponseEntity<?> findRoom(@PathVariable String roomId) { // room 하나만 return
-        BattleGameRoom room = battleGameService.findById(roomId);
-//        RoomResponseDTO roomResponseDTO = RoomResponseDTO.builder()
-//                .roomId(room.getRoomId())
-//                .hostId(room.getHostId())
-//                .title(room.getTitle())
-//                .maxPlayer(2)
-//                .curPlayer(room.getPlayerB() != null && room.getPlayerB().getUserId() != null ? 2 : 1)
-//                .isLock(room.getPassword() != null)
-//                .build();
+        BattleGameRoom room = roomService.findById(roomId);
         return new ResponseEntity<>(room, HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
                                       @RequestHeader Long memberId, @RequestHeader String username,
-                                      @RequestBody RoomJoinPasswordDTO roomJoinPasswordDTO) {
+                                      @RequestBody JoinRoomRequestDTO joinRoomRequestDTO) {
         try {
-            String password = roomJoinPasswordDTO.getPassword();
-            battleGameService.joinRoom(roomId, memberId, username, password);
-            BattleGameRoom room = battleGameService.findById(roomId);
+            String password = joinRoomRequestDTO.getPassword();
+            roomService.joinRoom(roomId, memberId, username, password);
+            BattleGameRoom room = roomService.findById(roomId);
             return new ResponseEntity<>(new JoinRoomResponseDTO(room.getPlayerA().getUsername(), room.getPlayerA().getUserId()), HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
@@ -83,7 +74,7 @@ public class BattleGameController {
     public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
                                         @Valid @RequestBody CreateRoomDTO createRoomDto) {
         try {
-            String roomId = battleGameService.createRoom(memberId, username, createRoomDto);
+            String roomId = roomService.createRoom(memberId, username, createRoomDto);
             return new ResponseEntity<>(roomId, HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
@@ -93,8 +84,8 @@ public class BattleGameController {
     @PostMapping("/room/{roomId}/start")
     public ResponseEntity<?> gameStart(@RequestHeader Long memberId, @PathVariable String roomId) {
         try {
-            battleGameService.startGame(memberId, roomId);
-            battleGameService.sendRoundProblemToRoom(roomId);
+            gameService.startGame(memberId, roomId);
+            battleSocketService.sendRoundProblemToRoom(roomId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
@@ -104,7 +95,7 @@ public class BattleGameController {
     @PostMapping("/room/{roomId}/leave")
     public ResponseEntity<?> leaveRoom(@RequestHeader Long memberId, @PathVariable String roomId) {
         try {
-            battleGameService.leaveRoom(memberId, roomId);
+            battleSocketService.leaveRoom(memberId, roomId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
