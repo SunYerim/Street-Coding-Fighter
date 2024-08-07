@@ -11,6 +11,7 @@ import Stomp from "stompjs";
 
 import DragNDropQuiz from "../../../components/game/quiz_with_blank/DragNDropQuiz.jsx";
 import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
+import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoice.jsx";
 
 import Modal from "react-modal";
 //음악 변경부분입니다. 아래 SoundStore import 해야됨
@@ -60,6 +61,8 @@ const BattleGamePage = () => {
     setMyBlankProblem,
     shortAnswerSolve,
     setMyShortAnswerProblem,
+    multipleChoiceSolve,
+    setMyMultipleChoiceProblem,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -82,6 +85,8 @@ const BattleGamePage = () => {
     setMyBlankProblem: state.setMyBlankProblem,
     shortAnswerSolve: state.shortAnswerSolve,
     setMyShortAnswerProblem: state.setMyShortAnswerProblem,
+    multipleChoiceSolve: state.multipleChoiceSolve,
+    setMyMultipleChoiceProblem: state.setMyMultipleChoiceProblem,
   }));
 
   const authClient = createAuthClient(
@@ -238,7 +243,7 @@ const BattleGamePage = () => {
           setMyShortAnswerProblem(responseProblem);
           break;
         default:
-          break;
+          setMyMultipleChoiceProblem(responseProblem);
       }
       setSelectMyProblem(true);
     });
@@ -268,11 +273,15 @@ const BattleGamePage = () => {
         break;
       case "SHORT_ANSWER_QUESTION":
         solveData = null;
-        solveText = shortAnswerSolve;
+        solveText = shortAnswerSolve === "" ? "ssafy" : shortAnswerSolve;
         break;
       default:
+        solveData =
+          multipleChoiceSolve[1] === "" ? { 1: "ssafy" } : multipleChoiceSolve;
+        solveText = null;
         break;
     }
+
     const submitAnswerDTO = {
       problemType: myProblem.problemType,
       problemId: myProblem.problemId,
@@ -474,6 +483,8 @@ const BattleGamePage = () => {
         return <DragNDropQuiz />;
       case "SHORT_ANSWER_QUESTION":
         return <ShortAnswer />;
+      case "MULTIPLE_CHOICE":
+        return <MultipleChoice />;
       default:
         return <div>Unknown problem type</div>;
     }

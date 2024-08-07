@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import reactStringReplace from "react-string-replace";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
@@ -82,7 +82,7 @@ const ShortAnswer = () => {
     } else {
       setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
     }
-  }, [problem, answer]);
+  }, [problem]);
 
   useEffect(() => {
     setAnswer(shortAnswerSolve); // 로컬 저장소의 값을 컴포넌트 상태에 반영
@@ -91,7 +91,7 @@ const ShortAnswer = () => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setAnswer(value); // 입력값을 상태에 저장
-    setShortAnswerSolve(value); // 입력값을 로컬 저장소에 저장
+    setShortAnswerSolve(value === "" ? "ssafy" : value); // 입력값을 로컬 저장소에 저장
   };
 
   return (

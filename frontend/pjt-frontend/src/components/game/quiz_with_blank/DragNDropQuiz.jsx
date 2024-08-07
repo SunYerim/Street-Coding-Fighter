@@ -41,7 +41,7 @@ const DragNDropQuiz = () => {
 
       // 각 블랭크에 대한 초기화
       const initialBlanks = {};
-      for (let i = 1; i <= problem.problemChoices.length; i++) {
+      for (let i = 1; i <= problem.problemContent.numberOfBlank; i++) {
         initialBlanks[i] = "ssafy"; // 각 블랭크의 초기값을 null로 설정
       }
       setBlanks(initialBlanks);
