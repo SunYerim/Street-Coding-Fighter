@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import multiStore from '../../stores/multiStore.jsx';
 
-const MultiRanking = ({userList}) => {
+const MultiRanking = () => {
+  const { gameRank, roundRank, playing } = multiStore;
+
+  const userList = playing ? roundRank : gameRank;
+
   return (
     <GraphContainer>
       <LeaderBoardSecond>
