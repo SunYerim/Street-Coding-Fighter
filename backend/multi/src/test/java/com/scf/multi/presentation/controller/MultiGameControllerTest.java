@@ -257,13 +257,10 @@ class MultiGameControllerTest {
                 .build())
             .toList();
 
-        when(multiGameService.startGame(roomId, userId)).thenReturn(problemList);
-
         // When & Then
         mockMvc.perform(post("/multi/game/{roomId}/start", roomId)
                 .header("memberId", userId))
-            .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(problemList)));
+            .andExpect(status().isOk());
 
         // Then
         verify(multiGameService, times(1)).startGame(roomId, userId);

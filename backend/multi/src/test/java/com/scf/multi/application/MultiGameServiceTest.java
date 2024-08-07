@@ -1,5 +1,6 @@
 package com.scf.multi.application;
 
+import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.problem.ProblemAnswer;
@@ -121,7 +122,29 @@ class MultiGameServiceTest {
             .problemAnswers(List.of(ProblemAnswer.builder().answerId(2).problemId(2L).blankPosition(null).correctChoice(null).correctAnswerText("test answer").build()))
             .build();
 
-        problems = Arrays.asList(problem1, problem2);
+        ProblemChoice correctChoice = ProblemChoice.builder()
+            .problemId(3L)
+            .choiceText(null)
+            .choiceId(2)
+            .build();
+
+        Problem problem3 = Problem // 객관식
+            .builder()
+            .problemId(3L)
+            .problemType(ProblemType.MULTIPLE_CHOICE)
+            .category("정렬")
+            .title("병합 정렬")
+            .problemContent(ProblemContent.builder()
+                .content("답을 고르세요.")
+                .numberOfBlank(0)
+                .problemId(3L)
+                .build()
+            )
+            .problemChoices(problemChoices)
+            .problemAnswers(List.of(ProblemAnswer.builder().answerId(1).problemId(3L).blankPosition(null).correctChoice(correctChoice).correctAnswerText(null).build()))
+            .build();
+
+        problems = Arrays.asList(problem1, problem2, problem3);
     }
 
     @Test
@@ -210,6 +233,33 @@ class MultiGameServiceTest {
     }
 
     @Test
+    @DisplayName("객관식 문제를 채점하고 점수를 옳바르게 계산해야 한다.")
+    void markMultipleChoiceSolutionTest() {
+
+        // Given
+        room.add("1234", hostPlayer);
+        room.add("1234", otherPlayer);
+        room.gameStart(problems, room.getHostId());
+        room.nextRound();
+        room.nextRound(); // 3번 문제가 객관식
+
+        when(multiGameRepository.findOneById(anyString())).thenReturn(room);
+
+        Solved solved = Solved.builder()
+            .userId(1L)
+            .solve(Map.of(1, 2))
+            .solveText(null)
+            .submitTime(20) // Within time limit
+            .build();
+
+        // When
+        int score = multiGameService.markSolution(room.getRoomId(), solved);
+
+        // Then
+        assertTrue(score > 0);
+    }
+
+    @Test
     @DisplayName("게임을 시작할 수 있어야 한다.")
     void startGameTest() {
 
@@ -220,11 +270,13 @@ class MultiGameServiceTest {
         when(problemService.getProblems(anyInt())).thenReturn(problems);
 
         // When
-        List<ProblemResponse.ListDTO> problemList = multiGameService.startGame(room.getRoomId(), 1L);
+        multiGameService.startGame(room.getRoomId(), 1L);
+
+        List<ListDTO> problemList = multiGameService.getProblems(room.getRoomId());
 
         // Then
         assertNotNull(problemList);
-        assertEquals(2, problemList.size());
+        assertEquals(3, problemList.size());
     }
 
     @Test
