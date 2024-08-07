@@ -58,18 +58,24 @@ export default function SinglePlay() {
   const { completed } = SingleInfoStore();
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   const { baseURL, accessToken, memberId } = store();
-  const [showCharacter, setShowCharacter] = useState(false) //캐릭터 보이기/안보이기 상태 추가
+  const [showCharacter, setShowCharacter] = useState(false); //캐릭터 보이기/안보이기 상태 추가
   const [isClickable, setIsClickable] = useState(true);
-//캐릭터 애니메이션 상태 추가
-  const [isVibrating, setIsVibrating] = useState(false);
-  const [isCloseUp, setIsCloseUp] = useState(false)
+  //캐릭터 애니메이션 상태 추가
+  // const [isVibrating, setIsVibrating] = useState(false);
 
+  const isVibrating = dialogueList?.[page].action === 1;
+  const isCloseUp = dialogueList?.[page].action === 2;
   const getContent = () => {
-    axios
-      .get(`${baseURL}/single/${content_id}`)
+    axios({
+      method: 'get',
+      url: `${baseURL}/single/${content_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
       .then((response) => {
-        console.log(content_id)
-        console.log(`${store.baseUrl}/single/${content_id}`)
+        console.log(content_id);
+        console.log(`${store.baseUrl}/single/${content_id}`);
         const data = response.data;
         setDialogueList(data.dialogueList);
         // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
@@ -81,12 +87,9 @@ export default function SinglePlay() {
       });
   };
   useEffect(() => {
-    switchBackgroundMusic(
-      'single',
-      (newBackgroundMusic) => {
-        newBackgroundMusic.play();
-      }
-    );
+    switchBackgroundMusic('single', (newBackgroundMusic) => {
+      newBackgroundMusic.play();
+    });
     getContent();
     const loadingTimer = setTimeout(() => {
       setLoading(false);
@@ -124,19 +127,19 @@ export default function SinglePlay() {
     // console.log(page);
 
     //넘어가면 안될때 누르면 바로 return!
-    console.log(isClickable)
-    if(!isClickable){
+    console.log(isClickable);
+    if (!isClickable) {
       return;
     }
 
     // 클릭이 불가능하게 만든 후 1초 후 클릭이 가능하게 상태 변경
     // 대사 넘어가고나서 1초동안 못넘어가게하기
-    setIsClickable(false)
-    console.log('false로 바뀜')
-    setTimeout(() =>{
-      setIsClickable(true)
-      console.log('true로 바뀜')
-    }, 1500)
+    setIsClickable(false);
+    console.log('false로 바뀜');
+    setTimeout(() => {
+      setIsClickable(true);
+      console.log('true로 바뀜');
+    }, 1500);
     if (increment) {
       if (page < dialogueList.length - 1) {
         setPage((prevPage) => prevPage + 1);
@@ -150,12 +153,12 @@ export default function SinglePlay() {
         setPage(0);
       }
     }
-    if(dialogueList[page].action == 1){
+    if (dialogueList[page].action == 1) {
       setIsVibrating(true);
-      console.log('vibrating')
-      setTimeout(()=>{
-        setIsVibrating(false)
-      },2000)
+      console.log('vibrating');
+      setTimeout(() => {
+        setIsVibrating(false);
+      }, 2000);
     }
     playEffectSound('singleClickSound');
     console.log(page);
@@ -174,10 +177,10 @@ export default function SinglePlay() {
   };
   const openExitModal = () => {
     setIsExitModalOpen(true);
-  }
+  };
   const closeExitModal = () => {
     setIsExitModalOpen(false);
-  }
+  };
   const goToList = (isFinish) => {
     if (isFinish && !completed[content_id]?.complete) {
       axios({
@@ -273,12 +276,13 @@ export default function SinglePlay() {
             style={{
               left: currentDialogue.imageCount > 0 ? '10vw' : '30vw',
             }}
-            $isVibrating = {isVibrating}
+            $isVibrating={isVibrating}
+            $isCloseUp={isCloseUp}
           />
         </S.ImageBox>
         {showDialogue && (
           <S.DialogueSection>
-            {/* <ChatButton></ChatButton> */} 
+            {/* <ChatButton></ChatButton> */}
             {/* 채팅 버튼 비활성화 */}
             <S.DialogueBox>
               <S.DialogueHeader>
@@ -332,7 +336,7 @@ export default function SinglePlay() {
         <div style={styles.modalContent}>
           <h2>학습을 완료하시겠습니까?</h2>
           <div style={styles.modalButtons}>
-            <S.CompleteButton onClick={()=>goToList(true)}>학습 완료</S.CompleteButton>
+            <S.CompleteButton onClick={() => goToList(true)}>학습 완료</S.CompleteButton>
             <S.CancelButton onClick={handleCloseModal}>돌아가기</S.CancelButton>
           </div>
         </div>

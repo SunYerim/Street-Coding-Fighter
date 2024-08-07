@@ -94,8 +94,26 @@ const vibratingAnimation = css`
   animation: ${vibration} 0.1s infinite;
 `;
 
+// 캐릭터 클로즈업 애니메이션 추가
+const closeUp = keyframes`
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.5);
+  }
+`;
+
+
+const closeUpAnimation = css`
+    animation : ${closeUp} 0.5s forwards;
+`; 
+
+
 const CharacterImage = styled.img`
-  // animation: ${(props) => (props.$isVibrating ? vibratingAnimation : null)};
+  ${(props) => (props.$isVibrating ? vibratingAnimation : null)};
+  ${props => props.$isCloseUp ? closeUpAnimation : null};
+
   position: fixed;
   height: 70vh;
   bottom: 0px;
