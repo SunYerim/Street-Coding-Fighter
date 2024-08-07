@@ -16,10 +16,10 @@ const styles = {
   choiceContainer: {
     width: "40vw",
     display: "grid",
-    gridTemplateColumns: "1fr 1fr", // 두 열로 설정
+    gridTemplateColumns: "1fr 1fr",
     gap: "10px",
     justifyContent: "center",
-    margin: "20px auto",
+    margin: "0 auto",
   },
   choiceButton: {
     display: "inline-block",
@@ -100,7 +100,6 @@ const MultipleChoice = () => {
 
   return (
     <>
-      <h2>객관식 문제</h2>
       <div className="multi-game-playing">
         <div style={styles.codeContainer}>
           {modifiedContent && (
