@@ -163,6 +163,7 @@ const BattleGameListPage = () => {
           },
         });
 
+        console.log(res.data);
         setBattleList(res.data);
         setCurrentBattleList(res.data);
       } catch (error) {

@@ -258,13 +258,28 @@ const BattleGamePage = () => {
   // 답변 제출 미완성
   const submitAnswer = () => {
     const endpoint = `/send/game/${roomId}/answer`;
+    let solveData = null;
+    let solveText = null;
+
+    switch (myProblem.problemType) {
+      case "FILL_IN_THE_BLANK":
+        solveData = blankSolve;
+        solveText = null;
+        break;
+      case "SHORT_ANSWER_QUESTION":
+        solveData = null;
+        solveText = shortAnswerSolve;
+        break;
+      default:
+        break;
+    }
     const submitAnswerDTO = {
       problemType: myProblem.problemType,
       problemId: myProblem.problemId,
       userId: memberId,
-      solve: blankSolve,
+      solve: solveData,
       submitTime: 30 - count,
-      solveText: null,
+      solveText: solveText,
       round: currentRound - 1,
     };
     battleStompClient.current.send(

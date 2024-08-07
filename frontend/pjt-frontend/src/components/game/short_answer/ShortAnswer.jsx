@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import reactStringReplace from "react-string-replace";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
 import store from "../../../store/store.js";
@@ -62,11 +63,26 @@ const ShortAnswer = () => {
 
   useEffect(() => {
     if (problem && problem.problemContent && problem.problemContent.content) {
-      setModifiedContent(problem.problemContent.content);
+      const problemContent = problem.problemContent.content;
+      const newModifiedContent = reactStringReplace(
+        problemContent,
+        /\$blank(\d+)\$/g,
+        (match, i) => (
+          <span key={match}>
+            <input
+              style={styles.answerInput}
+              type="text"
+              value={answer}
+              onChange={handleInputChange}
+            />
+          </span>
+        )
+      );
+      setModifiedContent(newModifiedContent);
     } else {
       setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
     }
-  }, [problem]);
+  }, [problem, answer]);
 
   useEffect(() => {
     setAnswer(shortAnswerSolve); // 로컬 저장소의 값을 컴포넌트 상태에 반영
@@ -83,7 +99,9 @@ const ShortAnswer = () => {
       <h2>주관식 문제</h2>
       <div className="multi-game-playing">
         <div style={styles.codeContainer}>
-          <StyleToPythonCode codeString={modifiedContent} />
+          {modifiedContent && (
+            <StyleToPythonCode codeString={modifiedContent} />
+          )}
         </div>
         <div style={styles.inputDiv}>
           <input
