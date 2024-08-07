@@ -1,9 +1,8 @@
 import Header from "../components/Header";
 import "../../../css/BattleGamePage.css";
 import store from "../../../store/store.js";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import createAuthClient from "../apis/createAuthClient.js";
 
 import SockJS from "sockjs-client/dist/sockjs";
@@ -310,25 +309,17 @@ const BattleGamePage = () => {
         }, 5000);
       } else {
         console.log(name);
-        const myName = body.userId === memberId ? name : enemyName;
-        const yourName = body.userId === memberId ? enemyName : name;
         const power = body.power;
         const isAttack = body.isAttack;
 
         if (isAttack === true) {
           setEnemyHealth((prevHealth) => prevHealth - power);
-          setBattleHistory((prevHistory) => [
-            ...prevHistory,
-            `${myName}님이 ${yourName}님에게 ${power}만큼 데미지를 주었습니다.`,
-          ]);
+          setBattleHistory((prevHistory) => [...prevHistory, body]);
         } else {
           setMyHealth((prevHealth) =>
             prevHealth + power > 100 ? 100 : prevHealth + power
           );
-          setBattleHistory((prevHistory) => [
-            ...prevHistory,
-            `${myName}님이 ${power}만큼 체력을 회복하였습니다.`,
-          ]);
+          setBattleHistory((prevHistory) => [...prevHistory, body]);
         }
       }
     });
@@ -363,7 +354,7 @@ const BattleGamePage = () => {
     chatStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
 
-      if (body.type === "JOIN") {
+      if (body.type === "JOIN" && body.sender !== name) {
         setEnemyName(body.sender);
       }
 
@@ -607,8 +598,14 @@ const BattleGamePage = () => {
                     {battleHistory.map((data, index) => (
                       <div className="battle-game-history-message" key={index}>
                         {data.isAttack === true
-                          ? `${data.memberId}님이 플레이어 2님에게 ${data.power}만큼 데미지를 주었습니다.`
-                          : `${data.memberId}님이 ${data.power}만큼 체력을 회복하였습니다.`}
+                          ? `${
+                              data.userId === memberId ? name : enemyName
+                            }님이 ${
+                              data.userId === memberId ? enemyName : name
+                            }님에게 ${data.power}만큼 데미지를 주었습니다.`
+                          : `${
+                              data.userId === memberId ? name : enemyName
+                            }님이 ${data.power}만큼 체력을 회복하였습니다.`}
                       </div>
                     ))}
                     <div ref={battleHistoryEndRef} />
