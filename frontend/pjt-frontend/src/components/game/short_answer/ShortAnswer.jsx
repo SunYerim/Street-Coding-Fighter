@@ -44,8 +44,13 @@ const styles = {
 
 const ShortAnswer = () => {
   const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
-  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } =
-    store();
+  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store(
+    (state) => ({
+      shortAnswerSolve: state.shortAnswerSolve,
+      setShortAnswerSolve: state.setShortAnswerSolve,
+      myShortAnswerProblem: state.myShortAnswerProblem,
+    })
+  );
   const currentAnswer = useRef("");
 
   // console.log(myShortAnswerProblem);
