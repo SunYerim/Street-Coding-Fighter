@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContentListResponseDto {
+public class MemberDto {
 
-    private int contentId;
-    private int complete;
+    private Long memberId;
+    private String userName;
 
 }

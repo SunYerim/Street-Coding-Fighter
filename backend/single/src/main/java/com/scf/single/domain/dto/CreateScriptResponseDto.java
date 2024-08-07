@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContentListResponseDto {
+public class CreateScriptResponseDto {
 
-    private int contentId;
-    private int complete;
+    // 개별의 스크립트
+    private int pageNo;
+    private String scriptContent;
+    private int action;
+    private int imageCount;
 
 }
