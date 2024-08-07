@@ -58,6 +58,9 @@ export default function SinglePlay() {
   const { completed } = SingleInfoStore();
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   const { baseURL, accessToken, memberId } = store();
+  const [showCharacter, setShowCharacter] = useState(false) //캐릭터 보이기/안보이기 상태 추가
+  const [isClickable, setIsClickable] = useState(true);
+
   const getContent = () => {
     axios
       .get(`${baseURL}/single/${content_id}`)
@@ -88,7 +91,7 @@ export default function SinglePlay() {
 
     const timer = setTimeout(() => {
       setShowDialogue(true);
-    }, 5000);
+    }, 3000);
 
     return () => {
       switchBackgroundMusic('main', (newBackgroundMusic) => {

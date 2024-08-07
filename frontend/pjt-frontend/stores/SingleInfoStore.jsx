@@ -15,8 +15,7 @@ const courses = [
   { id: 11, content_type: "알고리즘", title: "정렬" },
 ];
 
-const completed = {
-  contentList: [
+  const contentList = [
     {
       contentId: 0,
       complete: 1, // 수강 완료
@@ -65,12 +64,11 @@ const completed = {
       contentId: 11,
       complete: 0, // 수강 완료
     },
-  ],
-};
+  ]
 
 const useLeaderboardStore = create((set) => ({
   courses: courses,
-  completed: completed.contentList,
+  completed: contentList,
   setCompleted: (completedList) => set({ completed: completedList }),
 }));
 

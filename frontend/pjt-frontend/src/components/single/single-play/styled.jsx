@@ -79,6 +79,7 @@ const DialogueBodyRight = styled.div`
 const DialogueContent = styled.div`
   /* 버튼 스타일을 여기에 추가하세요 */
   margin-left: 10px;
+  width : 100%;
 `;
 
 const CharacterImage = styled.img`
