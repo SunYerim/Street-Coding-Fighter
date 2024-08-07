@@ -127,19 +127,14 @@ export default function MultiGame() {
 
     socketInstance.onmessage = (event) => {
       const messageData = event.data;
-      console.log("Message received:", messageData);
       if (isJsonString(messageData)) {
         const data = JSON.parse(messageData);
 
         // Multi socket 통신 타입별 정리
         if (data.type === 'gameStart') { // 게임스타트
-          console.log("Game started 신호는 왔음");
           setStart(1);
           console.log(data.payload);
-          const parsedPayload = JSON.parse(data.payload);
-          setProblems(parsedPayload);
-          console.log('parsedPayload: ', parsedPayload)
-          console.log('parsedPayload.data: ', parsedPayload.data)
+          setProblems(data.payload);
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
