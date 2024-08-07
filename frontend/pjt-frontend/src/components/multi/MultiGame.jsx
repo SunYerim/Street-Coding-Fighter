@@ -155,7 +155,7 @@ export default function MultiGame() {
     };
 
     return () => {
-      // socketInstance.close();
+      socketInstance.close();
       sendQuitMessage();
       if (chatStompClient.current) chatStompClient.current.disconnect();
     };
