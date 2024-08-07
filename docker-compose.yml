@@ -151,29 +151,30 @@ services:
       - network
 
   rank-server:
-    image: zlxldgus123/rank
-    depends_on:
-      - redis-user
-      - kafka
-      - multi-server
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      SPRING_KAFKA_CONSUMER_GROUP_ID: ranking-group
-      SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: earliest
-      SPRING_KAFKA_CONSUMER_ENABLE_AUTO_COMMIT: 'false'
-      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
-      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
-      SPRING_KAFKA_LISTENER_ACK_MODE: manual
-      SPRING_APPLICATION_NAME: scf-rank
-      SPRING_DATA_REDIS_PORT: 6380
-      SPRING_DATA_REDIS_HOST: redis-rank
-      LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
-      SERVER_ERROR_INCLUDE_MESSAGE: always
-      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
-    ports:
-      - "8083:8083"
-    networks:
-      - network
+  image: zlxldgus123/rank
+  depends_on:
+    - redis-user
+    - kafka
+    - multi-server
+  environment:
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    SPRING_KAFKA_CONSUMER_GROUP_ID: ranking-group
+    SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: earliest
+    SPRING_KAFKA_CONSUMER_ENABLE_AUTO_COMMIT: 'false'
+    SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+    SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+    SPRING_KAFKA_LISTENER_ACK_MODE: manual
+    SPRING_APPLICATION_NAME: scf-rank
+    SPRING_DATA_REDIS_PORT: 6379 # 포트 수정
+    SPRING_DATA_REDIS_HOST: redis-user # 호스트 수정
+    LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
+    SERVER_ERROR_INCLUDE_MESSAGE: always
+    SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+  ports:
+    - "8083:8083"
+  networks:
+    - network
+
 
   battle-server:
     image: zlxldgus123/battle
