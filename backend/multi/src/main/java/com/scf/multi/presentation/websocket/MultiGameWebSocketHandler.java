@@ -4,6 +4,7 @@ import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.application.MultiGameService;
+import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
 import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.SolvedMessage;
@@ -41,7 +42,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void onGameStarted(GameStartedEvent event) throws Exception {
 
         String roomId = event.getRoomId();
-        broadcastMessageToRoom(roomId, "gameStart", "게임이 시작되었습니다!");
+        List<ListDTO> problems = multiGameService.getProblems(roomId);
+        broadcastMessageToRoom(roomId, "gameStart", problems);
     }
 
     @Override
