@@ -104,20 +104,36 @@ export default function SinglePlay() {
   const changePage = (increment) => {
     console.log('click');
     if (loading || !showDialogue) return;
+
     // 모달이 열려있으면 모달을 닫고 함수 종료
     if (isModalOpen) {
       handleCloseModal();
       return;
     }
-    console.log(isModalOpen);
+    // console.log(isModalOpen);
     // 채팅이 열려있으면 페이지 변경을 하지 않고 함수 종료
-    if (isChatOpen) {
-      // console.log(isChatOpen);
-      handleChatOpen();
-      return;
-    }
+    // if (isChatOpen) {
+    //   // console.log(isChatOpen);
+    //   handleChatOpen();
+    //   return;
+    // }
     // console.log('111');
     // console.log(page);
+
+    //넘어가면 안될때 누르면 바로 return!
+    console.log(isClickable)
+    if(!isClickable){
+      return;
+    }
+
+    // 클릭이 불가능하게 만든 후 1초 후 클릭이 가능하게 상태 변경
+    // 대사 넘어가고나서 1초동안 못넘어가게하기
+    setIsClickable(false)
+    console.log('false로 바뀜')
+    setTimeout(() =>{
+      setIsClickable(true)
+      console.log('true로 바뀜')
+    }, 1500)
     if (increment) {
       if (page < dialogueList.length - 1) {
         setPage((prevPage) => prevPage + 1);
