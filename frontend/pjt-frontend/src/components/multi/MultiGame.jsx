@@ -26,6 +26,7 @@ export default function MultiGame() {
   const location = useLocation();
   const chatStompClient = useRef(null);
 
+  // 유저정보 받아오기
   const {
     accessToken,
     setAccessToken,
@@ -42,6 +43,7 @@ export default function MultiGame() {
     baseURL: state.baseURL,
   }));
 
+  // auth
   const authClient = createAuthClient(
     baseURL,
     () => accessToken,
@@ -53,15 +55,16 @@ export default function MultiGame() {
   const [socket, setSocket] = useState(null);
   const [start, setStart] = useState(0);
   const [hostId, setHostId] = useState(null);
-  // const [user, setUser] = useState(username);
 
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [resultModalOpen, setResultModalOpen] = useState(false);
+
   const [problems, setProblems] = useState([]);
   const [problemType, setProblemType] = useState('');
-  const [isSumbit, setIsSumbit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
   const [userList, setUserList] = useState([]);
   const [rankList, setRankList] = useState([]);
   const [roundRankList, setRoundRankList] = useState([]);
@@ -69,13 +72,15 @@ export default function MultiGame() {
 
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
-  // 시간을 담을 변수
+
   const [count, setCount] = useState(30);
 
+  // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
     setHostId(location.state?.hostId || null);
   }, [location.state]);
 
+  // 게임시작
   const handleStart = async () => {
     setStart(1);  
     const response = await axios.post(
@@ -88,9 +93,8 @@ export default function MultiGame() {
         }
       }
     );
-    // console.log(response.data);
-    setProblems(response.data);
-  };  
+    console.log(response.data);
+  };
 
   const isJsonString = (str) => {
     try {
@@ -102,6 +106,7 @@ export default function MultiGame() {
   };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
+  // 마운트할 때
   useEffect(() => {
     const initializeConnections = async () => {
       try {
@@ -126,9 +131,11 @@ export default function MultiGame() {
       if (isJsonString(messageData)) {
         const data = JSON.parse(messageData);
 
+        // Multi socket 통신 타입별 정리
         if (data.type === 'gameStart') { // 게임스타트
           setStart(1);
           console.log(data.payload);
+          setProblems(data.payload);
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
@@ -137,7 +144,7 @@ export default function MultiGame() {
         } else if (data.type === 'gameRank') {
           setRankList(data.payload);
           console.log('전체랭킹: ',rankList);
-        } else if (data.type === 'roundRank') {
+        } else if (data.type === 'roundRank') { 
           setRoundRankList(data.payload);
           console.log('라운드랭킹: ',roundRankList);
         }
@@ -154,11 +161,34 @@ export default function MultiGame() {
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
+  // 문제 받기
   useEffect(() => {
     if (problems.length > 0) {
       setProblemType(problems[currentProblemIndex].problemType);
     }
   }, [problems, currentProblemIndex]);
+
+
+  // 라운드 종료 후 최종 랭킹 모달 표시
+  useEffect(() => {
+    if (start === 1 && !modalOpen && timerEnded) {
+      if (currentProblemIndex < problems.length - 1) {
+        setCurrentProblemIndex(currentProblemIndex + 1);
+        setTimerEnded(false);
+        setIsSubmit(false);
+        setStart(0); // 라운드 종료
+        setModalOpen(true);
+        setTimeout(() => {
+          setModalOpen(false);
+        }, 4000);
+      } else {
+        setResultModalOpen(true);
+        setTimeout(() => {
+          setResultModalOpen(false);
+        }, 4000);
+      }
+    }
+  }, [timerEnded]);
 
 
 
@@ -176,7 +206,7 @@ export default function MultiGame() {
           }
       };
       socket.send(JSON.stringify(messageObj));
-      setIsSumbit(true);
+      setIsSubmit(true);
     }
   };
 
@@ -194,7 +224,7 @@ export default function MultiGame() {
           }
       };
       socket.send(JSON.stringify(messageObj));
-      setIsSumbit(true);
+      setIsSubmit(true);
     }
   };
 
@@ -212,7 +242,7 @@ export default function MultiGame() {
           }
       };
       socket.send(JSON.stringify(messageObj));
-      setIsSumbit(true);
+      setIsSubmit(true);
     }
   };
 
@@ -240,7 +270,6 @@ export default function MultiGame() {
     useEffect(() => {
       if (count <= 0) {
         setTimerEnded(true);
-        setIsSumbit(false);
         return;
       }
   
@@ -258,33 +287,38 @@ export default function MultiGame() {
     }, [count]);
 
     useEffect(() => {
-      if (count === 0 && !isSumbit) {
+      if (count === 0 && !isSubmit) {
         switch (problemType) {
           case "FILL_IN_THE_BLANK":
             handleBlankAnswer(null);
-            setIsSumbit(true);
+            setIsSubmit(true);
             break;
           case "SHORT_ANSWER_QUESTION":
             handleShortAnswer(null);
-            setIsSumbit(true);
+            setIsSubmit(true);
             break;
           case "MULTIPLE_CHOICE":
             handleChoiceSelection(null);
-            setIsSumbit(true);
+            setIsSubmit(true);
             break;
           default:
             console.log("Unknown problem type: " + problemType);
         }
+        setModalOpen(true);
+        setTimeout(() => {
+          setModalOpen(false);
+          setTimerEnded(true);
+        }, 4000);
       }
-    }, [count, isSumbit, problemType]);
+    }, [count, isSubmit, problemType]);
 
   
     return <div><span>{count}</span></div>;
   }
 
-    // ---------------------- WebSocket ----------------------
+  // ---------------------- 채팅 WebSocket ----------------------
 
-  // WebSocket 연결 및 초기화 함수
+  // 채팅 WebSocket 연결 및 초기화 함수
   const connect = async () => {
     const chatSocket = new SockJS(`https://www.ssafy11s.com/ws-chat`);
     chatStompClient.current = Stomp.over(chatSocket);
@@ -293,12 +327,7 @@ export default function MultiGame() {
       chatStompClient.current.connect(
         {},
         (frame) => {
-          // console.log("Connected: " + frame);
-          // console.log("chatStompClient: ", chatStompClient.current);
-          // setIsChatConnected(true);
           subscribeMessage();
-          // enterChat(roomId, name);
-          // console.log("채팅 서버 연결");
           resolve();
         },
         (error) => {
@@ -308,16 +337,6 @@ export default function MultiGame() {
       );
     });
   };
-
-  // const enterRoom = () => {
-  //   const chatMessage = {
-  //     sender: username,
-  //     content: `${username} has entered the room.`,
-  //     type: 'JOIN',
-  //     roomId: roomId
-  //   };
-  // chatStompClient.current.send(`/send/chat/${roomId}/enter`, {}, JSON.stringify(chatMessage));
-  // }
 
   const subscribeMessage = () => {
     const endpoint = `/room/${roomId}`;
@@ -337,7 +356,6 @@ export default function MultiGame() {
   const sendMessage = async (event) => {
     event.preventDefault();
     if (message.trim() === "") return;
-    // console.log("send message");
     const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
       sender: name,
@@ -384,7 +402,7 @@ export default function MultiGame() {
   };
 
 
-
+  // ---------------------- 채팅 WebSocket ----------------------
 
 
   return (
@@ -432,27 +450,30 @@ export default function MultiGame() {
                 </div>
               ) : (
                 <div className="after-start">
-                  {/* <div>
-                    <GameResultModal  />
-                  </div> */}
-                  {/* <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                  . . . Playing . . .</h1> */}
-
-                  {/* Playing Games! */}
-                  {problems.length > 0 && renderProblem()}
-                  {/* {timerEnded && submitAnswer(null)} */}
-                  {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
-                </div>
+                  (isSubmit ? (
+                    <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                      . . . Waiting . . .</h1>
+                  ) : (
+                      {/* <div>
+                        <GameResultModal  />
+                      </div> */}
+                      
+                      {/* Playing Games! */}
+                      {problems.length > 0 && renderProblem()}
+                      {/* {timerEnded && submitAnswer(null)} */}
+                      {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
+                    
+                  ))
+              </div>
               ))
             )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              {/* <h1>Round</h1> */}
               { start ? (
                 <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
               ) : (
-                <h1>Waiting...</h1>
+                <h1>Round</h1>
               )}
             </div>
             <div className="multi-message-room">
@@ -462,7 +483,9 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
+      {modalOpen && <MultiResultModal roundRankList={roundRankList} />}
+      {resultModalOpen && <MultiResultModal rankList={rankList} />}
+      
     </>
   );
 }
