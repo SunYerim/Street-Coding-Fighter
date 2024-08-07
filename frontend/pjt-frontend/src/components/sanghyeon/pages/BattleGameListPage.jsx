@@ -110,8 +110,6 @@ const BattleGameListPage = () => {
         },
       });
 
-      console.log(res.data);
-
       setRoomId(roomId);
       setRoomPassword(inputPassword);
       setEnemyId(res.data.memberId);

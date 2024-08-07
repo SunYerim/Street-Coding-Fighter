@@ -135,7 +135,6 @@ const BattleGamePage = () => {
       battleStompClient.current.connect(
         {},
         (frame) => {
-          console.log("Connected to Battle Server: " + frame);
           subscribeEnterRoom();
           subscribeEnemyProblem();
           subscribeMyProblem(); // Typo fixed: changed from subsribeMyProblem to subscribeMyProblem
@@ -152,17 +151,11 @@ const BattleGamePage = () => {
         }
       );
 
-      console.log("배틀 서버 연결 시도");
-
       // 채팅 서버 연결
       chatStompClient.current.connect(
         {},
         (frame) => {
-          console.log("Connected to Chat Server: " + frame);
-
           subscribeMessage();
-
-          console.log("채팅 서버 연결");
 
           chatConnected = true;
           if (battleConnected && chatConnected) {
@@ -174,8 +167,6 @@ const BattleGamePage = () => {
           reject(error); // 연결 실패 시 Promise 거부
         }
       );
-
-      console.log("채팅 서버 연결 시도");
     });
   };
 
@@ -200,8 +191,6 @@ const BattleGamePage = () => {
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
       ]);
-
-      console.log(body);
 
       if (body.memberId !== memberId) {
         setEnemyId(body.memberId);
@@ -237,7 +226,9 @@ const BattleGamePage = () => {
       setMyProblem(JSON.parse(message.body));
 
       const responseProblem = JSON.parse(message.body);
+
       console.log(responseProblem);
+
       switch (responseProblem.problemType) {
         case "FILL_IN_THE_BLANK":
           setMyBlankProblem(responseProblem);
@@ -308,10 +299,7 @@ const BattleGamePage = () => {
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
 
-      console.log(body);
-
       if (body.result && typeof body.result === "object") {
-        console.log("여기");
         setWinner(body.result.winner);
         setLoser(body.result.loser);
         setGameEnded(true);
@@ -356,7 +344,6 @@ const BattleGamePage = () => {
 
   const sendMessage = async () => {
     if (message.trim() === "") return;
-    console.log("send message");
     const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
       sender: name,
@@ -393,7 +380,6 @@ const BattleGamePage = () => {
   };
 
   const reconnectWebSocket = () => {
-    console.log("Reconnecting WebSocket...");
     setTimeout(async () => {
       try {
         await connect();
@@ -477,8 +463,6 @@ const BattleGamePage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      console.log("game start!");
     } catch (error) {
       console.log(error);
     }

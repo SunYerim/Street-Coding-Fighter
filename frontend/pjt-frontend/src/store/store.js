@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-// 더미데이터
+//
 const testBlankProblem = {
   problemId: 5,
   title: "파이썬 반복문 활용 문제",
