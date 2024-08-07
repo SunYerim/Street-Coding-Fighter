@@ -355,6 +355,9 @@ export default function MultiGame() {
           default:
             console.log("Unknown problem type: " + problemType);
         }
+        if (currentProblemIndex < problemList.length - 1) {
+          setCurrentProblemIndex(currentProblemIndex + 1);
+        }
       }
     }, [count]);
 
