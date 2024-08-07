@@ -102,7 +102,7 @@ const BattleGamePage = () => {
   const chatEndRef = useRef(null);
   const battleHistoryEndRef = useRef(null);
   const [myHealth, setMyHealth] = useState(100);
-  const [enemyHealth, setEnemy2Health] = useState(100);
+  const [enemyHealth, setEnemyHealth] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
   const [EnemyProblems, setEnemyProblems] = useState([]);
@@ -200,6 +200,8 @@ const BattleGamePage = () => {
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
       ]);
+
+      console.log(body);
 
       if (body.memberId !== memberId) {
         setEnemyId(body.memberId);
@@ -322,8 +324,21 @@ const BattleGamePage = () => {
           navigate("/battle-list");
         }, 5000);
       } else {
-        console.log(body);
-        // 체력 업데이트 반영
+        if (body.isAttack === true) {
+          setEnemyHealth((prevHealth) => prevHealth - body.power);
+          setBattleHistory((prevHistory) => [
+            ...prevHistory,
+            `${name}님이 ${enemyName}님에게 ${body.power}만큼 데미지를 주었습니다.`,
+          ]);
+        } else {
+          setMyHealth((prevHealth) =>
+            prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+          );
+          setBattleHistory((prevHistory) => [
+            ...prevHistory,
+            `${name}님이 ${body.power}만큼 체력을 회복하였습니다.`,
+          ]);
+        }
       }
     });
   };
@@ -388,7 +403,7 @@ const BattleGamePage = () => {
         console.error("Reconnection failed: ", error);
         reconnectWebSocket(); // 재연결 시도
       }
-    }, 3000); // 3초 후 재연결 시도
+    }, 2000); // 3초 후 재연결 시도
   };
 
   useEffect(() => {
