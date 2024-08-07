@@ -83,7 +83,7 @@ export default function MultiCreate() {
             </div>
             <div className="create-box">
               <span>최대인원 : </span>
-              <input name="maxPlayer" className="create-max-number" type="number" min="2" max="100" placeholder="10" />
+              <input name="maxPlayer" className="create-max-number" type="number" min="2" max="100" placeholder="10" defaultValue={10} />
             </div>
             <div className="create-box">
               <span>비밀번호 : </span>
@@ -91,7 +91,7 @@ export default function MultiCreate() {
             </div>
             <div className="create-box">
               <span>라운드 : </span>
-              <input name="gameRound" className="create-problems" type="number" min="2" max="10" placeholder="5" />
+              <input name="gameRound" className="create-problems" type="number" min="2" max="10" placeholder="5" defaultValue={5} />
             </div>
             <div className="create-button-container">
               <button className="create-button" type="submit">Create</button>
