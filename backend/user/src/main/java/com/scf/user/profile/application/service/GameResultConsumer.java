@@ -57,15 +57,15 @@ public class GameResultConsumer {
     public void processMultiGameResults(MultiGameResult multiGameResult) {
         System.out.println("Processing multi game results: " + multiGameResult.getGameRank());
 
-        // multi 게임이면
-        if (multiGameResult.getGameType().equals(0)) {
-            // 경험치를 업데이트
-            List<RenewExp> updatedExp = updateExperiencePoints(multiGameResult.getGameRank());
-
-            // 처리된 데이터를 다시 전송
-            kafkaMessageProducer.sendProcessedGameResults(updatedExp);
-
-        }
+//        // multi 게임이면
+//        if (multiGameResult.getGameType().equals(0)) {
+//            // 경험치를 업데이트
+//            List<RenewExp> updatedExp = updateExperiencePoints(multiGameResult.getGameRank());
+//
+//            // 처리된 데이터를 다시 전송
+//            kafkaMessageProducer.sendProcessedGameResults(updatedExp);
+//
+//        }
     }
 
     // exp를 업데이트.
