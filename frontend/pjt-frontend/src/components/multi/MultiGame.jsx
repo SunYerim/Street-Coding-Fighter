@@ -17,7 +17,7 @@ import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
 import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
-import ShortAnswer from "../game/short_answer/MultiShortAnswer";
+import ShortAnswer from "../game/short_answer/ShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
 
@@ -53,7 +53,7 @@ export default function MultiGame() {
   const roomId = multiStore.getState().roomId;
 
   const [socket, setSocket] = useState(null);
-  const [start, setStart] = useState(0);
+  const [start, setStart] = useState(false);
   const [hostId, setHostId] = useState(null);
 
   const [message, setMessage] = useState('');
@@ -82,7 +82,7 @@ export default function MultiGame() {
 
   // 게임시작
   const handleStart = async () => {
-    setStart(1);  
+    setStart(true);  
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
       null, // 요청 본문을 생략
@@ -132,7 +132,7 @@ export default function MultiGame() {
 
         // Multi socket 통신 타입별 정리
         if (data.type === 'gameStart') { // 게임스타트
-          setStart(1);
+          setStart(true);
           console.log(data.payload);
           setProblems(data.payload);
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
@@ -143,10 +143,10 @@ export default function MultiGame() {
         } else if (data.type === 'gameRank') {
           setRankList(data.payload);
           setTimerEnded(true);
-          console.log('전체랭킹: ',rankList);
+          console.log('전체랭킹: ', data.payload);
         } else if (data.type === 'roundRank') { 
           setRoundRankList(data.payload);
-          console.log('라운드랭킹: ',roundRankList);
+          console.log('라운드랭킹: ', data.payload);
         }
       } else {
         console.log("이거 json 맞는데?", messageData);
@@ -173,7 +173,7 @@ export default function MultiGame() {
 
   // 라운드 종료 후 랭킹 모달 표시
   useEffect(() => {
-    if (start === 1 && !modalOpen && timerEnded) {
+    if (start && !modalOpen && timerEnded) {
       if (currentProblemIndex < problems.length - 1) {
         // 모달 열고 4초 대기
         setModalOpen(true);
@@ -188,7 +188,7 @@ export default function MultiGame() {
         setResultModalOpen(true);
         setTimeout(() => {
           setResultModalOpen(false);
-          setStart(0);
+          setStart(false);
         }, 4000);
       }
     }
@@ -217,7 +217,7 @@ export default function MultiGame() {
   // 단답식 답변제출
   const handleShortAnswer = (answer) => {
     console.log('제출한 답:', answer);
-    if (socket && answer.trim().replace(/\s+/g, '')) {
+    if (socket && answer) {
       const messageObj = {
           type: 'solve',
           content: {
@@ -309,10 +309,6 @@ export default function MultiGame() {
           default:
             console.log("Unknown problem type: " + problemType);
         }
-        // setModalOpen(true);
-        // setTimeout(() => {
-        //   setModalOpen(false);
-        // }, 4000);
       }
     }, [count, isSubmit, problemType]);
 
@@ -416,7 +412,7 @@ export default function MultiGame() {
           <div className="multi-game-left">
             <div className="multi-timer">
               {/* start가 1이고 모달이 열려 있지 않으며 타이머가 종료되지 않은 경우에만 타이머를 렌더링 */}
-              {start === 1 && !modalOpen && !timerEnded && (
+              {start && !modalOpen && !timerEnded && (
                 <Timer setTimerEnded={setTimerEnded} />
               )}
             </div>
@@ -429,25 +425,15 @@ export default function MultiGame() {
             </div>
           </div>
           <div className="multi-game-center">
-            {userList.length === 1 ? (
-              <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-              . . . Waiting . . .</h1>
-            ) : (
-              (start === 0 ? (
+            {!start ? (
                 <div className="before-start">
                   <h1>. . . Waiting for start . . .</h1>
-                  {/* <button className="game-start-button" onClick={handleStart}>
-                    Start
-                  </button> */}
                   { hostId == memberId ? (
                     <button className="game-start-button" onClick={handleStart}>
                       Start
                     </button>
                   ) : (
                     <div>
-                      {/* <h1>대기중 . . .</h1>
-                      <h1>방장ID: {hostId}</h1>
-                      <h1>니이름: {name}</h1> */}
                       {/* <MultiResultModal roundRankList={roundRankList} /> */}
                     </div>
                   )}
@@ -463,8 +449,7 @@ export default function MultiGame() {
                   {/* {timerEnded && submitAnswer(null)} */}
                   {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
               </div>
-              ))
-            )}
+              )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
@@ -483,7 +468,6 @@ export default function MultiGame() {
       </div>
       {modalOpen && <MultiResultModal roundRankList={roundRankList} />}
       {resultModalOpen && <MultiResultModal rankList={rankList} />}
-      
     </>
   );
 }
