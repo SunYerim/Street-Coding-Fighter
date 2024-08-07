@@ -17,7 +17,7 @@ import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
 import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
-import ShortAnswer from "../game/short_answer/ShortAnswer";
+import ShortAnswer from "../game/short_answer/MultiShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
 
