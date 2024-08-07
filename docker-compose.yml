@@ -77,15 +77,6 @@ services:
     networks:
       - network
 
-  redis-test:
-    image: redis:latest
-    ports:
-      - "6380:6379"
-    depends_on:
-      - kafka
-    networks:
-      - network
-
   user-server:
     image: zlxldgus123/user
     depends_on:
