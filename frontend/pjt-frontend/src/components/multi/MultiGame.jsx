@@ -89,6 +89,7 @@ export default function MultiGame() {
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          // 'memberId': hostId, // 헤더에 hostId 추가
         }
       }
     );
@@ -124,12 +125,20 @@ export default function MultiGame() {
     const socketInstance = newSocket(roomId, memberId, name);
     setSocket(socketInstance);
 
-    socketInstance.onmessage = (event) => {
-      const messageData = event.data;
-      // if (isJsonString(messageData)) {
-        const data = JSON.parse(messageData);
+    return () => {
+      socketInstance.close();
+      sendQuitMessage();
+      if (chatStompClient.current) chatStompClient.current.disconnect();
+    };
+  }, []);
 
-        // Multi socket 통신 타입별 정리
+
+  socketInstance.onmessage = (event) => {
+    const messageData = event.data;
+    if (isJsonString(messageData)) {
+      const data = JSON.parse(messageData);
+
+      // Multi socket 통신 타입별 정리
       if (data.type === 'gameStart') { // 게임스타트
         console.log("Game started 신호는 왔음");
         setStart(1);
@@ -151,19 +160,12 @@ export default function MultiGame() {
         setRoundRankList(data.payload);
         console.log('라운드랭킹: ',roundRankList);
       }
-      // } else {
-      //   console.log("이거 json 맞는데?", messageData);
-      //   console.error('Received non-JSON message:', messageData);
-      //   console.log('Received non-JSON message:', messageData);
-      // }
-    };
-
-    return () => {
-      socketInstance.close();
-      sendQuitMessage();
-      if (chatStompClient.current) chatStompClient.current.disconnect();
-    };
-  }, []);
+    } else {
+      console.log("이거 json 맞는데?", messageData);
+      console.error('Received non-JSON message:', messageData);
+      console.log('Received non-JSON message:', messageData);
+    }
+  };
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   // 문제 받기
