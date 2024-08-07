@@ -168,7 +168,7 @@ const store = create(
       setMyBlankProblem: (myBlankProblem) => set({ myBlankProblem }),
 
       shortAnswerSolve: "",
-      setShortAnswertSolve: (shortAnswerSolve) => set({ shortAnswerSolve }),
+      setShortAnswerSolve: (shortAnswerSolve) => set({ shortAnswerSolve }),
 
       myShortAnswerProblem: testShortAnswerProblem,
       setMyShortAnswerProblem: (myShortAnswerProblem) =>
