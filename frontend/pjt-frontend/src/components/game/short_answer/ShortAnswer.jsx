@@ -48,7 +48,7 @@ const styles = {
     marginLeft: "20px",
   },
 };
-const ShortAnswer = (problem) => {
+const ShortAnswer = () => {
   const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
 
