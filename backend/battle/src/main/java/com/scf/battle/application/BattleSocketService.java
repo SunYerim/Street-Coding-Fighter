@@ -23,6 +23,7 @@ public class BattleSocketService {
     private final KafkaService kafkaService;
     private final RoomService roomService;
 
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     public List<ProblemResponseDTO.SelectProblemDTO> getRoundSelectProblems(BattleGameRoom room) {
