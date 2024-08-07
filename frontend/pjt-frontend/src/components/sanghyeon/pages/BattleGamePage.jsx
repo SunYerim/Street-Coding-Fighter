@@ -191,13 +191,6 @@ const BattleGamePage = () => {
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
       ]);
-
-      console.log(body);
-
-      if (body.memberId !== memberId) {
-        setEnemyId(body.memberId);
-        setEnemyName(body.username);
-      }
     });
   };
 
@@ -369,6 +362,11 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}`;
     chatStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
+
+      if (body.type === "JOIN") {
+        setEnemyName(body.sender);
+      }
+
       setChatMessages((prevMessages) => [
         ...prevMessages,
         body.type === "CHAT"
