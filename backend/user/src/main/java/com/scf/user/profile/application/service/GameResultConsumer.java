@@ -53,7 +53,7 @@ public class GameResultConsumer {
     }
 
     // multi 모드
-    @KafkaListener(topics = "game-result-multi", groupId = "game-results-group")
+    @KafkaListener(topics = "game-result-multi", groupId = "game-results-group", containerFactory = "kafkaListenerContainerFactory")
     public void processMultiGameResults(MultiGameResult multiGameResult) {
         System.out.println("Processing multi game results: " + multiGameResult.getGameRank());
 

@@ -14,7 +14,7 @@ public class SolvedConsumer {
     private final ProfileService profileService;
 
     // 푼 문제를 받아옵니다.
-    @KafkaListener(topics = "solved")
+    @KafkaListener(topics = "solved", containerFactory = "solvedKafkaListenerContainerFactory")
     public void updateSolved(Solved solved) {
         System.out.println("Solved Problem: " + solved);
         SolvedProblemKafkaRequestDto solvedProblemKafkaRequestDto = new SolvedProblemKafkaRequestDto();

@@ -1,5 +1,6 @@
 package com.scf.user.profile.global.config;
 
+import com.scf.user.profile.domain.dto.kafka.MultiGameResult;
 import com.scf.user.profile.domain.dto.kafka.Solved;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -27,22 +28,22 @@ public class KafkaConsumerConfig {
 
     // game 결과 consumer
     @Bean
-    public ConsumerFactory<String, List<Rank>> rankConsumerFactory() {
+    public ConsumerFactory<String, MultiGameResult> rankConsumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-            ErrorHandlingDeserializer.class);
-        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,
-            JsonDeserializer.class.getName());
+            JsonDeserializer.class);
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
+            "com.scf.user.profile.domain.dto.kafka.MultiGameResult");
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, List<Rank>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, List<Rank>> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, MultiGameResult> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MultiGameResult> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(rankConsumerFactory());
         return factory;
     }
@@ -55,10 +56,10 @@ public class KafkaConsumerConfig {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, solvedGroupId);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-            ErrorHandlingDeserializer.class);
-        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,
-            JsonDeserializer.class.getName());
+            JsonDeserializer.class);
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
+            "com.scf.user.profile.domain.dto.kafka.Solved");
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
