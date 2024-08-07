@@ -27,11 +27,9 @@ export default function MultiGame() {
   const chatStompClient = useRef(null);
 
   const {
-    problems,
-    start,
+    problemList,
   } = multiStore((state) => ({
-    setProblems: state.setProblems,
-    setStart: state.setStart,
+    setProblemList: state.setProblemList,
   }));
 
   // 유저정보 받아오기
@@ -61,7 +59,7 @@ export default function MultiGame() {
   const roomId = multiStore.getState().roomId;
 
   const [socket, setSocket] = useState(null);
-  // const [start, setStart] = useState(0);
+  const [start, setStart] = useState(0);
   const [hostId, setHostId] = useState(null);
 
   const [message, setMessage] = useState('');
@@ -70,7 +68,7 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
-  // const [problems, setProblems] = useState([]);
+  const [problems, setProblems] = useState([]);
   const [problemType, setProblemType] = useState('');
   const [isSubmit, setIsSubmit] = useState(false);
   const [userList, setUserList] = useState([]);
