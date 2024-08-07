@@ -14,6 +14,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
+  data:
+    redis:
+      host: redis-user
+      port: 6379
 
 logging:
   level:
