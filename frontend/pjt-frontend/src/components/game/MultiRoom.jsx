@@ -81,7 +81,7 @@ function MultiRoom(props) {
         console.log('props.roomId', props.roomId);
         console.log('state.roomId', roomId);
         navigate(`/multi-game/${props.roomId}`);
-      } else {
+      } else {  
         alert('Incorrect password');
       }
     } catch (error) {
