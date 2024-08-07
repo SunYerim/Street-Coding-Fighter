@@ -16,7 +16,7 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
   data:
     redis:
-      host: localhost
+      host: redis-user
       port: 6379
 
 
