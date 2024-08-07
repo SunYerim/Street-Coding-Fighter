@@ -17,7 +17,7 @@ spring:
 
   data:
    redis:
-    host: localhost
+    host: redis-user
     port: 6379
 
 logging:
