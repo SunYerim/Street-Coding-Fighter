@@ -78,8 +78,10 @@ function MultiRoom(props) {
 
       if (response.status === 200) {
         setRoomId(props.roomId);
+        console.log('props.roomId', props.roomId);
+        console.log('state.roomId', roomId);
         navigate(`/multi-game/${props.roomId}`);
-      } else {
+      } else {  
         alert('Incorrect password');
       }
     } catch (error) {
@@ -94,6 +96,7 @@ function MultiRoom(props) {
 
   const handleRoomClick = () => {
     if (props.isLock) {
+      setRoomId(props.roomId);
       handleOpenModal();
     } else {
       setRoomId(props.roomId);

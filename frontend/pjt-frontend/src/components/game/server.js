@@ -1,4 +1,3 @@
-
 const newSocket = async (roomId, memberId, name) => {
 
   const baseUrl = "wss://www.ssafy11s.com";
@@ -17,9 +16,6 @@ const newSocket = async (roomId, memberId, name) => {
 
   socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event);
-    setTimeout(() => {
-      newSocket(roomId, memberId, name);
-    }, 2000);
   }
 
   socket.onerror = (error) => {

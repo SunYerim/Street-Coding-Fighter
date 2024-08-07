@@ -137,7 +137,8 @@ export default function MultiGame() {
           console.log(data.payload);
           const parsedPayload = JSON.parse(data.payload);
           setProblems(parsedPayload);
-          console.log(problems)
+          console.log('parsedPayload: ', parsedPayload)
+          console.log('parsedPayload.data: ', parsedPayload.data)
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
@@ -153,6 +154,7 @@ export default function MultiGame() {
         }
       } else {
         console.error('Received non-JSON message:', messageData);
+        console.log('Received non-JSON message:', messageData);
       }
     };
 
