@@ -1,17 +1,15 @@
 package com.scf.single.domain.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ContentListResponseDto {
+@AllArgsConstructor
+public class UserInfoListResponseDto {
 
-    private int contentId;
-    private int complete;
+    private List<MemberDto> members;
 
 }
