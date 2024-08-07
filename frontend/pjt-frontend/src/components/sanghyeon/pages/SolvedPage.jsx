@@ -33,109 +33,17 @@ function SolvedPage() {
   useEffect(() => {
     const getSolved = async () => {
       try {
-        // const solvedRes = await authClient({
-        //   method: "GET",
-        //   url: `${baseURL}/profile/solved`,
-        //   headers: {
-        //     Authorization: `Bearer ${accessToken}`,
-        //   },
-        // });
+        const solvedRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/solved`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-        // setSolvedData(solvedRes.data);
-
-        const solved = [
-          {
-            solvedId: 1,
-            isCorrect: false,
-            choice: "A",
-            title: "문제1",
-            difficulty: 4,
-            category: "category1",
-            type: "type1",
-          },
-          {
-            solvedId: 2,
-            isCorrect: true,
-            choice: "B",
-            title: "문제2",
-            difficulty: 2,
-            category: "category2",
-            type: "type2",
-          },
-          {
-            solvedId: 3,
-            isCorrect: false,
-            choice: "C",
-            title: "문제3",
-            difficulty: 1,
-            category: "category3",
-            type: "type3",
-          },
-          {
-            solvedId: 4,
-            isCorrect: true,
-            choice: "D",
-            title: "문제4",
-            difficulty: 4,
-            category: "category4",
-            type: "type4",
-          },
-          {
-            solvedId: 5,
-            isCorrect: true,
-            choice: "A",
-            title: "문제5",
-            difficulty: 3,
-            category: "category5",
-            type: "type5",
-          },
-          {
-            solvedId: 6,
-            isCorrect: false,
-            choice: "B",
-            title: "문제6",
-            difficulty: 2,
-            category: "category6",
-            type: "type6",
-          },
-          {
-            solvedId: 7,
-            isCorrect: true,
-            choice: "C",
-            title: "문제7",
-            difficulty: 1,
-            category: "category7",
-            type: "type7",
-          },
-          {
-            solvedId: 8,
-            isCorrect: false,
-            choice: "D",
-            title: "문제8",
-            difficulty: 4,
-            category: "category8",
-            type: "type8",
-          },
-          {
-            solvedId: 9,
-            isCorrect: true,
-            choice: "E",
-            title: "문제9",
-            difficulty: 3,
-            category: "category9",
-            type: "type9",
-          },
-          {
-            solvedId: 10,
-            isCorrect: false,
-            choice: "F",
-            title: "문제10",
-            difficulty: 2,
-            category: "category10",
-            type: "type10",
-          },
-        ];
-        setSolvedData(solved);
+        setSolvedData(
+          solvedRes.data.solvedList ? solvedRes.data.solvedList : []
+        );
       } catch (error) {
         console.error("Failed to fetch record", error);
       }
@@ -151,7 +59,7 @@ function SolvedPage() {
         sorted.sort((a, b) => a.title.localeCompare(b.title));
       } else if (sortOption === "difficulty") {
         sorted.sort((a, b) => a.difficulty - b.difficulty);
-      } else if (sortOption === "correctness") {
+      } else if (sortOption === "isCorrect") {
         sorted.sort((a, b) =>
           a.isCorrect === b.isCorrect ? 0 : a.isCorrect ? -1 : 1
         );
@@ -201,7 +109,8 @@ function SolvedPage() {
                 {currentItems.map((data, index) => (
                   <div
                     className="solved"
-                    onClick={() => navigate("/solved/" + data.solvedId)}
+                    // onClick={() => navigate("/solved/" + data.solvedId)}
+                    onClick={alert("준비중입니다.")}
                     key={index}
                   >
                     <p>{data.title}</p>

@@ -28,34 +28,17 @@ function RecordPage() {
   useEffect(() => {
     const getRecord = async function () {
       try {
-        // const recordRes = await authClient({
-        //   method: "GET",
-        //   url: `${baseURL}/profile/record`,
-        //   headers: {
-        //     Authorization: `Bearer ${accessToken}`,
-        //   },
-        // });
-
-        // setRecordData(recordRes.data);
-        const dummyData = [
-          { gameType: "Type1", Time: "10:00", rank: 1, partCnt: 5, score: 100 },
-          { gameType: "Type2", Time: "12:00", rank: 2, partCnt: 5, score: 90 },
-          { gameType: "Type3", Time: "14:00", rank: 3, partCnt: 5, score: 80 },
-          { gameType: "Type4", Time: "16:00", rank: 4, partCnt: 5, score: 70 },
-          { gameType: "Type5", Time: "18:00", rank: 5, partCnt: 5, score: 60 },
-          { gameType: "Type6", Time: "20:00", rank: 6, partCnt: 5, score: 50 },
-          { gameType: "Type7", Time: "22:00", rank: 7, partCnt: 5, score: 40 },
-          { gameType: "Type8", Time: "00:00", rank: 8, partCnt: 5, score: 30 },
-          { gameType: "Type9", Time: "02:00", rank: 9, partCnt: 5, score: 20 },
-          {
-            gameType: "Type10",
-            Time: "04:00",
-            rank: 10,
-            partCnt: 5,
-            score: 10,
+        const recordRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/record`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
-        ];
-        setRecordData(dummyData);
+        });
+
+        setRecordData(
+          recordRes.data.historyLists ? recordRes.data.historyLists : []
+        );
       } catch (error) {
         console.error("Failed to fetch record", error);
       }
@@ -95,11 +78,9 @@ function RecordPage() {
               <div className="record-inner">
                 {currentItems.map((data, index) => (
                   <div className="record" key={index}>
-                    <p>{data.gameType}</p>
-                    <p>{data.Time}</p>
-                    <p>
-                      {data.rank} / {data.partCnt}
-                    </p>
+                    <p>{data.gametype}</p>
+                    <p>{data.time}</p>
+                    <p>{data.rank}</p>
                     <p>{data.score}</p>
                   </div>
                 ))}

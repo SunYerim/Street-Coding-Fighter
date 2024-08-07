@@ -251,7 +251,6 @@ const BattleGamePage = () => {
     }
   }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
 
-  // 답변 제출 미완성
   const submitAnswer = () => {
     const endpoint = `/send/game/${roomId}/answer`;
     let solveData = null;
@@ -292,7 +291,6 @@ const BattleGamePage = () => {
     setAnswerSubmitted(true);
   };
 
-  // 체력 반영 미완성
   const subscribeResult = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {

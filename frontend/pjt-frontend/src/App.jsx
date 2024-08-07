@@ -118,7 +118,7 @@ function App() {
             path="/multi-game-select"
             element={accessToken ? <SelectProblem /> : <LoginPage />}
           />
-          <Route path="/multiple-choice" element={<MultipleChoice />} />
+          {/* <Route path="/multiple-choice" element={<SolvedDetailPage />} /> */}
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
