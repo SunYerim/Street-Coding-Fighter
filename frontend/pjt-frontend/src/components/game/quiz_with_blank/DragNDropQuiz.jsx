@@ -22,7 +22,6 @@ const DragNDropQuiz = () => {
   }));
 
   useEffect(() => {
-    // store에서 문제 데이터를 가져오는 함수 호출
     const problemData = myBlankProblem; // 또는 store.getState().problem과 같은 방식으로 직접 접근할 수 있음
     setProblem(problemData);
   }, [myBlankProblem]);
