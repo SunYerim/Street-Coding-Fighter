@@ -67,9 +67,11 @@ const ShortAnswer = () => {
     )
   );
   const handleInputChange = () => {
+    console.log(currentAnswer);
+    console.log(currentAnswer.current.value);
     const value = currentAnswer.current.value;
     setAnswer(value); // 입력값을 상태에 저장
-    setShortAnswerSolve(value === "" ? "ssafy" : value); // 입력값을 로컬 저장소에 저장
+    setShortAnswerSolve(value === "" ? "ssafy" : value);
   };
 
   return (
