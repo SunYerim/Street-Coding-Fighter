@@ -308,18 +308,26 @@ const BattleGamePage = () => {
           navigate("/battle-list");
         }, 5000);
       } else {
-        console.log(name);
-        const power = body.power;
-        const isAttack = body.isAttack;
-
-        if (isAttack === true) {
-          setEnemyHealth((prevHealth) => prevHealth - power);
-          setBattleHistory((prevHistory) => [...prevHistory, body]);
+        if (body.userId === memberId) {
+          if (body.isAttack === true) {
+            setEnemyHealth((prevHealth) => prevHealth - body.power);
+            setBattleHistory((prevHistory) => [...prevHistory, body]);
+          } else {
+            setMyHealth((prevHealth) =>
+              prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+            );
+            setBattleHistory((prevHistory) => [...prevHistory, body]);
+          }
         } else {
-          setMyHealth((prevHealth) =>
-            prevHealth + power > 100 ? 100 : prevHealth + power
-          );
-          setBattleHistory((prevHistory) => [...prevHistory, body]);
+          if (body.isAttack === true) {
+            setMyHealth((prevHealth) => prevHealth - body.power);
+            setBattleHistory((prevHistory) => [...prevHistory, body]);
+          } else {
+            setEnemyHealth((prevHealth) =>
+              prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+            );
+            setBattleHistory((prevHistory) => [...prevHistory, body]);
+          }
         }
       }
     });
@@ -450,7 +458,11 @@ const BattleGamePage = () => {
   };
 
   const closeModal = () => {
-    setModalIsOpen(false);
+    if (selectOpponentProblem === false) {
+      return;
+    } else {
+      setModalIsOpen(false);
+    }
   };
 
   const handleStart = async () => {
@@ -481,7 +493,6 @@ const BattleGamePage = () => {
       setCount((prevCount) => {
         if (prevCount <= 1) {
           clearInterval(timerInterval);
-          // endRound();
           return 0;
         }
         return prevCount - 1;
