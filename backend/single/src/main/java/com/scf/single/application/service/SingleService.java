@@ -1,6 +1,7 @@
 package com.scf.single.application.service;
 
 import com.scf.single.domain.dto.ContentCompletionRequestDto;
+import com.scf.single.domain.dto.ContentCreateRequestDto;
 import com.scf.single.domain.dto.ContentDetailResponsesDto;
 import com.scf.single.domain.dto.ContentListResponsesDto;
 import org.springframework.stereotype.Service;
@@ -19,4 +20,11 @@ public interface SingleService {
 
     // 수강 여부를 초기화
     void initializeCompletionStatus(Long memberId);
+
+    // content 생성 -> 하나씩 추가
+    void createContent(ContentCreateRequestDto contentCreateRequestDto);
+
+    // script 생성
+
+
 }
