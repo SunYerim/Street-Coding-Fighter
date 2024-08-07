@@ -1,17 +1,6 @@
 
-// import multiStore from '../../stores/multiStore.jsx';
-// import store from '../../store/store.js';
+const newSocket = async (roomId, memberId, name) => {
 
-const newSocket = (roomId, memberId, name) => {
-  // const roomId = multiStore.getState().roomId;
-
-  // const {
-  //   memberId,
-  //   name,
-  // } = store((state) => ({
-  //   name: state.name,
-  //   memberId: state.memberId,
-  // }));
   const baseUrl = "wss://www.ssafy11s.com";
 
   const url = `${baseUrl}/ws-multi?roomId=${roomId}&userId=${memberId}&username=${name}`;
@@ -20,9 +9,6 @@ const newSocket = (roomId, memberId, name) => {
 
   socket.onopen = () => {
     console.log('WebSocket connection established');
-    setInterval(() => {
-      console.log('bufferedAmount:', socket.bufferedAmount);
-    }, 1000);
   };
 
   socket.onmessage = (event) => {
@@ -31,7 +17,10 @@ const newSocket = (roomId, memberId, name) => {
 
   socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event);
-  };
+    setTimeout(() => {
+      newSocket(roomId, memberId, name);
+    }, 2000);
+  }
 
   socket.onerror = (error) => {
     console.error('WebSocket error:', error);

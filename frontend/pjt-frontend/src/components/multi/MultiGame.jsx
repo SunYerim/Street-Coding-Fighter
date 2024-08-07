@@ -401,7 +401,7 @@ export default function MultiGame() {
         console.error("Reconnection failed: ", error);
         reconnectWebSocket(); // 재연결 시도
       }
-    }, 3000); // 3초 후 재연결 시도
+    }, 2000); // 3초 후 재연결 시도
   };
 
 
