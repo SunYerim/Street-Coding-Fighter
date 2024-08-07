@@ -10,13 +10,14 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
 import store from "../../store/store.js";
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 import axios from 'axios';
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
 import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
-import ShortAnswer from "../game/short_answer/ShortAnswer";
+import ShortAnswer from "../game/short_answer/MultiShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
 
@@ -25,63 +26,75 @@ export default function MultiGame() {
   const location = useLocation();
   const chatStompClient = useRef(null);
 
+  // 유저정보 받아오기
   const {
+    accessToken,
+    setAccessToken,
     memberId,
     userId,
     name,
     baseURL,
   } = store((state) => ({
     memberId: state.memberId,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
     userId: state.userId,
     name: state.name,
     baseURL: state.baseURL,
   }));
 
+  // auth
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
   const roomId = multiStore.getState().roomId;
-  // const userId = multiStore.getState().userId;
-  // const username = multiStore.getState().username;
 
   const [socket, setSocket] = useState(null);
-  const [start, setStart] = useState(0);
+  const [start, setStart] = useState(false);
   const [hostId, setHostId] = useState(null);
-  // const [user, setUser] = useState(username);
 
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [problems, setProblems] = useState([]);
-  const [problemType, setProblemType] = useState('');
-  const [isSumbit, setIsSumbit] = useState(false);
+  const [resultModalOpen, setResultModalOpen] = useState(false);
+
+  const [problems, setProblems] = useState([]); //이거 새 store로
+  const [problemType, setProblemType] = useState(''); // state로 말고 const problemType = problem[currendProblemIndex].problemType 
+  //-> 이런식으로 해도 currentProblemIndex가 변경됨에 따라 저절로 update 됩니다.
+  const [isSubmit, setIsSubmit] = useState(false); 
   const [userList, setUserList] = useState([]);
-  const [rankList, setRankList] = useState([]);
-  const [roundRankList, setRoundRankList] = useState([]);
+  const [rankList, setRankList] = useState([]); //새 스토어로
+  const [roundRankList, setRoundRankList] = useState([]);// 새 스토어로
   const chatEndRef = useRef(null);
 
-  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0); //이건 그대로 state로 관리해도 될 듯합니다. (why? => 초기 렌더링때 setProblemList 한 이후 건드릴 필요가 없기 때문)
   const [timerEnded, setTimerEnded] = useState(false);
-  // 시간을 담을 변수
+
   const [count, setCount] = useState(30);
 
+  // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
     setHostId(location.state?.hostId || null);
   }, [location.state]);
 
+  // 게임시작
   const handleStart = async () => {
-    setStart(1);  
+    setStart(true);  
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
       null, // 요청 본문을 생략
       {
         headers: {
-          'memberId': hostId // 헤더에 hostId 추가
+          Authorization: `Bearer ${accessToken}`,
+          // 'memberId': hostId, // 헤더에 hostId 추가
         }
       }
     );
-    console.log(response.data);
-    setProblems(response.data);
-  };  
+  };
 
   const isJsonString = (str) => {
     try {
@@ -93,6 +106,7 @@ export default function MultiGame() {
   };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
+  // 마운트할 때
   useEffect(() => {
     const initializeConnections = async () => {
       try {
@@ -107,13 +121,9 @@ export default function MultiGame() {
     initializeConnections();
 
     const roomId = multiStore.getState().roomId;
-    // const userId = multiStore.getState().userId;
-    // const username = multiStore.getState().username;
-    console.log(`Room ${roomId}, userId ${userId}, username: ${name}`);
+    // console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
 
-    // setUser(username);
-
-    const socketInstance = newSocket(roomId, userId, name);
+    const socketInstance = newSocket(roomId, memberId, name);
     setSocket(socketInstance);
 
     socketInstance.onmessage = (event) => {
@@ -121,9 +131,11 @@ export default function MultiGame() {
       if (isJsonString(messageData)) {
         const data = JSON.parse(messageData);
 
+        // Multi socket 통신 타입별 정리
         if (data.type === 'gameStart') { // 게임스타트
-          setStart(1);
+          setStart(true);
           console.log(data.payload);
+          setProblems(data.payload);
         } else if (data.type === 'newHost') { // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
@@ -131,13 +143,16 @@ export default function MultiGame() {
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === 'gameRank') {
           setRankList(data.payload);
-          console.log('전체랭킹: ',rankList);
-        } else if (data.type === 'roundRank') {
+          setTimerEnded(true);
+          console.log('전체랭킹: ', data.payload);
+        } else if (data.type === 'roundRank') { 
           setRoundRankList(data.payload);
-          console.log('라운드랭킹: ',roundRankList);
+          console.log('라운드랭킹: ', data.payload);
         }
       } else {
+        console.log("이거 json 맞는데?", messageData);
         console.error('Received non-JSON message:', messageData);
+        console.log('Received non-JSON message:', messageData);
       }
     };
 
@@ -149,11 +164,42 @@ export default function MultiGame() {
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
+  // 문제 받기
+  // 문제 받기 부분을 하지 않고, problem 을 problemList[currentProblemIndex] 이게 맞나 암튼 라운드 순서 나타내는걸로 바꾸면 될듯
+  // problemType을 state로 관리하는데, 1라운드가 끝난 후 currentProblemIndex + 1 => 의존성 배열에 currentProblemIndex가 있어서 useEffect 함수 실행
+  // => 근데 어짜피 problems, currentProblemIndex를 상태로 관리하기때문에 problemType을 상태로 관리하지 않고 const problemType = problems[currentProblemIndex].problemType
+  // 이렇게 선언해도 알아서 update됩니다.
   useEffect(() => {
     if (problems.length > 0) {
       setProblemType(problems[currentProblemIndex].problemType);
     }
   }, [problems, currentProblemIndex]);
+
+
+  // 라운드 종료 후 랭킹 모달 표시
+  // useEffect를 사용하지 않아도, rankList가 update된 이후 currentProblemIndex만 update해준다면 문제 번호 바뀔듯?
+
+  useEffect(() => {
+    if (start && !modalOpen && timerEnded) {
+      if (currentProblemIndex < problems.length - 1) {
+        // 모달 열고 4초 대기
+        setModalOpen(true);
+        setTimeout(() => {
+          setModalOpen(false);
+        }, 4000);
+
+        // 문제번호++, 제출상태 초기화
+        setCurrentProblemIndex(currentProblemIndex + 1);
+        setIsSubmit(false);
+      } else {
+        setResultModalOpen(true);
+        setTimeout(() => {
+          setResultModalOpen(false);
+          setStart(false);
+        }, 4000);
+      }
+    }
+  }, [rankList]);
 
 
 
@@ -171,14 +217,14 @@ export default function MultiGame() {
           }
       };
       socket.send(JSON.stringify(messageObj));
-      setIsSumbit(true);
+      setIsSubmit(true);
     }
   };
 
   // 단답식 답변제출
   const handleShortAnswer = (answer) => {
     console.log('제출한 답:', answer);
-    if (socket && answer.trim().replace(/\s+/g, '')) {
+    if (socket && answer) {
       const messageObj = {
           type: 'solve',
           content: {
@@ -189,7 +235,7 @@ export default function MultiGame() {
           }
       };
       socket.send(JSON.stringify(messageObj));
-      setIsSumbit(true);
+      setIsSubmit(true);
     }
   };
 
@@ -207,7 +253,7 @@ export default function MultiGame() {
           }
       };
       socket.send(JSON.stringify(messageObj));
-      setIsSumbit(true);
+      setIsSubmit(true);
     }
   };
 
@@ -235,7 +281,6 @@ export default function MultiGame() {
     useEffect(() => {
       if (count <= 0) {
         setTimerEnded(true);
-        setIsSumbit(false);
         return;
       }
   
@@ -252,39 +297,37 @@ export default function MultiGame() {
       return () => clearInterval(id);
     }, [count]);
 
+
+    //여기서 handleShortAnswer 등 내부에 isSubmit 상태를 변경하는 함수가 있는데, 동기적으로 순서대로 false=> true로 변할 수도 있지만, 
+    // react에서는 16ms 내로 변화한 상태들을 모아서 update하기 때문에 의도대로 코드가 작동하지 않을 수도 있습니다. 
     useEffect(() => {
-      if (count === 0 && !isSumbit) {
+      if (count === 0 && !isSubmit) {
         switch (problemType) {
           case "FILL_IN_THE_BLANK":
             handleBlankAnswer(null);
-            setIsSumbit(true);
+            setIsSubmit(true);
             break;
           case "SHORT_ANSWER_QUESTION":
             handleShortAnswer(null);
-            setIsSumbit(true);
+            setIsSubmit(true);
             break;
           case "MULTIPLE_CHOICE":
             handleChoiceSelection(null);
-            setIsSumbit(true);
+            setIsSubmit(true);
             break;
           default:
             console.log("Unknown problem type: " + problemType);
         }
       }
-    }, [count, isSumbit, problemType]);
+    }, [count, problemType]);
 
-    // // 라운드 종료시 모달창 띄우기
-    // useEffect(() => {
-    //   setModalOpen(true);
-
-    // }, []);
   
     return <div><span>{count}</span></div>;
   }
 
-    // ---------------------- WebSocket ----------------------
+  // ---------------------- 채팅 WebSocket ----------------------
 
-  // WebSocket 연결 및 초기화 함수
+  // 채팅 WebSocket 연결 및 초기화 함수
   const connect = async () => {
     const chatSocket = new SockJS(`https://www.ssafy11s.com/ws-chat`);
     chatStompClient.current = Stomp.over(chatSocket);
@@ -293,12 +336,7 @@ export default function MultiGame() {
       chatStompClient.current.connect(
         {},
         (frame) => {
-          console.log("Connected: " + frame);
-          console.log("chatStompClient: ", chatStompClient.current);
-          // setIsChatConnected(true);
           subscribeMessage();
-          // enterChat(roomId, name);
-          console.log("채팅 서버 연결");
           resolve();
         },
         (error) => {
@@ -308,16 +346,6 @@ export default function MultiGame() {
       );
     });
   };
-
-  // const enterRoom = () => {
-  //   const chatMessage = {
-  //     sender: username,
-  //     content: `${username} has entered the room.`,
-  //     type: 'JOIN',
-  //     roomId: roomId
-  //   };
-  // chatStompClient.current.send(`/send/chat/${roomId}/enter`, {}, JSON.stringify(chatMessage));
-  // }
 
   const subscribeMessage = () => {
     const endpoint = `/room/${roomId}`;
@@ -337,7 +365,6 @@ export default function MultiGame() {
   const sendMessage = async (event) => {
     event.preventDefault();
     if (message.trim() === "") return;
-    console.log("send message");
     const endpoint = `/send/chat/${roomId}`;
     const chatMessage = {
       sender: name,
@@ -380,11 +407,11 @@ export default function MultiGame() {
         console.error("Reconnection failed: ", error);
         reconnectWebSocket(); // 재연결 시도
       }
-    }, 3000); // 3초 후 재연결 시도
+    }, 2000); // 3초 후 재연결 시도
   };
 
 
-
+  // ---------------------- 채팅 WebSocket ----------------------
 
 
   return (
@@ -394,7 +421,7 @@ export default function MultiGame() {
           <div className="multi-game-left">
             <div className="multi-timer">
               {/* start가 1이고 모달이 열려 있지 않으며 타이머가 종료되지 않은 경우에만 타이머를 렌더링 */}
-              {start === 1 && !modalOpen && !timerEnded && (
+              {start && !modalOpen && !timerEnded && (
                 <Timer setTimerEnded={setTimerEnded} />
               )}
             </div>
@@ -407,52 +434,40 @@ export default function MultiGame() {
             </div>
           </div>
           <div className="multi-game-center">
-            {userList.length === 1 ? (
-              <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-              . . . Waiting . . .</h1>
-            ) : (
-              (start === 0 ? (
+            {!start ? (
                 <div className="before-start">
                   <h1>. . . Waiting for start . . .</h1>
-                  {/* <button className="game-start-button" onClick={handleStart}>
-                    Start
-                  </button> */}
-                  { hostId == userId ? (
+                  { hostId == memberId ? (
                     <button className="game-start-button" onClick={handleStart}>
                       Start
                     </button>
                   ) : (
                     <div>
-                      {/* <h1>대기중 . . .</h1>
-                      <h1>방장ID: {hostId}</h1>
-                      <h1>니이름: {name}</h1> */}
                       {/* <MultiResultModal roundRankList={roundRankList} /> */}
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="after-start">
-                  {/* <div>
-                    <GameResultModal  />
-                  </div> */}
-                  {/* <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                  . . . Playing . . .</h1> */}
-
-                  {/* Playing Games! */}
-                  {problems.length > 0 && renderProblem()}
-                  {/* {timerEnded && submitAnswer(null)} */}
-                  {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
-                </div>
-              ))
-            )}
+                  {isSubmit ? (
+                    <div>
+                      <h2>Submitted!</h2>
+                    </div>
+                  ) : (
+                    <div>
+                      {problems.length > 0 && renderProblem()}
+                      {modalOpen && <MultiResultModal roundRankList={roundRankList} />}
+                    </div>
+                  )}
+              </div>
+              )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              {/* <h1>Round</h1> */}
               { start ? (
                 <h1>{ currentProblemIndex+1 } / { problems.length }</h1>
               ) : (
-                <h1>Waiting...</h1>
+                <h1>Round</h1>
               )}
             </div>
             <div className="multi-message-room">
@@ -463,6 +478,7 @@ export default function MultiGame() {
         </div>
       </div>
       {/* {modalOpen && <MultiResultModal roundRankList={roundRankList} />} */}
+      {resultModalOpen && <MultiResultModal rankList={rankList} />}
     </>
   );
 }
