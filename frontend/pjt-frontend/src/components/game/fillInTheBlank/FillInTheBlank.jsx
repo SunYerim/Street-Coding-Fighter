@@ -1,118 +1,139 @@
-import { useState } from 'react';
-import reactStringReplace from 'react-string-replace';
-import Choice from './Choice.jsx';
-import Blank from './Blank.jsx';
-import ChoiceContainer from './ChoiceContainer.jsx';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
-import StyleToPythonCode from '../StyleToPythonCode.jsx';
+import { useState, useEffect } from "react";
+import reactStringReplace from "react-string-replace";
+import Choice from "./Choice";
+import Blank from "./Blank";
+import ChoiceContainer from "./ChoiceContainer";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import StyleToPythonCode from "../StyleToPythonCode.jsx";
+import multiStore from "../../../stores/multiStore.jsx";
+import "../../../css/MultiGame.css";
 
-// const testQuizContent = {
-//   content:
-//     'def bubble_sort(arr):\n    n = len(arr)  \n    for i in range(n):  \n        for j in range(0, n - i - 1):  \n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[$blank1$], arr[$blank2$]\n\n# 테스트용 리스트\ndata = [64, 34, 25, 12, 22, 11, 90]\n\n# 정렬 함수 호출\nbubble_sort($blank3$)\nprint("정렬된 리스트:", data)',
-//   answer: {
-//     1: 'j + 1',
-//     2: 'j',
-//     3: 'data',
-//   },
-//   choices: {
-//     1: 'i',
-//     2: 'i+1',
-//     3: 'j+1',
-//     4: 'j',
-//     5: 'data',
-//     6: 'print',
-//   },
-// };
-
-const DragNDropQuiz = ({ problem, onFillBlank }) => {
+const FillInTheBlank = (problem) => {
   const [blanks, setBlanks] = useState({});
-  const [choices, setChoices] = useState(problem.problemChoices);
-  const handleDrop = (blankId, choice) => {
+  const [choices, setChoices] = useState([]);
+  const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
+  const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
+  const problemData = problem;
+
+  const { blankSolve, setBlankSolve } = multiStore((state) => ({
+    blankSolve: state.blankSolve,
+    setBlankSolve: state.setBlankSolve,
+  }));
+
+  // useEffect(() => {
+  //   const problemData = problem;
+  //   setProblem(problemData);
+  // }, [myBlankProblem]);
+
+  useEffect(() => {
+    if (problem && problem.problemChoices) {
+      // problem.problemChoices 배열에서 choiceText와 choiceId를 매핑합니다.
+      const choiceTexts = problem.problemChoices.map(
+        (choice) => choice.choiceText
+      );
+      const choiceMap = problem.problemChoices.reduce((acc, choice) => {
+        acc[choice.choiceText] = choice.choiceId;
+        return acc;
+      }, {});
+      setChoices(choiceTexts);
+      setChoiceMap(choiceMap);
+
+      // 각 블랭크에 대한 초기화
+      const initialBlanks = {};
+      for (let i = 1; i <= problem.problemContent.numberOfBlank; i++) {
+        initialBlanks[i] = "ssafy"; // 각 블랭크의 초기값을 null로 설정
+      }
+      setBlanks(initialBlanks);
+    }
+  }, [problem]);
+
+  useEffect(() => {
+    if (Object.keys(blanks).length > 0) {
+      setBlankSolve(blanks);
+    }
+  }, [blanks]);
+
+  useEffect(() => {
+    if (problem && problem.problemContent && problem.problemContent.content) {
+      const problemContent = problem.problemContent.content;
+
+      const newModifiedContent = reactStringReplace(
+        problemContent,
+        /\$blank(\d+)\$/g,
+        (match, i) => {
+          return (
+            <Blank key={match} id={match} onDrop={handleDrop}>
+              {blanks[match]
+                ? choices.find(
+                    (choice) =>
+                      choice ===
+                      Object.keys(choiceMap).find(
+                        (key) => choiceMap[key] === blanks[match]
+                      )
+                  )
+                : ""}
+            </Blank>
+          );
+        }
+      );
+
+      setModifiedContent(newModifiedContent);
+    } else {
+      setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
+    }
+  }, [problem, blanks, choices, choiceMap]); // problemContent와 관련된 의존성 배열 업데이트
+
+  const handleDrop = (blankId, choiceText) => {
+    const choiceId = choiceMap[choiceText];
     setBlanks((prevBlanks) => ({
       ...prevBlanks,
-      [blankId]: choice,
+      [blankId]: choiceId,
     }));
-    console.log(blanks);
-    // setChoices((prevChoices) => prevChoices.filter((item) => item !== choice));
   };
-
-  const handleSubmit = (onFillBlank) => {
-    onFillBlank(blanks);
-    // const isCorrect = Object.keys(problem.problemAnswers.answer).every((key) => {
-    //   return problem.problemAnswers.answer[key] === blanks[key];
-    // });
-    // alert('정답 제출');
-  };
-
-  let modifiedContent = reactStringReplace(problem.problemContent.content, /\$blank(\d+)\$/g, (match, i) => {
-    return (
-      <Blank key={match} id={match} onDrop={handleDrop}>
-        {blanks[match]}
-      </Blank>
-    );
-  });
-
-  // modifiedContent = reactStringReplace(
-  //   modifiedContent,
-  //   /(def|for|if|else|return|import|from|as|class|try|except|finally|with|yield|raise|assert|del|pass|continue|break)\b/g,
-  //   (match, i) => {
-  //     return <span className="keyword">{match}</span>;
-  //   }
-  // );
-  // modifiedContent = reactStringReplace(modifiedContent, /('.*?'|".*?")/g, (match, i) => {
-  //   return <span className="string">{match}</span>;
-  // });
-  // modifiedContent = reactStringReplace(modifiedContent, /(#.*)/g, (match, i) => {
-  //   return <span className="comment">{match}</span>;
-  // });
-  // modifiedContent = reactStringReplace(modifiedContent, /(\b\d+\b)/g, (match, i) => {
-  //   return <span className="number">{match}</span>;
-  // });
 
   const styles = {
     quizContainer: {
-      marginBottom: '20px',
+      marginBottom: "20px",
     },
     submitButton: {
-      display: 'inline-block',
-      padding: '10px 20px',
-      fontSize: '16px',
-      color: '#fff',
-      backgroundColor: '#007bff',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      marginTop: '20px',
+      display: "inline-block",
+      padding: "10px 20px",
+      fontSize: "16px",
+      color: "#fff",
+      backgroundColor: "#007bff",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      marginTop: "20px",
     },
     submitButtonHover: {
-      backgroundColor: '#0056b3',
+      backgroundColor: "#0056b3",
     },
+  };
+
+  const handleSubmit = () => {
+    onFillBlank();
   };
 
   return (
     <>
       <DndProvider backend={HTML5Backend}>
         <div>
-          <StyleToPythonCode codeString={modifiedContent}/>
+          {modifiedContent && (
+            <StyleToPythonCode codeString={modifiedContent} />
+          )}
         </div>
 
         <ChoiceContainer>
           {choices.map((choice, idx) => {
-            return <Choice key={`choice-${idx}`} choice={choice.choiceText} />;
+            return <Choice key={`choice-${idx}`} choice={choice} />;
           })}
         </ChoiceContainer>
-        <button
-          style={styles.submitButton}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor)}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor)}
-          onClick={handleSubmit}
-        >
-          제출
-        </button>
       </DndProvider>
+      <button className='multi-button' onClick={handleSubmit}>제출</button>
     </>
   );
 };
 
-export default DragNDropQuiz;
+export default FillInTheBlank;

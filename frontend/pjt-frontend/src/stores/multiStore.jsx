@@ -5,6 +5,11 @@ const multiStore = create((set) => ({
   roomId: null,
   setRoomId: (roomId) => set({ roomId }),
 
+  
+  // 입장 패스워드
+  password: null,
+  setPassword: (password) => set({ password }),
+
 
   // 게임중인지 여부
   playing: false,
@@ -84,6 +89,12 @@ const multiStore = create((set) => ({
   gameRank: [],
   setGameRank: (gameRank) => set({ gameRank }),
   clearGameRank: () => set({ gameRank: [] }),
+
+
+  // 빈칸 답변
+  blankSolve: {},
+  setBlankSolve: (blankSolve) => set({ blankSolve }),
+  clearBlankSolve: () => set({ blankSolve: {} }),
 
 
 
