@@ -14,7 +14,8 @@ const FillInTheBlank = (problem) => {
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
-  const problemData = problem;
+  const [problemData, setProblemData] = useState({});
+  setProblemData(problem);
 
   const { blankSolve, setBlankSolve } = multiStore((state) => ({
     blankSolve: state.blankSolve,
@@ -27,12 +28,12 @@ const FillInTheBlank = (problem) => {
   // }, [myBlankProblem]);
 
   useEffect(() => {
-    if (problem && problem.problemChoices) {
+    if (problemData && problemData.problemChoices) {
       // problem.problemChoices 배열에서 choiceText와 choiceId를 매핑합니다.
-      const choiceTexts = problem.problemChoices.map(
+      const choiceTexts = problemData.problemChoices.map(
         (choice) => choice.choiceText
       );
-      const choiceMap = problem.problemChoices.reduce((acc, choice) => {
+      const choiceMap = problemData.problemChoices.reduce((acc, choice) => {
         acc[choice.choiceText] = choice.choiceId;
         return acc;
       }, {});
@@ -41,12 +42,12 @@ const FillInTheBlank = (problem) => {
 
       // 각 블랭크에 대한 초기화
       const initialBlanks = {};
-      for (let i = 1; i <= problem.problemContent.numberOfBlank; i++) {
+      for (let i = 1; i <= problemData.problemContent.numberOfBlank; i++) {
         initialBlanks[i] = "ssafy"; // 각 블랭크의 초기값을 null로 설정
       }
       setBlanks(initialBlanks);
     }
-  }, [problem]);
+  }, [problemData]);
 
   useEffect(() => {
     if (Object.keys(blanks).length > 0) {
@@ -55,8 +56,8 @@ const FillInTheBlank = (problem) => {
   }, [blanks]);
 
   useEffect(() => {
-    if (problem && problem.problemContent && problem.problemContent.content) {
-      const problemContent = problem.problemContent.content;
+    if (problemData && problemData.problemContent && problemData.problemContent.content) {
+      const problemContent = problemData.problemContent.content;
 
       const newModifiedContent = reactStringReplace(
         problemContent,
@@ -82,7 +83,7 @@ const FillInTheBlank = (problem) => {
     } else {
       setModifiedContent(""); // problemContent가 없으면 빈 문자열로 설정
     }
-  }, [problem, blanks, choices, choiceMap]); // problemContent와 관련된 의존성 배열 업데이트
+  }, [problemData, blanks, choices, choiceMap]); // problemContent와 관련된 의존성 배열 업데이트
 
   const handleDrop = (blankId, choiceText) => {
     const choiceId = choiceMap[choiceText];

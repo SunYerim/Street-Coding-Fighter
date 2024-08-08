@@ -175,7 +175,7 @@ export default function MultiGame() {
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === 'gameRank') {
           setGameRank(data.payload);
-          setTimerEnded(true);
+          setTimerEnded(false);
           console.log('전체랭킹: ', data.payload);
           setCurrentProblemIndex(currentProblemIndex + 1);
           setIsSubmit(false);
@@ -521,7 +521,7 @@ export default function MultiGame() {
                 <h1>{ currentProblemIndex + 1 } / { problemList.length }</h1>
               ) : (
                 <h1>Round</h1>
-              )}
+              )}  
             </div>
             <div className="multi-message-room">
               <MessageContainer chatMessages={chatMessages} username={name} />
