@@ -30,6 +30,7 @@ public class SolvedConsumer {
             SolvedProblemKafkaRequestDto solvedProblemKafkaRequestDto = new SolvedProblemKafkaRequestDto();
 
             // Set properties based on the solved object
+            solvedProblemKafkaRequestDto.setProblemId(solved.getProblemId());
             solvedProblemKafkaRequestDto.setCorrect(solved.getIsCorrect());
             solvedProblemKafkaRequestDto.setChoice(solved.getSolveText()); // 주관식
             solvedProblemKafkaRequestDto.setChoiceText(solved.getSolve()); // 빈칸, 객관식
@@ -39,7 +40,7 @@ public class SolvedConsumer {
             System.out.println(solved.getSolve());
 
             // Use the profileService to submit solved problems to the database
-//            profileService.submitSolved(solved.getUserId(), solvedProblemKafkaRequestDto);
+            profileService.submitSolved(solved.getUserId(), solvedProblemKafkaRequestDto);
         }
     }
 

@@ -60,8 +60,6 @@ public class KafkaConsumerConfig {
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
             ListJsonDeserializer.class.getName());
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
-            "java.util.List<com.scf.user.profile.domain.dto.kafka.Solved>");
         configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
             new ListJsonDeserializer<>(Solved.class));
