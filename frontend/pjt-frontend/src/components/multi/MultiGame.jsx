@@ -43,6 +43,9 @@ export default function MultiGame() {
     problemType,
     setProblemType,
     clearProblemType,
+    blankSolve,
+    setBlankSolve,
+    clearBlankSolve,
   } = multiStore((state) => ({
     roomId: state.roomId,
     playing: state.playing,
@@ -60,6 +63,9 @@ export default function MultiGame() {
     clearRoundRank: state.clearRoundRank,
     clearGameRank: state.clearGameRank,
     clearProblemType: state.clearProblemType,
+    blankSolve: state.blankSolve,
+    setBlankSolve: state.setBlankSolve,
+    clearBlankSolve: state.clearBlankSolve,
   }));
 
   // 유저정보 받아오기
@@ -192,14 +198,14 @@ export default function MultiGame() {
             //   clearProblemList();
             //   clearProblemType();
             // }, 4000);
-              setPlaying(false);
-              clearGameRank();
-              clearRoundRank();
-              clearProblemList();
-              clearProblemType();
+              // setPlaying(false);
+              // clearGameRank();
+              // clearRoundRank();
+              // clearProblemList();
+              // clearProblemType();
           }
         } else if (data.type === 'roundRank') { 
-          setRoundRank(data.payload);
+          setRoundRank(data.payload); 
           console.log('라운드랭킹: ', data.payload);
         }
       } else {
@@ -285,20 +291,21 @@ export default function MultiGame() {
   };
 
   // 빈칸 답변제출
-  const handleBlankAnswer = (blankList) => {
-    console.log('제출한 답:', blankList);
+  const handleBlankAnswer = () => {
+    console.log('제출한 답:', blankSolve);
     if (socket) {
       const messageObj = {
           type: 'solve',
           content: {
               "problemType": "FILL_IN_THE_BLANK",
               "submitTime": 30-count,
-              "solve": blankList,
+              "solve": blankSolve,
               "solveText": null
           }
       };
       socket.send(JSON.stringify(messageObj));
       setIsSubmit(true);
+      clearBlankSolve();
     }
   };
 
@@ -518,8 +525,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {/* {modalOpen && <MultiResultModal userList={roundRank} />}
-      {resultModalOpen && <MultiResultModal userList={gameRank} />} */}
+      {/* {modalOpen && <MultiResultModal />}
+      {resultModalOpen && <MultiResultModal />} */}
     </>
   );
 }
