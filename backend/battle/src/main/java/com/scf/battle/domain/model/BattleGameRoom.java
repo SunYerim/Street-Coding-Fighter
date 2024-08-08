@@ -87,11 +87,12 @@ public class BattleGameRoom {
 
     private void updatePlayerHp(Player player, int power) {
         int adjustedPower = this.isAttack ? -power : power;
-        if (isAttack) {
+        if (isAttack) { // 이미 공격 한 경우
             if (playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
             else player = playerA; // 내가 A
+            isAttack = false;
         }
-        if (!isAttack) {
+        else if (!isAttack) { // 한번도 공격 안 한 경우
             this.isAttack = true;
         }
         player.setHp(player.getHp() - adjustedPower);
