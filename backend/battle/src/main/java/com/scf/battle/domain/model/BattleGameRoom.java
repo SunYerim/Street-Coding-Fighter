@@ -31,6 +31,7 @@ public class BattleGameRoom {
     private Integer currentRound;
     private Boolean hasPlayerASubmitted;
     private Boolean hasPlayerBSubmitted;
+    private Integer hostCharacterType;
 
     // 각 유저가 풀어야 할 문제를 저장할 필드
     @Setter
@@ -43,6 +44,7 @@ public class BattleGameRoom {
     }
 
     public void startGame(List<Problem> problems, Long memberId) {
+        roundProblems.clear();
         if (!this.hostId.equals(memberId)) { //방장이 아닐 때
             throw new BusinessException(memberId, "memberId", ErrorCode.USER_NOT_HOST);
         }
@@ -91,8 +93,7 @@ public class BattleGameRoom {
             if (playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
             else player = playerA; // 내가 A
             isAttack = false;
-        }
-        else if (!isAttack) { // 한번도 공격 안 한 경우
+        } else if (!isAttack) { // 한번도 공격 안 한 경우
             this.isAttack = true;
         }
         player.setHp(player.getHp() - adjustedPower);
@@ -130,7 +131,17 @@ public class BattleGameRoom {
         }
     }
 
-    public void leavePlayerB(){
+    public void leavePlayerB() {
         playerB = null;
+    }
+
+    public void initRoom() {
+        playerA.setHp(100);
+        playerB.setHp(100);
+        this.isStart = false;
+        this.hasPlayerASubmitted = false;
+        this.hasPlayerBSubmitted = false;
+        this.isAttack = false;
+        this.currentRound = 0;
     }
 }
