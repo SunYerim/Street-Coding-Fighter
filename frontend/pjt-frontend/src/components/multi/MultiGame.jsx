@@ -41,6 +41,7 @@ export default function MultiGame() {
     clearGameRank,
     // problemType,
     currentRound,
+    setCurrentRound,
     setProblemType,
     clearProblemType,
     blankSolve,
@@ -59,6 +60,7 @@ export default function MultiGame() {
     setGameRank: state.setGameRank,
     // problemType: state.problemType,
     currentRound: state.currentRound,
+    setCurrentRound: state.currentRound,
     setProblemType: state.setProblemType,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
@@ -178,7 +180,7 @@ export default function MultiGame() {
           console.log("전체랭킹: ", data.payload);
           setIsSubmit(false);
           setCount(30);
-          setCurrentProblemIndex(currentRound + 1);
+          setCurrentRound(currentRound + 1);
           setTimeout(() => {
             console.log(currentRound);
             if (currentRound < problemList.length - 1) {
