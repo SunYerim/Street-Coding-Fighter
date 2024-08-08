@@ -396,7 +396,7 @@ export default function SinglePlay() {
           }}
         >
           <img
-            src={`/single-image/course${content_id}/image-${content_id}-${page}-${i + 1}.png`}
+            src={`/single-image/${content_id}/${content_id}-${page}-${i + 1}.png`}
             alt={`content ${i + 1}`}
             style={{
               width: '100%',
