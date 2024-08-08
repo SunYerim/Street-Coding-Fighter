@@ -80,12 +80,14 @@ public class MultiGameController {
             .userId(85L)
             .username("Hermes")
             .score(150)
+            .rank(1)
             .build();
 
         Rank jackRank = Rank.builder()
             .userId(2L)
-            .username("Jack")
+            .username("1")
             .score(100)
+            .rank(2)
             .build();
 
         Solved hermesSolved1 = Solved.builder() // 주관식
@@ -94,6 +96,7 @@ public class MultiGameController {
             .userId(85L)
             .solve(null)
             .submitTime(10)
+            .isCorrect(true)
             .build();
 
         Solved hermesSolved2 = Solved.builder() // 빈칸
@@ -102,22 +105,25 @@ public class MultiGameController {
             .userId(85L)
             .solve(Map.of(1, 1, 2, 2))
             .submitTime(10)
+            .isCorrect(false)
             .build();
 
         Solved jackSolved1 = Solved.builder() // 주관식
             .solveText("jack test answer")
             .problemId(1L)
-            .userId(1L)
+            .userId(2L)
             .solve(null)
             .submitTime(10)
+            .isCorrect(true)
             .build();
 
         Solved jackSolved2 = Solved.builder() // 빈칸
             .solveText(null)
             .problemId(2L)
-            .userId(1L)
+            .userId(2L)
             .solve(Map.of(1, 4, 2, 1))
             .submitTime(20)
+            .isCorrect(false)
             .build();
 
         GameResult gameResult = GameResult.builder()
