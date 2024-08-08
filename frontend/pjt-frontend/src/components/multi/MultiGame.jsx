@@ -261,7 +261,8 @@ export default function MultiGame() {
 
   // 객관식 답변제출
   const handleChoiceSelection = (choiceId) => {
-    console.log('선택된 choice ID:', choiceId);
+    if (!isSubmit) {
+      console.log('선택된 choice ID:', choiceId);
     if (socket) {
       const messageObj = {
           type: 'solve',
@@ -275,11 +276,13 @@ export default function MultiGame() {
       socket.send(JSON.stringify(messageObj));
       setIsSubmit(true);
     }
+    }
   };
 
   // 단답식 답변제출
   const handleShortAnswer = (answer) => {
-    console.log('제출한 답:', answer);
+    if (!isSubmit) {
+      console.log('제출한 답:', answer);
     if (socket) {
       const messageObj = {
           type: 'solve',
@@ -292,6 +295,7 @@ export default function MultiGame() {
       };
       socket.send(JSON.stringify(messageObj));
       setIsSubmit(true);
+    }
     }
   };
 
@@ -363,7 +367,8 @@ export default function MultiGame() {
       if (count === 0 && !isSubmit) {
         switch (problemType) {
           case "FILL_IN_THE_BLANK":
-            handleBlankAnswer(null);
+            setBlankSolve(null);
+            handleBlankAnswer();
             setIsSubmit(true);
             break;
           case "SHORT_ANSWER_QUESTION":
