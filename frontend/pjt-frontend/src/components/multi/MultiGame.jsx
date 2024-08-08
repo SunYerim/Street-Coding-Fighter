@@ -24,7 +24,7 @@ export default function MultiGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const chatStompClient = useRef(null);
-  const isSubmitRef = useRef(isSubmit);
+  const isSubmitRef = useRef(false);
 
   // 게임정보 불러오기
   const {
@@ -98,8 +98,6 @@ export default function MultiGame() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
-
-  const [isSubmit, setIsSubmit] = useState(false);
 
   // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
