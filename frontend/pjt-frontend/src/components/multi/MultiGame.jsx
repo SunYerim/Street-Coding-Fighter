@@ -60,7 +60,7 @@ export default function MultiGame() {
     setGameRank: state.setGameRank,
     // problemType: state.problemType,
     currentRound: state.currentRound,
-    setCurrentRound: state.currentRound,
+    setCurrentRound: state.setCurrentRound,
     setProblemType: state.setProblemType,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
