@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             || requestURI.startsWith("/user/public/validate/") || requestURI.startsWith(
             "/user/public/request-verification-code") || requestURI.startsWith(
             "/user/public/request-verification") || requestURI.startsWith(
-            "/user/public/change-password") || requestURI.startsWith("/user/public/reissue")) {
+            "/user/public/change-password") || requestURI.startsWith("/user/public/reissue")
+            || requestURI.startsWith("/user/public/list")) {
             filterChain.doFilter(request, response); // 다음 필터로 진행
             return;
         }
