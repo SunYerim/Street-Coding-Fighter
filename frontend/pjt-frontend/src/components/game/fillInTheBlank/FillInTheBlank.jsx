@@ -9,13 +9,12 @@ import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import multiStore from "../../../stores/multiStore.jsx";
 import "../../../css/MultiGame.css";
 
-const FillInTheBlank = (problem) => {
+const FillInTheBlank = ({ problem }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
-  const [problemData, setProblemData] = useState({});
-  setProblemData(problem);
+  const [problemData, setProblemData] = useState(problem);
 
   const { blankSolve, setBlankSolve } = multiStore((state) => ({
     blankSolve: state.blankSolve,
