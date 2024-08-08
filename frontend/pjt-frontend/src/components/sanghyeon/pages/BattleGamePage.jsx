@@ -272,7 +272,7 @@ const BattleGamePage = () => {
         solveText = shortAnswerSolve === "" ? "ssafy" : shortAnswerSolve;
         break;
       case "MULTIPLE_CHOICE":
-        solveData = { 1: multipleChoiceSolve };
+        solveData = multipleChoiceSolve ? { 1: multipleChoiceSolve } : { 1: 0 };
         solveText = null;
         break;
       default:
@@ -436,6 +436,7 @@ const BattleGamePage = () => {
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
+      navigate("/battle-list");
     };
 
     // return 내부에서 cleanup 함수를 호출
