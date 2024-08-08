@@ -482,7 +482,7 @@ export default function MultiGame() {
             <div className="multi-rank-table">
               {
                 gameRank.map((user, i) => {
-                  return <UserRank rank={user.rank} name={user.username} score={user.score} key={i} />
+                  return <UserRank rank={user.rank} username={user.username} score={user.score} key={i} />
                 })
               }
             </div>
