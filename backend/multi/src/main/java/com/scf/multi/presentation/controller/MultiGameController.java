@@ -77,47 +77,53 @@ public class MultiGameController {
     public ResponseEntity<Void> test() {
 
         Rank hermesRank = Rank.builder()
-            .userId(85L)
+            .userId(13L)
             .username("Hermes")
             .score(150)
+            .rank(1)
             .build();
 
         Rank jackRank = Rank.builder()
-            .userId(2L)
-            .username("Jack")
+            .userId(8L)
+            .username("1")
             .score(100)
+            .rank(2)
             .build();
 
         Solved hermesSolved1 = Solved.builder() // 주관식
             .solveText("hermes test answer")
             .problemId(1L)
-            .userId(85L)
+            .userId(13L)
             .solve(null)
             .submitTime(10)
+            .isCorrect(true)
             .build();
 
         Solved hermesSolved2 = Solved.builder() // 빈칸
             .solveText(null)
             .problemId(2L)
-            .userId(85L)
+            .userId(13L)
             .solve(Map.of(1, 1, 2, 2))
             .submitTime(10)
+            .isCorrect(false)
             .build();
 
         Solved jackSolved1 = Solved.builder() // 주관식
             .solveText("jack test answer")
             .problemId(1L)
-            .userId(1L)
+            .userId(8L)
             .solve(null)
             .submitTime(10)
+            .isCorrect(true)
             .build();
 
         Solved jackSolved2 = Solved.builder() // 빈칸
             .solveText(null)
             .problemId(2L)
-            .userId(1L)
+            .userId(8L)
             .solve(Map.of(1, 4, 2, 1))
             .submitTime(20)
+            .isCorrect(false)
             .build();
 
         GameResult gameResult = GameResult.builder()
