@@ -20,29 +20,19 @@ import { display } from '@mui/system';
 const testDialogueList = [
   {
     page_no: 0,
-    script_content: '첫번째 줄 \n 두번째 줄 \n 세번째 줄',
-    action: 0,
+    script_content: '안녕! 나는 너희에게 프로그래밍을 \n 가르쳐줄 고양이 선생님이다냥. \n 아직 이름은 없다냥!',
+    action: 2,
     imageCount: 0,
   },
   {
     page_no: 1,
-    script_content: '두번째 페이지 줄 \n 두번째 줄 \n 세번째 줄',
+    script_content: '나는 프로그래밍의 기초부터 \n 하나씩 차근차근 알려줄 거다냥. \n 같이 열심히 공부하자냥!',
     action: 1,
-    imageCount: 1,
-  },
-  {
-    page_no: 3,
-    script_content: '세번째 페이지 줄 \n 두번째 줄 \n 세번째 줄',
-    action: 2,
-    imageCount: 2,
-  },
-  {
-    page_no: 4,
-    script_content: '네번째 페이지 \n 두번째 줄 \n 세번째 줄',
-    action: 3,
-    imageCount: 1,
+    imageCount: 0,
   },
 ];
+
+
 
 export default function SinglePlay() {
   const [page, setPage] = useState(0);
@@ -58,15 +48,24 @@ export default function SinglePlay() {
   const { completed } = SingleInfoStore();
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   const { baseURL, accessToken, memberId } = store();
-  const [showCharacter, setShowCharacter] = useState(false) //캐릭터 보이기/안보이기 상태 추가
+  const [showCharacter, setShowCharacter] = useState(false); //캐릭터 보이기/안보이기 상태 추가
   const [isClickable, setIsClickable] = useState(true);
+  //캐릭터 애니메이션 상태 추가
+  // const [isVibrating, setIsVibrating] = useState(false);
 
+  const isVibrating = dialogueList?.[page].action === 1;
+  const isCloseUp = dialogueList?.[page].action === 2;
   const getContent = () => {
-    axios
-      .get(`${baseURL}/single/${content_id}`)
+    axios({
+      method: 'get',
+      url: `${baseURL}/single/${content_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
       .then((response) => {
-        console.log(content_id)
-        console.log(`${store.baseUrl}/single/${content_id}`)
+        console.log(content_id);
+        console.log(`${store.baseUrl}/single/${content_id}`);
         const data = response.data;
         setDialogueList(data.dialogueList);
         // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
@@ -78,12 +77,9 @@ export default function SinglePlay() {
       });
   };
   useEffect(() => {
-    switchBackgroundMusic(
-      'single',
-      (newBackgroundMusic) => {
-        newBackgroundMusic.play();
-      }
-    );
+    switchBackgroundMusic('single', (newBackgroundMusic) => {
+      newBackgroundMusic.play();
+    });
     getContent();
     const loadingTimer = setTimeout(() => {
       setLoading(false);
@@ -99,25 +95,41 @@ export default function SinglePlay() {
       });
       clearTimeout(timer);
     };
-  }, [content_id]);
+  }, [content_id]); 
 
   const changePage = (increment) => {
     console.log('click');
     if (loading || !showDialogue) return;
+
     // 모달이 열려있으면 모달을 닫고 함수 종료
     if (isModalOpen) {
       handleCloseModal();
       return;
     }
-    console.log(isModalOpen);
+    // console.log(isModalOpen);
     // 채팅이 열려있으면 페이지 변경을 하지 않고 함수 종료
-    if (isChatOpen) {
-      // console.log(isChatOpen);
-      handleChatOpen();
-      return;
-    }
+    // if (isChatOpen) {
+    //   // console.log(isChatOpen);
+    //   handleChatOpen();
+    //   return;
+    // }
     // console.log('111');
     // console.log(page);
+
+    //넘어가면 안될때 누르면 바로 return!
+    console.log(isClickable);
+    if (!isClickable) {
+      return;
+    }
+
+    // 클릭이 불가능하게 만든 후 1초 후 클릭이 가능하게 상태 변경
+    // 대사 넘어가고나서 1초동안 못넘어가게하기
+    setIsClickable(false);
+    console.log('false로 바뀜');
+    setTimeout(() => {
+      setIsClickable(true);
+      console.log('true로 바뀜');
+    }, 1500);
     if (increment) {
       if (page < dialogueList.length - 1) {
         setPage((prevPage) => prevPage + 1);
@@ -130,6 +142,13 @@ export default function SinglePlay() {
       } else {
         setPage(0);
       }
+    }
+    if (dialogueList[page].action == 1) {
+      setIsVibrating(true);
+      console.log('vibrating');
+      setTimeout(() => {
+        setIsVibrating(false);
+      }, 2000);
     }
     playEffectSound('singleClickSound');
     console.log(page);
@@ -148,15 +167,15 @@ export default function SinglePlay() {
   };
   const openExitModal = () => {
     setIsExitModalOpen(true);
-  }
+  };
   const closeExitModal = () => {
     setIsExitModalOpen(false);
-  }
+  };
   const goToList = (isFinish) => {
     if (isFinish && !completed[content_id]?.complete) {
       axios({
         method: 'post',
-        url: `${baseURL}/edu`,
+        url: `${baseURL}/single`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -208,7 +227,7 @@ export default function SinglePlay() {
           }}
         >
           <img
-            src={`/single-image/${content_id}-${page}-${i + 1}.png`}
+            src={`/single-image/${content_id}/${content_id}-${page}-${i + 1}.png`}
             alt={`content ${i + 1}`}
             style={{
               width: '100%',
@@ -247,18 +266,20 @@ export default function SinglePlay() {
             style={{
               left: currentDialogue.imageCount > 0 ? '10vw' : '30vw',
             }}
+            $isVibrating={isVibrating}
+            $isCloseUp={isCloseUp}
           />
         </S.ImageBox>
         {showDialogue && (
           <S.DialogueSection>
-            {/* <ChatButton></ChatButton> */} 
+            {/* <ChatButton></ChatButton> */}
             {/* 채팅 버튼 비활성화 */}
             <S.DialogueBox>
               <S.DialogueHeader>
                 <S.CharacterName>
                   <span>
                     <CgProfile />
-                    <span> Hoshino Ai {content_id}</span>
+                    <span>  야옹 선생</span>
                   </span>
                 </S.CharacterName>
               </S.DialogueHeader>
@@ -305,7 +326,7 @@ export default function SinglePlay() {
         <div style={styles.modalContent}>
           <h2>학습을 완료하시겠습니까?</h2>
           <div style={styles.modalButtons}>
-            <S.CompleteButton onClick={()=>goToList(true)}>학습 완료</S.CompleteButton>
+            <S.CompleteButton onClick={() => goToList(true)}>학습 완료</S.CompleteButton>
             <S.CancelButton onClick={handleCloseModal}>돌아가기</S.CancelButton>
           </div>
         </div>
