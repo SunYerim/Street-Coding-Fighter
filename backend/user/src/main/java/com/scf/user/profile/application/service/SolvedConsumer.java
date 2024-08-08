@@ -3,6 +3,7 @@ package com.scf.user.profile.application.service;
 import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.kafka.Solved;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -16,19 +17,30 @@ public class SolvedConsumer {
 
     // 푼 문제를 받아옵니다.
     @KafkaListener(topics = "solved", containerFactory = "solvedKafkaListenerContainerFactory")
-    public void updateSolved(List<Solved> solved) {
-        // solvedList를 순회하면서 solved객체에 사용자가 푼 문제를 db에 저장합니다.
-        for (Solved solve : solved) {
+    public void updateSolved(List<Map<String, Object>> solvedMaps) {
+        // Deserialize the list of maps to a list of Solved objects
+        List<Solved> solveds = solvedMaps.stream()
+            .map(Solved::fromMap)
+            .toList();
+
+        System.out.println("Solved Problems: " + solveds);
+
+        // Iterate over the list of Solved objects
+        for (Solved solved : solveds) {
             SolvedProblemKafkaRequestDto solvedProblemKafkaRequestDto = new SolvedProblemKafkaRequestDto();
 
-            solvedProblemKafkaRequestDto.setCorrect(solve.getIsCorrect());
-            solvedProblemKafkaRequestDto.setChoice(solve.getSolveText()); // 주관식
-            solvedProblemKafkaRequestDto.setChoiceText(solve.getSolve()); // 빈칸, 객관식
+            // Set properties based on the solved object
+            solvedProblemKafkaRequestDto.setCorrect(solved.getIsCorrect());
+            solvedProblemKafkaRequestDto.setChoice(solved.getSolveText()); // 주관식
+            solvedProblemKafkaRequestDto.setChoiceText(solved.getSolve()); // 빈칸, 객관식
 
-            // 사용자가 푼 문제를 db에 저장시킵니다.
-            profileService.submitSolved(solve.getUserId(), solvedProblemKafkaRequestDto);
+            System.out.println(solved.getIsCorrect());
+            System.out.println(solved.getSolveText());
+            System.out.println(solved.getSolve());
+
+            // Use the profileService to submit solved problems to the database
+//            profileService.submitSolved(solved.getUserId(), solvedProblemKafkaRequestDto);
         }
-
     }
 
 }
