@@ -302,8 +302,9 @@ export default function MultiGame() {
   const handleBlankAnswer = () => {
     if (!isSubmit) {
       console.log("제출한 답:", blankSolve);
-      console.log(isSubmit);
       if (socket) {
+        console.log("여기여기");
+
         const messageObj = {
           type: "solve",
           content: {
