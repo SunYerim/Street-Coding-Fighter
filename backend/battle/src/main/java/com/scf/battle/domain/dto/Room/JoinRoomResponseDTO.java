@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class JoinRoomResponseDTO {
     private String username;
     private Long memberId;
+    private Integer hostCharacterType;
 }
