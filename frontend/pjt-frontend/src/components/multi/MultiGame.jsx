@@ -40,10 +40,10 @@ export default function MultiGame() {
     gameRank,
     setGameRank,
     clearGameRank,
-    // problemType,
+    problemType,
+    setProblemType,
     currentRound,
     setCurrentRound,
-    setProblemType,
     clearProblemType,
     blankSolve,
     setBlankSolve,
@@ -59,10 +59,10 @@ export default function MultiGame() {
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
-    // problemType: state.problemType,
+    problemType: state.problemType,
+    setProblemType: state.setProblemType,
     currentRound: state.currentRound,
     setCurrentRound: state.setCurrentRound,
-    setProblemType: state.setProblemType,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
     clearGameRank: state.clearGameRank,
@@ -107,7 +107,7 @@ export default function MultiGame() {
 
   const [count, setCount] = useState(30);
 
-  const problemType = problemList[currentRound].problemType;
+  // const problemType = problemList[currentRound].problemType;
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -168,7 +168,7 @@ export default function MultiGame() {
           // 게임스타트
           setPlaying(true);
           console.log(data.payload);
-          setProblemList(data.payload);
+          handleSetProblem(data.payload);
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
@@ -241,6 +241,10 @@ export default function MultiGame() {
     };
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
+
+  const handleSetProblem = (data) => {
+    setProblemList(data);
+  };
 
   const handleNextRound = () => {
     setCurrentRound((prevRound) => prevRound + 1);
