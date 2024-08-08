@@ -173,24 +173,30 @@ export default function MultiGame() {
           console.log('전체랭킹: ', data.payload);
           if (currentProblemIndex < problemList.length - 1) {
             // 모달 열고 4초 대기
-            setModalOpen(true);
-            setTimeout(() => {
-              setModalOpen(false);
-            }, 4000);
+            // setModalOpen(true);
+            // setTimeout(() => {
+            //   setModalOpen(false);
+            // }, 4000);
     
             // 문제번호++, 제출상태 초기화
             setCurrentProblemIndex(currentProblemIndex + 1);
             setIsSubmit(false);
+            setCount(30);
           } else {
-            setResultModalOpen(true);
-            setTimeout(() => {
-              setResultModalOpen(false);
+            // setResultModalOpen(true);
+            // setTimeout(() => {
+            //   setResultModalOpen(false);
+            //   setPlaying(false);
+            //   clearGameRank();
+            //   clearRoundRank();
+            //   clearProblemList();
+            //   clearProblemType();
+            // }, 4000);
               setPlaying(false);
               clearGameRank();
               clearRoundRank();
               clearProblemList();
               clearProblemType();
-            }, 4000);
           }
         } else if (data.type === 'roundRank') { 
           setRoundRank(data.payload);
@@ -355,9 +361,6 @@ export default function MultiGame() {
           default:
             console.log("Unknown problem type: " + problemType);
         }
-        if (currentProblemIndex < problemList.length - 1) {
-          setCurrentProblemIndex(currentProblemIndex + 1);
-        }
       }
     }, [count]);
 
@@ -515,8 +518,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal userList={roundRank} />}
-      {resultModalOpen && <MultiResultModal userList={gameRank} />}
+      {/* {modalOpen && <MultiResultModal userList={roundRank} />}
+      {resultModalOpen && <MultiResultModal userList={gameRank} />} */}
     </>
   );
 }
