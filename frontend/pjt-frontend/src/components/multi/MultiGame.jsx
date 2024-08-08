@@ -182,7 +182,7 @@ export default function MultiGame() {
           isSubmitRef.current = false;
           setCount(30);
           // handleNextRound();
-          setCurrentRound((prevRound) => prevRound + 1);
+          setCurrentRound(currentRound + 1);
 
           setTimeout(() => {
             console.log('이건여기!',currentRound);
