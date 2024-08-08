@@ -181,7 +181,7 @@ export default function MultiGame() {
           console.log("전체랭킹: ", data.payload);
           isSubmitRef.current = false;
           setCount(30);
-          handleNextRound();
+          setCurrentRound((prevRound) => prevRound + 1);
 
           setTimeout(() => {
             console.log('이건여기!',currentRound);
@@ -240,16 +240,14 @@ export default function MultiGame() {
     setProblemList(data);
   };
 
-  const handleNextRound = () => {
-    setCurrentRound(currentRound + 1);
-    console.log("currentRound: ", currentRound);
-  };
+  // const handleNextRound = () => {
+  //   setCurrentRound(currentRound + 1);
+  //   console.log("currentRound: ", currentRound);
+  // };
 
   useEffect(() => {
     if (playing && currentRound < problemList.length - 1) {
-      setTimeout(() => {
-        console.log('저건저기!',currentRound);
-      }, 500);
+      console.log('저건저기!',currentRound);
     }
   }, [currentRound]);
 
