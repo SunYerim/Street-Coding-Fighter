@@ -39,7 +39,8 @@ export default function MultiGame() {
     gameRank,
     setGameRank,
     clearGameRank,
-    problemType,
+    // problemType,
+    currentRound,
     setProblemType,
     clearProblemType,
     blankSolve,
@@ -56,7 +57,8 @@ export default function MultiGame() {
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
-    problemType: state.problemType,
+    // problemType: state.problemType,
+    currentRound: state.currentRound,
     setProblemType: state.setProblemType,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
@@ -98,8 +100,11 @@ export default function MultiGame() {
 
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
+  const [problemLength, setProblemLength] = useState(problemList.length);
 
   const [count, setCount] = useState(30);
+
+  const problemType = problemList[currentRound].problemType;
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -173,39 +178,39 @@ export default function MultiGame() {
           console.log("전체랭킹: ", data.payload);
           setIsSubmit(false);
           setCount(30);
+          setCurrentProblemIndex(currentRound + 1);
           setTimeout(() => {
-            setCurrentProblemIndex(currentProblemIndex + 1);
-            console.log(currentProblemIndex);
-          }, 500);
-          if (currentProblemIndex < problemList.length - 1) {
-            // 모달 열고 4초 대기
-            // setModalOpen(true);
-            // setTimeout(() => {
-            //   setModalOpen(false);
-            // }, 4000);
+            console.log(currentRound);
+            if (currentRound < problemList.length - 1) {
+              // 모달 열고 4초 대기
+              // setModalOpen(true);
+              // setTimeout(() => {
+              //   setModalOpen(false);
+              // }, 4000);
 
-            // 문제번호++, 제출상태 초기화
-            console.log("여기 들어오냐?");
-            console.log(problemList.length);
-            setCurrentProblemIndex(currentProblemIndex + 1);
-            setIsSubmit(false);
-            setCount(30);
-          } else {
-            // setResultModalOpen(true);
-            // setTimeout(() => {
-            //   setResultModalOpen(false);
-            //   setPlaying(false);
-            //   clearGameRank();
-            //   clearRoundRank();
-            //   clearProblemList();
-            //   clearProblemType();
-            // }, 4000);
-            // setPlaying(false);
-            // clearGameRank();
-            // clearRoundRank();
-            // clearProblemList();
-            // clearProblemType();
-          }
+              // 문제번호++, 제출상태 초기화
+              console.log("여기 들어오냐?");
+              console.log(problemList.length);
+              setCurrentProblemIndex(currentRound + 1);
+              setIsSubmit(false);
+              setCount(30);
+            } else {
+              // setResultModalOpen(true);
+              // setTimeout(() => {
+              //   setResultModalOpen(false);
+              //   setPlaying(false);
+              //   clearGameRank();
+              //   clearRoundRank();
+              //   clearProblemList();
+              //   clearProblemType();
+              // }, 4000);
+              // setPlaying(false);
+              // clearGameRank();
+              // clearRoundRank();
+              // clearProblemList();
+              // clearProblemType();
+            }
+          }, 500);
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
@@ -224,11 +229,11 @@ export default function MultiGame() {
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   // 문제 타입 바꾸기
-  useEffect(() => {
-    if (problemList.length > 0) {
-      setProblemType(problemList[currentProblemIndex].problemType);
-    }
-  }, [currentProblemIndex]);
+  // useEffect(() => {
+  //   if (problemList.length > 0) {
+  //     setProblemType(problemList[currentProblemIndex].problemType);
+  //   }
+  // }, [currentProblemIndex]);
 
   // 라운드 종료 후 랭킹 모달 표시
   // useEffect(() => {
@@ -295,8 +300,9 @@ export default function MultiGame() {
 
   // 빈칸 답변제출
   const handleBlankAnswer = () => {
-    if (isSubmit === false) {
+    if (!isSubmit) {
       console.log("제출한 답:", blankSolve);
+      console.log(isSubmit);
       if (socket) {
         const messageObj = {
           type: "solve",
@@ -317,7 +323,7 @@ export default function MultiGame() {
   };
 
   const renderProblem = () => {
-    const problem = problemList[currentProblemIndex];
+    const problem = problemList[currentRound];
     return problem ? (
       <>
         {problem.problemType === "FILL_IN_THE_BLANK" && (
@@ -527,7 +533,7 @@ export default function MultiGame() {
             <div className="multi-round">
               {playing ? (
                 <h1>
-                  {currentProblemIndex + 1} / {problemList.length}
+                  {currentRound + 1} / {problemList.length}
                 </h1>
               ) : (
                 <h1>Round</h1>
