@@ -72,7 +72,7 @@ export default function SinglePlay() {
           console.log(content_id);
           console.log(`${baseURL}/single/${content_id}`);
           const data = response.data;
-          setDialogueList(data.dialogueList);
+          setDialogueList(data.detailList);
           // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
           setLoading(true);
         })
