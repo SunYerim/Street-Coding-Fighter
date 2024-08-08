@@ -179,9 +179,7 @@ export default function MultiGame() {
           setGameRank(data.payload);
           setTimerEnded(false);
           console.log("전체랭킹: ", data.payload);
-
           isSubmitRef.current = false;
-
           setCount(30);
           handleNextRound();
 
@@ -196,10 +194,6 @@ export default function MultiGame() {
 
               // 문제번호++, 제출상태 초기화
               console.log("여기 들어오냐?");
-              console.log(problemList.length);
-              setCurrentProblemIndex(currentRound + 1);
-
-              isSubmitRef.current = false;
 
               setCount(30);
             } else {
@@ -248,6 +242,7 @@ export default function MultiGame() {
 
   const handleNextRound = () => {
     setCurrentRound(currentRound + 1);
+    console.log("currentRound: ", currentRound);
   };
 
   useEffect(() => {
