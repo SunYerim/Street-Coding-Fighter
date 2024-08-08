@@ -250,12 +250,16 @@ export default function MultiGame() {
 
   useEffect(() => {
     console.log('요건요기!', round);
+    if (round >= problemList.length) {
+      setPlaying(false);
+      clearProblemList();
+      clearBlankSolve();
+      clearRoundRank();
+      clearGameRank();
+      clearType();
+      setRound(0);
+    }
   }, [round]);
-
-  const handleNextRound = () => {
-    setCurrentRound(currentRound + 1);
-    console.log("currentRound: ", currentRound);
-  };
 
 
   // 문제 타입 바꾸기
@@ -350,17 +354,17 @@ export default function MultiGame() {
 
   const renderProblem = () => {
     // const problem = problemList[currentRound];
-    return problemList[currentRound] ? (
+    return problemList[round] ? (
       <>
-        {problemList[currentRound].problemType === "FILL_IN_THE_BLANK" && (
-          <FillInTheBlank problem={problemList[currentRound]} onFillBlank={handleBlankAnswer} />
+        {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
+          <FillInTheBlank problem={problemList[round]} onFillBlank={handleBlankAnswer} />
         )}
-        {problemList[currentRound].problemType === "SHORT_ANSWER_QUESTION" && (
-          <ShortAnswer problem={problemList[currentRound]} onShortAnswer={handleShortAnswer} />
+        {problemList[round].problemType === "SHORT_ANSWER_QUESTION" && (
+          <ShortAnswer problem={problemList[round]} onShortAnswer={handleShortAnswer} />
         )}
-        {problemList[currentRound].problemType === "MULTIPLE_CHOICE" && (
+        {problemList[round].problemType === "MULTIPLE_CHOICE" && (
           <MultipleChoice
-            problem={problemList[currentRound]}
+            problem={problemList[round]}
             onChoiceSelect={handleChoiceSelection}
           />
         )}
