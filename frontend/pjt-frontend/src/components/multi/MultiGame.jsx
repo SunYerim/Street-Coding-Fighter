@@ -177,9 +177,12 @@ export default function MultiGame() {
           setGameRank(data.payload);
           setTimerEnded(false);
           console.log('전체랭킹: ', data.payload);
-          setCurrentProblemIndex(currentProblemIndex + 1);
           setIsSubmit(false);
           setCount(30);
+          setTimeout(() => {
+            setCurrentProblemIndex(currentProblemIndex + 1);
+            console.log(currentProblemIndex);
+          }, 500);
           if (currentProblemIndex < problemList.length - 1) {
             // 모달 열고 4초 대기
             // setModalOpen(true);
