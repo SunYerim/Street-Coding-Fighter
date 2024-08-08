@@ -78,6 +78,11 @@ const multiStore = create((set) => ({
   setProblemType: (problemType) => set({ problemType }),
   clearProbleType: () => set({   problemType: ''}),
 
+  // 현재라운드
+  currentRound: 0,
+  setCurrentRound: (currentRound) => set({ currentRound }),
+  clearCurrentRound: () => set({ currentRound: 0 }),
+
 
   // 라운드 랭크
   roundRank: [],
