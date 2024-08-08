@@ -16,6 +16,8 @@ import Modal from "react-modal";
 //음악 변경부분입니다. 아래 SoundStore import 해야됨
 import SoundStore from "../../../stores/SoundStore.jsx";
 
+import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
+
 Modal.setAppElement("#root");
 
 const BattleGamePage = () => {
@@ -115,6 +117,8 @@ const BattleGamePage = () => {
   const [loser, setLoser] = useState("");
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
+
+  const [timerOn, setTimerOn] = useState(false);
 
   // ---------------------- WebSocket ----------------------
 
@@ -247,7 +251,9 @@ const BattleGamePage = () => {
       closeModal();
       setGameStart(true);
       setAnswerSubmitted(false);
+      setTimerOn(false);
       startTimer();
+      setTimerOn(true);
     }
   }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
 
@@ -491,6 +497,10 @@ const BattleGamePage = () => {
   };
 
   const startTimer = () => {
+    if (timerOn === true) {
+      return;
+    }
+
     setCount(30);
     const timerInterval = setInterval(() => {
       setCount((prevCount) => {
@@ -605,7 +615,14 @@ const BattleGamePage = () => {
             </div>
             <div className="battle-game-container">
               <div className="battle-game-left-container">
-                <div className="battle-game-left-cam"></div>
+                <div className="battle-game-left-cam">
+                  <div className="battle-game-my-character-container">
+                    <img
+                      src={movingGreenSlime}
+                      alt="battle-game-my-character"
+                    />
+                  </div>
+                </div>
                 <div className="battle-game-history-container">
                   <div className="battle-game-history">
                     <div className="battle-game-history-title">전투 기록</div>
@@ -634,12 +651,14 @@ const BattleGamePage = () => {
                 {gameStart ? (
                   <>
                     {renderQuestion(myProblem)}
-                    <button
-                      onClick={handleSubmit}
-                      className="battle-game-submit-answer"
-                    >
-                      답안 제출
-                    </button>
+                    <div className="battle-game-submit-answer-container">
+                      <button
+                        onClick={handleSubmit}
+                        className="battle-game-submit-answer"
+                      >
+                        답안 제출
+                      </button>
+                    </div>
                   </>
                 ) : (
                   <div className="battle-game-game-start-container">
@@ -662,7 +681,14 @@ const BattleGamePage = () => {
                 )}
               </div>
               <div className="battle-game-right-container">
-                <div className="battle-game-right-cam"></div>
+                <div className="battle-game-right-cam">
+                  <div className="battle-game-enemy-character-container">
+                    <img
+                      src={movingGreenSlime}
+                      alt="battle-game-enemy-character"
+                    />
+                  </div>
+                </div>
                 <div className="battle-game-chatting-container">
                   <div className="battle-game-chatting">
                     {chatMessages.map((msg, index) => (
