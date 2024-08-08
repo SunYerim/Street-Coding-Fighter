@@ -20,7 +20,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, List<Solved>> solvedDTOProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs(Solved.class));
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
@@ -30,7 +30,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, GameResultRoomDTO> resultDTOProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs(GameResultRoomDTO.class));
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
@@ -39,9 +39,9 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public Map<String, Object> producerConfigs(Class<?> valueClass) {
+    public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         props.put(ProducerConfig.ACKS_CONFIG, "all");
