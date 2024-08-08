@@ -24,6 +24,7 @@ export default function MultiGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const chatStompClient = useRef(null);
+  const isSubmitRef = useRef(isSubmit);
 
   // 게임정보 불러오기
   const {
@@ -98,9 +99,9 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
-  const [isSubmit, setIsSubmit] = useState(false);
+  // const [isSubmit, setIsSubmit] = useState(false);
 
-  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
   const [problemLength, setProblemLength] = useState(problemList.length);
 
@@ -178,7 +179,9 @@ export default function MultiGame() {
           setGameRank(data.payload);
           setTimerEnded(false);
           console.log("전체랭킹: ", data.payload);
-          setIsSubmit(false);
+
+          isSubmitRef.current = false;
+
           setCount(30);
           setCurrentRound(currentRound + 1);
           setTimeout(() => {
@@ -194,7 +197,9 @@ export default function MultiGame() {
               console.log("여기 들어오냐?");
               console.log(problemList.length);
               setCurrentProblemIndex(currentRound + 1);
-              setIsSubmit(false);
+
+              isSubmitRef.current = false;
+
               setCount(30);
             } else {
               // setResultModalOpen(true);
@@ -223,6 +228,12 @@ export default function MultiGame() {
     };
 
     return () => {
+      setPlaying(false);
+      clearProblemList();
+      clearBlankSolve();
+      clearRoundRank();
+      clearGameRank();
+      clearProblemType();
       socketInstance.close();
       sendQuitMessage();
       if (chatStompClient.current) chatStompClient.current.disconnect();
@@ -262,7 +273,7 @@ export default function MultiGame() {
 
   // 객관식 답변제출
   const handleChoiceSelection = (choiceId) => {
-    if (!isSubmit) {
+    if (!isSubmitRef.current) {
       console.log("선택된 choice ID:", choiceId);
       if (socket) {
         const messageObj = {
@@ -275,14 +286,16 @@ export default function MultiGame() {
           },
         };
         socket.send(JSON.stringify(messageObj));
-        setIsSubmit(true);
+
+        isSubmitRef.current = true;
+
       }
     }
   };
 
   // 단답식 답변제출
   const handleShortAnswer = (answer) => {
-    if (!isSubmit) {
+    if (!isSubmitRef.current) {
       console.log("제출한 답:", answer);
       if (socket) {
         const messageObj = {
@@ -295,18 +308,18 @@ export default function MultiGame() {
           },
         };
         socket.send(JSON.stringify(messageObj));
-        setIsSubmit(true);
+
+        isSubmitRef.current = true;
+        
       }
     }
   };
 
   // 빈칸 답변제출
   const handleBlankAnswer = () => {
-    if (!isSubmit) {
+    if (!isSubmitRef.current) {
       console.log("제출한 답:", blankSolve);
       if (socket) {
-        console.log("여기여기");
-
         const messageObj = {
           type: "solve",
           content: {
@@ -317,7 +330,7 @@ export default function MultiGame() {
           },
         };
         socket.send(JSON.stringify(messageObj));
-        setIsSubmit(true);
+        isSubmitRef.current = true;
         clearBlankSolve();
       }
     } else {
@@ -368,26 +381,26 @@ export default function MultiGame() {
     }, [count]);
 
     useEffect(() => {
-      if (count === 0 && !isSubmit) {
+      if (count === 0 && !isSubmitRef.current) {
         switch (problemType) {
           case "FILL_IN_THE_BLANK":
             setBlankSolve(null);
             handleBlankAnswer();
-            setIsSubmit(true);
+            isSubmitRef.current = true;
             break;
           case "SHORT_ANSWER_QUESTION":
             handleShortAnswer(null);
-            setIsSubmit(true);
+            isSubmitRef.current = true;
             break;
           case "MULTIPLE_CHOICE":
             handleChoiceSelection(null);
-            setIsSubmit(true);
+            isSubmitRef.current = true;
             break;
           default:
             console.log("Unknown problem type: " + problemType);
         }
       }
-    }, [count]);
+    }, [count, isSubmitRef]);
 
     return (
       <div>
@@ -522,7 +535,7 @@ export default function MultiGame() {
               </div>
             ) : (
               <div className="after-start">
-                {isSubmit ? (
+                {isSubmitRef.current ? (
                   <div>
                     <h2>Submitted!</h2>
                   </div>
