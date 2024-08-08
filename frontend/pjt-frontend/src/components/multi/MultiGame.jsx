@@ -99,7 +99,7 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
-
+  let cnt = 0;
 
   // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
@@ -182,7 +182,7 @@ export default function MultiGame() {
           isSubmitRef.current = false;
           setCount(30);
           // handleNextRound();
-          setCurrentRound(currentRound + 1);
+          setCurrentRound(cnt + 1);
 
           setTimeout(() => {
             console.log('이건여기!',currentRound);
@@ -242,7 +242,8 @@ export default function MultiGame() {
   };
 
   useEffect(() => {
-    console.log('저건저기!',currentRound);
+    console.log('저건저기!', currentRound);
+    cnt = currentRound;
   }, [currentRound]);
 
   const handleNextRound = () => {
