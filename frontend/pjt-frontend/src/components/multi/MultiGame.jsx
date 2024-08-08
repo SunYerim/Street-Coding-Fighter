@@ -118,6 +118,7 @@ export default function MultiGame() {
   // 게임시작
   const handleStart = async () => {
     setPlaying(true);
+    clearGameRank();
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
       null,
@@ -255,7 +256,7 @@ export default function MultiGame() {
       clearProblemList();
       clearBlankSolve();
       clearRoundRank();
-      clearGameRank();
+      // clearGameRank();
       clearType();
       setRound(0);
     }
