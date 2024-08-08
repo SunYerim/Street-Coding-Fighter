@@ -65,6 +65,7 @@ export default function SinglePlay() {
       },
     })
       .then((response) => {
+        console.log(response.data)
         console.log(content_id);
         console.log(`${baseURL}/single/${content_id}`);
         const data = response.data;
