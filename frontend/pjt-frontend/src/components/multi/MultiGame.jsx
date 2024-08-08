@@ -168,7 +168,7 @@ export default function MultiGame() {
           // 게임스타트
           setPlaying(true);
           console.log(data.payload);
-          handleSetProblem(data.payload);
+          handleSetProblemList(data.payload);
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
@@ -242,12 +242,17 @@ export default function MultiGame() {
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  const handleSetProblem = (data) => {
+  const handleSetProblemList = (data) => {
     setProblemList(data);
   };
 
+  const handleSetProblemType = () => {
+    setProblemType(problemList[currentRound].problemType);
+  }
+
   const handleNextRound = () => {
     setCurrentRound((prevRound) => prevRound + 1);
+    handleSetProblemType();
   };
 
   useEffect(() => {
