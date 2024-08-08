@@ -192,18 +192,14 @@ public class ProfileServiceImpl implements ProfileService {
         }
         // 빈칸일 경우
         if (problemType.equals(ProblemType.FILL_IN_THE_BLANK)) {
-            convertedChoiceText = ChoiceTextConverter.FillInBlank(problemRequestDto.getChoiceText())
-            ;
+            convertedChoiceText = ChoiceTextConverter.FillInBlank(
+                problemRequestDto.getChoiceText());
         }
         // 객관식인 경우
         if (problemType.equals(ProblemType.MULTIPLE_CHOICE)) {
             convertedChoiceText = ChoiceTextConverter.MultipleChoice(
                 problemRequestDto.getChoiceText());
         }
-
-//        // choice를 문자열로 변환 (객관식, 주관식, 빈칸 모두 string으로 변환)
-//        String convertedChoiceText = ChoiceTextConverter.convertChoiceText(
-//            problemRequestDto.getChoiceText(), problemRequestDto.getChoice());
 
         //Solved 엔티티 생성
         Solved solved = new Solved();
