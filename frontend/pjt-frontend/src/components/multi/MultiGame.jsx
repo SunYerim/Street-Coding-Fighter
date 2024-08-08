@@ -40,7 +40,7 @@ export default function MultiGame() {
     gameRank,
     setGameRank,
     clearGameRank,
-    problemType,
+    // problemType,
     setProblemType,
     currentRound,
     setCurrentRound,
@@ -59,7 +59,7 @@ export default function MultiGame() {
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
-    problemType: state.problemType,
+    // problemType: state.problemType,
     setProblemType: state.setProblemType,
     currentRound: state.currentRound,
     setCurrentRound: state.setCurrentRound,
@@ -106,6 +106,8 @@ export default function MultiGame() {
   const [problemLength, setProblemLength] = useState(problemList.length);
 
   const [count, setCount] = useState(30);
+
+  let problemType = problemList[currentRound].problemType;
 
   // const problemType = problemList[currentRound].problemType;
 
@@ -246,13 +248,8 @@ export default function MultiGame() {
     setProblemList(data);
   };
 
-  const handleSetProblemType = () => {
-    setProblemType(problemList[currentRound].problemType);
-  }
-
   const handleNextRound = () => {
     setCurrentRound((prevRound) => prevRound + 1);
-    handleSetProblemType();
   };
 
   useEffect(() => {
