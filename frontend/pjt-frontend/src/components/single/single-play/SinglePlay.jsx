@@ -342,7 +342,7 @@ export default function SinglePlay() {
     if (isFinish && !completed[content_id]?.complete) {
       axios({
         method: 'post',
-        url: `${baseURL}/single`,
+        url: `${baseURL}/single/${content_id}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
