@@ -70,7 +70,7 @@ export default function EpisodeList({ rownum }) {
                       <img src={characterSource[0]} style={{ height: '100px' }} />
                     </S.CharacterImage>
                   ) : null}
-                  {e.id === 11 ? (
+                  {e.id === 12 ? (
                     <div style={{ position: 'absolute', top: '-50%', right: '-10px', color: 'red', fontSize: '2rem' }}>
                       <MdFlag />
                     </div>
