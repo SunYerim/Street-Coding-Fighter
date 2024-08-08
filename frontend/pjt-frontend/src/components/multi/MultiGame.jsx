@@ -111,7 +111,7 @@ export default function MultiGame() {
   
   const [count, setCount] = useState(30);
 
-  const problemType = problem[currentRound].problemType 
+  const problemType = problemList[currentRound].problemType 
   
 
   // 방생성할때 방장의 memberId 가져오기
