@@ -3,7 +3,7 @@ package com.scf.user.profile.application.service;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
-import com.scf.user.profile.domain.dto.SolvedProblemKafkaRequestDto;
+import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 
 public interface ProfileService {

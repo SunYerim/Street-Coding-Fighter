@@ -2,6 +2,7 @@ package com.scf.user.profile.global.config;
 
 import com.scf.user.profile.domain.dto.kafka.MultiGameResult;
 import com.scf.user.profile.domain.dto.kafka.Solved;
+import com.scf.user.profile.global.util.ListJsonDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -38,6 +39,7 @@ public class KafkaConsumerConfig {
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
             "com.scf.user.profile.domain.dto.kafka.MultiGameResult");
+        configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
@@ -56,11 +58,11 @@ public class KafkaConsumerConfig {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, solvedGroupId);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-            JsonDeserializer.class);
+            ListJsonDeserializer.class.getName());
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
-            "com.scf.user.profile.domain.dto.kafka.Solved");
-        return new DefaultKafkaConsumerFactory<>(configProps);
+        configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+        return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
+            new ListJsonDeserializer<>(Solved.class));
     }
 
     @Bean
