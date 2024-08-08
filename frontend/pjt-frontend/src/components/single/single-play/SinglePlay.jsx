@@ -61,6 +61,7 @@ export default function SinglePlay() {
       url: `${baseURL}/single/${content_id}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMxMDM3NjgsImV4cCI6MTcyMzEwNzM2OH0.Qy2T-1du9CNOfrGZi_1axMkE4jSsmeKKjXR_TdZCqY0`,
       },
     })
       .then((response) => {
@@ -144,11 +145,11 @@ export default function SinglePlay() {
       }
     }
     if (dialogueList[page].action == 1) {
-      setIsVibrating(true);
-      console.log('vibrating');
-      setTimeout(() => {
-        setIsVibrating(false);
-      }, 2000);
+      // setIsVibrating(true);
+      // console.log('vibrating');
+      // setTimeout(() => {
+        // setIsVibrating(false);
+      // }, 2000);
     }
     playEffectSound('singleClickSound');
     console.log(page);
