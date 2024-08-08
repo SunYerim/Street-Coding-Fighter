@@ -30,10 +30,10 @@ export default function EpisodeList({ rownum }) {
     // console.log(isCompleted);
     console.log(id);
     console.log(nextIndex);
-    if (id <= nextIndex) {
+    if (id <= nextIndex+1) {
       // console.log(id);
       playEffectSound('clickSound');
-      navigate(`/single-play/${id+1}`);
+      navigate(`/single-play/${id}`);
     } else {
       // alert("이전 에피소드를 먼저 클리어해주세요.");
     }
