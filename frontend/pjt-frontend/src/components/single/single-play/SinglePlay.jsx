@@ -55,34 +55,31 @@ export default function SinglePlay() {
 
   const isVibrating = dialogueList?.[page].action === 1;
   const isCloseUp = dialogueList?.[page].action === 2;
-  const getContent = () => {
-    axios({
-      method: 'get',
-      url: `${baseURL}/single/${content_id}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMxMDM3NjgsImV4cCI6MTcyMzEwNzM2OH0.Qy2T-1du9CNOfrGZi_1axMkE4jSsmeKKjXR_TdZCqY0`,
-      },
-    })
-      .then((response) => {
-        console.log(response.data)
-        console.log(content_id);
-        console.log(`${baseURL}/single/${content_id}`);
-        const data = response.data;
-        setDialogueList(data.dialogueList);
-        // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
-        setLoading(true);
-      })
-      .catch((error) => {
-        console.error('Error fetching content: ', error);
-        setLoading(false);
-      });
-  };
   useEffect(() => {
     switchBackgroundMusic('single', (newBackgroundMusic) => {
       newBackgroundMusic.play();
     });
-    getContent();
+      axios({
+        method: 'get',
+        url: `${baseURL}/single/${content_id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMxMDM3NjgsImV4cCI6MTcyMzEwNzM2OH0.Qy2T-1du9CNOfrGZi_1axMkE4jSsmeKKjXR_TdZCqY0`,
+        },
+      })
+        .then((response) => {
+          console.log(response.data)
+          console.log(content_id);
+          console.log(`${baseURL}/single/${content_id}`);
+          const data = response.data;
+          setDialogueList(data.dialogueList);
+          // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
+          setLoading(true);
+        })
+        .catch((error) => {
+          console.error('Error fetching content: ', error);
+          setLoading(false);
+        });
     const loadingTimer = setTimeout(() => {
       setLoading(false);
     }, 2000);
