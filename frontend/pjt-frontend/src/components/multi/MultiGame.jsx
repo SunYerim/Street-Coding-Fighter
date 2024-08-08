@@ -1,17 +1,17 @@
-import '../../index.css';
-import '../../css/GameMain.css';
+import "../../index.css";
+import "../../css/GameMain.css";
 import "../../css/MultiGame.css";
-import '../../css/Timer.css';
+import "../../css/Timer.css";
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
 import MultiResultModal from "./MultiResultModal.jsx";
-import newSocket from "../game/server.js"
+import newSocket from "../game/server.js";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import multiStore from '../../stores/multiStore.jsx';
+import multiStore from "../../stores/multiStore.jsx";
 import store from "../../store/store.js";
 import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
-import axios from 'axios';
+import axios from "axios";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -20,12 +20,11 @@ import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/MultiShortAnswer";
 import MultipleChoice from "../game/MultipleChoice";
 
-
 export default function MultiGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const chatStompClient = useRef(null);
-  
+
   // 게임정보 불러오기
   const {
     roomId,
@@ -69,21 +68,15 @@ export default function MultiGame() {
   }));
 
   // 유저정보 받아오기
-  const {
-    accessToken,
-    setAccessToken,
-    memberId,
-    userId,
-    name,
-    baseURL,
-  } = store((state) => ({
-    memberId: state.memberId,
-    accessToken: state.accessToken,
-    setAccessToken: state.setAccessToken,
-    userId: state.userId,
-    name: state.name,
-    baseURL: state.baseURL,
-  }));
+  const { accessToken, setAccessToken, memberId, userId, name, baseURL } =
+    store((state) => ({
+      memberId: state.memberId,
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+      userId: state.userId,
+      name: state.name,
+      baseURL: state.baseURL,
+    }));
 
   // auth
   const authClient = createAuthClient(
@@ -95,19 +88,18 @@ export default function MultiGame() {
   const [socket, setSocket] = useState(null);
   const [hostId, setHostId] = useState(null);
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
   const [isSubmit, setIsSubmit] = useState(false);
-  
+
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
-  
+
   const [count, setCount] = useState(30);
-  
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -116,14 +108,14 @@ export default function MultiGame() {
 
   // 게임시작
   const handleStart = async () => {
-    setPlaying(true);  
+    setPlaying(true);
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
       null,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-        }
+        },
       }
     );
   };
@@ -164,19 +156,21 @@ export default function MultiGame() {
         const data = JSON.parse(messageData);
 
         // Multi socket 통신 타입별 정리
-        if (data.type === 'gameStart') { // 게임스타트
+        if (data.type === "gameStart") {
+          // 게임스타트
           setPlaying(true);
           console.log(data.payload);
           setProblemList(data.payload);
-        } else if (data.type === 'newHost') { // 방장바뀌는 타입
+        } else if (data.type === "newHost") {
+          // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
-        } else if (data.type === 'attainScore') {
+        } else if (data.type === "attainScore") {
           console.log(`얻은 점수: ${data.payload}`);
-        } else if (data.type === 'gameRank') {
+        } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           setTimerEnded(false);
-          console.log('전체랭킹: ', data.payload);
+          console.log("전체랭킹: ", data.payload);
           setIsSubmit(false);
           setCount(30);
           setTimeout(() => {
@@ -189,9 +183,9 @@ export default function MultiGame() {
             // setTimeout(() => {
             //   setModalOpen(false);
             // }, 4000);
-    
+
             // 문제번호++, 제출상태 초기화
-            console.log('여기 들어오냐?');
+            console.log("여기 들어오냐?");
             console.log(problemList.length);
             setCurrentProblemIndex(currentProblemIndex + 1);
             setIsSubmit(false);
@@ -206,18 +200,18 @@ export default function MultiGame() {
             //   clearProblemList();
             //   clearProblemType();
             // }, 4000);
-              // setPlaying(false);
-              // clearGameRank();
-              // clearRoundRank();
-              // clearProblemList();
-              // clearProblemType();
+            // setPlaying(false);
+            // clearGameRank();
+            // clearRoundRank();
+            // clearProblemList();
+            // clearProblemType();
           }
-        } else if (data.type === 'roundRank') { 
-          setRoundRank(data.payload); 
-          console.log('라운드랭킹: ', data.payload);
+        } else if (data.type === "roundRank") {
+          setRoundRank(data.payload);
+          console.log("라운드랭킹: ", data.payload);
         }
       } else {
-        console.error('Received non-JSON message:', messageData);
+        console.error("Received non-JSON message:", messageData);
       }
     };
 
@@ -235,7 +229,6 @@ export default function MultiGame() {
       setProblemType(problemList[currentProblemIndex].problemType);
     }
   }, [currentProblemIndex]);
-
 
   // 라운드 종료 후 랭킹 모달 표시
   // useEffect(() => {
@@ -260,61 +253,59 @@ export default function MultiGame() {
   //   }
   // }, [roundRank]);
 
-
-
   // 객관식 답변제출
   const handleChoiceSelection = (choiceId) => {
     if (!isSubmit) {
-      console.log('선택된 choice ID:', choiceId);
-    if (socket) {
-      const messageObj = {
-          type: 'solve',
+      console.log("선택된 choice ID:", choiceId);
+      if (socket) {
+        const messageObj = {
+          type: "solve",
           content: {
-              "problemType": "MULTIPLE_CHOICE",
-              "submitTime": 30-count,
-              "solve": { 1 : choiceId },
-              "solveText": null
-          }
-      };
-      socket.send(JSON.stringify(messageObj));
-      setIsSubmit(true);
-    }
+            problemType: "MULTIPLE_CHOICE",
+            submitTime: 30 - count,
+            solve: { 1: choiceId },
+            solveText: null,
+          },
+        };
+        socket.send(JSON.stringify(messageObj));
+        setIsSubmit(true);
+      }
     }
   };
 
   // 단답식 답변제출
   const handleShortAnswer = (answer) => {
     if (!isSubmit) {
-      console.log('제출한 답:', answer);
-    if (socket) {
-      const messageObj = {
-          type: 'solve',
+      console.log("제출한 답:", answer);
+      if (socket) {
+        const messageObj = {
+          type: "solve",
           content: {
-              "problemType": "SHORT_ANSWER_QUESTION",
-              "submitTime": 30-count,
-              "solve": null,
-              "solveText": answer
-          }
-      };
-      socket.send(JSON.stringify(messageObj));
-      setIsSubmit(true);
-    }
+            problemType: "SHORT_ANSWER_QUESTION",
+            submitTime: 30 - count,
+            solve: null,
+            solveText: answer,
+          },
+        };
+        socket.send(JSON.stringify(messageObj));
+        setIsSubmit(true);
+      }
     }
   };
 
   // 빈칸 답변제출
   const handleBlankAnswer = () => {
-    if (!isSubmit) {
-      console.log('제출한 답:', blankSolve);
+    if (isSubmit === false) {
+      console.log("제출한 답:", blankSolve);
       if (socket) {
         const messageObj = {
-            type: 'solve',
-            content: {
-                "problemType": "FILL_IN_THE_BLANK",
-                "submitTime": 30-count,
-                "solve": blankSolve,
-                "solveText": null
-            }
+          type: "solve",
+          content: {
+            problemType: "FILL_IN_THE_BLANK",
+            submitTime: 30 - count,
+            solve: blankSolve,
+            solveText: null,
+          },
         };
         socket.send(JSON.stringify(messageObj));
         setIsSubmit(true);
@@ -336,7 +327,10 @@ export default function MultiGame() {
           <ShortAnswer problem={problem} onShortAnswer={handleShortAnswer} />
         )}
         {problem.problemType === "MULTIPLE_CHOICE" && (
-          <MultipleChoice problem={problem} onChoiceSelect={handleChoiceSelection} />
+          <MultipleChoice
+            problem={problem}
+            onChoiceSelect={handleChoiceSelection}
+          />
         )}
       </>
     ) : (
@@ -344,14 +338,13 @@ export default function MultiGame() {
     );
   };
 
-  
   function Timer({ setTimerEnded }) {
     useEffect(() => {
       if (count <= 0) {
         setTimerEnded(true);
         return;
       }
-  
+
       const id = setInterval(() => {
         setCount((prevCount) => {
           if (prevCount <= 1) {
@@ -361,10 +354,9 @@ export default function MultiGame() {
           return prevCount - 1;
         });
       }, 1000);
-  
+
       return () => clearInterval(id);
     }, [count]);
-
 
     useEffect(() => {
       if (count === 0 && !isSubmit) {
@@ -388,8 +380,11 @@ export default function MultiGame() {
       }
     }, [count]);
 
-  
-    return <div><span>{count}</span></div>;
+    return (
+      <div>
+        <span>{count}</span>
+      </div>
+    );
   }
 
   // ---------------------- 채팅 WebSocket ----------------------
@@ -421,10 +416,10 @@ export default function MultiGame() {
       setChatMessages((prevMessages) => [
         ...prevMessages,
         body.type === "CHAT"
-        ? { sender: body.sender, content: body.content }
-        : body.type === "JOIN"
-        ? { sender: "system", content: `${body.sender}님이 입장하셨습니다.` } 
-        : { sender: "system", content: `${body.sender}님이 퇴장하셨습니다.` },
+          ? { sender: body.sender, content: body.content }
+          : body.type === "JOIN"
+          ? { sender: "system", content: `${body.sender}님이 입장하셨습니다.` }
+          : { sender: "system", content: `${body.sender}님이 퇴장하셨습니다.` },
       ]);
     });
   };
@@ -477,9 +472,7 @@ export default function MultiGame() {
     }, 2000); // 3초 후 재연결 시도
   };
 
-
   // ---------------------- 채팅 WebSocket ----------------------
-
 
   return (
     <>
@@ -492,53 +485,62 @@ export default function MultiGame() {
               )}
             </div>
             <div className="multi-rank-table">
-              {
-                gameRank.map((user, i) => {
-                  return <UserRank rank={user.rank} username={user.username} score={user.score} key={i} />
-                })
-              }
+              {gameRank.map((user, i) => {
+                return (
+                  <UserRank
+                    rank={user.rank}
+                    username={user.username}
+                    score={user.score}
+                    key={i}
+                  />
+                );
+              })}
             </div>
           </div>
           <div className="multi-game-center">
             {!playing ? (
-                <div className="before-start">
-                  <h1>. . . Waiting for start . . .</h1>
-                  { hostId == memberId ? (
-                    <button className="game-start-button" onClick={handleStart}>
-                      Start
-                    </button>
-                  ) : (
-                    <div>
-                      <h2>방장만 시작가능!</h2>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="after-start">
-                  {isSubmit ? (
-                    <div>
-                      <h2>Submitted!</h2>
-                    </div>
-                  ) : (
-                    <div>
-                      {problemList.length > 0 && renderProblem()}
-                    </div>
-                  )}
+              <div className="before-start">
+                <h1>. . . Waiting for start . . .</h1>
+                {hostId == memberId ? (
+                  <button className="game-start-button" onClick={handleStart}>
+                    Start
+                  </button>
+                ) : (
+                  <div>
+                    <h2>방장만 시작가능!</h2>
+                  </div>
+                )}
               </div>
-              )}
+            ) : (
+              <div className="after-start">
+                {isSubmit ? (
+                  <div>
+                    <h2>Submitted!</h2>
+                  </div>
+                ) : (
+                  <div>{problemList.length > 0 && renderProblem()}</div>
+                )}
+              </div>
+            )}
           </div>
           <div className="multi-game-right">
             <div className="multi-round">
-              { playing ? (
-                <h1>{ currentProblemIndex + 1 } / { problemList.length }</h1>
+              {playing ? (
+                <h1>
+                  {currentProblemIndex + 1} / {problemList.length}
+                </h1>
               ) : (
                 <h1>Round</h1>
-              )}  
+              )}
             </div>
             <div className="multi-message-room">
               <MessageContainer chatMessages={chatMessages} username={name} />
             </div>
-              <InputField message={message} setMessage={setMessage} sendMessage={sendMessage} />
+            <InputField
+              message={message}
+              setMessage={setMessage}
+              sendMessage={sendMessage}
+            />
           </div>
         </div>
       </div>

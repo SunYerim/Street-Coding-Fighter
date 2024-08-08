@@ -110,8 +110,8 @@ const BattleGamePage = () => {
   const [count, setCount] = useState(30);
   const [gameStart, setGameStart] = useState(false);
   const [myProblem, setMyProblem] = useState({});
-  const [selectMyProblem, setSelectMyProblem] = useState(false);
-  const [selectOpponentProblem, setSelectOpponentProblem] = useState(false);
+  const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
+  const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
   const [gameEnded, setGameEnded] = useState(false);
   const [winner, setWinner] = useState("");
   const [loser, setLoser] = useState("");
