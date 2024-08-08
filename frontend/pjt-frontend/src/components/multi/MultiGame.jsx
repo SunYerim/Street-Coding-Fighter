@@ -40,10 +40,10 @@ export default function MultiGame() {
     gameRank,
     setGameRank,
     clearGameRank,
-    // problemType,
+    problemType,
+    setProblemType,
     currentRound,
     setCurrentRound,
-    setProblemType,
     clearProblemType,
     blankSolve,
     setBlankSolve,
@@ -59,10 +59,10 @@ export default function MultiGame() {
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
-    // problemType: state.problemType,
+    problemType: state.problemType,
+    setProblemType: state.setProblemType,
     currentRound: state.currentRound,
     setCurrentRound: state.setCurrentRound,
-    setProblemType: state.setProblemType,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
     clearGameRank: state.clearGameRank,
@@ -99,13 +99,15 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
+
+
   // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
   const [problemLength, setProblemLength] = useState(problemList.length);
 
   const [count, setCount] = useState(30);
 
-  const problemType = problemList[currentRound].problemType;
+  // const problemType = problemList[currentRound].problemType;
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -166,7 +168,7 @@ export default function MultiGame() {
           // 게임스타트
           setPlaying(true);
           console.log(data.payload);
-          setProblemList(data.payload);
+          handleSetProblem(data.payload);
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
@@ -181,9 +183,10 @@ export default function MultiGame() {
           isSubmitRef.current = false;
 
           setCount(30);
-          setCurrentRound(currentRound + 1);
+          handleNextRound();
+
           setTimeout(() => {
-            console.log(currentRound);
+            console.log('이건여기!',currentRound);
             if (currentRound < problemList.length - 1) {
               // 모달 열고 4초 대기
               // setModalOpen(true);
@@ -238,6 +241,22 @@ export default function MultiGame() {
     };
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
+
+  const handleSetProblem = (data) => {
+    setProblemList(data);
+  };
+
+  const handleNextRound = () => {
+    setCurrentRound((prevRound) => prevRound + 1);
+  };
+
+  useEffect(() => {
+    if (playing && currentRound < problemList.length - 1) {
+      setTimeout(() => {
+        console.log('저건저기!',currentRound);
+      }, 500);
+    }
+  }, [currentRound, playing, problemList.length]);
 
   // 문제 타입 바꾸기
   // useEffect(() => {
@@ -329,7 +348,6 @@ export default function MultiGame() {
         };
         socket.send(JSON.stringify(messageObj));
         isSubmitRef.current = true;
-        clearBlankSolve();
       }
     } else {
       return 0;
