@@ -181,6 +181,7 @@ export default function MultiGame() {
           console.log("전체랭킹: ", data.payload);
           isSubmitRef.current = false;
           setCount(30);
+          // handleNextRound();
           setCurrentRound((prevRound) => prevRound + 1);
 
           setTimeout(() => {
@@ -240,16 +241,15 @@ export default function MultiGame() {
     setProblemList(data);
   };
 
-  // const handleNextRound = () => {
-  //   setCurrentRound(currentRound + 1);
-  //   console.log("currentRound: ", currentRound);
-  // };
-
   useEffect(() => {
-    if (playing && currentRound < problemList.length - 1) {
-      console.log('저건저기!',currentRound);
-    }
+    console.log('저건저기!',currentRound);
   }, [currentRound]);
+
+  const handleNextRound = () => {
+    setCurrentRound(currentRound + 1);
+    console.log("currentRound: ", currentRound);
+  };
+
 
   // 문제 타입 바꾸기
   // useEffect(() => {
@@ -342,18 +342,18 @@ export default function MultiGame() {
   };
 
   const renderProblem = () => {
-    const problem = problemList[currentRound];
-    return problem ? (
+    // const problem = problemList[currentRound];
+    return problemList[currentRound] ? (
       <>
-        {problem.problemType === "FILL_IN_THE_BLANK" && (
-          <FillInTheBlank problem={problem} onFillBlank={handleBlankAnswer} />
+        {problemList[currentRound].problemType === "FILL_IN_THE_BLANK" && (
+          <FillInTheBlank problem={problemList[currentRound]} onFillBlank={handleBlankAnswer} />
         )}
-        {problem.problemType === "SHORT_ANSWER_QUESTION" && (
-          <ShortAnswer problem={problem} onShortAnswer={handleShortAnswer} />
+        {problemList[currentRound].problemType === "SHORT_ANSWER_QUESTION" && (
+          <ShortAnswer problem={problemList[currentRound]} onShortAnswer={handleShortAnswer} />
         )}
-        {problem.problemType === "MULTIPLE_CHOICE" && (
+        {problemList[currentRound].problemType === "MULTIPLE_CHOICE" && (
           <MultipleChoice
-            problem={problem}
+            problem={problemList[currentRound]}
             onChoiceSelect={handleChoiceSelection}
           />
         )}
