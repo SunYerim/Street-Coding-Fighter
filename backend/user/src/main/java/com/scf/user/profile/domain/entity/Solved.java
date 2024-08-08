@@ -32,7 +32,7 @@ public class Solved {
     private String choice;
 
     @Column(name = "problem_id")
-    private int problemId;
+    private Long problemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id") // FK 설정

@@ -8,6 +8,7 @@ import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.HistoryResponseDto;
 import com.scf.user.profile.domain.dto.ProblemResponseDto;
+import com.scf.user.profile.domain.dto.ProblemType;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
@@ -20,6 +21,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -172,9 +174,36 @@ public class ProfileServiceImpl implements ProfileService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        // choice를 문자열로 변환 (객관식, 주관식, 빈칸 모두 string으로 변환)
-        String convertedChoiceText = ChoiceTextConverter.convertChoiceText(
-            problemRequestDto.getChoiceText(), problemRequestDto.getChoice());
+        // 문제 아이디로 문제 조회해서 type 추출
+        // 문제 정보
+        ProblemResponseDto problemInfo = problemClient.getProblemById(
+                problemRequestDto.getProblemId())
+            .block(); // Mono를 동기식으로 처리
+
+        // 문제의 type
+        ProblemType problemType = problemInfo.getProblemType();
+
+        String convertedChoiceText = null;
+
+        // 문제의 타입에 따라서 세분화.
+        // 단답식일 경우
+        if (problemType.equals(ProblemType.SHORT_ANSWER_QUESTION)) {
+            convertedChoiceText = ChoiceTextConverter.ShortAnswer(problemRequestDto.getChoice());
+        }
+        // 빈칸일 경우
+        if (problemType.equals(ProblemType.FILL_IN_THE_BLANK)) {
+            convertedChoiceText = ChoiceTextConverter.FillInBlank(problemRequestDto.getChoiceText())
+            ;
+        }
+        // 객관식인 경우
+        if (problemType.equals(ProblemType.MULTIPLE_CHOICE)) {
+            convertedChoiceText = ChoiceTextConverter.MultipleChoice(
+                problemRequestDto.getChoiceText());
+        }
+
+//        // choice를 문자열로 변환 (객관식, 주관식, 빈칸 모두 string으로 변환)
+//        String convertedChoiceText = ChoiceTextConverter.convertChoiceText(
+//            problemRequestDto.getChoiceText(), problemRequestDto.getChoice());
 
         //Solved 엔티티 생성
         Solved solved = new Solved();
