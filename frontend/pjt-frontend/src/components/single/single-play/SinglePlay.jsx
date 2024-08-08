@@ -346,7 +346,9 @@ export default function SinglePlay() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      });
+      }).then(
+        console.log('요청 보내기 성공!')
+      ).catch(console.log('요청보내기 실패 ㅜㅜ'))
     }
     navigate('/single-main');
   };
