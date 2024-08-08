@@ -65,7 +65,7 @@ export default function SinglePlay() {
     })
       .then((response) => {
         console.log(content_id);
-        console.log(`${store.baseUrl}/single/${content_id}`);
+        console.log(`${baseURL}/single/${content_id}`);
         const data = response.data;
         setDialogueList(data.dialogueList);
         // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
