@@ -20,29 +20,19 @@ import { display } from '@mui/system';
 const testDialogueList = [
   {
     page_no: 0,
-    script_content: '첫번째 줄 \n 두번째 줄 \n 세번째 줄',
-    action: 0,
+    script_content: '안녕! 나는 너희에게 프로그래밍을 \n 가르쳐줄 고양이 선생님이다냥. \n 아직 이름은 없다냥!',
+    action: 2,
     imageCount: 0,
   },
   {
     page_no: 1,
-    script_content: '두번째 페이지 줄 \n 두번째 줄 \n 세번째 줄1111',
+    script_content: '나는 프로그래밍의 기초부터 \n 하나씩 차근차근 알려줄 거다냥. \n 같이 열심히 공부하자냥!',
     action: 1,
-    imageCount: 1,
-  },
-  {
-    page_no: 3,
-    script_content: '세번째 페이지 줄 \n 두번째 줄 \n 세번째 줄',
-    action: 2,
-    imageCount: 2,
-  },
-  {
-    page_no: 4,
-    script_content: '네번째 페이지 \n 두번째 줄 \n 세번째 줄',
-    action: 1,
-    imageCount: 1,
+    imageCount: 0,
   },
 ];
+
+
 
 export default function SinglePlay() {
   const [page, setPage] = useState(0);
@@ -105,7 +95,7 @@ export default function SinglePlay() {
       });
       clearTimeout(timer);
     };
-  }, [content_id]);
+  }, [content_id]); 
 
   const changePage = (increment) => {
     console.log('click');
@@ -289,7 +279,7 @@ export default function SinglePlay() {
                 <S.CharacterName>
                   <span>
                     <CgProfile />
-                    <span> Hoshino Ai {content_id}</span>
+                    <span>  야옹 선생</span>
                   </span>
                 </S.CharacterName>
               </S.DialogueHeader>

@@ -67,18 +67,22 @@ const DialogueBody = styled.div`
   padding: 10px;
   // justify-content: space-between;
 `;
-const DialogueBodyLeft = styled.div``;
+const DialogueBodyLeft = styled.div`
+margin-top: 28px;
+font-size:1.3em;
+padding-left : 10px;`;
 const DialogueBodyRight = styled.div`
   position: fixed;
   height: 180px;
   left: 78vw;
+  width : 100%;
   bottom: 10px;
   color: white;
   // background-color: rgba(240, 240, 240, 0.9);
 `;
 const DialogueContent = styled.div`
   /* 버튼 스타일을 여기에 추가하세요 */
-  margin-left: 10px;
+  margin-top: 13px;
   width: 100%;
 `;
 // 캐릭터 움직이는 애니메이션 추가...!
@@ -121,15 +125,16 @@ const CharacterImage = styled.img`
 
 const CharacterName = styled.div`
   position: absolute;
-  top: -10px;
-  left: 20px;
-  height: 20px;
+  top: -15px;
+  left: 50px;
+  height: 30px;
   font-size: 1em;
   border-radius: 10px;
   border: 1px solid black;
-  background-color: rgba(240, 240, 240, 0.8);
+  background-color: rgba(240, 240, 240, 0.9);
   padding: 5px;
   padding-right: 15px;
+  padding-left: 15px;
 `;
 
 const ImageContentBox = styled.div`

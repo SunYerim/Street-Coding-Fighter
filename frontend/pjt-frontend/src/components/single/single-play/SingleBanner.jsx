@@ -50,7 +50,7 @@ const SingleBanner = () => {
 
   return (
     <BannerWrapper $isVisible={isVisible} $isBehind={isBehind}>
-      <Banner>{Number(content_id)+1}. {courses[content_id]?.title}</Banner>
+      <Banner>{content_id}. {courses[content_id]?.title}</Banner>
     </BannerWrapper>
   );
 };
