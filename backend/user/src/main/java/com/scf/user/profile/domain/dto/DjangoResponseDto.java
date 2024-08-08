@@ -21,8 +21,6 @@ public class DjangoResponseDto {
     @Builder
     public static class solvedProblemDto {
 
-        private int ranking;
-
         private boolean isCorrect;
 
         private String category;
