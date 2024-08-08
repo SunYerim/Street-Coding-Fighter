@@ -20,8 +20,8 @@ export default function SingleMain() {
         method: 'get',
         url: `${baseURL}/single`,
         headers: {
-          // Authorization: `Bearer ${accessToken}`,
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMwOTczNjgsImV4cCI6MTcyMzEwMDk2OH0.4wZxyxS2RwHVFiZZWq7e3QIV54UZ1_XNdYb0x-92qAQ`,
+          Authorization: `Bearer ${accessToken}`,
+          // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMwOTczNjgsImV4cCI6MTcyMzEwMDk2OH0.4wZxyxS2RwHVFiZZWq7e3QIV54UZ1_XNdYb0x-92qAQ`,
         },
       })
         .then((res) => {

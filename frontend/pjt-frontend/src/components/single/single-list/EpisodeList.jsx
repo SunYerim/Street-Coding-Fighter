@@ -55,7 +55,7 @@ export default function EpisodeList({ rownum }) {
                     playEffectSound('hoverSound');
                   }}
                 >
-                  {e.id + 1}. {e.title}
+                  {e.id}. {e.title}
                   {index === array.length - 1 && r < 3 ? (
                     <>
                       <S.VerticalPath
