@@ -78,9 +78,9 @@ const multiStore = create((set) => ({
     }),
 
   // 문제 타입
-  problemType: "",
-  setProblemType: (problemType) => set({ problemType }),
-  clearProbleType: () => set({ problemType: "" }),
+  type: "",
+  setType: (type) => set({ type }),
+  clearType: () => set({ type: "" }),
 
   // 현재라운드
   currentRound: 0,
@@ -98,9 +98,9 @@ const multiStore = create((set) => ({
   clearGameRank: () => set({ gameRank: [] }),
 
   // 빈칸 답변
-  blankSolve: {},
+  blankSolve: null,
   setBlankSolve: (blankSolve) => set({ blankSolve }),
-  clearBlankSolve: () => set({ blankSolve: {} }),
+  clearBlankSolve: () => set({ blankSolve: null }),
 }));
 
 export default multiStore;

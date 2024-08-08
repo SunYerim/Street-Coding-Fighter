@@ -40,11 +40,11 @@ export default function MultiGame() {
     gameRank,
     setGameRank,
     clearGameRank,
-    // problemType,
-    setProblemType,
+    type,
+    setType,
     currentRound,
     setCurrentRound,
-    clearProblemType,
+    clearType,
     blankSolve,
     setBlankSolve,
     clearBlankSolve,
@@ -59,14 +59,14 @@ export default function MultiGame() {
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
-    // problemType: state.problemType,
-    setProblemType: state.setProblemType,
+    type: state.type,
+    setType: state.setType,
     currentRound: state.currentRound,
     setCurrentRound: state.setCurrentRound,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
     clearGameRank: state.clearGameRank,
-    clearProblemType: state.clearProblemType,
+    clearType: state.clearType,
     blankSolve: state.blankSolve,
     setBlankSolve: state.setBlankSolve,
     clearBlankSolve: state.clearBlankSolve,
@@ -103,12 +103,10 @@ export default function MultiGame() {
 
   // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
-  const [problemLength, setProblemLength] = useState(problemList.length);
-
+  
   const [count, setCount] = useState(30);
-
-  let problemType = problemList[currentRound].problemType;
-
+  
+  // const [problemType, setProblemType] = useState(type);
   // const problemType = problemList[currentRound].problemType;
 
   // 방생성할때 방장의 memberId 가져오기
@@ -236,7 +234,7 @@ export default function MultiGame() {
       clearBlankSolve();
       clearRoundRank();
       clearGameRank();
-      clearProblemType();
+      clearType();
       socketInstance.close();
       sendQuitMessage();
       if (chatStompClient.current) chatStompClient.current.disconnect();
@@ -249,7 +247,7 @@ export default function MultiGame() {
   };
 
   const handleNextRound = () => {
-    setCurrentRound((prevRound) => prevRound + 1);
+    setCurrentRound(currentRound + 1);
   };
 
   useEffect(() => {
@@ -400,7 +398,7 @@ export default function MultiGame() {
 
     useEffect(() => {
       if (count === 0 && !isSubmitRef.current) {
-        switch (problemType) {
+        switch (type) {
           case "FILL_IN_THE_BLANK":
             setBlankSolve(null);
             handleBlankAnswer();
@@ -415,7 +413,7 @@ export default function MultiGame() {
             isSubmitRef.current = true;
             break;
           default:
-            console.log("Unknown problem type: " + problemType);
+            console.log("Unknown problem type: " + type);
         }
       }
     }, [count, isSubmitRef]);
