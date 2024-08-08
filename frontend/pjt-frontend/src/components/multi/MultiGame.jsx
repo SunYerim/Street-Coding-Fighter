@@ -99,6 +99,8 @@ export default function MultiGame() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
 
+
+
   // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
   const [problemLength, setProblemLength] = useState(problemList.length);
@@ -181,9 +183,10 @@ export default function MultiGame() {
           isSubmitRef.current = false;
 
           setCount(30);
-          setCurrentRound(currentRound + 1);
+          handleNextRound();
+
           setTimeout(() => {
-            console.log(currentRound);
+            console.log('이건여기!',currentRound);
             if (currentRound < problemList.length - 1) {
               // 모달 열고 4초 대기
               // setModalOpen(true);
@@ -238,6 +241,18 @@ export default function MultiGame() {
     };
   }, []);
   ///////////////////////////////////////////////////////////////////////////////////////////////
+
+  const handleNextRound = () => {
+    setCurrentRound((prevRound) => prevRound + 1);
+  };
+
+  useEffect(() => {
+    if (playing && currentRound < problemList.length - 1) {
+      setTimeout(() => {
+        console.log('저건저기!',currentRound);
+      }, 500);
+    }
+  }, [currentRound, playing, problemList.length]);
 
   // 문제 타입 바꾸기
   // useEffect(() => {
@@ -329,7 +344,6 @@ export default function MultiGame() {
         };
         socket.send(JSON.stringify(messageObj));
         isSubmitRef.current = true;
-        clearBlankSolve();
       }
     } else {
       return 0;
