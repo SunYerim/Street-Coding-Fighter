@@ -9,7 +9,7 @@ import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import multiStore from "../../../stores/multiStore.jsx";
 import "../../../css/MultiGame.css";
 
-const FillInTheBlank = ({ problem }) => {
+const FillInTheBlank = ({ problem, onFillBlank }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑

@@ -297,20 +297,24 @@ export default function MultiGame() {
 
   // 빈칸 답변제출
   const handleBlankAnswer = () => {
-    console.log('제출한 답:', blankSolve);
-    if (socket) {
-      const messageObj = {
-          type: 'solve',
-          content: {
-              "problemType": "FILL_IN_THE_BLANK",
-              "submitTime": 30-count,
-              "solve": blankSolve,
-              "solveText": null
-          }
-      };
-      socket.send(JSON.stringify(messageObj));
-      setIsSubmit(true);
-      clearBlankSolve();
+    if (!isSubmit) {
+      console.log('제출한 답:', blankSolve);
+      if (socket) {
+        const messageObj = {
+            type: 'solve',
+            content: {
+                "problemType": "FILL_IN_THE_BLANK",
+                "submitTime": 30-count,
+                "solve": blankSolve,
+                "solveText": null
+            }
+        };
+        socket.send(JSON.stringify(messageObj));
+        setIsSubmit(true);
+        clearBlankSolve();
+      }
+    } else {
+      return 0;
     }
   };
 
