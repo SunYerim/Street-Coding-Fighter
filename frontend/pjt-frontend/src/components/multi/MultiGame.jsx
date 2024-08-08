@@ -177,6 +177,9 @@ export default function MultiGame() {
           setGameRank(data.payload);
           setTimerEnded(true);
           console.log('전체랭킹: ', data.payload);
+          setCurrentProblemIndex(currentProblemIndex + 1);
+          setIsSubmit(false);
+          setCount(30);
           if (currentProblemIndex < problemList.length - 1) {
             // 모달 열고 4초 대기
             // setModalOpen(true);
@@ -185,6 +188,8 @@ export default function MultiGame() {
             // }, 4000);
     
             // 문제번호++, 제출상태 초기화
+            console.log('여기 들어오냐?');
+            console.log(problemList.length);
             setCurrentProblemIndex(currentProblemIndex + 1);
             setIsSubmit(false);
             setCount(30);
@@ -477,7 +482,7 @@ export default function MultiGame() {
             <div className="multi-rank-table">
               {
                 gameRank.map((user, i) => {
-                  return <UserRank rank={user.rank} name={user.name} score={user.score} key={i} />
+                  return <UserRank rank={user.rank} name={user.username} score={user.score} key={i} />
                 })
               }
             </div>
