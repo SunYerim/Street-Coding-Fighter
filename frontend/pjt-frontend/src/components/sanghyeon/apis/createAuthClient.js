@@ -22,6 +22,7 @@ const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
         : null;
 
       setAccessToken(accessToken);
+      console.log("new token: ", accessToken);
     } catch (error) {
       console.log(error);
     }

@@ -65,6 +65,7 @@ const BattleGamePage = () => {
     setMyShortAnswerProblem,
     multipleChoiceSolve,
     setMyMultipleChoiceProblem,
+    setRoomId,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -73,6 +74,7 @@ const BattleGamePage = () => {
     userId: state.userId,
     name: state.name,
     roomId: state.roomId,
+    setRoomId: state.setRoomId,
     roomPassword: state.roomPassword,
     baseURL: state.baseURL,
     wsBattle: state.wsBattle,
@@ -436,7 +438,8 @@ const BattleGamePage = () => {
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
-      navigate("/battle-list");
+      setRoomId("");
+      // navigate("/battle-list");
     };
 
     // return 내부에서 cleanup 함수를 호출
