@@ -18,32 +18,28 @@ const courses = [
 const completed = {
   contentList: [
     {
-      contentId: 0,
-      complete: 1, // 수강 완료
-    },
-    {
       contentId: 1,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 2,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 3,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 4,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 5,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 6,
-      complete: 1, // 수강 완료
+      complete: 0, // 수강 완료
     },
     {
       contentId: 7,
@@ -63,6 +59,10 @@ const completed = {
     },
     {
       contentId: 11,
+      complete: 0, // 수강 완료
+    },
+    {
+      contentId: 12,
       complete: 0, // 수강 완료
     },
   ],
