@@ -3,6 +3,7 @@ package com.scf.battle.presentation.websocket;
 import com.scf.battle.application.BattleSocketService;
 import com.scf.battle.application.GameService;
 import com.scf.battle.application.RoomService;
+import com.scf.battle.application.UserService;
 import com.scf.battle.domain.dto.Problem.ProblemRequestDTO;
 import com.scf.battle.domain.dto.Problem.ProblemResponseDTO;
 import com.scf.battle.domain.dto.Problem.ProblemSelectRequestDTO;
@@ -27,15 +28,16 @@ public class BattleSocketController {
 
     private final RoomService roomService;
     private final GameService gameService;
+    private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
     private final BattleSocketService battleSocketService;
 
     @MessageMapping("/game/{roomId}/join")
     public void joinRoom(@DestinationVariable String roomId, JoinRoomSocketRequestDTO joinRoomSocketRequestDTO) {
         roomService.joinRoom(roomId, joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), joinRoomSocketRequestDTO.getRoomPassword());
-
+        Integer guestCharacterType = userService.getCharacterType(joinRoomSocketRequestDTO.getUserId());
         messagingTemplate.convertAndSend("/room/" + roomId, new JoinRoomSocketResponseDTO(
-            joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername())); // 실제로는 입장 메세지
+            joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), guestCharacterType)); // 실제로는 입장 메세지
     }
 
     @MessageMapping("/game/{roomId}/answer")
@@ -65,8 +67,10 @@ public class BattleSocketController {
 
         Optional<ProblemResponseDTO.SelectProblemDTO> selectedProblem = battleSocketService.findSelectedProblem(roundSelectProblems, selectProblemId);
 
-        selectedProblem.ifPresent(problem -> battleSocketService.assignProblemToOpponent(room, selectingUser, problem));
-
+        selectedProblem.ifPresent(problem -> {
+            battleSocketService.assignProblemToOpponent(room, selectingUser, problem);
+            problem.setItemBasedOnDifficulty(); // 아이템 설정 메서드 호출
+        });
         messagingTemplate.convertAndSend("/room/" + roomId + "/" + opponentUser.getUserId(), selectedProblem);
     }
 
