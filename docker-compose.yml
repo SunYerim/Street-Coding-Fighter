@@ -143,8 +143,8 @@ services:
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
       SPRING_APPLICATION_NAME: scf-multi
-      PROBLEM_SERVER_URL: http://ssafy11s.com/problem
-      USER_SERVER_URL: http://ssafy11s.com/user
+      PROBLEM_SERVER_URL: http://www.ssafy11s.com/problem
+      USER_SERVER_URL: http://www.ssafy11s.com/user
     ports:
       - "8082:8082"
     networks:
@@ -193,8 +193,8 @@ services:
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
       SPRING_APPLICATION_NAME: scf-battle
-      PROBLEM_SERVER_URL: http://ssafy11s.com/problem
-      USER_SERVER_URL: http://ssafy11s.com/user
+      PROBLEM_SERVER_URL: http://www.ssafy11s.com/problem
+      USER_SERVER_URL: http://www.ssafy11s.com/user
     ports:
       - "8084:8084"
     networks:
