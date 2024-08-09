@@ -102,6 +102,7 @@ export default function MultiGame() {
   let cnt = 0;
   const [round, setRound] = useState(0);
   let problemLength = 0;
+  let getScore = 0;
 
   const [timerEnded, setTimerEnded] = useState(false);
   
@@ -172,6 +173,7 @@ export default function MultiGame() {
           console.log(data.payload);
           setHostId(data.payload);
         } else if (data.type === "attainScore") {
+          getScore(data.payload);
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
@@ -182,8 +184,8 @@ export default function MultiGame() {
           setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
 
-          console.log('게임여기!', round);
-          if (round == problemLength - 1) {
+          console.log('게임여기!', cnt);
+          if (cnt == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
@@ -199,8 +201,8 @@ export default function MultiGame() {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
 
-            console.log('라운드여기!', round);
-            if (round < problemLength - 1) {
+            console.log('라운드여기!', cnt);
+            if (cnt < problemLength - 1) {
               // 모달 열고 4초 대기
               setModalOpen(true);
               setTimeout(() => {
@@ -550,7 +552,6 @@ export default function MultiGame() {
               ) : (
                 <>
                   <p>Round</p>
-                  <p>2 / 5</p>
                 </>
               )}
             </div>
@@ -565,8 +566,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal getScore={getScore} />}
-      {resultModalOpen && <MultiResultModal getScore={getScore} />}
+      {modalOpen && <MultiResultModal />}
+      {resultModalOpen && <MultiResultModal />}
     </>
   );
 }
