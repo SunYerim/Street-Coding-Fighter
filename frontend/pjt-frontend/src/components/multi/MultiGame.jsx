@@ -185,7 +185,7 @@ export default function MultiGame() {
         } else if (data.type === "attainScore") {
           getScore(data.payload);
           console.log(`얻은 점수: ${data.payload}`);
-        } else if (data.type === "play-list") {
+        } else if (data.type === "player-list") {
           // 플레이어 리스트
           setPlayList(data.payload);
           console.log(`플레이어 리스트: ${data.payload}`);
