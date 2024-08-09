@@ -545,7 +545,7 @@ useEffect(() => {
 
     return (
       <>
-        <Header type="Game" />
+        {/* <Header type="Game" /> */}
         <div className="game-container">
           <div className="multi-game-main">
             <div className="multi-game-left">
