@@ -191,9 +191,43 @@
 .battle-game-chatting {
   flex: 1;
   overflow-y: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   font-size: 1rem;
+}
+
+.battle-game-chatting::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바 막대 */
+.battle-game-chatting::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    rgb(148, 226, 148),
+    rgb(72, 129, 199),
+    rgb(229, 141, 229),
+    pink,
+    rgb(228, 103, 103)
+  );
+  border-radius: 10px;
+}
+
+.battle-game-chatting::-webkit-scrollbar-track {
+  background: rgba(214, 193, 212, 0.1);
+}
+
+.battle-game-chatting::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    rgb(148, 226, 148),
+    rgb(72, 129, 199),
+    rgb(229, 141, 229),
+    pink,
+    rgb(228, 103, 103)
+  );
 }
 
 .battle-game-history-message {
