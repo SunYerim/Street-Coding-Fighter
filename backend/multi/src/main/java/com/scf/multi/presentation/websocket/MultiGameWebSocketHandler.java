@@ -81,22 +81,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         boolean isAllPlayerSubmit = multiGameService.increaseSubmit(roomId);
 
-        if (isAllPlayerSubmit) { // 모든 Player가 제출했으면
-            List<Rank> roundRank = multiGameService.getRoundRank(roomId);
-            broadcastMessageToRoom(roomId, "roundRank", roundRank);
-
-            List<Rank> gameRank = multiGameService.getGameRank(roomId);
-            broadcastMessageToRoom(roomId, "gameRank", gameRank);
-
-            if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
-
-                boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
-
-                if(isFinishGame) {
-                    multiGameService.finalizeGame(roomId);
-                }
-            }
-        }
+        handleRoundCompletion(isAllPlayerSubmit, roomId);
     }
 
     private static void sendMessage(WebSocketSession session, String attainScoreMessage)
@@ -171,6 +156,29 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
                 sessionRooms.remove(roomId);
                 multiGameService.deleteRoom(roomId);
+            }
+        }
+    }
+
+    private void handleRoundCompletion(boolean isAllPlayerSubmit, String roomId) throws Exception {
+        if (isAllPlayerSubmit) { // 모든 Player가 제출했으면
+            List<Rank> roundRank = multiGameService.getRoundRank(roomId);
+            broadcastMessageToRoom(roomId, "roundRank", roundRank);
+
+            List<Rank> gameRank = multiGameService.getGameRank(roomId);
+            broadcastMessageToRoom(roomId, "gameRank", gameRank);
+
+            handleGameFinish(roomId);
+        }
+    }
+
+    private void handleGameFinish(String roomId) {
+        if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
+
+            boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
+
+            if(isFinishGame) {
+                multiGameService.finalizeGame(roomId);
             }
         }
     }
