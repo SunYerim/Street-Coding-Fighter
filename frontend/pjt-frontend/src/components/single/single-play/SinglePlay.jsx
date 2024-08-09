@@ -70,7 +70,9 @@ export default function SinglePlay() {
         console.log(content_id);
         console.log(`${baseURL}/single/${content_id}`);
         const data = response.data;
-        setDialogueList(data.detailList);
+        if(data.length > 0) {
+        setDialogueList(data.detailList);}
+        else{setDialogueList(['Comming Soon...'])}
         // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
         setLoading(true);
       })
