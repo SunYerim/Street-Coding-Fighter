@@ -23,7 +23,6 @@ export default function Ranking() {
           axios
           .get(`${baseURL}/rank/total`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
-              console.log(res.data);
               setTotalList(res.data)
               console.log("total", rankingList.total);
             })
