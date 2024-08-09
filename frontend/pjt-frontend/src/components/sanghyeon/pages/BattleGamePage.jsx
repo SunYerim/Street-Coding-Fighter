@@ -473,8 +473,6 @@ const BattleGamePage = () => {
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
-      setRoomId("");
-      // navigate("/battle-list");
     };
 
     // return 내부에서 cleanup 함수를 호출
