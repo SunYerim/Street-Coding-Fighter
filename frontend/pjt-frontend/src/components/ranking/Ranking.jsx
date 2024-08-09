@@ -24,7 +24,7 @@ export default function Ranking() {
             .get(`${baseURL}/rank/total`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
               console.log(res.data);
-              rankingObj['total'] = totalRes;
+              rankingObj.total = totalRes;
               console.log(rankingObj);
             })
             .catch((err) => console.log(err)),
@@ -32,7 +32,7 @@ export default function Ranking() {
             .get(`${baseURL}/rank/weekly`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
               console.log(res.data);
-              rankingObj['weekly'] = weeklyRes;
+              rankingObj.weekly = weeklyRes;
               console.log(rankingObj);
             })
             .catch((err) => console.log(err)),
@@ -40,7 +40,7 @@ export default function Ranking() {
             .get(`${baseURL}/rank/daily`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
               console.log(res.data);
-              rankingObj['daily'] = dailyRes;
+              rankingObj.daily = dailyRes;
               console.log(rankingObj);
             })
             .catch((err) => console.log(err)),
