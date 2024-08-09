@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Howl } from "howler";
 import SoundStore from "../../../stores/SoundStore.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
+import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const {
@@ -38,8 +39,7 @@ const LoginPage = () => {
   const { playEffectSound } = SoundStore();
 
   const noAuthLogin = async () => {
-    playEffectSound('mainStartSound');
-    console.log(baseURL);
+    playEffectSound("mainStartSound");
     try {
       const res = await axios({
         method: "POST",
@@ -60,9 +60,17 @@ const LoginPage = () => {
       setAccessToken(accessToken);
       setMemberId(memberId);
       setUserId(userId.current.value);
+      Swal.fire({
+        text: "로그인 성공",
+        icon: "success",
+      });
       navigate("/main");
     } catch (error) {
-      alert("로그인 실패");
+      Swal.fire({
+        text: "아이디 또는 비밀번호가 일치하지 않습니다.",
+        icon: "error",
+      });
+      console.log(error);
     }
   };
 

@@ -26,6 +26,7 @@ import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.
 import store from "./store/store.js";
 import Loading from "./components/loading/Loading.jsx";
 
+import ItemPage from "./components/sanghyeon/pages/ItemPage.jsx";
 import MultipleChoice from "./components/game/multipleChoice/MultipleChoice.jsx";
 
 import { useEffect, useState } from "react";
@@ -77,7 +78,8 @@ function App() {
           />
           <Route
             path="/report"
-            element={accessToken ? <ReportPage /> : <LoginPage />}
+            // element={accessToken ? <ReportPage /> : <LoginPage />}
+            element={<ReportPage />}
           />
           <Route
             path="/solved"
@@ -119,6 +121,7 @@ function App() {
             element={accessToken ? <SelectProblem /> : <LoginPage />}
           />
           <Route path="/multiple-choice" element={<BattleGamePage />} />
+          <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
         </Routes>
       </Router>
