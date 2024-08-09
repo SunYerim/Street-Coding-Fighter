@@ -1,6 +1,7 @@
 // apiClient.js
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
   const authClient = axios.create({
@@ -22,7 +23,6 @@ const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
         : null;
 
       setAccessToken(accessToken);
-      console.log("new token: ", accessToken);
     } catch (error) {
       console.log(error);
     }
