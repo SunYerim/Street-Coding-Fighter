@@ -45,13 +45,14 @@ public class RoomService {
     public String createRoom(Long memberId, String username, CreateRoomDTO createRoomDTO) {
         String roomId = UUID.randomUUID().toString();
         Player playerHost = new Player(memberId, username, 100);
+        String password = (createRoomDTO.getPassword() != null) ? createRoomDTO.getPassword() : "ssafy";
         BattleGameRoom room = BattleGameRoom.builder()
                 .roomId(roomId)
                 .hostId(memberId)
                 .isStart(false)
                 .finalRound(createRoomDTO.getRound())
                 .title(createRoomDTO.getTitle())
-                .password(createRoomDTO.getPassword())
+                .password(password)
                 .playerA(playerHost)
                 .hasPlayerASubmitted(false)
                 .hasPlayerBSubmitted(false)
