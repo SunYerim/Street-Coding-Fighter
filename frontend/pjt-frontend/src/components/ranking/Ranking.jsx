@@ -32,7 +32,6 @@ export default function Ranking() {
             .then((res) => {
               setWeeklyList(res.data)
               console.log("weekly", rankingList.weekly);
-
             })
             .catch((err) => console.log(err)),
           axios
@@ -43,6 +42,7 @@ export default function Ranking() {
             })
             .catch((err) => console.log(err)),
         ]).then(() => {
+          console.log(rankingList)
           console.log('전부 불러오기 성공');
         });
       } catch (error) {
