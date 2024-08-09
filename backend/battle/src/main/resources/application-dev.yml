@@ -21,11 +21,11 @@ logging:
 
 problem:
   server:
-    url: http://ssafy11s.com/problem
+    url: http://www.ssafy11s.com/problem
 
 user:
   server:
-    url: http://ssafy11s.com/user
+    url: http://www.ssafy11s.com/user
 
 server:
   port: 8084
