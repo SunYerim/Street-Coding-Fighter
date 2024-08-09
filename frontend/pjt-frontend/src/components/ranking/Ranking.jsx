@@ -13,7 +13,7 @@ export default function Ranking() {
   useEffect(() => {
     const fetchRankingData = async () => {
       // const tempUrl = 'http://192.168.30.171:8080';
-      const rankingObj = {};
+      const rankingObj = {total : [], weekly : [], daily : []};
 
       try {
         const [totalRes, weeklyRes, dailyRes] = await Promise.all([
@@ -44,10 +44,10 @@ export default function Ranking() {
               console.log(rankingObj);
             })
             .catch((err) => console.log(err)),
-        ]).then(()=>
-          setRankingList(rankingObj)
-        )
-
+        ]).then(() => {
+          console.log(rankingObj);
+          setRankingList(rankingObj);
+        });
       } catch (error) {
         console.error('Error fetching ranking data:', error);
       }

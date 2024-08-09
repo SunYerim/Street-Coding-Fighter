@@ -12,11 +12,7 @@ const testRanking = {
       "name": 'x탱글대기2',
       "exp": 1234
     },
-    {
-      "userId": '123',
-      "name": 'x탱글대기2',
-      "exp": 1234
-    },
+    
   ],
   weekly: [{
     "userId": '123',

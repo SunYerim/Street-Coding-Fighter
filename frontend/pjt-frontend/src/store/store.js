@@ -120,7 +120,7 @@ const store = create(
       birth: "",
       setBirth: (birth) => set({ birth }),
 
-      accessToken: null,
+      accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMxNzEzOTEsImV4cCI6MTcyMzE3NDk5MX0.tF4IxCsk5PUhshSW0amNPdeRVcEEcfVii98iXopMjYk',
       setAccessToken: (accessToken) => set({ accessToken }),
 
       exp: 0,
