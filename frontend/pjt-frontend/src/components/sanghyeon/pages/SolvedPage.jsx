@@ -65,9 +65,9 @@ function SolvedPage() {
         sorted.sort((a, b) => a.title.localeCompare(b.title));
       } else if (sortOption === "difficulty") {
         sorted.sort((a, b) => a.difficulty - b.difficulty);
-      } else if (sortOption === "Correct") {
+      } else if (sortOption === "correct") {
         sorted.sort((a, b) =>
-          a.Correct === b.Correct ? 0 : a.Correct ? -1 : 1
+          a.correct === b.correct ? 0 : a.correct ? -1 : 1
         );
       }
       setSortedData(sorted);
@@ -126,7 +126,7 @@ function SolvedPage() {
                     key={index}
                   >
                     <p>{data.title}</p>
-                    <p>{data.Correct ? "O" : "X"}</p>
+                    <p>{data.correct ? "O" : "X"}</p>
                     <p>{data.difficulty}</p>
                   </div>
                 ))}
