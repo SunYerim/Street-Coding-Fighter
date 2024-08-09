@@ -28,4 +28,8 @@ public interface UserService {
     public UserInfoListResponseDto sendUserList();
 
     public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId);
+
+    @Transactional
+    void updateCharacterCloth(Long memberId, int characterCloth);
+
 }
