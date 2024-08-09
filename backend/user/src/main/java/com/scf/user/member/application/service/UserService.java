@@ -32,4 +32,6 @@ public interface UserService {
     @Transactional
     void updateCharacterCloth(Long memberId, int characterCloth);
 
+    @Transactional
+    void updateCharacterType(Long memberId, int characterType);
 }
