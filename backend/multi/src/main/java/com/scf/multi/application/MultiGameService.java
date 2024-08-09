@@ -354,4 +354,10 @@ public class MultiGameService {
             .map(this::mapToProblemListDTO)
             .toList();
     }
+
+    public List<Player> getPlayerList(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+        return room.getPlayers();
+    }
 }

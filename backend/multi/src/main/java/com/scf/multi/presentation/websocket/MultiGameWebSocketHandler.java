@@ -53,6 +53,10 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         broadcastMessageToRoom(roomId, "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
+
+        List<Player> playerList = multiGameService.getPlayerList(roomId);
+
+        broadcastMessageToRoom(roomId, "player-list", playerList);
     }
 
     @Override
@@ -127,9 +131,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     }
 
     private static String makeResponseMessage(String type, Object payload) throws IOException {
-        ResponseMessage responseMessage = ResponseMessage.builder()
-            .type(type)
-            .payload(payload)
+        ResponseMessage responseMessage = ResponseMessage.builder().type(type).payload(payload)
             .build();
         return JsonConverter.getInstance().toString(responseMessage);
     }
