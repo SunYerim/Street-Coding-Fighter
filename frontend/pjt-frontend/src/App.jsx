@@ -58,7 +58,7 @@ function App() {
   }, []);
 
   return (
-    <div style={{backgroundImage : `url(${backgroundImageUrl})`, minHeight:'100vh'}}>
+    <div style={{backgroundImage : `url(${backgroundImageUrl})`, minHeight:'100vh', backgroundSize:'100vh'}}>
       <Router>
         <Routes>
           <Route path="/" element={isLoading ? <Loading /> : <TitlePage />} />
