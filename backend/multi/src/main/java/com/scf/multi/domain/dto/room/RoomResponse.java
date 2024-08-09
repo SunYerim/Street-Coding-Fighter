@@ -10,17 +10,12 @@ public class RoomResponse {
     public static class ListDTO {
 
         private String roomId;
-
         private String title;
-
         private Long hostId;
-
         private String hostname;
-
         private Integer maxPlayer;
-
         private Integer curPlayer;
-
         private Boolean isLock;
+        private Boolean isStart;
     }
 }
