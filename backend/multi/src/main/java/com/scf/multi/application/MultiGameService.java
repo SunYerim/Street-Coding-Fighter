@@ -93,7 +93,7 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public void validateRoom(String roomId) {
+    public void validateRoomIsNotStart(String roomId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
@@ -443,5 +443,13 @@ public class MultiGameService {
         MultiGameRoom room = findOneById(roomId);
 
         room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
+    }
+
+    public void validateRoomIsStart(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+        if (!room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.NOT_YET_START_GAME);
+        }
     }
 }
