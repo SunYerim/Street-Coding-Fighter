@@ -84,7 +84,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         handleRoundCompletion(isAllPlayerSubmit, roomId);
     }
 
-    private static void sendMessage(WebSocketSession session, String attainScoreMessage)
+    private void sendMessage(WebSocketSession session, String attainScoreMessage)
         throws IOException {
         session.sendMessage(new TextMessage(attainScoreMessage));
     }
@@ -168,17 +168,13 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             List<Rank> gameRank = multiGameService.getGameRank(roomId);
             broadcastMessageToRoom(roomId, "gameRank", gameRank);
 
-            handleGameFinish(roomId);
-        }
-    }
+            if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
 
-    private void handleGameFinish(String roomId) {
-        if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
+                boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
 
-            boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
-
-            if(isFinishGame) {
-                multiGameService.finalizeGame(roomId);
+                if(isFinishGame) {
+                    multiGameService.finalizeGame(roomId);
+                }
             }
         }
     }
