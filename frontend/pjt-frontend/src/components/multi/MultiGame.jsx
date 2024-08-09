@@ -36,7 +36,7 @@ export default function MultiGame() {
     clearProblemList,
     playererList,
     setPlayerList,
-    clearPlayerList
+    clearPlayerList,
     roundRank,
     setRoundRank,
     clearRoundRank,
