@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export default function Ranking() {
   const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
-  const { baseURL } = store();
+  const { baseURL, accessToken } = store();
   useEffect(() => {
     const fetchRankingData = async () => {
       // const tempUrl = 'http://192.168.30.171:8080';
@@ -20,18 +20,27 @@ export default function Ranking() {
           // axios.get(`${tempUrl}/rank/total`),
           // axios.get(`${tempUrl}/rank/weekly`),
           // axios.get(`${tempUrl}/rank/daily`),
-          axios.get(`${baseURL}/rank/total`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
-          axios.get(`${baseURL}/rank/weekly`).then((res) => console.log(res.data)).catch((err) => console.log(err)),
-          axios.get(`${baseURL}/rank/daily`).then(res => console.log(res.data)).catch((err) => console.log(err)),
+          axios
+            .get(`${baseURL}/rank/total`, { headers: { Authorization: `Bearer ${accessToken}` } })
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err)),
+          axios
+            .get(`${baseURL}/rank/weekly`, { headers: { Authorization: `Bearer ${accessToken}` } })
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err)),
+          axios
+            .get(`${baseURL}/rank/daily`, { headers: { Authorization: `Bearer ${accessToken}` } })
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err)),
         ]);
 
         rankingObj['total'] = totalRes.data;
         rankingObj['weekly'] = weeklyRes.data;
         rankingObj['daily'] = dailyRes.data;
-        console.log(rankingObj)
+        console.log(rankingObj);
         setRankingList(rankingObj);
       } catch (error) {
-        console.error("Error fetching ranking data:", error);
+        console.error('Error fetching ranking data:', error);
       }
     };
 
@@ -49,22 +58,13 @@ export default function Ranking() {
         <S.Container>
           <h1>{boardPeriod.toUpperCase()} Ranking</h1>
           <S.RankingInfoContainer>
-            <S.PeriodButton
-              onClick={() => handleTabClick('total')}
-              $isSelected={boardPeriod === 'total'}
-            >
+            <S.PeriodButton onClick={() => handleTabClick('total')} $isSelected={boardPeriod === 'total'}>
               Total
             </S.PeriodButton>
-            <S.PeriodButton
-              onClick={() => handleTabClick('weekly')}
-              $isSelected={boardPeriod === 'weekly'}
-            >
+            <S.PeriodButton onClick={() => handleTabClick('weekly')} $isSelected={boardPeriod === 'weekly'}>
               Weekly
             </S.PeriodButton>
-            <S.PeriodButton
-              onClick={() => handleTabClick('daily')}
-              $isSelected={boardPeriod === 'daily'}
-            >
+            <S.PeriodButton onClick={() => handleTabClick('daily')} $isSelected={boardPeriod === 'daily'}>
               Daily
             </S.PeriodButton>
           </S.RankingInfoContainer>
@@ -75,11 +75,11 @@ export default function Ranking() {
               </S.GraphContainer>
             </S.RankingInfoSection>
             <S.RankingListSection>
-              {rankingList && rankingList[boardPeriod] ? (
-                rankingList[boardPeriod].slice(3).map((player, idx) => (
-                  <RankingListItem key={idx} rank={idx + 4} player={player} />
-                ))
-              ) : null}
+              {rankingList && rankingList[boardPeriod]
+                ? rankingList[boardPeriod]
+                    .slice(3)
+                    .map((player, idx) => <RankingListItem key={idx} rank={idx + 4} player={player} />)
+                : null}
             </S.RankingListSection>
           </S.FlexContainer>
         </S.Container>
