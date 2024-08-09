@@ -18,13 +18,11 @@ public class UserService {
 
     public UserCharaterTypeResponseDTO getCharacterType(Long memberId) {
         return webClient.get()
-            .uri(uriBuilder -> uriBuilder
-                .path("/{memberId}")
-                .build(memberId))
+            .uri("http://www.ssafy11s.com/user/public/charaterType")  // 정확한 경로 설정
+            .header("memberId", String.valueOf(memberId))  // 헤더에 memberId 추가
             .retrieve()
             .bodyToMono(UserCharaterTypeResponseDTO.class)
             .block();  // 응답을 UserCharaterTypeResponseDTO로 받아옴
     }
-
 
 }
