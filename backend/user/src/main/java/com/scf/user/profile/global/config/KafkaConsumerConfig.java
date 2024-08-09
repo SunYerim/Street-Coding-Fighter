@@ -62,7 +62,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, MultiGameResult> kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, MultiGameResult> multiGameResultkafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, MultiGameResult> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(rankConsumerFactory());
         return factory;

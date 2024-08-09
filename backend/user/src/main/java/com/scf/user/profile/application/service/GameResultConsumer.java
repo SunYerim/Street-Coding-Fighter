@@ -18,7 +18,7 @@ public class GameResultConsumer {
     private final ProfileService profileService;
 
     // battle 모드
-    @KafkaListener(topics = "game-result-battle", groupId = "game-results-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "game-result-battle", groupId = "game-results-group", containerFactory = "battleGameResultKafkaListenerContainerFactory")
     public void processGameResults(BattleGameResult battleGameResult) {
         // 각 유저의 경험치를 업데이트
         Long playerA = battleGameResult.getPlayerAId();
@@ -54,7 +54,7 @@ public class GameResultConsumer {
     }
 
     // multi 모드
-    @KafkaListener(topics = "game-result-multi", groupId = "game-results-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "game-result-multi", groupId = "game-results-group", containerFactory = "multiGameResultkafkaListenerContainerFactory")
     public void processMultiGameResults(MultiGameResult multiGameResult) {
         System.out.println("Processing multi game results: " + multiGameResult.getGameRank());
 
