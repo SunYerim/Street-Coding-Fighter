@@ -3,13 +3,17 @@ import styled from 'styled-components';
 import multiStore from '../../stores/multiStore.jsx';
 
 const MultiRanking = () => {
-  const { gameRank, roundRank, playing } = multiStore;
+  const { gameRank, roundRank, playing } = multiStore((state) => ({
+    gameRank: state.gameRank,
+    roundRank: state.roundRank,
+    playing: state.playing,
+  }));
 
-  let userList = playing ? roundRank : gameRank;
+  let userList = [];
 
-  if (!Array.isArray(userList)) {
-    userList = [];
-  }
+  useEffect(() => {
+    userList = playing ? roundRank : gameRank;
+  }, [playing, gameRank, roundRank]);
 
   return (
     <GraphContainer>
@@ -146,4 +150,3 @@ const PlaceHolder = styled.div`
   top: 10px;
   font-size: 1.5em;
 `;
-  
