@@ -183,7 +183,8 @@ export default function MultiGame() {
           console.log(data.payload);
           setHostId(data.payload);
         } else if (data.type === "attainScore") {
-          getScore(data.payload);
+          getScore = data.payload;
+          console.log("getScore: " + getScore);
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === "player-list") {
           // 플레이어 리스트
