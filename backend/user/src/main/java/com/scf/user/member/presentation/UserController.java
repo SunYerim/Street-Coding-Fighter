@@ -37,6 +37,7 @@ public class UserController {
 
     private final UserService userService;
     private final RedisService redisService;
+    private final GachaService gachaService;
     private final JwtCookieUtil jwtCookieUtil;
     private final PasswordResetService passwordResetService;
 
@@ -164,4 +165,29 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/gacha/character-cloth")
+    public ResponseEntity<?> gachaCloth(@RequestHeader("memberId") Long memberId) {
+        try {
+            // 랜덤으로 옷 타입을 뽑음
+            int characterCloth = gachaService.drawClothingType();
+
+            // 뽑힌 옷 타입을 해당 사용자의 캐릭터에 업데이트
+            userService.updateCharacterCloth(memberId, characterCloth);
+
+            // 성공 응답 반환
+            return ResponseEntity.ok("Character cloth updated successfully.");
+
+        } catch (UsernameNotFoundException e) {
+            // 회원을 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            // 캐릭터가 없는 경우 등
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operation: " + e.getMessage());
+        } catch (Exception e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
+        }
+    }
+
 }
