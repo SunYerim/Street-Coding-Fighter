@@ -2,7 +2,7 @@
   import "../../css/GameMain.css";
   import "../../css/MultiGame.css";
   import "../../css/Timer.css";
-  import Header from "../game/MultiHeader.jsx"
+  import MultiHeader from "../game/MultiHeader.jsx"
   import InputField from "../game/InputField.jsx";
   import MessageContainer from "../game/MessageContainer.jsx";
   import MultiResultModal from "./MultiResultModal.jsx";
@@ -545,8 +545,8 @@ useEffect(() => {
 
     return (
       <>
-        {/* <Header type="Game" /> */}
-        <div className="game-container">
+        <MultiHeader />
+        <div className="multi-game-container">
           <div className="multi-game-main">
             <div className="multi-game-left">
               <div className="multi-timer">
