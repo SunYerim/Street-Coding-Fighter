@@ -1,4 +1,4 @@
-import { style, textAlign, width } from '@mui/system';
+import { fontSize, style, textAlign, width } from '@mui/system';
 
 const Loading = () => {
   const sampleTips = [
@@ -42,7 +42,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    fontSize: '30px',
+    fontSize: '25px',
     color: 'white',
   },
   characterContainer: {
@@ -62,9 +62,11 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'end',
+    whiteSpace : 'nowrap',
   },
   tip: {
     textAlign: 'center',
+    width : '100%',
   },
 };
 

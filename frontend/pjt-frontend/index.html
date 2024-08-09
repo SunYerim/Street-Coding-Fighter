@@ -9,18 +9,6 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      const now = new Date(); // 현재 날짜 및 시간
-      const minutes = now.getMinutes();
-      if (minutes >= 0 && minutes < 30) {
-        console.log('minutes', minutes);
-        document.body.style.backgroundImage = 'url("/background1.gif")';
-      } else {
-        console.log('minutes', minutes);
-        document.body.style.backgroundImage = 'url("/background2.gif")';
-      }
-    </script>
-
-    <!-- <script src="/src/index.js"></script> -->
+    <script src="index.js"></script>
   </body>
 </html>
