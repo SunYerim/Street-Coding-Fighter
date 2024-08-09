@@ -34,8 +34,9 @@ export default function MultiGame() {
     problemList,
     setProblemList,
     clearProblemList,
-    playerList,
-    setPlayList,
+    playererList,
+    setPlayerList,
+    clearPlayerList
     roundRank,
     setRoundRank,
     clearRoundRank,
@@ -61,7 +62,8 @@ export default function MultiGame() {
     setProblemList: state.setProblemList,
     clearProblemList: state.clearProblemList,
     playerList: state.playerList,
-    setPlayList: state.setPlayList,
+    setPlayerList: state.setPlayerList,
+    clearPlayerList: state.clearPlayerList,
     setRoomId: state.setRoomId,
     roundRank: state.roundRank,
     setRoundRank: state.setRoundRank,
@@ -183,12 +185,10 @@ export default function MultiGame() {
           console.log(data.payload);
           setHostId(data.payload);
         } else if (data.type === "attainScore") {
-          getScore = data.payload;
-          console.log("getScore: " + getScore);
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === "player-list") {
           // 플레이어 리스트
-          setPlayList(data.payload);
+          setPlayerList(data.payload);
           console.log(`플레이어 리스트: ${data.payload}`);
         } else if (data.type === "submit-list") {
           // 제출자 리스트
