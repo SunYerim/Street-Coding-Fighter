@@ -75,7 +75,7 @@ public class BattleSocketService {
         notifyClients(room, gameResult);
 
         // BattleGameRoom 삭제
-        roomService.removeRoom(room.getRoomId());
+        // roomService.removeRoom(room.getRoomId());
     }
 
     private GameResult calculateGameResult(BattleGameRoom room) {
