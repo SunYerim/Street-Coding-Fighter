@@ -143,7 +143,7 @@ const BattleGamePage = () => {
         (frame) => {
           subscribeEnterRoom();
           subscribeEnemyProblem();
-          subscribeMyProblem(); // Typo fixed: changed from subsribeMyProblem to subscribeMyProblem
+          subscribeMyProblem();
           subscribeResult();
 
           battleConnected = true;
@@ -266,8 +266,13 @@ const BattleGamePage = () => {
         await setGameStart(true);
         await setAnswerSubmitted(false);
         await setTimerOn(false);
-        await startTimer();
-        await setTimerOn(true);
+        setTimeout(() => {
+          startTimer();
+
+          setTimeout(() => {
+            setTimerOn(true);
+          }, 4000);
+        }, 2000);
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -458,6 +463,7 @@ const BattleGamePage = () => {
     // 클린업 함수는 비동기 함수로 직접 정의할 수 없으므로
     // 비동기 작업을 수행할 내부 함수를 정의하고 호출합니다.
     const cleanup = async () => {
+      console.log("cleanup");
       await delay(5000);
 
       if (normalQuit === false) {
@@ -543,6 +549,7 @@ const BattleGamePage = () => {
   };
 
   const startTimer = async () => {
+    console.log(timerOn);
     if (timerOn === true) {
       return;
     }

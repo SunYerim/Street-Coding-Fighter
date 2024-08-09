@@ -128,7 +128,6 @@ const BattleGameListPage = () => {
       setHostId(res.data.memberId);
       setEnemyId(res.data.memberId);
       setEnemyName(res.data.username);
-      setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
       Swal.fire({
