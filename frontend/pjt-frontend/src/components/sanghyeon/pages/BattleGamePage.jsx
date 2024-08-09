@@ -565,6 +565,7 @@ const BattleGamePage = () => {
 
   const initBattleGame = () => {
     closeModal("clear");
+    stopTimer();
     setCount(30);
     setSelectMyProblem(false);
     setSelectOpponentProblem(false);
