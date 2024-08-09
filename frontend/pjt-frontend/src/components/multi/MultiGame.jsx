@@ -613,11 +613,12 @@ export default function MultiGame() {
 }
 
 function UserRank(props) {  
-  const backgroundColor = props.isSubmit ? 'yellow' : '';
+  // const backgroundColor = props.isSubmit ? 'yellow' : '';
 
   return (
     <>
-      <div className="multi-rank-items" style={{ backgroundColor }}>
+      {/* <div className="multi-rank-items" style={{ backgroundColor }}> */}
+      <div className="multi-rank-items">
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
