@@ -62,13 +62,13 @@ public class ProfileController {
 
     // produce test api
     // 경험치를 내려주고,
-    @PostMapping("/produce")
-    public String produceGameResult(@RequestBody List<RenewExp> renewExp) {
-        kafkaMessageProducer.sendProcessedGameResults(renewExp);
-
-        return "Message sended successfully";
-
-    }
+//    @PostMapping("/produce")
+//    public String produceGameResult(@RequestBody List<RenewExp> renewExp) {
+//        kafkaMessageProducer.sendProcessedGameResults(renewExp);
+//
+//        return "Message sended successfully";
+//
+//    }
 
 
 }

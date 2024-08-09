@@ -44,11 +44,12 @@ public class GameResultConsumer {
         updateExpoint(playerB, newExpB);
 
         // 처리된 데이터를 다시 전송
-        List<RenewExp> renewExpList = new ArrayList<>();
-        renewExpList.add(new RenewExp(playerA, playerAName, newExpA));
-        renewExpList.add(new RenewExp(playerB, playerBName, newExpB));
+        // List형식이 아닌 RenewExp 객체로 보내도록 수정합니다.
+        RenewExp arenew = new RenewExp(playerA, playerAName, newExpA);
+        RenewExp brenew = new RenewExp(playerB, playerBName, newExpB);
 
-        kafkaMessageProducer.sendProcessedGameResults(renewExpList);
+        kafkaMessageProducer.sendProcessedGameResults(arenew);
+        kafkaMessageProducer.sendProcessedGameResults(brenew);
 
     }
 
@@ -63,8 +64,10 @@ public class GameResultConsumer {
             List<RenewExp> updatedExp = updateExperiencePoints(multiGameResult.getGameRank());
 
             // 처리된 데이터를 다시 전송
-            kafkaMessageProducer.sendProcessedGameResults(updatedExp);
-
+            // 게임 참여한 유저 수 만큼 for문을 돌면서 RenewExp자체를 전송합니다.
+            for (RenewExp exp : updatedExp) {
+                kafkaMessageProducer.sendProcessedGameResults(exp);
+            }
         }
     }
 
