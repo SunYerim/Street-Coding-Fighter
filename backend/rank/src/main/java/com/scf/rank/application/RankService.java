@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,5 +84,23 @@ public class RankService {
     public String getDailyPrefix(LocalDate date) {
         // 일간 랭킹 키 생성 (예: "user:daily:2024-07-31")
         return RedisRankType.DAILY.key + date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    // 일간 랭킹 초기화
+    @Scheduled(cron = "59 59 23 * * ?") // 매일 23:59에 실행
+    public void resetDailyRankings() {
+        Set<String> dailyKeys = redisTemplate.keys("user:daily:*");
+        if (dailyKeys != null && !dailyKeys.isEmpty()) {
+            redisTemplate.delete(dailyKeys);
+        }
+    }
+
+    // 주간 랭킹 초기화
+    @Scheduled(cron = "59 59 23 ? * SUN") // 매주 일요일 23:59에 실행
+    public void resetWeeklyRankings() {
+        Set<String> weeklyKeys = redisTemplate.keys("user:weekly:*");
+        if (weeklyKeys != null && !weeklyKeys.isEmpty()) {
+            redisTemplate.delete(weeklyKeys);
+        }
     }
 }
