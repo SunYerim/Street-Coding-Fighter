@@ -5,6 +5,7 @@ import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.domain.dto.user.GameResult;
 import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.SubmitItem;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.room.RoomRequest.CreateRoomDTO;
 import com.scf.multi.domain.dto.room.RoomResponse;
@@ -106,6 +107,8 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
         Player connectedPlayer = findPlayerByUserId(room, userId);
         connectedPlayer.setSessionId(sessionId);
+
+        room.addSubmitItem(userId);
 
         return connectedPlayer;
     }
@@ -270,6 +273,26 @@ public class MultiGameService {
         room.updateLeaderBoard(player.getUserId(), score);
     }
 
+    public void changeSubmitItem(String roomId, String sessionId, boolean isSubmit) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        Player player = findPlayerBySessionId(room, sessionId);
+
+        SubmitItem playerSubmitItem = room.getSubmits().stream()
+            .filter(submitItem -> submitItem.getUserId().equals(player.getUserId())).toList()
+            .getFirst();
+
+        playerSubmitItem.setIsSubmit(isSubmit);
+    }
+
+    public List<SubmitItem> getSubmits(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        return room.getSubmits();
+    }
+
     private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
         return RoomResponse.ListDTO.builder()
             .roomId(room.getRoomId())
@@ -412,5 +435,12 @@ public class MultiGameService {
         }
 
         return BASE_SCORE * (MAX_SUBMIT_TIME - submitTime) + (streakCount * STREAK_BONUS);
+    }
+
+    public void resetSubmits(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
     }
 }

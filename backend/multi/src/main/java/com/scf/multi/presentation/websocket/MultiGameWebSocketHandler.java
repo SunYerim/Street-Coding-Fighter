@@ -2,6 +2,7 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
+import com.scf.multi.domain.dto.user.SubmitItem;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.SolvedMessage;
 import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
@@ -55,7 +56,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
 
         List<Player> playerList = multiGameService.getPlayerList(roomId);
-
         broadcastMessageToRoom(roomId, "player-list", playerList);
     }
 
@@ -79,8 +79,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String attainScoreMessage = makeResponseMessage("attainScore", attainedScore);
         sendMessage(session, attainScoreMessage);
 
-        boolean isAllPlayerSubmit = multiGameService.increaseSubmit(roomId);
+        multiGameService.changeSubmitItem(roomId, session.getId(), true);
+        List<SubmitItem> submits = multiGameService.getSubmits(roomId);
+        broadcastMessageToRoom("submit-list", roomId, submits);
 
+        boolean isAllPlayerSubmit = multiGameService.increaseSubmit(roomId);
         handleRoundCompletion(isAllPlayerSubmit, roomId);
     }
 
@@ -161,12 +164,15 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     }
 
     private void handleRoundCompletion(boolean isAllPlayerSubmit, String roomId) throws Exception {
+
         if (isAllPlayerSubmit) { // 모든 Player가 제출했으면
             List<Rank> roundRank = multiGameService.getRoundRank(roomId);
             broadcastMessageToRoom(roomId, "roundRank", roundRank);
 
             List<Rank> gameRank = multiGameService.getGameRank(roomId);
             broadcastMessageToRoom(roomId, "gameRank", gameRank);
+
+            multiGameService.resetSubmits(roomId);
 
             if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
 

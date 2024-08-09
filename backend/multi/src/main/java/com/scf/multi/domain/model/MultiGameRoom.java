@@ -3,6 +3,7 @@ package com.scf.multi.domain.model;
 import com.scf.multi.domain.dto.problem.Problem;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
+import com.scf.multi.domain.dto.user.SubmitItem;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class MultiGameRoom {
     private Boolean isStart;
     private Integer round;
     private final AtomicInteger curSubmitCount;
+    private final List<SubmitItem> submits = new ArrayList<>();
 
     @Builder
     public MultiGameRoom(String roomId, Long hostId, String hostname, String title, String password, Integer maxPlayer, Integer playRound) {
@@ -222,5 +224,10 @@ public class MultiGameRoom {
         for (Player player : players) {
             player.getSolveds().clear();
         }
+    }
+
+    public void addSubmitItem(Long userId) {
+
+        this.submits.add(SubmitItem.builder().userId(userId).isSubmit(false).build());
     }
 }
