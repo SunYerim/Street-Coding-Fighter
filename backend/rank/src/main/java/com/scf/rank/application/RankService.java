@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -87,20 +89,25 @@ public class RankService {
     }
 
     // 일간 랭킹 초기화
-    @Scheduled(cron = "59 59 23 * * ?") // 매일 23:59에 실행
+    @Scheduled(cron = "59 59 23 * * ?") // 매일 23:59:59에 실행
     public void resetDailyRankings() {
-        Set<String> dailyKeys = redisTemplate.keys("user:daily:*");
-        if (dailyKeys != null && !dailyKeys.isEmpty()) {
-            redisTemplate.delete(dailyKeys);
-        }
+        resetRankings("user:daily:*");
     }
 
     // 주간 랭킹 초기화
-    @Scheduled(cron = "59 59 23 ? * SUN") // 매주 일요일 23:59에 실행
+    @Scheduled(cron = "59 59 23 * * SUN") // 매주 일요일 23:59:59에 실행
     public void resetWeeklyRankings() {
-        Set<String> weeklyKeys = redisTemplate.keys("user:weekly:*");
-        if (weeklyKeys != null && !weeklyKeys.isEmpty()) {
-            redisTemplate.delete(weeklyKeys);
+        resetRankings("user:weekly:*");
+    }
+
+    // 공통적인 랭킹 초기화 메서드
+    private void resetRankings(String pattern) {
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).build();
+        try (Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
+            while (cursor.hasNext()) {
+                String key = cursor.next();
+                redisTemplate.delete(key);
+            }
         }
     }
 }
