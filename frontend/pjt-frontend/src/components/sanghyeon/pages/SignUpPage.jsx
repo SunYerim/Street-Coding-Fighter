@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import "../../../css/SignUpPage.css";
-import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import store from "../../../store/store.js";
+import Swal from "sweetalert2";
 
-function SignUpPage() {
+const SignUpPage = () => {
   const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
     registerInfo: state.registerInfo,
@@ -20,45 +20,55 @@ function SignUpPage() {
   const schoolName = useRef(null);
   const birth = useRef(null);
   const navigate = useNavigate();
-
   const idCheckComplete = useRef(false);
 
-  const [errorMessage, setErrorMessage] =
-    useState("비밀번호가 일치하지 않습니다.");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
+  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 
   const signUp = async (event) => {
     event.preventDefault();
 
+    if (userId.current.value.length < 3 || userId.current.value.length > 15) {
+      Swal.fire({
+        text: "아이디는 3글자 이상 15글자 미만으로 입력해주세요.",
+        icon: "warning",
+      });
+      return;
+    }
+
     if (!idCheckComplete.current) {
-      setErrorMessage("아이디 중복 확인을 해주세요.");
-      openModal();
+      Swal.fire({
+        text: "아이디 중복 확인 을 해주세요.",
+        icon: "warning",
+      });
       return;
     }
 
     if (password1.current.value !== password2.current.value) {
-      setErrorMessage("비밀번호가 일치하지 않습니다.");
-      openModal();
-    } else {
-      setRegisterInfo({
-        userId: userId.current.value,
-        name: name.current.value,
-        password: password1.current.value,
-        email: email.current.value,
-        schoolName: schoolName.current.value,
-        birth: birth.current.value,
-        characterType: "",
+      Swal.fire({
+        text: "비밀번호가 일치하지 않습니다.",
+        icon: "warning",
       });
-      navigate("/signup-character");
+      return;
     }
+
+    if (passwordRegex.test(password1.current.value) === false) {
+      Swal.fire({
+        text: "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!",
+        icon: "warning",
+      });
+      return;
+    }
+
+    setRegisterInfo({
+      userId: userId.current.value,
+      name: name.current.value,
+      password: password1.current.value,
+      email: email.current.value,
+      schoolName: schoolName.current.value,
+      birth: birth.current.value,
+      characterType: "",
+    });
+    navigate("/signup-character");
   };
 
   const idCheck = async () => {
@@ -68,21 +78,27 @@ function SignUpPage() {
         url: `${baseURL}/user/public/validate/${userId.current.value}`,
       });
 
-      setErrorMessage("사용 가능한 아이디입니다.");
-      openModal();
+      Swal.fire({
+        text: "사용 가능한 아이디입니다.",
+        icon: "success",
+      });
       idCheckComplete.current = true;
     } catch (error) {
       if (error.response.status === 409) {
-        setErrorMessage("이미 사용중인 아이디입니다.");
-        openModal();
+        Swal.fire({
+          text: "이미 사용 중인 아이디입니다.",
+          icon: "error",
+        });
       } else {
         console.log(error.response);
-        setErrorMessage("아이디 중복 확인에 실패했습니다.");
-        openModal();
+        Swal.fire({
+          text: "알 수 없는 오류가 발생했습니다.",
+          icon: "error",
+        });
       }
     }
   };
-  const warningSign = "/warningSign.png"
+
   return (
     <>
       <div className="signup-outer-container">
@@ -119,20 +135,8 @@ function SignUpPage() {
           <button type="submit">NEXT</button>
         </form>
       </div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Alert Modal"
-        className="modal"
-        overlayClassName="overlay"
-      >
-        <div className="modal-container">
-          <img className="warning-img" src={warningSign} alt="warning-sign" />
-          <h4 className="warning-text">{errorMessage}</h4>
-        </div>
-      </Modal>
     </>
   );
-}
+};
 
 export default SignUpPage;
