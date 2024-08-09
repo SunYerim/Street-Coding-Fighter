@@ -43,7 +43,7 @@ const styles = {
 };
 
 const ShortAnswer = () => {
-  const answerRef = useRef(""); // 입력값을 저장할 상태 추가
+  const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
   const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store(
     (state) => ({
       shortAnswerSolve: state.shortAnswerSolve,
@@ -51,6 +51,9 @@ const ShortAnswer = () => {
       myShortAnswerProblem: state.myShortAnswerProblem,
     })
   );
+  const currentAnswer = useRef("");
+
+  // console.log(myShortAnswerProblem);
 
   const problemContent = myShortAnswerProblem?.problemContent?.content;
 
@@ -62,14 +65,16 @@ const ShortAnswer = () => {
         <input
           style={styles.answerInput}
           type="text"
+          ref={currentAnswer}
           onChange={(e) => handleInputChange(e)}
         />
       </span>
     )
   );
   const handleInputChange = () => {
-    answerRef.current = e.target.value;
-    setShortAnswerSolve(answerRef.current === "" ? "ssafy" : answerRef.current);
+    const value = currentAnswer.current.value;
+    setAnswer(value); // 입력값을 상태에 저장
+    setShortAnswerSolve(value === "" ? "ssafy" : value);
   };
 
   return (
@@ -85,7 +90,8 @@ const ShortAnswer = () => {
           <input
             style={styles.answerInput}
             type="text"
-            onChange={handleInputChange}
+            ref={currentAnswer}
+            onChange={(e) => handleInputChange(e)}
           />
         </div>
       </div>
