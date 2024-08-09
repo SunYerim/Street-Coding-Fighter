@@ -11,7 +11,7 @@ public class UserClient {
     private final WebClient webClient;
 
     public UserClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://ssafy11s.com/user").build();
+        this.webClient = webClientBuilder.baseUrl("http://www.ssafy11s.com/user").build();
     }
 
     public Mono<UserInfoListResponseDto> getUserList() {
