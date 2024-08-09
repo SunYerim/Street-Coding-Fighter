@@ -2,6 +2,7 @@ package com.scf.user.member.application.service;
 
 
 import com.scf.user.member.application.client.ContentClient;
+import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
 import com.scf.user.profile.domain.repository.CharacterRepository;
@@ -187,4 +188,9 @@ public class UserServiceImpl implements UserService {
         return new UserInfoListResponseDto(userInfotoSingleList);
     }
 
+    @Override
+    public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId){
+        Member member = userRepository.getById(memberId);
+        return new UserCharaterTypeResponseDTO(member.getCharacter().getCharacterType());
+    }
 }
