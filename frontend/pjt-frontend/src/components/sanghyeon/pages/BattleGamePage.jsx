@@ -120,6 +120,7 @@ const BattleGamePage = () => {
   const [loser, setLoser] = useState("");
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
+  const timerRef = useRef(null);
 
   // ---------------------- WebSocket ----------------------
 
@@ -259,6 +260,7 @@ const BattleGamePage = () => {
 
       const timer = setTimeout(async () => {
         await closeModal();
+        await stopTimer();
         await setSelectMyProblem(false);
         await setSelectOpponentProblem(false);
         await setGameStart(true);
@@ -343,7 +345,6 @@ const BattleGamePage = () => {
           });
         }, 3000);
       } else {
-        clearTimeout(timer);
         setCount(30);
         if (body.userId === memberId) {
           if (body.isAttack === true) {
@@ -527,7 +528,11 @@ const BattleGamePage = () => {
   };
 
   const startTimer = async () => {
-    const timerInterval = setInterval(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
       setCount((prevCount) => {
         if (prevCount <= 1) {
           clearInterval(timerInterval);
@@ -536,6 +541,13 @@ const BattleGamePage = () => {
         return prevCount - 1;
       });
     }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
   };
 
   const renderQuestion = (problem) => {
