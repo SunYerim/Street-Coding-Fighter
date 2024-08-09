@@ -218,5 +218,9 @@ public class MultiGameRoom {
         this.scoreBoard.clear();
         this.round = 0;
         this.curSubmitCount.set(0);
+
+        for (Player player : players) {
+            player.getSolveds().clear();
+        }
     }
 }
