@@ -103,6 +103,7 @@ const Setting = ({ isOpen, onClose }) => {
         icon: "success",
       });
       navigate("/login");
+      window.location.reload();
     } catch (error) {
       Swal.fire({
         text: "로그아웃에 실패했습니다.",

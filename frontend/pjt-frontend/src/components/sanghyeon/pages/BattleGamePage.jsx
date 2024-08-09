@@ -7,6 +7,7 @@ import createAuthClient from "../apis/createAuthClient.js";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
+import Swal from "sweetalert2";
 
 import DragNDropQuiz from "../../../components/game/quiz_with_blank/DragNDropQuiz.jsx";
 import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
@@ -227,8 +228,6 @@ const BattleGamePage = () => {
 
       const responseProblem = JSON.parse(message.body);
 
-      console.log(responseProblem);
-
       switch (responseProblem.problemType) {
         case "FILL_IN_THE_BLANK":
           setMyBlankProblem(responseProblem);
@@ -240,6 +239,10 @@ const BattleGamePage = () => {
           setMyMultipleChoiceProblem(responseProblem);
           break;
         default:
+          Swal.fire({
+            text: "문제 타입을 알 수 없습니다.",
+            icon: "error",
+          });
           console.log("Unknown problem type");
       }
       setSelectMyProblem(true);
@@ -278,6 +281,10 @@ const BattleGamePage = () => {
         solveText = null;
         break;
       default:
+        Swal.fire({
+          text: "문제 타입을 알 수 없습니다.",
+          icon: "error",
+        });
         console.log("Unknown problem type");
         break;
     }
@@ -303,8 +310,6 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
-
-      console.log(body);
 
       if (body.result && typeof body.result === "object") {
         setWinner(body.result.winner);
@@ -404,10 +409,10 @@ const BattleGamePage = () => {
         await enterRoom();
         await enterChat();
       } catch (error) {
-        console.error("Reconnection failed: ", error);
+        console.log("Reconnection failed: ", error);
         reconnectWebSocket(); // 재연결 시도
       }
-    }, 2000); // 3초 후 재연결 시도
+    }, 2000); // 2초 후 재연결 시도
   };
 
   useEffect(() => {
@@ -488,6 +493,10 @@ const BattleGamePage = () => {
         },
       });
     } catch (error) {
+      Swal.fire({
+        text: "게임 시작에 실패했습니다.",
+        icon: "error",
+      });
       console.log(error);
     }
   };
