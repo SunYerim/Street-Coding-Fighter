@@ -69,6 +69,7 @@ public class BattleSocketService {
 
     public void handleRoundOver(BattleGameRoom room) {
         if (room.getCurrentRound().equals(room.getFinalRound()) || isAnyPlayerHpZero(room)) {
+            room.initRoom();
             determineWinner(room);
         } else {
             sendRoundProblemToRoom(room.getRoomId());

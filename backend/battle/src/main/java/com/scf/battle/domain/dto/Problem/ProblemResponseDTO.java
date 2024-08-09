@@ -1,6 +1,7 @@
 package com.scf.battle.domain.dto.Problem;
 
 import java.util.List;
+import java.util.Random;
 
 import com.scf.battle.domain.enums.ProblemType;
 import lombok.Builder;
@@ -32,5 +33,20 @@ public class ProblemResponseDTO {
         private Integer difficulty;
         private ProblemContent problemContent;
         private List<ProblemChoice> problemChoices;
+        private Item item;
+
+        public void setItemBasedOnDifficulty() {
+            Random random = new Random();
+            double randomValue = random.nextDouble();
+
+            double cumulativeProbability = 0.0;
+            for (Item item : ItemList.items) {
+                cumulativeProbability += item.getProbability(this.difficulty);
+                if (randomValue <= cumulativeProbability) {
+                    this.item = item;
+                    break;
+                }
+            }
+        }
     }
 }
