@@ -7,6 +7,8 @@ import com.scf.user.member.application.service.UserService;
 import com.scf.user.member.domain.dto.LogoutDto;
 import com.scf.user.member.domain.dto.PasswordResetRequestDto;
 import com.scf.user.member.domain.dto.TokenDto;
+import com.scf.user.member.domain.dto.UserCharaterClothTypeResponseDTO;
+import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
 import com.scf.user.member.domain.dto.UserPasswordRequestDto;
@@ -171,13 +173,13 @@ public class UserController {
     public ResponseEntity<?> gachaCloth(@RequestHeader("memberId") Long memberId) {
         try {
             // 랜덤으로 옷 타입을 뽑음
-            int characterCloth = gachaService.drawClothingType();
-
+            int characterClothType = gachaService.drawClothingType();
+            UserCharaterClothTypeResponseDTO userCharaterClothTypeResponseDTO = new UserCharaterClothTypeResponseDTO(characterClothType);
             // 뽑힌 옷 타입을 해당 사용자의 캐릭터에 업데이트
-            userService.updateCharacterCloth(memberId, characterCloth);
+            userService.updateCharacterCloth(memberId, characterClothType);
 
             // 성공 응답 반환
-            return ResponseEntity.ok("Character cloth updated successfully.");
+            return ResponseEntity.ok(userCharaterClothTypeResponseDTO);
 
         } catch (UsernameNotFoundException e) {
             // 회원을 찾을 수 없는 경우
@@ -196,12 +198,12 @@ public class UserController {
         try {
             // 랜덤으로 캐릭터 타입을 뽑음
             int characterType = gachaService.drawCharacterType();
-
+            UserCharaterTypeResponseDTO userCharaterTypeResponseDTO = new UserCharaterTypeResponseDTO(characterType);
             // 뽑힌 캐릭터 타입을 해당 사용자의 캐릭터에 업데이트
             userService.updateCharacterType(memberId, characterType);
 
             // 성공 응답 반환
-            return ResponseEntity.ok("Character Type updated successfully.");
+            return ResponseEntity.ok(userCharaterTypeResponseDTO);
 
         } catch (UsernameNotFoundException e) {
             // 회원을 찾을 수 없는 경우
