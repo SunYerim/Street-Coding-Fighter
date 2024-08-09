@@ -194,7 +194,7 @@ services:
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
       SPRING_APPLICATION_NAME: scf-battle
       PROBLEM_SERVER_URL: http://www.ssafy11s.com/problem
-      USER_SERVER_URL: http://www.ssafy11s.com/user
+      USER_SERVER_URL: http://www.ssafy11s.com/user/public/charaterType
     ports:
       - "8084:8084"
     networks:
