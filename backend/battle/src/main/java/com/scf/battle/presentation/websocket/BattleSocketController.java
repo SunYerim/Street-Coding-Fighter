@@ -43,12 +43,11 @@ public class BattleSocketController {
     @MessageMapping("/game/{roomId}/answer")
     public void handleQuizAnswer(@DestinationVariable String roomId, ProblemRequestDTO problemRequestDTO) {
         BattleGameRoom room = roomService.findById(roomId);
-        Solved solved = battleSocketService.buildSolved(problemRequestDTO);
 
-        FightDTO fightDTO = gameService.markSolution(roomId, solved.getUserId(), solved);
+
+        FightDTO fightDTO = gameService.markSolution(roomId, problemRequestDTO.getUserId(), problemRequestDTO);
 
         messagingTemplate.convertAndSend("/room/" + roomId, fightDTO);
-        battleSocketService.updatePlayerSolvedList(room, solved);
 
         if (gameService.isRoundOver(roomId)) {
             battleSocketService.handleRoundOver(room);

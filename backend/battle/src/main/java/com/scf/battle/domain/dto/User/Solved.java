@@ -17,5 +17,6 @@ public class Solved {
     private Map<Integer, Integer> solve;
     private String solveText;
     private Integer submitTime;
+    private Boolean isCorrect;
     private Integer round;
 }

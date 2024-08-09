@@ -58,15 +58,6 @@ public class BattleSocketService {
 
     }
 
-    public void updatePlayerSolvedList(BattleGameRoom room, Solved solved) {
-        Long curruntUserId = solved.getUserId();
-        if (room.getPlayerA().getUserId().equals(curruntUserId)) {
-            room.getPlayerA().addSolved(solved);
-        } else if (room.getPlayerB().getUserId().equals(curruntUserId)) {
-            room.getPlayerB().addSolved(solved);
-        }
-    }
-
     public void handleRoundOver(BattleGameRoom room) {
         if (room.getCurrentRound().equals(room.getFinalRound()) || isAnyPlayerHpZero(room)) {
             room.initRoom();
@@ -152,17 +143,6 @@ public class BattleSocketService {
                         .build())
                 .collect(Collectors.toList());
         messagingTemplate.convertAndSend("/room/" + roomId + "/RoundChoiceProblem", roundSelectProblemsDTOs);
-    }
-
-    public Solved buildSolved(ProblemRequestDTO problemRequestDTO) {
-        return Solved.builder()
-                .problemId(problemRequestDTO.getProblemId())
-                .userId(problemRequestDTO.getUserId())
-                .solve(problemRequestDTO.getSolve())
-                .solveText(problemRequestDTO.getSolveText())
-                .submitTime(problemRequestDTO.getSubmitTime())
-                .round(problemRequestDTO.getRound())
-                .build();
     }
 
     private static class GameResult {
