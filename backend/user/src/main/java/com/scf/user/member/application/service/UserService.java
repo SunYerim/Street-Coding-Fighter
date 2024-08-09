@@ -7,6 +7,7 @@ import com.scf.user.member.domain.dto.UserInfoResponseDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 public interface UserService {
 
