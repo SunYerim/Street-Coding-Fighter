@@ -87,6 +87,11 @@ const multiStore = create((set) => ({
   setCurrentRound: (currentRound) => set({ currentRound }),
   clearCurrentRound: () => set({ currentRound: 0 }),
 
+  // 소켓에 연결된 플레이어리스트
+  playerList: [],
+  setPlayerList: (playerList) => set({ playerList }),
+  clearPlayerList: () => set({ playerList: [] }),
+
   // 라운드 랭크
   roundRank: [],
   setRoundRank: (roundRank) => set({ roundRank }),
