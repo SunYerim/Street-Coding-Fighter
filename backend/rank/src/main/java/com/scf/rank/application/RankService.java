@@ -31,18 +31,6 @@ public class RankService {
         return redisTemplate.opsForZSet();
     }
 
-    @KafkaListener(topics = "user-exp", groupId = "ranking-group", containerFactory = "kafkaListenerContainerFactory")
-    @Transactional
-    public void consumeUserExp(UserExp userExp, Acknowledgment acknowledgment) {
-
-        LocalDate today = LocalDate.now();
-        updateRank(userExp, getDailyPrefix(today));
-        updateRank(userExp, getWeeklyPrefix(today));
-        updateRank(userExp, null); // 전체 기간 업데이트
-
-        acknowledgment.acknowledge(); // 메시지 처리 완료 후 ACK 전송
-    }
-
     public List<UserExp> getAllTimeRankings() {
         return getRankings(ALL_TIME_KEY);
     }
@@ -64,7 +52,7 @@ public class RankService {
         return valueOps.get(key);
     }
 
-    private void updateRank(UserExp userExp, String datePrefix) {
+    public void updateRank(UserExp userExp, String datePrefix) {
 
         // 전체 기간
         if (datePrefix == null) {
@@ -90,13 +78,13 @@ public class RankService {
         return ranks;
     }
 
-    private String getWeeklyPrefix(LocalDate date) {
+    public String getWeeklyPrefix(LocalDate date) {
         // 주간 랭킹 키 생성 (예: "user:weekly:2024-W31")
         String weekOfYear = String.format("W%02d", date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR));
         return WEEKLY_KEY + date.getYear() + "-" + weekOfYear;
     }
 
-    private String getDailyPrefix(LocalDate date) {
+    public String getDailyPrefix(LocalDate date) {
         // 일간 랭킹 키 생성 (예: "user:daily:2024-07-31")
         return DAILY_KEY + date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
