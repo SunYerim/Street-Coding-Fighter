@@ -7,7 +7,7 @@ import SingleInfoStore from '../../../stores/SingleInfoStore';
 import store from '../../../store/store';
 import SoundStore from '../../../stores/SoundStore';
 import { MdFlag } from 'react-icons/md';
-
+import checkIsCompleted from '../checkIsCompleted';
 const rowList = [0, 1, 2, 3];
 
 export default function EpisodeList({ rownum }) {
@@ -38,12 +38,6 @@ export default function EpisodeList({ rownum }) {
       // alert("이전 에피소드를 먼저 클리어해주세요.");
     }
   };
-  const checkIsCompleted = (contentNum) =>{
-    return completed.find((e)=>{
-      console.log(e, contentNum)
-      return e.contentId === contentNum
-    }).complete
-  }
   return (
     <>
       {rowList.map((r) => (

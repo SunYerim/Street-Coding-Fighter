@@ -19,20 +19,18 @@ import { display } from '@mui/system';
 
 const testDialogueList = [
   {
-      "pageNo": 0,
-      "scriptContent": "안녕! 나는 너희에게 프로그래밍을 \n 가르쳐줄 고양이 선생님이다냥.",
-      "action": 0,
-      "imageCount": 0
+    pageNo: 0,
+    scriptContent: '안녕! 나는 너희에게 프로그래밍을 \n 가르쳐줄 고양이 선생님이다냥.',
+    action: 0,
+    imageCount: 0,
   },
   {
-      "pageNo": 1,
-      "scriptContent": "dummy_data",
-      "action": 0,
-      "imageCount": 0
+    pageNo: 1,
+    scriptContent: 'dummy_data',
+    action: 0,
+    imageCount: 0,
   },
-]
-
-
+];
 
 export default function SinglePlay() {
   const [page, setPage] = useState(0);
@@ -59,27 +57,27 @@ export default function SinglePlay() {
     switchBackgroundMusic('single', (newBackgroundMusic) => {
       newBackgroundMusic.play();
     });
-      axios({
-        method: 'get',
-        url: `${baseURL}/single/${content_id}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMxMDM3NjgsImV4cCI6MTcyMzEwNzM2OH0.Qy2T-1du9CNOfrGZi_1axMkE4jSsmeKKjXR_TdZCqY0`,
-        },
+    axios({
+      method: 'get',
+      url: `${baseURL}/single/${content_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMxMDM3NjgsImV4cCI6MTcyMzEwNzM2OH0.Qy2T-1du9CNOfrGZi_1axMkE4jSsmeKKjXR_TdZCqY0`,
+      },
+    })
+      .then((response) => {
+        console.log(response.data);
+        console.log(content_id);
+        console.log(`${baseURL}/single/${content_id}`);
+        const data = response.data;
+        setDialogueList(data.detailList);
+        // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
+        setLoading(true);
       })
-        .then((response) => {
-          console.log(response.data)
-          console.log(content_id);
-          console.log(`${baseURL}/single/${content_id}`);
-          const data = response.data;
-          setDialogueList(data.detailList);
-          // 여기서 데이터 로드함!! 로그 확인하고 주석해제 ㄱㄱ
-          setLoading(true);
-        })
-        .catch((error) => {
-          console.error('Error fetching content: ', error);
-          setLoading(false);
-        });
+      .catch((error) => {
+        console.error('Error fetching content: ', error);
+        setLoading(false);
+      });
     const loadingTimer = setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -94,7 +92,7 @@ export default function SinglePlay() {
       });
       clearTimeout(timer);
     };
-  }, [content_id]); 
+  }, [content_id]);
 
   const changePage = (increment) => {
     console.log('click');
@@ -146,7 +144,7 @@ export default function SinglePlay() {
       // setIsVibrating(true);
       // console.log('vibrating');
       // setTimeout(() => {
-        // setIsVibrating(false);
+      // setIsVibrating(false);
       // }, 2000);
     }
     playEffectSound('singleClickSound');
@@ -170,17 +168,27 @@ export default function SinglePlay() {
   const closeExitModal = () => {
     setIsExitModalOpen(false);
   };
+  const checkIsCompleted = () => {
+    const target = completed.find((e) => {
+      // console.log(e);
+      return e.contentId == content_id;
+    });
+    return target.complete;
+  };
   const goToList = (isFinish) => {
-    if (isFinish && !completed[content_id]?.complete) {
+    if (isFinish && !checkIsCompleted()) {
+      console.log('axios 요청 드갑니다')
       axios({
         method: 'post',
         url: `${baseURL}/single/${content_id}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }).then(
-        console.log('요청 보내기 성공!')
-      ).catch(console.log('요청보내기 실패 ㅜㅜ'))
+      })
+        .then(console.log('요청 보내기 성공!'))
+        .catch(console.log('요청보내기 실패 ㅜㅜ'));
+    } else {
+      console.log('비정상적인 나가기 또는 이미 학습한 컨텐츠임');
     }
     navigate('/single-main');
   };
@@ -280,7 +288,7 @@ export default function SinglePlay() {
                 <S.CharacterName>
                   <span>
                     <CgProfile />
-                    <span>  야옹 선생</span>
+                    <span> 야옹 선생</span>
                   </span>
                 </S.CharacterName>
               </S.DialogueHeader>
