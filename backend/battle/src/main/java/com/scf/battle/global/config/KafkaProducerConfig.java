@@ -19,12 +19,12 @@ import java.util.Map;
 public class KafkaProducerConfig {
 
     @Bean
-    public ProducerFactory<String, List<Solved>> solvedDTOProducerFactory() {
+    public ProducerFactory<String, Solved> solvedDTOProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, List<Solved>> solvedDTOKafkaTemplate() {
+    public KafkaTemplate<String, Solved> solvedDTOKafkaTemplate() {
         return new KafkaTemplate<>(solvedDTOProducerFactory());
     }
 
