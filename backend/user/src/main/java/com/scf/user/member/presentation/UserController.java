@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -152,5 +151,17 @@ public class UserController {
     public ResponseEntity<?> getList() {
         UserInfoListResponseDto userInfoListResponseDto = userService.sendUserList();
         return ResponseEntity.ok(userInfoListResponseDto);
+    }
+
+    @GetMapping("/public/charaterType")
+    public ResponseEntity<?> getCharaterType(@RequestHeader("memberId") Long memberId){
+        String memberIdString = String.valueOf(memberId);
+        Object userInfo = userService.getUserInfo(memberIdString);
+        if (userInfo != null) {
+            return new ResponseEntity<>(userService.getUserCharaterType(memberId),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
