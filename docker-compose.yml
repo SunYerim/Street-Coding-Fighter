@@ -74,6 +74,10 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf  # 로컬의 redis.conf 파일을 컨테이너에 복사
+      - redis_data:/data  # Redis 데이터를 저장할 볼륨
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]  # 커스텀 설정 파일을 사용해 Redis 시작
     networks:
       - network
 
