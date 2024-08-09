@@ -19,7 +19,8 @@ public enum ErrorCode {
     GAME_ALREADY_STARTED("게임이 이미 시작되었습니다.", HttpStatus.BAD_REQUEST),
     PROBLEM_NOT_FOUND("문제를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     MAX_PLAYERS_EXCEEDED("최대 참가자 수를 초과했습니다.", HttpStatus.BAD_REQUEST),
-    SUBMIT_TIME_EXCEEDED("제출 시간이 초과되었습니다.", HttpStatus.BAD_REQUEST);
+    SUBMIT_TIME_EXCEEDED("제출 시간이 초과되었습니다.", HttpStatus.BAD_REQUEST),
+    NOT_YET_START_GAME("아직 게임이 시작하지 않았습니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;
