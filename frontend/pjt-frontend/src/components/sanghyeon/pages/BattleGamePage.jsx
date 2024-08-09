@@ -535,7 +535,7 @@ const BattleGamePage = () => {
     timerRef.current = setInterval(() => {
       setCount((prevCount) => {
         if (prevCount <= 1) {
-          clearInterval(timerInterval);
+          clearInterval(timerRef.current);
           return 0;
         }
         return prevCount - 1;
@@ -608,7 +608,7 @@ const BattleGamePage = () => {
                   : "패배하셨습니다."}
               </div>
               <div className="battle-game-result-footer">
-                {count2}초 후 방 목록 화면으로 이동합니다.
+                {count2}초 후 대기방으로 이동합니다.
               </div>
             </div>
           ) : selectOpponentProblem ? (
