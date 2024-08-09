@@ -19,7 +19,7 @@ const completed = {
   contentList: [
     {
       contentId: 1,
-      complete: 0, // 수강 완료
+      complete: 1, // 수강 완료
     },
     {
       contentId: 2,

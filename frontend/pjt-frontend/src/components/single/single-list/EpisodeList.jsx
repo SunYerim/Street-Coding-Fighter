@@ -38,7 +38,12 @@ export default function EpisodeList({ rownum }) {
       // alert("이전 에피소드를 먼저 클리어해주세요.");
     }
   };
-
+  const checkIsCompleted = (contentNum) =>{
+    return completed.find((e)=>{
+      console.log(e, contentNum)
+      return e.contentId === contentNum
+    }).complete
+  }
   return (
     <>
       {rowList.map((r) => (
@@ -48,7 +53,7 @@ export default function EpisodeList({ rownum }) {
               <React.Fragment key={e.id}>
                 <S.CheckPoint
                   key={`checkpoint-${e.id}`}
-                  $completed={completed[e.id]?.complete}
+                  $completed={checkIsCompleted(e.id)}
                   $isNext={e.id === nextIndex+1}
                   onClick={handleClick(e.id)}
                   onMouseEnter={() => {
