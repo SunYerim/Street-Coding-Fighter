@@ -83,7 +83,7 @@ services:
       - mariadb-user
       - redis-user
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db?characterEncoding=utf8mb4
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_REDIS_HOST: redis-user
@@ -107,7 +107,7 @@ services:
       - redis-user
       - user-server
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-problem:3306/problem_db
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-problem:3306/problem_db?characterEncoding=utf8mb4
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_REDIS_HOST: redis-user
@@ -208,7 +208,7 @@ services:
     environment:
       LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
       SPRING_APPLICATION_NAME: scf-chat
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db?characterEncoding=utf8mb4
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
     ports:
