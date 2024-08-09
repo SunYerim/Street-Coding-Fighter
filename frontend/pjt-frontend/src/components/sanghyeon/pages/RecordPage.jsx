@@ -5,7 +5,7 @@ import store from "../../../store/store.js";
 import createAuthClient from "../apis/createAuthClient.js";
 import Swal from "sweetalert2";
 
-function RecordPage() {
+const RecordPage = () => {
   const { accessToken, setAccessToken, baseURL, memberId, name } = store(
     (state) => ({
       accessToken: state.accessToken,
@@ -108,6 +108,6 @@ function RecordPage() {
       </div>
     </>
   );
-}
+};
 
 export default RecordPage;
