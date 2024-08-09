@@ -571,20 +571,21 @@ const BattleGamePage = () => {
   };
 
   const initBattleGame = () => {
+    setBattleHistory([]);
     setMyHealth(100);
     setEnemyHealth(100);
     setCurrentRound(0);
-    setEnemyProblems([]);
     setCount(30);
-    setGameStart(false);
     setMyProblem({});
     setSelectMyProblem(false);
     setSelectOpponentProblem(false);
+    setGameStart(false);
     setGameEnded(false);
     setWinner("");
     setLoser("");
     setCount2(5);
     setAnswerSubmitted(false);
+    setTimerOn(false);
   };
 
   return (

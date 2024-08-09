@@ -23,10 +23,6 @@ const ItemPage = () => {
 
     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-    // Update the position of the overlay
-    const overlayX = (x / rect.width) * 100 - 50; // -50 to center
-    const overlayY = (y / rect.height) * 100 - 50; // -50 to center
-
     overlay.style = `background-position: ${
       (centerX - x) / 5 + (centerY - y) / 5
     }%`;
@@ -36,7 +32,7 @@ const ItemPage = () => {
     const card = cardRef.current;
     const overlay = overlayRef.current;
     card.style.transform = `rotateX(0) rotateY(0)`; // 원상 복귀
-    overlay.style = `background-position: 100%`;
+    overlay.style.backgroundPosition = `100% 100%`; // 애니메이션과 함께 되돌리기
   };
 
   return (

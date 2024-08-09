@@ -52,8 +52,8 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  /* transition: transform 0.1s ease, box-shadow 0.1s ease; */
-  transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.6s ease-out, box-shadow 0.6s ease-out;
   perspective: 1000px; /* 3D 효과를 위한 원근감 */
 }
 
@@ -239,7 +239,10 @@
   background-size: 150% 150%;
   background-position: 100%;
 
-  filter: brightness(1.2) opacity(0.7);
+  filter: brightness(1) opacity(0.6);
   mix-blend-mode: color-dodge;
-  transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.6s ease-out, box-shadow 0.6s ease-out;
+  transition: background-position 0.3s ease, transform 0.3s ease;
+  transition: background-position 0.6s ease-out, transform 0.6s ease-out;
 }
