@@ -5,6 +5,7 @@ import createAuthClient from "../apis/createAuthClient.js";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
 
 Modal.setAppElement("#root");
 
@@ -76,13 +77,19 @@ const BattleGameListPage = () => {
         setCurrentBattleList(res.data);
       }
     } catch (error) {
-      console.error("Failed to fetch record", error);
+      Swal.fire({
+        text: "방 목록을 불러오는데 실패했습니다.",
+        icon: "error",
+      });
     }
   };
 
   const joinBattleRoom = async (roomId, curPlayer, isLock) => {
     if (curPlayer === 2) {
-      alert("인원 수가 최대치에 도달했습니다.");
+      Swal.fire({
+        text: "방이 꽉 찼습니다.",
+        icon: "error",
+      });
       return;
     }
 
@@ -93,7 +100,10 @@ const BattleGameListPage = () => {
       inputPassword = prompt("비밀번호를 입력하세요.");
 
       if (inputPassword === null || inputPassword === "") {
-        alert("비밀번호를 입력해주세요.");
+        Swal.fire({
+          text: "비밀번호를 입력해주세요.",
+          icon: "error",
+        });
         return;
       }
     }
@@ -110,7 +120,6 @@ const BattleGameListPage = () => {
         },
       });
 
-      console.log(res.data);
       setRoomId(roomId);
       setRoomPassword(inputPassword);
       setHostId(res.data.memberId);
@@ -119,6 +128,10 @@ const BattleGameListPage = () => {
       setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
+      Swal.fire({
+        text: "방 입장에 실패했습니다.",
+        icon: "error",
+      });
       console.log(error);
     }
   };
@@ -156,6 +169,10 @@ const BattleGameListPage = () => {
       setNormalQuit(false);
       navigate("/battle-game");
     } catch (error) {
+      Swal.fire({
+        text: "방 생성에 실패했습니다.",
+        icon: "error",
+      });
       console.log(error);
     }
   };
@@ -179,7 +196,11 @@ const BattleGameListPage = () => {
           setCurrentBattleList(res.data);
         }
       } catch (error) {
-        console.error("Failed to fetch record", error);
+        Swal.fire({
+          text: "방 목록을 불러오는데 실패했습니다.",
+          icon: "error",
+        });
+        console.log(error);
       }
     };
 

@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import "../../../css/RecordPage.css";
 import store from "../../../store/store.js";
 import createAuthClient from "../apis/createAuthClient.js";
+import Swal from "sweetalert2";
 
 function RecordPage() {
   const { accessToken, setAccessToken, baseURL, memberId, name } = store(
@@ -40,6 +41,10 @@ function RecordPage() {
           recordRes.data.historyLists ? recordRes.data.historyLists : []
         );
       } catch (error) {
+        Swal.fire({
+          text: "기록을 불러오는데 실패했습니다.",
+          icon: "error",
+        });
         console.error("Failed to fetch record", error);
       }
     };

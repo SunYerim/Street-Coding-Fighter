@@ -11,6 +11,7 @@ const FindPasswordPage = () => {
     baseURL: state.baseURL,
     code: state.code,
     setCode: state.setCode,
+    setUserId: state.setUserId,
   }));
   const currentUserId = useRef(null);
   const verificationCode = useRef(null);
@@ -71,10 +72,6 @@ const FindPasswordPage = () => {
         icon: "warning",
       });
     } else {
-      Swal.fire({
-        text: "인증이 완료되었습니다.",
-        icon: "success",
-      });
       setCode(verificationCode.current.value);
       navigate("/reset-password");
     }

@@ -181,6 +181,10 @@ const store = create(
       myMultipleChoiceProblem: testMultipleChoiceProblem,
       setMyMultipleChoiceProblem: (myMultipleChoiceProblem) =>
         set({ myMultipleChoiceProblem }),
+
+      clearLocalStorage: () => {
+        localStorage.clear();
+      },
     }),
     {
       name: "userStorage",

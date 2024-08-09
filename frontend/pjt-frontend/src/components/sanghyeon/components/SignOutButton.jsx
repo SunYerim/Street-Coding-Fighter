@@ -1,6 +1,7 @@
 import createAuthClient from "../apis/createAuthClient.js";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const SignOutButton = function () {
   const {
@@ -10,6 +11,7 @@ const SignOutButton = function () {
     baseURL,
     memberId,
     setMemberId,
+    clearLocalStorage,
   } = store((state) => ({
     userId: state.userId,
     accessToken: state.accessToken,
@@ -17,6 +19,7 @@ const SignOutButton = function () {
     baseURL: state.baseURL,
     memberId: state.memberId,
     setMemberId: state.setMemberId,
+    clearLocalStorage: state.clearLocalStorage,
   }));
   const navigate = useNavigate();
   const authClient = createAuthClient(
@@ -34,12 +37,18 @@ const SignOutButton = function () {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setAccessToken(null);
-      setMemberId(null);
-      alert("회원탈퇴에 성공했습니다.");
+      clearLocalStorage();
+      Swal.fire({
+        text: "회원탈퇴에 성공했습니다.",
+        icon: "success",
+      });
       navigate("/login");
     } catch (error) {
-      alert("회원탈퇴에 실패했습니다.");
+      Swal.fire({
+        text: "회원탈퇴에 실패했습니다.",
+        icon: "error",
+      });
+      console.log(error);
     }
   };
 

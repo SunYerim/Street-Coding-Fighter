@@ -21,13 +21,11 @@ import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
 import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
-import SelectProblem from "./components/sanghyeon/pages/SelectProblem.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
 import store from "./store/store.js";
 import Loading from "./components/loading/Loading.jsx";
 
 import ItemPage from "./components/sanghyeon/pages/ItemPage.jsx";
-import MultipleChoice from "./components/game/multipleChoice/MultipleChoice.jsx";
 
 import { useEffect, useState } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
@@ -116,10 +114,6 @@ function App() {
           <Route path="/single-main" element={<SingleMain />} />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
           <Route path="/single-play/:content_id" element={<SinglePlay />} />
-          <Route
-            path="/multi-game-select"
-            element={accessToken ? <SelectProblem /> : <LoginPage />}
-          />
           <Route path="/multiple-choice" element={<BattleGamePage />} />
           <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
