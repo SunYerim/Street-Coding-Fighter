@@ -34,9 +34,9 @@ export default function Ranking() {
             .catch((err) => console.log(err)),
         ]);
 
-        rankingObj['total'] = totalRes.data;
-        rankingObj['weekly'] = weeklyRes.data;
-        rankingObj['daily'] = dailyRes.data;
+        rankingObj['total'] = totalRes;
+        rankingObj['weekly'] = weeklyRes;
+        rankingObj['daily'] = dailyRes;
         console.log(rankingObj);
         setRankingList(rankingObj);
       } catch (error) {
