@@ -61,8 +61,7 @@ public class GameService {
 
         boolean isCorrect = compareAnswers(problemType, solved, answers);
         int score = isCorrect ? calculateScore(solved.getSubmitTime()) : 0;
-        room.updateHp(userId, score);
-        return FightDTO.builder().userId(userId).isAttack(isCorrect).power(score).build();
+        return room.updateHp(userId, score);
     }
 
     private boolean compareAnswers(ProblemType problemType, Solved solved, List<ProblemAnswer> answers) {

@@ -39,6 +39,7 @@ public class UserController {
 
     private final UserService userService;
     private final RedisService redisService;
+    private final GachaService gachaService;
     private final JwtCookieUtil jwtCookieUtil;
     private final ResetService resetService;
 
@@ -176,5 +177,68 @@ public class UserController {
     public ResponseEntity<?> getList() {
         UserInfoListResponseDto userInfoListResponseDto = userService.sendUserList();
         return ResponseEntity.ok(userInfoListResponseDto);
+    }
+
+    @GetMapping("/public/charaterType")
+    public ResponseEntity<?> getCharaterType(@RequestHeader("memberId") Long memberId){
+        String memberIdString = String.valueOf(memberId);
+        Object userInfo = userService.getUserInfo(memberIdString);
+        if (userInfo != null) {
+            return new ResponseEntity<>(userService.getUserCharaterType(memberId),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/gacha/character-cloth")
+    public ResponseEntity<?> gachaCloth(@RequestHeader("memberId") Long memberId) {
+        try {
+            // 랜덤으로 옷 타입을 뽑음
+            int characterCloth = gachaService.drawClothingType();
+
+            // 뽑힌 옷 타입을 해당 사용자의 캐릭터에 업데이트
+            userService.updateCharacterCloth(memberId, characterCloth);
+
+            // 성공 응답 반환
+            return ResponseEntity.ok("Character cloth updated successfully.");
+
+        } catch (UsernameNotFoundException e) {
+            // 회원을 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            // 캐릭터가 없는 경우 등
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operation: " + e.getMessage());
+        } catch (Exception e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/gacha/character-type")
+    public ResponseEntity<?> gachaCharacterType(@RequestHeader("memberId") Long memberId) {
+        try {
+            // 랜덤으로 캐릭터 타입을 뽑음
+            int characterType = gachaService.drawCharacterType();
+
+            // 뽑힌 캐릭터 타입을 해당 사용자의 캐릭터에 업데이트
+            userService.updateCharacterType(memberId, characterType);
+
+            // 성공 응답 반환
+            return ResponseEntity.ok("Character Type updated successfully.");
+
+        } catch (UsernameNotFoundException e) {
+            // 회원을 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Member not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            // 캐릭터가 없는 경우 등
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid operation: " + e.getMessage());
+        } catch (Exception e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An unexpected error occurred: " + e.getMessage());
+        }
     }
 }

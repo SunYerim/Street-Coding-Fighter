@@ -80,7 +80,7 @@ public class SecurityConfig {
                 .requestMatchers("/user/public/login", "/user/public/join",
                     "/user/public/validate/**", "/user/public/request-verification-code",
                     "/user/public/request-verification", "/user/public/change-password",
-                    "/user/public/reissue", "user/public/list")
+                    "/user/public/reissue", "user/public/list","/user/public/charaterType")
                 .permitAll()
 
                 .anyRequest().authenticated())

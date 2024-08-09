@@ -5,6 +5,7 @@ import com.scf.single.domain.dto.ContentCompletionRequestDto;
 import com.scf.single.domain.dto.ContentCreateRequestDto;
 import com.scf.single.domain.dto.ContentDetailResponsesDto;
 import com.scf.single.domain.dto.ContentListResponsesDto;
+import com.scf.single.domain.dto.ScriptCreateRequestListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -76,13 +77,20 @@ public class SingleController {
 
     // content 생성 api (개별)
     @PostMapping("/public/createcontent")
-    public ResponseEntity<?> requestCreateContent(@RequestBody ContentCreateRequestDto contentCreateRequestDto) {
+    public ResponseEntity<?> requestCreateContent(
+        @RequestBody ContentCreateRequestDto contentCreateRequestDto) {
         singleService.createContent(contentCreateRequestDto);
         return ResponseEntity.ok().build();
     }
 
 
     // script 생성 api
-
+    @PostMapping("/public/createscript/{contentId}")
+    public ResponseEntity<?> requestCreateScript(
+        @RequestBody ScriptCreateRequestListDto scriptCreateRequestListDto,
+        @PathVariable("contentId") Integer contentId) {
+        singleService.createScript(scriptCreateRequestListDto, contentId);
+        return ResponseEntity.ok().body(contentId + "에 script 등록이 완료되었습니다.");
+    }
 
 }

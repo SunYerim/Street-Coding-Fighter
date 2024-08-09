@@ -161,7 +161,9 @@ public class MultiGameService {
     public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
 
         room.getPlayers().forEach(player ->
-            Optional.ofNullable(player.getSolveds()).ifPresent(kafkaMessageProducer::sendSolved)
+            Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
+                solveds.forEach(kafkaMessageProducer::sendSolved)
+            )
         );
 
         kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());

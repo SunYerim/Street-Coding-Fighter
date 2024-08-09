@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RoomService {
 
     private final BattleGameRepository battleGameRepository;
-
+    private final  UserService userService;
     public List<BattleGameRoom> findAllRooms() {
         return battleGameRepository.findAllRooms();
     }
@@ -57,6 +57,7 @@ public class RoomService {
                 .hasPlayerBSubmitted(false)
                 .isAttack(false)
                 .currentRound(0)
+                .hostCharacterType(userService.getCharacterType(memberId).getCharacterType())
                 .build();
         battleGameRepository.addRoom(room);
         return roomId;

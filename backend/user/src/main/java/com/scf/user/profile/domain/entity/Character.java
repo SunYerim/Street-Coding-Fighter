@@ -29,6 +29,9 @@ public class Character {
     @Column(name = "character_type")
     private int characterType;
 
+    @Column(name = "character_cloth")
+    private int characterCloth;
+
     @OneToOne
     @JoinColumn(name = "member_id", nullable = false) // FK 설정
     private Member member;

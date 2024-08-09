@@ -4,6 +4,7 @@ import com.scf.single.domain.dto.ContentCompletionRequestDto;
 import com.scf.single.domain.dto.ContentCreateRequestDto;
 import com.scf.single.domain.dto.ContentDetailResponsesDto;
 import com.scf.single.domain.dto.ContentListResponsesDto;
+import com.scf.single.domain.dto.ScriptCreateRequestListDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,6 @@ public interface SingleService {
     void createContent(ContentCreateRequestDto contentCreateRequestDto);
 
     // script 생성
-
+    void createScript(ScriptCreateRequestListDto scriptCreateRequestListDto, int contentId);
 
 }

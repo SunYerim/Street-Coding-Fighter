@@ -20,8 +20,8 @@ public class Script {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "page_no")
-    private int pageNo;
+    @Column(name = "script_id")
+    private int scriptId;
 
     @Column(name = "script_content")
     private String scriptContent;
@@ -31,6 +31,9 @@ public class Script {
 
     @Column(name = "imageCount")
     private int imageCount;
+
+    @Column(name = "page_no")
+    private int pageNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", nullable = false)
