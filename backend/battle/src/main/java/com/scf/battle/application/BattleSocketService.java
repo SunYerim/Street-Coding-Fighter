@@ -1,12 +1,9 @@
 package com.scf.battle.application;
 
 import com.scf.battle.domain.dto.Problem.Problem;
-import com.scf.battle.domain.dto.Problem.ProblemRequestDTO;
 import com.scf.battle.domain.dto.Problem.ProblemResponseDTO;
 import com.scf.battle.domain.dto.Room.RoomResultResponseDTO;
 import com.scf.battle.domain.dto.User.Player;
-import com.scf.battle.domain.dto.User.Solved;
-import com.scf.battle.domain.enums.GameResultType;
 import com.scf.battle.domain.model.BattleGameRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,16 +82,16 @@ public class BattleSocketService {
         int playerAHp = room.getPlayerA().getHp();
         int playerBHp = room.getPlayerB().getHp();
 
-        GameResultType determineValue = GameResultType.DRAW;
+        Integer determineValue = 0;
         Long winnerId = null;
         Long loserId = null;
 
         if (playerAHp > playerBHp) {
-            determineValue = GameResultType.PLAYER_A_WINS;
+            determineValue = 1;
             winnerId = room.getPlayerA().getUserId();
             loserId = room.getPlayerB().getUserId();
         } else if (playerBHp > playerAHp) {
-            determineValue = GameResultType.PLAYER_B_WINS;
+            determineValue = 2;
             winnerId = room.getPlayerB().getUserId();
             loserId = room.getPlayerA().getUserId();
         }
@@ -147,9 +144,9 @@ public class BattleSocketService {
 
     private static class GameResult {
         private final Map<String, Long> result;
-        private final GameResultType determineValue;
+        private final Integer determineValue;
 
-        public GameResult(Map<String, Long> result, GameResultType determineValue) {
+        public GameResult(Map<String, Long> result, Integer determineValue) {
             this.result = result;
             this.determineValue = determineValue;
         }
@@ -158,7 +155,7 @@ public class BattleSocketService {
             return result;
         }
 
-        public GameResultType getDetermineValue() {
+        public Integer getDetermineValue() {
             return determineValue;
         }
     }

@@ -1,6 +1,5 @@
 package com.scf.battle.domain.dto.Problem;
 
-import com.scf.battle.domain.enums.GameType;
 import com.scf.battle.domain.enums.ProblemType;
 import java.util.Map;
 

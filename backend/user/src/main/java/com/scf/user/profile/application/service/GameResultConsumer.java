@@ -18,7 +18,7 @@ public class GameResultConsumer {
     private final ProfileService profileService;
 
     // battle 모드
-    @KafkaListener(topics = "game-result-battle", groupId = "game-results-group")
+    @KafkaListener(topics = "game-result-battle", groupId = "game-results-group", containerFactory = "kafkaListenerContainerFactory")
     public void processGameResults(BattleGameResult battleGameResult) {
         // 각 유저의 경험치를 업데이트
         Long playerA = battleGameResult.getPlayerAId();
