@@ -212,4 +212,19 @@ public class UserServiceImpl implements UserService {
         character.setCharacterCloth(characterCloth);
     }
 
+    @Transactional
+    @Override
+    public void updateCharacterType(Long memberId, int characterType) {
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(
+                () -> new UsernameNotFoundException("Member not found with id: " + memberId));
+
+        Character character = member.getCharacter();
+
+        if (character == null) {
+            throw new IllegalStateException("Character not found for member with id: " + memberId);
+        }
+
+        character.setCharacterType(characterType);
+    }
 }
