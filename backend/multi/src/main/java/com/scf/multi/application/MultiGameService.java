@@ -120,7 +120,9 @@ public class MultiGameService {
         eventPublisher.publishEvent(new GameStartedEvent(roomId));
     }
 
-    public Solved addSolved(MultiGameRoom room, String sessionId, Content content) {
+    public Solved addSolved(String roomId, String sessionId, Content content) {
+
+        MultiGameRoom room = findOneById(roomId);
 
         Player player = findPlayerBySessionId(room, sessionId);
         Problem currentProblem = getCurrentProblem(room);
@@ -152,22 +154,7 @@ public class MultiGameService {
 
         solved.setIsCorrect(isCorrect);
 
-        updateScoreBoard(room, player, score);
-        updateLeaderBoard(room, player, score);
-
         return score;
-    }
-
-    public void finalizeGame(MultiGameRoom room, List<Rank> gameRank) {
-
-        room.getPlayers().forEach(player ->
-            Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
-                solveds.forEach(kafkaMessageProducer::sendSolved)
-            )
-        );
-
-        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());
-        room.finishGame();
     }
 
     public Player handlePlayerExit(String roomId, String sessionId) {
@@ -191,6 +178,96 @@ public class MultiGameService {
         room.updateHost(newHost);
 
         return newHost;
+    }
+
+    public List<ProblemResponse.ListDTO> getProblems(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        // problem -> problemList
+        return room.getProblems().stream()
+            .map(this::mapToProblemListDTO)
+            .toList();
+    }
+
+    public List<Player> getPlayerList(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+        return room.getPlayers();
+    }
+
+    public boolean increaseSubmit(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
+
+        if (curSubmitCount == room.getPlayers().size()) {
+            room.nextRound();
+
+            room.getCurSubmitCount().set(0);
+
+            return true;
+        }
+        return false;
+    }
+
+    public List<Rank> getRoundRank(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        return room.getRoundRank();
+    }
+
+    public List<Rank> getGameRank(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        return room.getGameRank();
+    }
+
+    public void finalizeGame(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().forEach(player ->
+            Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
+                solveds.forEach(kafkaMessageProducer::sendSolved)
+            )
+        );
+
+        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(room.getGameRank()).build());
+
+        room.finishGame();
+    }
+
+    public boolean checkIsFinishGame(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        return room.getRound().equals(room.getPlayRound());
+    }
+
+    public void updateScoreBoard(String roomId, String sessionId, int score) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        Player player = room.getPlayers().stream()
+            .filter(p -> p.getSessionId().equals(sessionId)).toList().getFirst();
+
+        room.updateScoreBoard(player.getUserId(), score);
+    }
+
+    public void updateLeaderBoard(String roomId, String sessionId, int score) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        Player player = room.getPlayers().stream()
+            .filter(p -> p.getSessionId().equals(sessionId)).toList().getFirst();
+
+        room.updateScoreBoard(player.getUserId(), score);
+
+        room.updateLeaderBoard(player.getUserId(), score);
     }
 
     private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
@@ -284,14 +361,6 @@ public class MultiGameService {
         return 0;
     }
 
-    private void updateScoreBoard(MultiGameRoom room, Player player, int score) {
-        room.updateScoreBoard(player.getUserId(), score);
-    }
-
-    private void updateLeaderBoard(MultiGameRoom room, Player player, int score) {
-        room.updateLeaderBoard(player.getUserId(), score);
-    }
-
     private boolean compareWith(ProblemType problemType, Solved solved,
         List<ProblemAnswer> answers) {
 
@@ -343,21 +412,5 @@ public class MultiGameService {
         }
 
         return BASE_SCORE * (MAX_SUBMIT_TIME - submitTime) + (streakCount * STREAK_BONUS);
-    }
-
-    public List<ProblemResponse.ListDTO> getProblems(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        // problem -> problemList
-        return room.getProblems().stream()
-            .map(this::mapToProblemListDTO)
-            .toList();
-    }
-
-    public List<Player> getPlayerList(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-        return room.getPlayers();
     }
 }

@@ -64,22 +64,39 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         throws Exception {
 
         String roomId = rooms.get(session.getId());
-        MultiGameRoom room = multiGameService.findOneById(roomId);
-        if (!room.getIsStart()) {
-            return;
-        }
+
+        multiGameService.validateRoom(roomId);
 
         SolvedMessage solvedMessage = getSolvedMessage(textMessage);
 
-        Solved solved = multiGameService.addSolved(room, session.getId(),
+        Solved solved = multiGameService.addSolved(roomId, session.getId(),
             solvedMessage.getContent());
 
         int attainedScore = multiGameService.markSolution(roomId, solved); // 문제 채점
+        multiGameService.updateScoreBoard(roomId, session.getId(), attainedScore);
+        multiGameService.updateLeaderBoard(roomId, session.getId(), attainedScore);
 
         String attainScoreMessage = makeResponseMessage("attainScore", attainedScore);
         sendMessage(session, attainScoreMessage);
 
-        handleRoundCompletion(room);
+        boolean isAllPlayerSubmit = multiGameService.increaseSubmit(roomId);
+
+        if (isAllPlayerSubmit) { // 모든 Player가 제출했으면
+            List<Rank> roundRank = multiGameService.getRoundRank(roomId);
+            broadcastMessageToRoom(roomId, "roundRank", roundRank);
+
+            List<Rank> gameRank = multiGameService.getGameRank(roomId);
+            broadcastMessageToRoom(roomId, "gameRank", gameRank);
+
+            if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
+
+                boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
+
+                if(isFinishGame) {
+                    multiGameService.finalizeGame(roomId);
+                }
+            }
+        }
     }
 
     private static void sendMessage(WebSocketSession session, String attainScoreMessage)
@@ -134,27 +151,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         ResponseMessage responseMessage = ResponseMessage.builder().type(type).payload(payload)
             .build();
         return JsonConverter.getInstance().toString(responseMessage);
-    }
-
-    private void handleRoundCompletion(MultiGameRoom room) throws Exception {
-
-        int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
-
-        if (curSubmitCount == room.getPlayers().size()) {
-            room.nextRound();
-
-            List<Rank> roundRank = room.getRoundRank();
-            broadcastMessageToRoom(room.getRoomId(), "roundRank", roundRank);
-
-            List<Rank> gameRank = room.getGameRank();
-            broadcastMessageToRoom(room.getRoomId(), "gameRank", gameRank);
-
-            if (room.getRound().equals(room.getPlayRound())) {
-                multiGameService.finalizeGame(room, gameRank);
-            }
-
-            room.getCurSubmitCount().set(0);
-        }
     }
 
     private void hostRotateIfNecessary(String roomId, Player exitPlayer) throws Exception {
