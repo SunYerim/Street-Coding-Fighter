@@ -8,45 +8,43 @@ import store from '../../store/store.js';
 import axios from 'axios';
 
 export default function Ranking() {
-  const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
+  const { rankingList, setTotalList, setWeeklyList, setDailyList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
   const { baseURL, accessToken } = store();
   useEffect(() => {
     const fetchRankingData = async () => {
       // const tempUrl = 'http://192.168.30.171:8080';
-      const rankingObj = {total : [], weekly : [], daily : []};
-
+      
       try {
-        const [totalRes, weeklyRes, dailyRes] = await Promise.all([
+        await Promise.all([
+          
           // axios.get(`${tempUrl}/rank/total`),
           // axios.get(`${tempUrl}/rank/weekly`),
           // axios.get(`${tempUrl}/rank/daily`),
           axios
-            .get(`${baseURL}/rank/total`, { headers: { Authorization: `Bearer ${accessToken}` } })
+          .get(`${baseURL}/rank/total`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
               console.log(res.data);
-              rankingObj.total = totalRes;
-              console.log(rankingObj);
+              setTotalList(res.data)
+              console.log("total", rankingList.total);
             })
             .catch((err) => console.log(err)),
           axios
             .get(`${baseURL}/rank/weekly`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
-              console.log(res.data);
-              rankingObj.weekly = weeklyRes;
-              console.log(rankingObj);
+              setWeeklyList(res.data)
+              console.log("weekly", rankingList.weekly);
+
             })
             .catch((err) => console.log(err)),
           axios
             .get(`${baseURL}/rank/daily`, { headers: { Authorization: `Bearer ${accessToken}` } })
             .then((res) => {
-              console.log(res.data);
-              rankingObj.daily = dailyRes;
-              console.log(rankingObj);
+              setDailyList(res.data)
+              console.log("daily", rankingList.daily);
             })
             .catch((err) => console.log(err)),
         ]).then(() => {
-          console.log(rankingObj);
-          setRankingList(rankingObj);
+          console.log('전부 불러오기 성공');
         });
       } catch (error) {
         console.error('Error fetching ranking data:', error);
