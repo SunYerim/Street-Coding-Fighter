@@ -9,6 +9,8 @@ import SoundStore from "../../../stores/SoundStore.jsx";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa"; //react-icons import
 import VolumeSlider from "./VolumeSlider.jsx";
 
+import Swal from "sweetalert2";
+
 Modal.setAppElement("#root");
 const settingIcon = "/settingIcon.png";
 
@@ -60,15 +62,21 @@ const styles = {
 };
 
 const Setting = ({ isOpen, onClose }) => {
-  const { accessToken, setAccessToken, baseURL, memberId, setMemberId } = store(
-    (state) => ({
-      accessToken: state.accessToken,
-      setAccessToken: state.setAccessToken,
-      baseURL: state.baseURL,
-      memberId: state.memberId,
-      setMemberId: state.setMemberId,
-    })
-  );
+  const {
+    accessToken,
+    setAccessToken,
+    baseURL,
+    memberId,
+    setMemberId,
+    clearLocalStorage,
+  } = store((state) => ({
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    baseURL: state.baseURL,
+    memberId: state.memberId,
+    setMemberId: state.setMemberId,
+    clearLocalStorage: state.clearLocalStorage,
+  }));
   const { setBgmVolume, setEffectVolume, bgmVolume, effectVolume } =
     SoundStore();
 
@@ -89,12 +97,18 @@ const Setting = ({ isOpen, onClose }) => {
           memberId: memberId,
         },
       });
-      setAccessToken(null);
-      setMemberId(null);
-      alert("로그아웃에 성공했습니다.");
+      clearLocalStorage();
+      Swal.fire({
+        text: "로그아웃 되었습니다.",
+        icon: "success",
+      });
       navigate("/login");
     } catch (error) {
-      alert("로그아웃에 실패했습니다.");
+      Swal.fire({
+        text: "로그아웃에 실패했습니다.",
+        icon: "error",
+      });
+      console.log(error);
     }
   };
 

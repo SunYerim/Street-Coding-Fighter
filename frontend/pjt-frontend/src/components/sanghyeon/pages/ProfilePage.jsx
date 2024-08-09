@@ -10,6 +10,7 @@ import movingIceSlime from "../../../assets/characters/movingIceSlime.gif";
 import movingFireSlime from "../../../assets/characters/movingFireSlime.gif";
 import movingThunderSlime from "../../../assets/characters/movingThunderSlime.gif";
 import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
+import Swal from "sweetalert2";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -84,7 +85,11 @@ function ProfilePage() {
         setCharacter(profileRes.data.character);
         setExp(profileRes.data.exp);
       } catch (error) {
-        alert("Failed to get profile", error);
+        Swal.fire({
+          text: "프로필을 불러오는데 실패했습니다.",
+          icon: "error",
+        });
+        console.log(error);
       }
     };
 

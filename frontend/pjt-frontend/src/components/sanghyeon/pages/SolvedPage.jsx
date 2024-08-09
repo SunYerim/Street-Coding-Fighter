@@ -4,6 +4,7 @@ import "../../../css/SolvedPage.css";
 import createAuthClient from "../apis/createAuthClient";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function SolvedPage() {
   const navigate = useNavigate();
@@ -45,6 +46,10 @@ function SolvedPage() {
           solvedRes.data.solvedList ? solvedRes.data.solvedList : []
         );
       } catch (error) {
+        Swal.fire({
+          text: "문제를 불러오는데 실패했습니다.",
+          icon: "error",
+        });
         console.error("Failed to fetch record", error);
       }
     };
@@ -110,7 +115,10 @@ function SolvedPage() {
                   <div
                     className="solved"
                     // onClick={() => navigate("/solved/" + data.solvedId)}
-                    onClick={alert("준비중입니다.")}
+                    onClick={Swal.fire({
+                      text: "준비 중입니다.",
+                      icon: "waning",
+                    })}
                     key={index}
                   >
                     <p>{data.title}</p>

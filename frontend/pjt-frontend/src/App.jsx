@@ -7,27 +7,25 @@ import ChangePasswordPage from './components/sanghyeon/pages/ChangePasswordPage.
 import SignUpPage from './components/sanghyeon/pages/SignUpPage.jsx';
 import MainPage from './components/main-page/MainPage.jsx';
 //mainpage 경로 수정했습니다. //
-import ProfilePage from './components/sanghyeon/pages/ProfilePage.jsx';
-import RecordPage from './components/sanghyeon/pages/RecordPage.jsx';
-import ReportPage from './components/sanghyeon/pages/ReportPage.jsx';
-import SolvedPage from './components/sanghyeon/pages/SolvedPage.jsx';
-import SingleMain from './components/single/SingleMain.jsx';
-import SinglePlay from './components/single/single-play/SinglePlay.jsx';
-import MultiMain from './components/multi/MultiMain.jsx';
-import MultiCreate from './components/multi/MultiCreate.jsx';
-import BattleCreate from './components/battle/BattleCreate.jsx';
-import BattleMain from './components/battle/BattleMain.jsx';
-import MultiGame from './components/multi/MultiGame.jsx';
-import BattleGameListPage from './components/sanghyeon/pages/BattleGameListPage.jsx';
-import BattleGamePage from './components/sanghyeon/pages/BattleGamePage.jsx';
-import Ranking from './components/ranking/Ranking.jsx';
-import SelectProblem from './components/sanghyeon/pages/SelectProblem.jsx';
-import CharacterSelection from './components/sanghyeon/pages/CharacterSelection.jsx';
-import store from './store/store.js';
-import Loading from './components/loading/Loading.jsx';
+import ProfilePage from "./components/sanghyeon/pages/ProfilePage.jsx";
+import RecordPage from "./components/sanghyeon/pages/RecordPage.jsx";
+import ReportPage from "./components/sanghyeon/pages/ReportPage.jsx";
+import SolvedPage from "./components/sanghyeon/pages/SolvedPage.jsx";
+import SingleMain from "./components/single/SingleMain.jsx";
+import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
+import MultiMain from "./components/multi/MultiMain.jsx";
+import MultiCreate from "./components/multi/MultiCreate.jsx";
+import BattleCreate from "./components/battle/BattleCreate.jsx";
+import BattleMain from "./components/battle/BattleMain.jsx";
+import MultiGame from "./components/multi/MultiGame.jsx";
+import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
+import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
+import Ranking from "./components/ranking/Ranking.jsx";
+import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
+import store from "./store/store.js";
+import Loading from "./components/loading/Loading.jsx";
 
-import ItemPage from './components/sanghyeon/pages/ItemPage.jsx';
-import MultipleChoice from './components/game/multipleChoice/MultipleChoice.jsx';
+import ItemPage from "./components/sanghyeon/pages/ItemPage.jsx";
 
 import { useEffect, useState } from 'react';
 import SoundStore from './stores/SoundStore.jsx';
@@ -103,7 +101,6 @@ function App() {
           <Route path="/single-main" element={<SingleMain />} />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
           <Route path="/single-play/:content_id" element={<SinglePlay />} />
-          <Route path="/multi-game-select" element={accessToken ? <SelectProblem /> : <LoginPage />} />
           <Route path="/multiple-choice" element={<BattleGamePage />} />
           <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
