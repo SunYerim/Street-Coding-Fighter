@@ -10,11 +10,11 @@ import java.util.Random;
 
 @Getter
 class ClothingType {
-    private final Integer type;
+    private final int type;
     private final double probability;
     private final Rarity rarity;
 
-    public ClothingType(Integer type, double probability, Rarity rarity) {
+    public ClothingType(int type, double probability, Rarity rarity) {
         this.type = type;
         this.probability = probability;
         this.rarity = rarity;
@@ -24,11 +24,11 @@ class ClothingType {
 
 @Getter
 class CharacterType {
-    private final Integer type;
+    private final int type;
     private final double probability;
     private final Rarity rarity;
 
-    public CharacterType(Integer type, double probability, Rarity rarity) {
+    public CharacterType(int type, double probability, Rarity rarity) {
         this.type = type;
         this.probability = probability;
         this.rarity = rarity;
