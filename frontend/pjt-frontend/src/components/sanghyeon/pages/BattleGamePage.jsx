@@ -259,15 +259,15 @@ const BattleGamePage = () => {
         timer: 3000,
       });
 
-      const timer = setTimeout(() => {
-        setSelectMyProblem(false);
-        setSelectOpponentProblem(false);
-        closeModal();
-        setGameStart(true);
-        setAnswerSubmitted(false);
-        setTimerOn(false);
-        startTimer();
-        setTimerOn(true);
+      const timer = setTimeout(async () => {
+        await setSelectMyProblem(false);
+        await setSelectOpponentProblem(false);
+        await closeModal();
+        await setGameStart(true);
+        await setAnswerSubmitted(false);
+        await setTimerOn(false);
+        await startTimer();
+        await setTimerOn(true);
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -336,15 +336,19 @@ const BattleGamePage = () => {
         setNormalQuit(true);
 
         openModal();
-        closeModal();
 
-        Swal.fire({
-          text: "게임이 종료되었습니다.",
-          icon: "success",
-          timer: 3000,
-        });
-
-        initBattleGame();
+        setTimeout(() => {
+          closeModal();
+          Swal.fire({
+            text: "게임이 종료되었습니다.",
+            icon: "success",
+            timer: 3000,
+          }).then(() => {
+            setTimeout(() => {
+              initBattleGame();
+            }, 3000);
+          });
+        }, 3000);
       } else {
         if (body.userId === memberId) {
           if (body.isAttack === true) {
@@ -469,8 +473,6 @@ const BattleGamePage = () => {
       sendQuitMessage();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
-      setRoomId("");
-      // navigate("/battle-list");
     };
 
     // return 내부에서 cleanup 함수를 호출
@@ -571,20 +573,22 @@ const BattleGamePage = () => {
   };
 
   const initBattleGame = () => {
+    setNormalQuit(false);
+    setBattleHistory([]);
     setMyHealth(100);
     setEnemyHealth(100);
-    setCurrentRound(1);
-    setEnemyProblems([]);
+    setCurrentRound(0);
     setCount(30);
-    setGameStart(false);
     setMyProblem({});
     setSelectMyProblem(false);
     setSelectOpponentProblem(false);
+    setGameStart(false);
     setGameEnded(false);
     setWinner("");
     setLoser("");
     setCount2(5);
     setAnswerSubmitted(false);
+    setTimerOn(false);
   };
 
   return (

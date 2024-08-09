@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
   width: 100%;
   margin: 0;
 }
@@ -69,12 +69,3 @@
 .before-start h2 {
   margin-top: 15%;
 }
-
-
-
-
-
-
-
-
-

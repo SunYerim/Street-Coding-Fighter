@@ -15,8 +15,9 @@ const newSocket = (roomId, memberId, name) => {
     console.log('WebSocket message received:', event.data);
   };
 
-  socket.onclose = () => {
+  socket.onclose = (event) => {
     console.log('WebSocket connection closed');
+    console.log(`Close code: ${event.code}, reason: ${event.reason}, wasClean: ${event.wasClean}`);
   };
 
   socket.onerror = (error) => {

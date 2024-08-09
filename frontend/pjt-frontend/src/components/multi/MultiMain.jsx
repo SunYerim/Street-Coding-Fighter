@@ -1,4 +1,5 @@
 import "../../index.css";
+import Header from"../sanghyeon/components/Header.jsx";
 import "../../css/GameMain.css";
 import "../../css/GameCreate.css";
 import MultiRoom from "../game/MultiRoom.jsx";
@@ -7,6 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import store from '../../store/store.js';
 import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
+import SoundStore from "../../stores/SoundStore.jsx";
 
 export default function MultiMain() {
   const navigate = useNavigate();
@@ -63,6 +65,7 @@ export default function MultiMain() {
 
   return (
     <>
+      <Header />
       <div className="container">
         <div className="sub-container">
         <div className="list-container">
