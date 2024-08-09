@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../../css/CharacterSelection.css";
+import Swal from "sweetalert2";
 import greenSlime from "../../../assets/characters/greenSlime.png";
 import thunderSlime from "../../../assets/characters/thunderSlime.png";
 import fireSlime from "../../../assets/characters/fireSlime.png";
@@ -69,8 +70,10 @@ const CharacterSelection = () => {
 
   useEffect(() => {
     if (selectedCharacter === "nyan") {
-      alert("Hidden Character Selected");
-      // signup();
+      Swal.fire({
+        text: "히든 캐릭터가 선택되었습니다.",
+        icon: "success",
+      });
     }
   }, [selectedCharacter]);
 
@@ -93,7 +96,10 @@ const CharacterSelection = () => {
 
   const signup = async function () {
     if (!selectedCharacter && !prevCharacter) {
-      alert("캐릭터를 선택해주세요.");
+      Swal.fire({
+        text: "캐릭터를 선택해주세요.",
+        icon: "warning",
+      });
       return;
     }
 
@@ -109,11 +115,18 @@ const CharacterSelection = () => {
         method: "POST",
         url: `${baseURL}/user/public/join`,
         data: updatedRegisterInfo,
-      })
+      });
 
-      alert("회원가입이 완료되었습니다.");
+      Swal.fire({
+        text: "회원가입에 성공했습니다.",
+        icon: "success",
+      });
       navigate("/login");
     } catch (error) {
+      Swal.fire({
+        text: "회원가입에 실패했습니다.",
+        icon: "error",
+      });
       console.log(error);
     }
   };
