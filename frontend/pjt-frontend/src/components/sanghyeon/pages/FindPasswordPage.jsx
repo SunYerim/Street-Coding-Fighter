@@ -3,6 +3,7 @@ import { useRef } from "react";
 import store from "../../../store/store.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const FindPasswordPage = () => {
   const { userId, baseURL, code, setCode, setUserId } = store((state) => ({
@@ -25,7 +26,15 @@ const FindPasswordPage = () => {
           userId: currentUserId.current.value,
         },
       });
+      Swal.fire({
+        text: "인증코드가 발송되었습니다.",
+        icon: "success",
+      });
     } catch (error) {
+      Swal.fire({
+        text: "인증코드 발송에 실패했습니다.",
+        icon: "error",
+      });
       console.log(error);
     }
   };
@@ -33,7 +42,7 @@ const FindPasswordPage = () => {
   const checkVerificationCode = async () => {
     try {
       const chkRes = await axios({
-        method: "GET",
+        method: "POST",
         url: `${baseURL}/user/public/request-verification`,
         data: {
           userId: currentUserId.current.value,
@@ -42,15 +51,30 @@ const FindPasswordPage = () => {
       });
       isVerified.current = true;
       setUserId(currentUserId.current.value);
+      Swal.fire({
+        text: "인증코드가 일치합니다.",
+        icon: "success",
+      });
     } catch (error) {
+      Swal.fire({
+        text: "인증코드가 일치하지 않습니다.",
+        icon: "error",
+      });
       console.log(error);
     }
   };
 
   const completeVerification = () => {
     if (!isVerified.current) {
-      alert("인증코드를 확인해주세요.");
+      Swal.fire({
+        text: "인증코드를 확인해주세요.",
+        icon: "warning",
+      });
     } else {
+      Swal.fire({
+        text: "인증이 완료되었습니다.",
+        icon: "success",
+      });
       setCode(verificationCode.current.value);
       navigate("/reset-password");
     }

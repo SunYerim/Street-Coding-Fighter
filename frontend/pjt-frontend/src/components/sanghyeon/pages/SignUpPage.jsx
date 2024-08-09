@@ -53,7 +53,7 @@ const SignUpPage = () => {
 
     if (passwordRegex.test(password1.current.value) === false) {
       Swal.fire({
-        text: "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!",
+        text: "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상 25자리 이하로 입력해주세요!",
         icon: "warning",
       });
       return;
