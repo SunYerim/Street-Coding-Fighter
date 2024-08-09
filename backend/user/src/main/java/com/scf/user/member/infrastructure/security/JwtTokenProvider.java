@@ -28,13 +28,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
+    @Value("${spring.jwt.secret}")
     private String secret;
 
-    @Value("${jwt.access-token-expiry}")
+    @Value("${spring.jwt.access-token-expiry}")
     private long accessTokenExpiry;
 
-    @Value("${jwt.refresh-token-expiry}")
+    @Value("${spring.jwt.refresh-token-expiry}")
     private long refreshTokenExpiry;
 
     private static final String AUTHORITY_KEY = "auth";

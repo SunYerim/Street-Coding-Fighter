@@ -17,12 +17,12 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 public class KafkaProducerConfig {
 
     @Bean
-    public ProducerFactory<String, List<RenewExp>> renewExpProducerFactory() {
+    public ProducerFactory<String, RenewExp> renewExpProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs(RenewExp.class));
     }
 
     @Bean
-    public KafkaTemplate<String, List<RenewExp>> renewExpKafkaTemplate() {
+    public KafkaTemplate<String, RenewExp> renewExpKafkaTemplate() {
         return new KafkaTemplate<>(renewExpProducerFactory());
     }
 
