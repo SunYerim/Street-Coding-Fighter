@@ -2,6 +2,8 @@ package com.scf.user.member.application.service;
 
 
 import com.scf.user.member.application.client.ContentClient;
+import com.scf.user.member.domain.dto.UserInfoListResponseDto;
+import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.dto.TokenDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
@@ -17,6 +19,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -169,5 +173,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow().getName();
     }
 
+
+    @Override
+    public UserInfoListResponseDto sendUserList() {
+        // 모든 유저 정보 조회
+        List<Member> members = userRepository.findAll();
+        System.out.println(members.size());
+
+        List<UserInfotoSingleResponseDto> userInfotoSingleList = members.stream()
+            .map(member -> new UserInfotoSingleResponseDto(member.getId(), member.getName()))
+            .collect(Collectors.toList());
+
+        return new UserInfoListResponseDto(userInfotoSingleList);
+    }
 
 }
