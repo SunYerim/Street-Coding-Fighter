@@ -5,6 +5,7 @@ import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const ReportPage = () => {
   const navigate = useNavigate();
@@ -23,9 +24,16 @@ const ReportPage = () => {
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
+      Swal.fire({
+        text: "리포트 다운로드가 완료되었습니다.",
+        icon: "success",
+      });
     } catch (error) {
+      Swal.fire({
+        text: "리포트 다운로드에 실패했습니다.",
+        icon: "error",
+      });
       console.log(error);
-      alert("리포트 다운로드에 실패했습니다.");
     }
   };
 
