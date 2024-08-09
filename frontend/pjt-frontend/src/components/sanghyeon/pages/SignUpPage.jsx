@@ -31,6 +31,7 @@ const SignUpPage = () => {
       Swal.fire({
         text: "아이디는 3글자 이상 15글자 미만으로 입력해주세요.",
         icon: "warning",
+        timer: 3000,
       });
       return;
     }
@@ -39,6 +40,7 @@ const SignUpPage = () => {
       Swal.fire({
         text: "아이디 중복 확인 을 해주세요.",
         icon: "warning",
+        timer: 3000,
       });
       return;
     }
@@ -47,6 +49,7 @@ const SignUpPage = () => {
       Swal.fire({
         text: "비밀번호가 일치하지 않습니다.",
         icon: "warning",
+        timer: 3000,
       });
       return;
     }
@@ -55,6 +58,7 @@ const SignUpPage = () => {
       Swal.fire({
         text: "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상 25자리 이하로 입력해주세요!",
         icon: "warning",
+        timer: 3000,
       });
       return;
     }
@@ -81,6 +85,7 @@ const SignUpPage = () => {
       Swal.fire({
         text: "사용 가능한 아이디입니다.",
         icon: "success",
+        timer: 3000,
       });
       idCheckComplete.current = true;
     } catch (error) {
@@ -88,12 +93,14 @@ const SignUpPage = () => {
         Swal.fire({
           text: "이미 사용 중인 아이디입니다.",
           icon: "error",
+          timer: 3000,
         });
       } else {
         console.log(error.response);
         Swal.fire({
           text: "알 수 없는 오류가 발생했습니다.",
           icon: "error",
+          timer: 3000,
         });
       }
     }

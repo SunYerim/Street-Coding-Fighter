@@ -242,6 +242,7 @@ const BattleGamePage = () => {
           Swal.fire({
             text: "문제 타입을 알 수 없습니다.",
             icon: "error",
+            timer: 3000,
           });
           console.log("Unknown problem type");
       }
@@ -251,16 +252,27 @@ const BattleGamePage = () => {
 
   useEffect(() => {
     if (selectOpponentProblem && selectMyProblem) {
-      setSelectMyProblem(false);
-      setSelectOpponentProblem(false);
-      closeModal();
-      setGameStart(true);
-      setAnswerSubmitted(false);
-      setTimerOn(false);
-      startTimer();
-      setTimerOn(true);
+      Swal.fire({
+        text: "3초 후 라운드가 시작됩니다!",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+
+      const timer = setTimeout(() => {
+        setSelectMyProblem(false);
+        setSelectOpponentProblem(false);
+        closeModal();
+        setGameStart(true);
+        setAnswerSubmitted(false);
+        setTimerOn(false);
+        startTimer();
+        setTimerOn(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
     }
-  }, [selectOpponentProblem, selectMyProblem]); // 이 두 상태가 변경될 때마다 실행됩니다.
+  }, [selectOpponentProblem, selectMyProblem]);
 
   const submitAnswer = () => {
     const endpoint = `/send/game/${roomId}/answer`;
@@ -284,6 +296,7 @@ const BattleGamePage = () => {
         Swal.fire({
           text: "문제 타입을 알 수 없습니다.",
           icon: "error",
+          timer: 3000,
         });
         console.log("Unknown problem type");
         break;
@@ -304,6 +317,11 @@ const BattleGamePage = () => {
       JSON.stringify(submitAnswerDTO)
     );
     setAnswerSubmitted(true);
+    Swal.fire({
+      text: "답안을 제출하셨습니다.",
+      icon: "success",
+      timer: 3000,
+    });
   };
 
   const subscribeResult = () => {
@@ -320,9 +338,13 @@ const BattleGamePage = () => {
         openModal();
         closeModal();
 
-        setTimeout(() => {
-          navigate("/battle-list");
-        }, 5000);
+        Swal.fire({
+          text: "게임이 종료되었습니다.",
+          icon: "success",
+          timer: 3000,
+        });
+
+        initBattleGame();
       } else {
         if (body.userId === memberId) {
           if (body.isAttack === true) {
@@ -435,7 +457,11 @@ const BattleGamePage = () => {
       await delay(5000);
 
       if (normalQuit === false) {
-        alert("호스트와의 연결이 끊겼습니다.");
+        Swal.fire({
+          text: "호스트와의 연결이 끊겼습니다.",
+          icon: "error",
+          timer: 3000,
+        });
       }
 
       await delay(5000);
@@ -496,6 +522,7 @@ const BattleGamePage = () => {
       Swal.fire({
         text: "게임 시작에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
@@ -503,7 +530,11 @@ const BattleGamePage = () => {
 
   const handleSubmit = () => {
     if (answerSubmitted === true) {
-      alert("이미 답안을 제출하셨습니다.");
+      Swal.fire({
+        text: "이미 답안을 제출하셨습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
     } else {
       submitAnswer();
     }
@@ -537,6 +568,23 @@ const BattleGamePage = () => {
       default:
         return <div>Unknown problem type</div>;
     }
+  };
+
+  const initBattleGame = () => {
+    setMyHealth(100);
+    setEnemyHealth(100);
+    setCurrentRound(1);
+    setEnemyProblems([]);
+    setCount(30);
+    setGameStart(false);
+    setMyProblem({});
+    setSelectMyProblem(false);
+    setSelectOpponentProblem(false);
+    setGameEnded(false);
+    setWinner("");
+    setLoser("");
+    setCount2(5);
+    setAnswerSubmitted(false);
   };
 
   return (

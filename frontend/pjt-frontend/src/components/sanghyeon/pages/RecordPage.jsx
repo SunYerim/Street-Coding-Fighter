@@ -44,6 +44,7 @@ function RecordPage() {
         Swal.fire({
           text: "기록을 불러오는데 실패했습니다.",
           icon: "error",
+          timer: 3000,
         });
         console.error("Failed to fetch record", error);
       }

@@ -63,12 +63,14 @@ const LoginPage = () => {
       Swal.fire({
         text: "로그인 성공",
         icon: "success",
+        timer: 3000,
       });
       navigate("/main");
     } catch (error) {
       Swal.fire({
         text: "아이디 또는 비밀번호가 일치하지 않습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }

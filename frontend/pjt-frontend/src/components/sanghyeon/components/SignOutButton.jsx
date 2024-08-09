@@ -41,12 +41,14 @@ const SignOutButton = function () {
       Swal.fire({
         text: "회원탈퇴에 성공했습니다.",
         icon: "success",
+        timer: 3000,
       });
       navigate("/login");
     } catch (error) {
       Swal.fire({
         text: "회원탈퇴에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
