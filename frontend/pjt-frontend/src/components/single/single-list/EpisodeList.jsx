@@ -7,7 +7,7 @@ import SingleInfoStore from '../../../stores/SingleInfoStore';
 import store from '../../../store/store';
 import SoundStore from '../../../stores/SoundStore';
 import { MdFlag } from 'react-icons/md';
-
+import checkIsCompleted from '../checkIsCompleted';
 const rowList = [0, 1, 2, 3];
 
 export default function EpisodeList({ rownum }) {
@@ -38,7 +38,6 @@ export default function EpisodeList({ rownum }) {
       // alert("이전 에피소드를 먼저 클리어해주세요.");
     }
   };
-
   return (
     <>
       {rowList.map((r) => (
@@ -48,7 +47,7 @@ export default function EpisodeList({ rownum }) {
               <React.Fragment key={e.id}>
                 <S.CheckPoint
                   key={`checkpoint-${e.id}`}
-                  $completed={completed[e.id]?.complete}
+                  $completed={checkIsCompleted(e.id)}
                   $isNext={e.id === nextIndex+1}
                   onClick={handleClick(e.id)}
                   onMouseEnter={() => {
