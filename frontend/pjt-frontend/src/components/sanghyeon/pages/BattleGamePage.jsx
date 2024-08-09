@@ -568,7 +568,9 @@ const BattleGamePage = () => {
     setSelectMyProblem(false);
     setSelectOpponentProblem(false);
     setNormalQuit(false);
+    closeModal();
     setBattleHistory([]);
+    setEnemyProblems([]);
     setMyHealth(100);
     setEnemyHealth(100);
     setCurrentRound(0);
