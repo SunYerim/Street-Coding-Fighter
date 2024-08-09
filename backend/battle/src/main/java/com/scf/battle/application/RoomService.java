@@ -81,9 +81,10 @@ public class RoomService {
                 .title(room.getTitle())
                 .maxPlayer(2)
                 .curPlayer(determineCurrentPlayers(room))
-                .isLock(room.getPassword() != null)
+                .isLock(!"ssafy".equals(room.getPassword()))
                 .build();
     }
+
 
     private int determineCurrentPlayers(BattleGameRoom room) {
         return (room.getPlayerB() != null && room.getPlayerB().getUserId() != null) ? 2 : 1;
