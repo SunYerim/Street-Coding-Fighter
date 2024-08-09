@@ -179,47 +179,44 @@ export default function MultiGame() {
           console.log(`얻은 점수: ${data.payload}`);
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
-          setTimerEnded(false);
+          // setTimerEnded(false);
           console.log("전체랭킹: ", data.payload);
           isSubmitRef.current = false;
-          setCount(30);
-          // handleNextRound();
+          // setCount(30);
           setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
 
           setTimeout(() => {
-            console.log('이건여기!',currentRound);
-            if (currentRound < problemList.length - 1) {
-              // 모달 열고 4초 대기
-              // setModalOpen(true);
-              // setTimeout(() => {
-              //   setModalOpen(false);
-              // }, 4000);
-
-              // 문제번호++, 제출상태 초기화
-              console.log("여기 들어오냐?");
-
-              setCount(30);
-            } else {
-              // setResultModalOpen(true);
-              // setTimeout(() => {
-              //   setResultModalOpen(false);
-              //   setPlaying(false);
-              //   clearGameRank();
-              //   clearRoundRank();
-              //   clearProblemList();
-              //   clearProblemType();
-              // }, 4000);
-              // setPlaying(false);
-              // clearGameRank();
-              // clearRoundRank();
-              // clearProblemList();
-              // clearProblemType();
+            console.log('게임여기!', round);
+            if (round == problemList.length - 1) {
+              setResultModalOpen(true);
+              setTimeout(() => {
+                setResultModalOpen(false);
+                setPlaying(false);
+                clearGameRank();
+                clearRoundRank();
+                clearProblemList();
+                setTimerEnded(false);
+              }, 4000);
             }
           }, 500);
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
+
+          setTimeout(() => {
+            console.log('라운드여기!', round);
+            if (round < problemList.length - 1) {
+              // 모달 열고 4초 대기
+              setModalOpen(true);
+              setTimeout(() => {
+                setModalOpen(false);
+                setCount(30);
+                setTimerEnded(false);
+              }, 4000);
+            }
+          }, 500);
+
         }
       } else {
         console.error("Received non-JSON message:", messageData);
@@ -581,8 +578,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {/* {modalOpen && <MultiResultModal />}
-      {resultModalOpen && <MultiResultModal />} */}
+      {modalOpen && <MultiResultModal />}
+      {resultModalOpen && <MultiResultModal />}
     </>
   );
 }
