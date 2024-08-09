@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -74,6 +75,7 @@ public class UserServiceImpl implements UserService {
         // Character 생성
         Character character = new Character();
         character.setCharacterType(registerRequestDto.getCharacterType());
+        character.setCharacterCloth(0); // defalut는 0
         character.setMember(savedMember);
 
         // Member 엔티티에 Character 설정
@@ -193,4 +195,21 @@ public class UserServiceImpl implements UserService {
         Member member = userRepository.getById(memberId);
         return new UserCharaterTypeResponseDTO(member.getCharacter().getCharacterType());
     }
+
+    @Transactional
+    @Override
+    public void updateCharacterCloth(Long memberId, int characterCloth) {
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(
+                () -> new UsernameNotFoundException("Member not found with id: " + memberId));
+
+        Character character = member.getCharacter();
+
+        if (character == null) {
+            throw new IllegalStateException("Character not found for member with id: " + memberId);
+        }
+
+        character.setCharacterCloth(characterCloth);
+    }
+
 }
