@@ -209,7 +209,7 @@ useEffect(() => {
           }else if (data.type === "player-list") {
             // 플레이어 리스트
             setPlayerList(data.payload);
-            console.log(`플레이어 리스트: ${data.payload}`);
+            console.log(`플레이어 리스트: ${JSON.stringify(data.payload)}`);
           } else if (data.type === "submit-list") {
             // 제출자 리스트
             setSubmitList(data.payload);
