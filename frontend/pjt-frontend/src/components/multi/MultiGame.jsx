@@ -34,6 +34,8 @@ export default function MultiGame() {
     problemList,
     setProblemList,
     clearProblemList,
+    playerList,
+    setPlayList,
     roundRank,
     setRoundRank,
     clearRoundRank,
@@ -41,6 +43,7 @@ export default function MultiGame() {
     setGameRank,
     clearGameRank,
     submitList,
+    setSubmitList,
     clearSubmitList,
     type,
     setType,
@@ -54,21 +57,24 @@ export default function MultiGame() {
     roomId: state.roomId,
     playing: state.playing,
     setPlaying: state.setPlaying,
-    setRoomId: state.setRoomId,
     problemList: state.problemList,
     setProblemList: state.setProblemList,
+    clearProblemList: state.clearProblemList,
+    playerList: state.playerList,
+    setPlayList: state.setPlayList,
+    setRoomId: state.setRoomId,
     roundRank: state.roundRank,
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
     clearGameRank: state.clearGameRank,
     submitList: state.submitList,
+    setSubmitList: state.setSubmitList,
     clearSubmitList: state.clearSubmitList,
     type: state.type,
     setType: state.setType,
     currentRound: state.currentRound,
     setCurrentRound: state.setCurrentRound,
-    clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
     clearType: state.clearType,
     blankSolve: state.blankSolve,
@@ -179,14 +185,14 @@ export default function MultiGame() {
         } else if (data.type === "attainScore") {
           getScore(data.payload);
           console.log(`얻은 점수: ${data.payload}`);
-        } else if (data.type === "") {
-          submitList(data.payload);
-          console.log(`제출자: ${data.payload}`);
         } else if (data.type === "play-list") {
           // 플레이어 리스트
-          
-
+          setPlayList(data.payload);
           console.log(`플레이어 리스트: ${data.payload}`);
+        } else if (data.type === "submit-list") {
+          // 제출자 리스트
+          setSubmitList(data.payload);
+          console.log(`제출자 리스트: ${data.payload}`);
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           console.log("전체랭킹: ", data.payload);
