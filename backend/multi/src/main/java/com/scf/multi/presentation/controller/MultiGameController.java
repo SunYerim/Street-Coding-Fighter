@@ -131,8 +131,10 @@ public class MultiGameController {
             .build();
 
         kafkaMessageProducer.sendResult(gameResult);
-        kafkaMessageProducer.sendSolved(List.of(hermesSolved1, hermesSolved2));
-        kafkaMessageProducer.sendSolved(List.of(jackSolved1, jackSolved2));
+        kafkaMessageProducer.sendSolved(hermesSolved1);
+        kafkaMessageProducer.sendSolved(hermesSolved2);
+        kafkaMessageProducer.sendSolved(jackSolved1);
+        kafkaMessageProducer.sendSolved(jackSolved2);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
