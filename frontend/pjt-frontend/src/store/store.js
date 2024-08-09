@@ -174,7 +174,7 @@ const store = create(
       setMyShortAnswerProblem: (myShortAnswerProblem) =>
         set({ myShortAnswerProblem }),
 
-      multipleChoiceSolve: {},
+      multipleChoiceSolve: -1,
       setMultipleChoiceSolve: (multipleChoiceSolve) =>
         set({ multipleChoiceSolve }),
 
