@@ -368,34 +368,34 @@ export default function MultiGame() {
       return () => clearInterval(id);
     }, [count]);
 
-    useEffect(() => {
-      if (count === 0 && !isSubmitRef.current) {
-        switch (type) {
-          case "FILL_IN_THE_BLANK":
-            setBlankSolve(null);
-            handleBlankAnswer();
-            isSubmitRef.current = true;
-            break;
-          case "SHORT_ANSWER_QUESTION":
-            handleShortAnswer(null);
-            isSubmitRef.current = true;
-            break;
-          case "MULTIPLE_CHOICE":
-            handleChoiceSelection(null);
-            isSubmitRef.current = true;
-            break;
-          default:
-            console.log("Unknown problem type: " + type);
-        }
-      }
-    }, [count, isSubmitRef]);
-
     return (
       <div>
         <span>{count}</span>
       </div>
     );
   }
+
+  useEffect(() => {
+    if (count === 0 && !isSubmitRef.current) {
+      switch (type) {
+        case "FILL_IN_THE_BLANK":
+          setBlankSolve(null);
+          handleBlankAnswer();
+          isSubmitRef.current = true;
+          break;
+        case "SHORT_ANSWER_QUESTION":
+          handleShortAnswer(null);
+          isSubmitRef.current = true;
+          break;
+        case "MULTIPLE_CHOICE":
+          handleChoiceSelection(null);
+          isSubmitRef.current = true;
+          break;
+        default:
+          console.log("Unknown problem type: " + type);
+      }
+    }
+  }, [count, isSubmitRef]);
 
   // ---------------------- 채팅 WebSocket ----------------------
 
