@@ -190,4 +190,30 @@ public class UserController {
         }
     }
 
+    @GetMapping("/gacha/character-type")
+    public ResponseEntity<?> gachaCharacterType(@RequestHeader("memberId") Long memberId) {
+        try {
+            // 랜덤으로 캐릭터 타입을 뽑음
+            int characterType = gachaService.drawCharacterType();
+
+            // 뽑힌 캐릭터 타입을 해당 사용자의 캐릭터에 업데이트
+            userService.updateCharacterType(memberId, characterType);
+
+            // 성공 응답 반환
+            return ResponseEntity.ok("Character Type updated successfully.");
+
+        } catch (UsernameNotFoundException e) {
+            // 회원을 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Member not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            // 캐릭터가 없는 경우 등
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid operation: " + e.getMessage());
+        } catch (Exception e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An unexpected error occurred: " + e.getMessage());
+        }
+    }
 }
