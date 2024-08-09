@@ -23,7 +23,7 @@ const RankingGraph = () => {
     <GraphContainer>
       <LeaderBoardSecond>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={2} />
+          <PodiumPlayer rank={1} />
         </PodiumPlayerContainer>
         <PlaceHolder>2</PlaceHolder>
       </LeaderBoardSecond>
@@ -36,7 +36,7 @@ const RankingGraph = () => {
       </LeaderBoardFirst>
       <LeaderBoardThird>
         <PodiumPlayerContainer>
-          <PodiumPlayer rank={1} />
+          <PodiumPlayer rank={2} />
         </PodiumPlayerContainer>
           <PlaceHolder>3</PlaceHolder>
       </LeaderBoardThird>
