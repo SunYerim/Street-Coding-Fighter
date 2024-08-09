@@ -88,14 +88,14 @@ const multiStore = create((set) => ({
   clearCurrentRound: () => set({ currentRound: 0 }),
 
   // 라운드 랭크
-  roundRank: [0,0,0],
+  roundRank: [],
   setRoundRank: (roundRank) => set({ roundRank }),
-  clearRoundRank: () => set({ roundRank: [0,0,0] }),
+  clearRoundRank: () => set({ roundRank: [] }),
 
   // 게임랭크
-  gameRank: [0,0,0],
+  gameRank: [],
   setGameRank: (gameRank) => set({ gameRank }),
-  clearGameRank: () => set({ gameRank: [0,0,0] }),
+  clearGameRank: () => set({ gameRank: [] }),
 
   // 빈칸 답변
   blankSolve: null,

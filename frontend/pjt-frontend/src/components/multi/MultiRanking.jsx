@@ -5,16 +5,16 @@ import multiStore from '../../stores/multiStore.jsx';
 const MultiRanking = () => {
   const { gameRank, roundRank, playing } = multiStore;
 
-  const [userList, setUserList] = useState([]);
+  let userList = playing ? roundRank : gameRank;
 
-  useEffect(() => {
-    setUserList(playing ? roundRank : gameRank);
-  }, [playing, gameRank, roundRank]);
+  if (!Array.isArray(userList)) {
+    userList = [];
+  }
 
   return (
     <GraphContainer>
       <LeaderBoardSecond>
-        <PodiumPlayerContainer>
+        <PodiumPlayerContainer>W
           {userList.length > 1 ? (
             <>
               <div>{userList[1].username}</div>
@@ -146,3 +146,4 @@ const PlaceHolder = styled.div`
   top: 10px;
   font-size: 1.5em;
 `;
+  
