@@ -2,6 +2,7 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
+import com.scf.multi.domain.dto.user.PlayerListDTO;
 import com.scf.multi.domain.dto.user.SubmitItem;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.SolvedMessage;
@@ -55,7 +56,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
 
-        List<Player> playerList = multiGameService.getPlayerList(roomId);
+        List<PlayerListDTO> playerList = multiGameService.getPlayerList(roomId);
         broadcastMessageToRoom(roomId, "player-list", playerList);
     }
 

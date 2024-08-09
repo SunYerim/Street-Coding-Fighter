@@ -4,6 +4,7 @@ import static com.scf.multi.global.error.ErrorCode.GAME_ALREADY_STARTED;
 import static com.scf.multi.global.error.ErrorCode.USER_NOT_FOUND;
 
 import com.scf.multi.domain.dto.user.GameResult;
+import com.scf.multi.domain.dto.user.PlayerListDTO;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.SubmitItem;
 import com.scf.multi.domain.event.GameStartedEvent;
@@ -22,10 +23,12 @@ import com.scf.multi.domain.repository.MultiGameRepository;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.infrastructure.KafkaMessageProducer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -193,10 +196,13 @@ public class MultiGameService {
             .toList();
     }
 
-    public List<Player> getPlayerList(String roomId) {
+    public List<PlayerListDTO> getPlayerList(String roomId) {
 
         MultiGameRoom room = findOneById(roomId);
-        return room.getPlayers();
+        return room.getPlayers()
+            .stream()
+            .map(PlayerListDTO::fromPlayer)
+            .toList();
     }
 
     public boolean increaseSubmit(String roomId) {
