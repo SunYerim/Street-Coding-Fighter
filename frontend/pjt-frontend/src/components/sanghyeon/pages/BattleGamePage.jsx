@@ -258,9 +258,9 @@ const BattleGamePage = () => {
       });
 
       const timer = setTimeout(async () => {
+        await closeModal();
         await setSelectMyProblem(false);
         await setSelectOpponentProblem(false);
-        await closeModal();
         await setGameStart(true);
         await setAnswerSubmitted(false);
         await setCount(30);
@@ -333,14 +333,14 @@ const BattleGamePage = () => {
         setGameStart(false);
         openModal();
         setTimeout(() => {
-          closeModal();
           Swal.fire({
             text: "게임이 종료되었습니다.",
             icon: "success",
             timer: 3000,
           }).then(() => {
-            setTimeout(() => {
-              initBattleGame();
+            setTimeout(async () => {
+              await initBattleGame();
+              setSelectOpponentProblem(false);
             }, 3000);
           });
         }, 3000);
@@ -564,11 +564,11 @@ const BattleGamePage = () => {
   };
 
   const initBattleGame = () => {
+    closeModal();
     setCount(30);
     setSelectMyProblem(false);
     setSelectOpponentProblem(false);
     setNormalQuit(false);
-    closeModal();
     setBattleHistory([]);
     setEnemyProblems([]);
     setMyHealth(100);
