@@ -2,8 +2,13 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import store from "../../../store/store.js";
 
 const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
+  const { clearLocalStorage } = store((state) => ({
+    clearLocalStorage: state.clearLocalStorage,
+  }));
+
   const authClient = axios.create({
     baseURL,
     withCredentials: true,
@@ -25,6 +30,20 @@ const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
       setAccessToken(accessToken);
     } catch (error) {
       console.log(error);
+      clearLocalStorage();
+      Swal.fire({
+        icon: "error",
+        title: "세션이 만료되었습니다.",
+        text: "다시 로그인해주세요.",
+        timer: 2000,
+        showConfirmButton: false,
+        showCloseButton: false,
+      });
+
+      setTimeout(() => {
+        window.location.href = "/login";
+        window.location.reload();
+      }, 2000);
     }
   };
 

@@ -13,7 +13,7 @@ function SolvedPage() {
   const [sortedData, setSortedData] = useState([]);
   const [sortOption, setSortOption] = useState("title");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
 
   const { accessToken, setAccessToken, baseURL, memberId, name } = store(
     (state) => ({
@@ -116,11 +116,13 @@ function SolvedPage() {
                   <div
                     className="solved"
                     // onClick={() => navigate("/solved/" + data.solvedId)}
-                    onClick={Swal.fire({
-                      text: "준비 중입니다.",
-                      icon: "waning",
-                      timer: 3000,
-                    })}
+                    onClick={() =>
+                      Swal.fire({
+                        text: "준비 중입니다.",
+                        icon: "warning",
+                        timer: 3000,
+                      })
+                    }
                     key={index}
                   >
                     <p>{data.title}</p>
