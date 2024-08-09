@@ -7,8 +7,8 @@
 #root {
   margin: 0;
   min-width: 640px;
-  min-height: 100vw;
-  background-image: url("/background1.gif");
+  min-height: 100vh;
+  /* background-image: url("/background1.gif"); */
   background-size: 100vh;
 }
 
