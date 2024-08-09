@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaMessageProducer {
 
-    private final KafkaTemplate<String, List<Solved>> solvedKafkaTemplate;
+    private final KafkaTemplate<String, Solved> solvedKafkaTemplate;
     private final KafkaTemplate<String, GameResultRoomDTO> gameResultKafkaTemplate;
 
-    public void sendSolved(List<Solved> solved) {
+    public void sendSolved(Solved solved) {
         String topic = "solved";
         solvedKafkaTemplate.send(topic, solved);
         System.out.println("Sent SolvedDTO: " + solved);

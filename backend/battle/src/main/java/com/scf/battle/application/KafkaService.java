@@ -30,7 +30,7 @@ public class KafkaService {
         players.forEach(player ->
             Optional.ofNullable(player)
                 .map(Player::getSolveds)
-                .ifPresent(kafkaMessageProducer::sendSolved)
+                .ifPresent(solveds -> solveds.forEach(kafkaMessageProducer::sendSolved))
         );
     }
 
@@ -41,22 +41,6 @@ public class KafkaService {
             room.getPlayerA().getUserId(),
             room.getPlayerB().getUserId(),
             determineValue
-        );
-        kafkaMessageProducer.sendGameResult(gameResultRoomDTO);
-    }
-
-    public void testSendToKafkaSolved(List<Solved> solved) {
-        kafkaMessageProducer.sendSolved(solved);
-    }
-
-
-    public void testSendToKafkaGameResult() {
-        GameResultRoomDTO gameResultRoomDTO = new GameResultRoomDTO(
-            GameType.BATTLE,
-            LocalDateTime.now(),
-            1L,
-            2L,
-            GameResultType.DRAW
         );
         kafkaMessageProducer.sendGameResult(gameResultRoomDTO);
     }
