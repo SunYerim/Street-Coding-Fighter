@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
 public class Player {
 
-    private final Long userId;
-    private final String username;
+    private Long userId;
+    private String username;
     private Boolean isHost;
     private Integer streakCount;
     private final List<Solved> solveds = new ArrayList<>();
