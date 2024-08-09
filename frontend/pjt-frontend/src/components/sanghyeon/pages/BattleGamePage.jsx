@@ -121,8 +121,6 @@ const BattleGamePage = () => {
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
 
-  const [timerOn, setTimerOn] = useState(true);
-
   // ---------------------- WebSocket ----------------------
 
   // WebSocket 연결 및 초기화 함수
@@ -265,14 +263,8 @@ const BattleGamePage = () => {
         await closeModal();
         await setGameStart(true);
         await setAnswerSubmitted(false);
-        await setTimerOn(false);
-        setTimeout(() => {
-          startTimer();
-
-          setTimeout(() => {
-            setTimerOn(true);
-          }, 4000);
-        }, 2000);
+        await setCount(30);
+        await startTimer();
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -338,10 +330,8 @@ const BattleGamePage = () => {
         setWinner(body.result.winner);
         setLoser(body.result.loser);
         setGameEnded(true);
-        setNormalQuit(true);
-
+        setGameStart(false);
         openModal();
-
         setTimeout(() => {
           closeModal();
           Swal.fire({
@@ -549,12 +539,6 @@ const BattleGamePage = () => {
   };
 
   const startTimer = async () => {
-    console.log(timerOn);
-    if (timerOn === true) {
-      return;
-    }
-
-    await setCount(30);
     const timerInterval = setInterval(() => {
       setCount((prevCount) => {
         if (prevCount <= 1) {
@@ -581,7 +565,6 @@ const BattleGamePage = () => {
 
   const initBattleGame = () => {
     setCount(30);
-    setTimerOn(true);
     setSelectMyProblem(false);
     setSelectOpponentProblem(false);
     setNormalQuit(false);
@@ -590,7 +573,6 @@ const BattleGamePage = () => {
     setEnemyHealth(100);
     setCurrentRound(0);
     setMyProblem({});
-    setGameStart(false);
     setGameEnded(false);
     setWinner("");
     setLoser("");

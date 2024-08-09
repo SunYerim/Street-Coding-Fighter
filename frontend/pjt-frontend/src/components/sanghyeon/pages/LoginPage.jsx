@@ -60,11 +60,6 @@ const LoginPage = () => {
       setAccessToken(accessToken);
       setMemberId(memberId);
       setUserId(userId.current.value);
-      Swal.fire({
-        text: "로그인 성공",
-        icon: "success",
-        timer: 3000,
-      });
       navigate("/main");
     } catch (error) {
       Swal.fire({
