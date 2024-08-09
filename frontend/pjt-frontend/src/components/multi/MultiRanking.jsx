@@ -14,6 +14,7 @@ const MultiRanking = () => {
 
   return (
     <GraphContainer>
+    <h1>+ {getScore}</h1>
       <LeaderBoardSecond>
         <PodiumPlayerContainer>
           {userList.length > 1 ? (

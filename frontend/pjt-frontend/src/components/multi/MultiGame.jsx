@@ -565,8 +565,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal />}
-      {resultModalOpen && <MultiResultModal />}
+      {modalOpen && <MultiResultModal getScore={getScore} />}
+      {resultModalOpen && <MultiResultModal getScore={getScore} />}
     </>
   );
 }
