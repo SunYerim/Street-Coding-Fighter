@@ -10,7 +10,7 @@ public class ContentClient {
     private final WebClient webClient;
 
     public ContentClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://ssafy11s.com/single").build();
+        this.webClient = webClientBuilder.baseUrl("http://www.ssafy11s.com/single").build();
     }
 
     public Mono<Void> initializeCompletionStatus(Long memberId) {

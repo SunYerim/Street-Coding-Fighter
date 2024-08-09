@@ -19,14 +19,10 @@ spring:
     redis:
       host: localhost
       port: 6379
-
-
-
-
-jwt:
-  secret: "7d1b1d6d36d8e6a8f1bda6a7f473f87b012b0345a1b5f"
-  access-token-expiry: 3600000 # 10분
-  refresh-token-expiry: 86400000 # 1일
+  jwt:
+    secret: "7d1b1d6d36d8e6a8f1bda6a7f473f87b012b0345a1b5f"
+    access-token-expiry: 3600000 # 10분
+    refresh-token-expiry: 86400000 # 1일
 
 logging:
   level:
