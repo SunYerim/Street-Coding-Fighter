@@ -2,6 +2,7 @@ package com.scf.multi.presentation.websocket;
 
 import com.scf.multi.application.MultiGameService;
 import com.scf.multi.domain.dto.problem.ProblemResponse.ListDTO;
+import com.scf.multi.domain.dto.user.PlayerListDTO;
 import com.scf.multi.domain.dto.user.SubmitItem;
 import com.scf.multi.domain.event.GameStartedEvent;
 import com.scf.multi.domain.dto.socket_message.request.SolvedMessage;
@@ -46,7 +47,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String roomId = (String) session.getAttributes().get("roomId");
         Long userId = (Long) session.getAttributes().get("userId");
 
-        multiGameService.validateRoom(roomId);
+        multiGameService.validateRoomIsNotStart(roomId);
 
         Player connectedPlayer = multiGameService.connectPlayer(roomId, userId, session.getId());
 
@@ -55,7 +56,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "notice",
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
 
-        List<Player> playerList = multiGameService.getPlayerList(roomId);
+        List<PlayerListDTO> playerList = multiGameService.getPlayerList(roomId);
         broadcastMessageToRoom(roomId, "player-list", playerList);
     }
 
@@ -65,7 +66,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         String roomId = rooms.get(session.getId());
 
-        multiGameService.validateRoom(roomId);
+        multiGameService.validateRoomIsStart(roomId);
 
         SolvedMessage solvedMessage = getSolvedMessage(textMessage);
 
