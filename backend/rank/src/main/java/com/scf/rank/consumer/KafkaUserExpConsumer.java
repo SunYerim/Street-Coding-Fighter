@@ -1,6 +1,7 @@
 package com.scf.rank.consumer;
 
 import com.scf.rank.application.RankService;
+import com.scf.rank.constant.RedisRankType;
 import com.scf.rank.domain.model.UserExp;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class KafkaUserExpConsumer {
     @Transactional
     public void consumeUserTotalExp(UserExp userExp, Acknowledgment acknowledgment) {
 
-        rankService.updateRank(userExp, null); // 전체 기간 업데이트
+        rankService.updateRank(userExp, RedisRankType.ALL_TIME.key); // 전체 기간 업데이트
 
         acknowledgment.acknowledge(); // 메시지 처리 완료 후 ACK 전송
     }

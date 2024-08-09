@@ -1,5 +1,6 @@
 package com.scf.rank.application;
 
+import com.scf.rank.constant.RedisRankType;
 import com.scf.rank.domain.model.UserExp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +22,13 @@ public class RankService {
 
     private final RedisTemplate<String, UserExp> redisTemplate;
     private static final String KEY_PREFIX = "user:";
-    private static final String ALL_TIME_KEY = "user:alltime";
-    private static final String WEEKLY_KEY = "user:weekly:";
-    private static final String DAILY_KEY = "user:daily:";
 
     private ZSetOperations<String, UserExp> zSetOps() {
         return redisTemplate.opsForZSet();
     }
 
     public List<UserExp> getAllTimeRankings() {
-        return getRankings(ALL_TIME_KEY);
+        return getRankings(RedisRankType.ALL_TIME.key);
     }
 
     public List<UserExp> getWeeklyRankings() {
@@ -53,15 +49,15 @@ public class RankService {
     }
 
     public void updateRank(UserExp userExp, String datePrefix) {
+        // 플레이어가 이미 점수를 가지고 있는지 확인
+        Double currentScore = zSetOps().score(datePrefix, userExp);
 
-        // 전체 기간
-        if (datePrefix == null) {
-            zSetOps().add(ALL_TIME_KEY, userExp, userExp.getExp());
-            return;
+        // 플레이어가 존재하면 점수를 증가시키고, 그렇지 않으면 추가
+        if (currentScore != null) {
+            zSetOps().incrementScore(datePrefix, userExp, userExp.getExp());
+        } else {
+            zSetOps().add(datePrefix, userExp, userExp.getExp());
         }
-
-        // 기간별 (주간, 일간)
-        zSetOps().add(datePrefix, userExp, userExp.getExp());
     }
 
     private List<UserExp> getRankings(String datePrefix) {
@@ -81,11 +77,11 @@ public class RankService {
     public String getWeeklyPrefix(LocalDate date) {
         // 주간 랭킹 키 생성 (예: "user:weekly:2024-W31")
         String weekOfYear = String.format("W%02d", date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR));
-        return WEEKLY_KEY + date.getYear() + "-" + weekOfYear;
+        return RedisRankType.WEEKLY.key + date.getYear() + "-" + weekOfYear;
     }
 
     public String getDailyPrefix(LocalDate date) {
         // 일간 랭킹 키 생성 (예: "user:daily:2024-07-31")
-        return DAILY_KEY + date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return RedisRankType.DAILY.key + date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 }
