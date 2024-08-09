@@ -101,6 +101,7 @@ export default function MultiGame() {
 
   let cnt = 0;
   const [round, setRound] = useState(0);
+  let problemLength = 0;
 
   const [timerEnded, setTimerEnded] = useState(false);
   
@@ -165,6 +166,7 @@ export default function MultiGame() {
           setPlaying(true);
           console.log(data.payload);
           handleSetProblemList(data.payload);
+          problemLength = data.payload.length;
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
@@ -181,7 +183,7 @@ export default function MultiGame() {
           setRound((prevVal) => prevVal + 1);
 
           console.log('게임여기!', round);
-          if (round == problemList.length - 1) {
+          if (round == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
@@ -198,7 +200,7 @@ export default function MultiGame() {
           console.log("라운드랭킹: ", data.payload);
 
             console.log('라운드여기!', round);
-            if (round < problemList.length - 1) {
+            if (round < problemLength - 1) {
               // 모달 열고 4초 대기
               setModalOpen(true);
               setTimeout(() => {
@@ -223,6 +225,7 @@ export default function MultiGame() {
       clearType();
       socketInstance.close();
       sendQuitMessage();
+      problemLength = 0;
       if (chatStompClient.current) chatStompClient.current.disconnect();
     };
   }, []);
