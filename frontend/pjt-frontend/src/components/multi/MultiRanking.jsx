@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import multiStore from '../../stores/multiStore.jsx';
 
 const MultiRanking = () => {
   const { gameRank, roundRank, playing } = multiStore;
 
-  const userList = playing ? roundRank : gameRank;
+  const [userList, setUserList] = useState([]);
+
+  setUserList(playing ? roundRank : gameRank);
 
   return (
     <GraphContainer>
