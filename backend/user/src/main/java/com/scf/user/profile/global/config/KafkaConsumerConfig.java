@@ -19,7 +19,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 @EnableKafka
 public class KafkaConsumerConfig {
 
-    private final String bootstrapServers = "localhost:9092";
+    private final String bootstrapServers = "kafka:9092";
     private final String groupId = "game-results-group";
     private final String solvedGroupId = "solved-problems-group";
 
