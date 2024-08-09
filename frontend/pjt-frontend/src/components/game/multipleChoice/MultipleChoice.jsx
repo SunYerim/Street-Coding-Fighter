@@ -89,10 +89,6 @@ const MultipleChoice = () => {
     }
   }, [problem]);
 
-  useEffect(() => {
-    setSelectedChoice(multipleChoiceSolve); // 로컬 저장소의 값을 컴포넌트 상태에 반영
-  }, [multipleChoiceSolve]);
-
   const handleChoiceSelect = (choiceId) => {
     setSelectedChoice(choiceId); // 선택된 choiceId를 상태에 저장
     setMultipleChoiceSolve(choiceId); // 선택된 값을 로컬 저장소에 저장
