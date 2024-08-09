@@ -97,6 +97,11 @@ const multiStore = create((set) => ({
   setGameRank: (gameRank) => set({ gameRank }),
   clearGameRank: () => set({ gameRank: [] }),
 
+  // 제출 리스트
+  submitList: [],
+  setSubmitList: (submitList) => set({ submitList }),
+  clearSubmitList: () => set({ submitList: [] }),
+
   // 빈칸 답변
   blankSolve: null,
   setBlankSolve: (blankSolve) => set({ blankSolve }),

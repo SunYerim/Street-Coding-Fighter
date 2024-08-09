@@ -40,6 +40,8 @@ export default function MultiGame() {
     gameRank,
     setGameRank,
     clearGameRank,
+    submitList,
+    clearSubmitList,
     type,
     setType,
     currentRound,
@@ -59,13 +61,15 @@ export default function MultiGame() {
     setRoundRank: state.setRoundRank,
     gameRank: state.gameRank,
     setGameRank: state.setGameRank,
+    clearGameRank: state.clearGameRank,
+    submitList: state.submitList,
+    clearSubmitList: state.clearSubmitList,
     type: state.type,
     setType: state.setType,
     currentRound: state.currentRound,
     setCurrentRound: state.setCurrentRound,
     clearProblemList: state.clearProblemList,
     clearRoundRank: state.clearRoundRank,
-    clearGameRank: state.clearGameRank,
     clearType: state.clearType,
     blankSolve: state.blankSolve,
     setBlankSolve: state.setBlankSolve,
@@ -175,9 +179,16 @@ export default function MultiGame() {
         } else if (data.type === "attainScore") {
           getScore(data.payload);
           console.log(`얻은 점수: ${data.payload}`);
+        } else if (data.type === "") {
+          submitList(data.payload);
+          console.log(`제출자: ${data.payload}`);
+        } else if (data.type === "play-list") {
+          // 플레이어 리스트
+          
+
+          console.log(`플레이어 리스트: ${data.payload}`);
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
-          // setTimerEnded(false);
           console.log("전체랭킹: ", data.payload);
           isSubmitRef.current = false;
           // setCount(30);
@@ -473,15 +484,35 @@ export default function MultiGame() {
 
   // ---------------------- 채팅 WebSocket ----------------------
 
-  const exRank = [
-    {rank: "1", username: "Hermes", score: "2000", isSubmit: true},
-    {rank: "2", username: "Bernie", score: "2000", isSubmit: false},
-    {rank: "3", username: "Jack", score: "2000", isSubmit: false},
-    {rank: "4", username: "Ethan", score: "2000", isSubmit: true},
-    {rank: "5", username: "Falcon", score: "2000", isSubmit: true},
-    {rank: "6", username: "Sophia", score: "2000", isSubmit: false},
-    {rank: "7", username: "SR", score: "2000", isSubmit: true},
-  ]
+  // const exRank = [
+  //   {rank: "1", username: "Hermes", score: "2000", userId: "1"},
+  //   {rank: "2", username: "Bernie", score: "2000", userId: "23"},
+  //   {rank: "3", username: "Jack", score: "2000", userId: "2"},
+  //   {rank: "4", username: "Ethan", score: "2000", userId: "4"},
+  //   {rank: "5", username: "Falcon", score: "2000", userId: "5"},
+  //   {rank: "6", username: "Sophia", score: "2000", userId: "77"},
+  //   {rank: "7", username: "SR", score: "2000", userId: "8"},
+  // ]
+
+  // const submitList = [
+  //   {userId: "1", isSubmit: false},
+  //   {userId: "23", isSubmit: true},
+  //   {userId: "2", isSubmit: true},
+  //   {userId: "4", isSubmit: false},
+  //   {userId: "5", isSubmit: true},
+  //   {userId: "77", isSubmit: false},
+  //   {userId: "8", isSubmit: false},
+  // ]
+
+  // let mergedList = gameRank.map(rankItem => {
+  //   const submitItem = submitList.find(submitItem => submitItem.userId === rankItem.userId);
+  //   return {
+  //     ...rankItem,
+  //     isSubmit: submitItem ? submitItem.isSubmit : null 
+  //   };
+  // });
+
+  // console.log(mergedList);
 
   return (
     <>
@@ -504,12 +535,13 @@ export default function MultiGame() {
                   />
                 );
               })}
-              {/* {exRank.map((user, i) => {
+              {/* {mergedList.map((user, i) => {
                 return (
                   <UserRank
                     rank={user.rank}
                     username={user.username}
                     score={user.score}
+                    isSubmit={user.isSubmit}
                     key={i}
                   />
                 );
@@ -572,10 +604,12 @@ export default function MultiGame() {
   );
 }
 
-function UserRank(props) {
+function UserRank(props) {  
+  const backgroundColor = props.isSubmit ? 'yellow' : '';
+
   return (
     <>
-      <div className="multi-rank-items">
+      <div className="multi-rank-items" style={{ backgroundColor }}>
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
