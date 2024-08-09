@@ -301,6 +301,7 @@ public class MultiGameService {
             .maxPlayer(room.getMaxPlayer())
             .curPlayer(room.getPlayers().size())
             .isLock(room.getPassword() != null)
+            .isStart(room.getIsStart())
             .build();
     }
 

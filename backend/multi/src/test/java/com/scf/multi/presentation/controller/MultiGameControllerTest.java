@@ -139,6 +139,7 @@ class MultiGameControllerTest {
             .hostname(gameRoom.getHostname())
             .curPlayer(gameRoom.getPlayers().size())
             .isLock(gameRoom.getPassword() != null)
+            .isStart(gameRoom.getIsStart())
             .build();
         List<RoomResponse.ListDTO> rooms = List.of(listDTO);
         when(multiGameService.findAllRooms()).thenReturn(rooms);
