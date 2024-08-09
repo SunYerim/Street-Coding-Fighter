@@ -25,7 +25,7 @@ problem:
 
 user:
   server:
-    url: http://www.ssafy11s.com/user
+    url: http://www.ssafy11s.com/user/public/charaterType
 
 server:
   port: 8084

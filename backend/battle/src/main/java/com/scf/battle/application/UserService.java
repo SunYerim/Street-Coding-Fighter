@@ -16,12 +16,13 @@ public class UserService {
 
     public Integer getCharacterType(Long memberId) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/{memberId}")
-                        .build(memberId))
-                .retrieve()
-                .bodyToMono(Integer.class)
-                .block();
+            .uri(uriBuilder -> uriBuilder
+                .build(memberId))
+            .header("memberId", String.valueOf(memberId))  // memberId를 헤더에 추가
+            .retrieve()
+            .bodyToMono(Integer.class)
+            .block();
     }
+
 
 }
