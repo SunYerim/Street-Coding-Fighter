@@ -47,7 +47,7 @@ export default function EpisodeList({ rownum }) {
               <React.Fragment key={e.id}>
                 <S.CheckPoint
                   key={`checkpoint-${e.id}`}
-                  $completed={checkIsCompleted(e.id)}
+                  $completed={e.id < nextIndex+1}
                   $isNext={e.id === nextIndex+1}
                   onClick={handleClick(e.id)}
                   onMouseEnter={() => {
