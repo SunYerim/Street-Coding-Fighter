@@ -55,7 +55,11 @@ export default function Ranking() {
   }, []);
 
   const handleTabClick = (tab) => {
+    console.log(tab)
     setBoardPeriod(tab);
+    console.log('period', boardPeriod)
+    console.log('board with period []', rankingList.boardPeriod)
+    console.log('board with period . dot', rankingList[boardPeriod])
   };
 
   return (

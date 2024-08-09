@@ -30,7 +30,6 @@ const RankingGraph = () => {
       <LeaderBoardFirst>
         <PodiumPlayerContainer>
           <PodiumPlayer rank={0} />
-
         </PodiumPlayerContainer>
           <PlaceHolder>1</PlaceHolder>
       </LeaderBoardFirst>
