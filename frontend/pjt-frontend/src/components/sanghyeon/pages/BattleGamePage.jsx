@@ -573,7 +573,7 @@ const BattleGamePage = () => {
   const initBattleGame = () => {
     setMyHealth(100);
     setEnemyHealth(100);
-    setCurrentRound(1);
+    setCurrentRound(0);
     setEnemyProblems([]);
     setCount(30);
     setGameStart(false);

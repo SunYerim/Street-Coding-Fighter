@@ -98,15 +98,17 @@ const Setting = ({ isOpen, onClose }) => {
         },
       });
       clearLocalStorage();
-      navigate("/login");
-      window.location.reload();
       setTimeout(() => {
         Swal.fire({
           text: "로그아웃 되었습니다.",
           icon: "success",
-          timer: 3000,
+          timer: 2000,
+          showConfirmButton: false,
+          showCloseButton: false,
         });
-      }, 500);
+        navigate("/login");
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       Swal.fire({
         text: "로그아웃에 실패했습니다.",

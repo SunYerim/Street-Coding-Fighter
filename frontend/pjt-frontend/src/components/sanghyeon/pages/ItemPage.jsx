@@ -7,23 +7,36 @@ import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
 
 const ItemPage = () => {
   const cardRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const handleMouseMove = (e) => {
     const card = cardRef.current;
+    const overlay = overlayRef.current;
+
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * 25; // 기울기 정도를 조절
-    const rotateY = ((centerX - x) / centerX) * 25;
+    const rotateX = ((y - centerY) / centerY) * 45;
+    const rotateY = ((centerX - x) / centerX) * 45;
 
     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    // Update the position of the overlay
+    const overlayX = (x / rect.width) * 100 - 50; // -50 to center
+    const overlayY = (y / rect.height) * 100 - 50; // -50 to center
+
+    overlay.style = `background-position: ${
+      (centerX - x) / 5 + (centerY - y) / 5
+    }%`;
   };
 
   const handleMouseLeave = () => {
     const card = cardRef.current;
+    const overlay = overlayRef.current;
     card.style.transform = `rotateX(0) rotateY(0)`; // 원상 복귀
+    overlay.style = `background-position: 100%`;
   };
 
   return (
@@ -60,13 +73,14 @@ const ItemPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="item-right-container">
-                <div
-                  className="item-character-outer-container"
-                  ref={cardRef}
-                  onMouseMove={handleMouseMove}
-                  onMouseLeave={handleMouseLeave}
-                >
+              <div
+                className="item-right-container"
+                ref={cardRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="item-character-overlay" ref={overlayRef}></div>
+                <div className="item-character-outer-container">
                   <div className="item-character-inner-container">
                     <div className="item-character-rank-container">
                       <div className="item-character-rank">R</div>
