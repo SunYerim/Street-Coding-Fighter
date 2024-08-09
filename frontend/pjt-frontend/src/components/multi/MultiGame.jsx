@@ -102,13 +102,10 @@ export default function MultiGame() {
   let cnt = 0;
   const [round, setRound] = useState(0);
 
-  // const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [timerEnded, setTimerEnded] = useState(false);
   
   const [count, setCount] = useState(30);
   
-  // const [problemType, setProblemType] = useState(type);
-  // const problemType = problemList[currentRound].problemType;
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -118,7 +115,6 @@ export default function MultiGame() {
   // 게임시작
   const handleStart = async () => {
     setPlaying(true);
-    clearGameRank();
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
       null,
@@ -153,9 +149,6 @@ export default function MultiGame() {
     };
 
     initializeConnections();
-
-    // const roomId = multiStore.getState().roomId;
-    // console.log(`Room ${roomId}, userId ${memberId}, username: ${name}`);
 
     const socketInstance = newSocket(roomId, memberId, name);
     setSocket(socketInstance);
