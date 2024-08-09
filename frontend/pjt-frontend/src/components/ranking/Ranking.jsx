@@ -22,30 +22,39 @@ export default function Ranking() {
           // axios.get(`${tempUrl}/rank/daily`),
           axios
             .get(`${baseURL}/rank/total`, { headers: { Authorization: `Bearer ${accessToken}` } })
-            .then((res) => console.log(res.data))
+            .then((res) => {
+              console.log(res.data);
+              rankingObj['total'] = totalRes;
+              console.log(rankingObj);
+            })
             .catch((err) => console.log(err)),
           axios
             .get(`${baseURL}/rank/weekly`, { headers: { Authorization: `Bearer ${accessToken}` } })
-            .then((res) => console.log(res.data))
+            .then((res) => {
+              console.log(res.data);
+              rankingObj['weekly'] = weeklyRes;
+              console.log(rankingObj);
+            })
             .catch((err) => console.log(err)),
           axios
             .get(`${baseURL}/rank/daily`, { headers: { Authorization: `Bearer ${accessToken}` } })
-            .then((res) => console.log(res.data))
+            .then((res) => {
+              console.log(res.data);
+              rankingObj['daily'] = dailyRes;
+              console.log(rankingObj);
+            })
             .catch((err) => console.log(err)),
-        ]);
+        ]).then(()=>
+          setRankingList(rankingObj)
+        )
 
-        rankingObj['total'] = totalRes;
-        rankingObj['weekly'] = weeklyRes;
-        rankingObj['daily'] = dailyRes;
-        console.log(rankingObj);
-        setRankingList(rankingObj);
       } catch (error) {
         console.error('Error fetching ranking data:', error);
       }
     };
 
     fetchRankingData();
-  }, [setRankingList]);
+  }, []);
 
   const handleTabClick = (tab) => {
     setBoardPeriod(tab);
