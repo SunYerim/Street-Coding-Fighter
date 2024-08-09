@@ -10,15 +10,12 @@ const MultiRanking = () => {
   }));
 
   let userList = [];
-
-  useEffect(() => {
-    userList = playing ? roundRank : gameRank;
-  }, [playing, gameRank, roundRank]);
+  userList = playing ? roundRank : gameRank;
 
   return (
     <GraphContainer>
       <LeaderBoardSecond>
-        <PodiumPlayerContainer>W
+        <PodiumPlayerContainer>
           {userList.length > 1 ? (
             <>
               <div>{userList[1].username}</div>
