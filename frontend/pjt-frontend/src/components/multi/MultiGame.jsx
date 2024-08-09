@@ -115,6 +115,7 @@ export default function MultiGame() {
   // 게임시작
   const handleStart = async () => {
     setPlaying(true);
+    clearGameRank();
     const response = await axios.post(
       `${baseURL}/multi/game/${roomId}/start`,
       null,
@@ -179,25 +180,23 @@ export default function MultiGame() {
           setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
 
-          setTimeout(() => {
-            console.log('게임여기!', round);
-            if (round == problemList.length - 1) {
-              setResultModalOpen(true);
-              setTimeout(() => {
-                setResultModalOpen(false);
-                setPlaying(false);
-                clearGameRank();
-                clearRoundRank();
-                clearProblemList();
-                setTimerEnded(false);
-              }, 4000);
-            }
-          }, 500);
+          console.log('게임여기!', round);
+          if (round == problemList.length - 1) {
+            setResultModalOpen(true);
+            setTimeout(() => {
+              setResultModalOpen(false);
+              setPlaying(false);
+              clearGameRank();
+              clearRoundRank();
+              clearProblemList();
+              setTimerEnded(false);
+            }, 4000);
+          }
+
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
 
-          setTimeout(() => {
             console.log('라운드여기!', round);
             if (round < problemList.length - 1) {
               // 모달 열고 4초 대기
@@ -208,7 +207,6 @@ export default function MultiGame() {
                 setTimerEnded(false);
               }, 4000);
             }
-          }, 500);
 
         }
       } else {
@@ -235,53 +233,22 @@ export default function MultiGame() {
   };
 
   useEffect(() => {
-    console.log('저건저기!', currentRound);
     cnt = currentRound;
   }, [currentRound]);
 
+  
   useEffect(() => {
-    console.log('요건요기!', round);
+
     if (round >= problemList.length) {
       setPlaying(false);
       clearProblemList();
       clearBlankSolve();
       clearRoundRank();
-      // clearGameRank();
       clearType();
       setRound(0);
     }
   }, [round]);
 
-
-  // 문제 타입 바꾸기
-  // useEffect(() => {
-  //   if (problemList.length > 0) {
-  //     setProblemType(problemList[currentProblemIndex].problemType);
-  //   }
-  // }, [currentProblemIndex]);
-
-  // 라운드 종료 후 랭킹 모달 표시
-  // useEffect(() => {
-  //   if (playing && !modalOpen && timerEnded) {
-  //     if (currentProblemIndex < problemList.length - 1) {
-  //       // 모달 열고 4초 대기
-  //       setModalOpen(true);
-  //       setTimeout(() => {
-  //         setModalOpen(false);
-  //       }, 4000);
-
-  //       // 문제번호++, 제출상태 초기화
-  //       setCurrentProblemIndex(currentProblemIndex + 1);
-  //       setIsSubmit(false);
-  //     } else {
-  //       setResultModalOpen(true);
-  //       setTimeout(() => {
-  //         setResultModalOpen(false);
-  //         setPlaying(false);
-  //       }, 4000);
-  //     }
-  //   }
-  // }, [roundRank]);
 
   // 객관식 답변제출
   const handleChoiceSelection = (choiceId) => {
@@ -501,6 +468,16 @@ export default function MultiGame() {
 
   // ---------------------- 채팅 WebSocket ----------------------
 
+  const exRank = [
+    {rank: "1", username: "Hermes", score: "2000", isSubmit: true},
+    {rank: "2", username: "Bernie", score: "2000", isSubmit: false},
+    {rank: "3", username: "Jack", score: "2000", isSubmit: false},
+    {rank: "4", username: "Ethan", score: "2000", isSubmit: true},
+    {rank: "5", username: "Falcon", score: "2000", isSubmit: true},
+    {rank: "6", username: "Sophia", score: "2000", isSubmit: false},
+    {rank: "7", username: "SR", score: "2000", isSubmit: true},
+  ]
+
   return (
     <>
       <div className="game-container">
@@ -522,6 +499,17 @@ export default function MultiGame() {
                   />
                 );
               })}
+              {/* {exRank.map((user, i) => {
+                return (
+                  <UserRank
+                    rank={user.rank}
+                    username={user.username}
+                    score={user.score}
+                    key={i}
+                  />
+                );
+              })} */}
+
             </div>
           </div>
           <div className="multi-game-center">
@@ -557,7 +545,10 @@ export default function MultiGame() {
                   {round + 1} / {problemList.length}
                 </h1>
               ) : (
-                <h1>Round</h1>
+                <>
+                  <p>Round</p>
+                  <p>2 / 5</p>
+                </>
               )}
             </div>
             <div className="multi-message-room">
