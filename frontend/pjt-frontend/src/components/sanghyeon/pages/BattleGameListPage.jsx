@@ -80,6 +80,7 @@ const BattleGameListPage = () => {
       Swal.fire({
         text: "방 목록을 불러오는데 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
     }
   };
@@ -89,6 +90,7 @@ const BattleGameListPage = () => {
       Swal.fire({
         text: "방이 꽉 찼습니다.",
         icon: "error",
+        timer: 3000,
       });
       return;
     }
@@ -103,6 +105,7 @@ const BattleGameListPage = () => {
         Swal.fire({
           text: "비밀번호를 입력해주세요.",
           icon: "error",
+          timer: 3000,
         });
         return;
       }
@@ -131,6 +134,7 @@ const BattleGameListPage = () => {
       Swal.fire({
         text: "방 입장에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
@@ -172,6 +176,7 @@ const BattleGameListPage = () => {
       Swal.fire({
         text: "방 생성에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
@@ -199,6 +204,7 @@ const BattleGameListPage = () => {
         Swal.fire({
           text: "방 목록을 불러오는데 실패했습니다.",
           icon: "error",
+          timer: 3000,
         });
         console.log(error);
       }

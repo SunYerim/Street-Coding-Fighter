@@ -44,12 +44,14 @@ const Header = ({ type = "default" }) => {
       Swal.fire({
         text: "방을 나갔습니다.",
         icon: "success",
+        timer: 3000,
       });
       navigate("/battle-list");
     } catch (error) {
       Swal.fire({
         text: "방 나가기에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }

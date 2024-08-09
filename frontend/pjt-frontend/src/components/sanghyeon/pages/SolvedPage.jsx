@@ -49,6 +49,7 @@ function SolvedPage() {
         Swal.fire({
           text: "문제를 불러오는데 실패했습니다.",
           icon: "error",
+          timer: 3000,
         });
         console.error("Failed to fetch record", error);
       }
@@ -118,6 +119,7 @@ function SolvedPage() {
                     onClick={Swal.fire({
                       text: "준비 중입니다.",
                       icon: "waning",
+                      timer: 3000,
                     })}
                     key={index}
                   >

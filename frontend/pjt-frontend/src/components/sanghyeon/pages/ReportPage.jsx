@@ -27,11 +27,13 @@ const ReportPage = () => {
       Swal.fire({
         text: "리포트 다운로드가 완료되었습니다.",
         icon: "success",
+        timer: 3000,
       });
     } catch (error) {
       Swal.fire({
         text: "리포트 다운로드에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }

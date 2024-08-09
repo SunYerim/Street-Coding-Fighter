@@ -30,11 +30,13 @@ const FindPasswordPage = () => {
       Swal.fire({
         text: "인증코드가 발송되었습니다.",
         icon: "success",
+        timer: 3000,
       });
     } catch (error) {
       Swal.fire({
         text: "인증코드 발송에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
@@ -55,11 +57,13 @@ const FindPasswordPage = () => {
       Swal.fire({
         text: "인증코드가 일치합니다.",
         icon: "success",
+        timer: 3000,
       });
     } catch (error) {
       Swal.fire({
         text: "인증코드가 일치하지 않습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
@@ -70,6 +74,7 @@ const FindPasswordPage = () => {
       Swal.fire({
         text: "인증코드를 확인해주세요.",
         icon: "warning",
+        timer: 3000,
       });
     } else {
       setCode(verificationCode.current.value);

@@ -22,6 +22,7 @@ const ChangePasswordPage = () => {
       Swal.fire({
         text: "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상 25자리 이하로 입력해주세요!",
         icon: "warning",
+        timer: 3000,
       });
       return;
     }
@@ -30,6 +31,7 @@ const ChangePasswordPage = () => {
       Swal.fire({
         text: "비밀번호가 일치하지 않습니다.",
         icon: "warning",
+        timer: 3000,
       });
       return;
     } else {
@@ -46,12 +48,14 @@ const ChangePasswordPage = () => {
         Swal.fire({
           text: "비밀번호가 변경되었습니다.",
           icon: "success",
+          timer: 3000,
         });
         navigate("/login");
       } catch (error) {
         Swal.fire({
           text: "비밀번호 변경에 실패했습니다.",
           icon: "error",
+          timer: 3000,
         });
         console.log(error);
       }

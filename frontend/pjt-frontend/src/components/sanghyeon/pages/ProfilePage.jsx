@@ -88,6 +88,7 @@ function ProfilePage() {
         Swal.fire({
           text: "프로필을 불러오는데 실패했습니다.",
           icon: "error",
+          timer: 3000,
         });
         console.log(error);
       }

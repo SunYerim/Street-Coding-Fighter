@@ -73,6 +73,7 @@ const CharacterSelection = () => {
       Swal.fire({
         text: "히든 캐릭터가 선택되었습니다.",
         icon: "success",
+        timer: 3000,
       });
     }
   }, [selectedCharacter]);
@@ -99,6 +100,7 @@ const CharacterSelection = () => {
       Swal.fire({
         text: "캐릭터를 선택해주세요.",
         icon: "warning",
+        timer: 3000,
       });
       return;
     }
@@ -120,12 +122,14 @@ const CharacterSelection = () => {
       Swal.fire({
         text: "회원가입에 성공했습니다.",
         icon: "success",
+        timer: 3000,
       });
       navigate("/login");
     } catch (error) {
       Swal.fire({
         text: "회원가입에 실패했습니다.",
         icon: "error",
+        timer: 3000,
       });
       console.log(error);
     }
