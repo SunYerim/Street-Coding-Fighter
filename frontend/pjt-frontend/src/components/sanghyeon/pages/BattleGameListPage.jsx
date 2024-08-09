@@ -167,6 +167,7 @@ const BattleGameListPage = () => {
 
       setEnemyId(null);
       setEnemyName(null);
+      console.log(createRes.data);
       setRoomId(createRes.data);
       setHostId(memberId);
       setRoomPassword(battleRoomPassword.current.value);
