@@ -10,9 +10,6 @@ import createAuthClient from "../apis/createAuthClient.js";
 
 const ReportPage = () => {
   const navigate = useNavigate();
-  const { baseURL, accessToken } = store((state) => ({
-    baseURL: state.baseURL,
-  }));
 
   const getReport = async () => {
     try {
