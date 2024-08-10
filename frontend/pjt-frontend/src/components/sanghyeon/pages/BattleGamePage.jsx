@@ -207,8 +207,10 @@ const BattleGamePage = () => {
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setEnemyProblems(body);
+      setAnswerSubmitted(false);
       openModal();
       setCurrentRound((prevRound) => prevRound + 1);
+      setCount(30);
     });
   };
 
@@ -352,7 +354,6 @@ const BattleGamePage = () => {
           });
         }, 3000);
       } else {
-        setCount(30);
         if (body.userId === memberId) {
           if (body.isAttack === true) {
             setEnemyHealth((prevHealth) => prevHealth - body.power);
