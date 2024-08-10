@@ -128,16 +128,21 @@ public class BattleSocketService {
         BattleGameRoom room = roomService.findById(roomId);
         List<Problem> roundSelectProblems = room.getProblemsForRound(room.getCurrentRound());
         List<ProblemResponseDTO.ListDTO> roundSelectProblemsDTOs = roundSelectProblems.stream()
-                .map(problem -> ProblemResponseDTO.ListDTO.builder()
-                        .problemId(problem.getProblemId())
-                        .title(problem.getTitle())
-                        .problemType(problem.getProblemType())
-                        .category(problem.getCategory())
-                        .difficulty(problem.getDifficulty())
-//                        .problemContent(problem.getProblemContent())
-//                        .problemChoices(problem.getProblemChoices())
-                        .build())
+                .map(problem -> {
+                    ProblemResponseDTO.ListDTO listDTO = ProblemResponseDTO.ListDTO.builder()
+                            .problemId(problem.getProblemId())
+                            .title(problem.getTitle())
+                            .problemType(problem.getProblemType())
+                            .category(problem.getCategory())
+                            .difficulty(problem.getDifficulty())
+                            .build();
+
+                    listDTO.setItemBasedOnDifficulty(); // 아이템 선정 함수 호출
+
+                    return listDTO;
+                })
                 .collect(Collectors.toList());
+
         messagingTemplate.convertAndSend("/room/" + roomId + "/RoundChoiceProblem", roundSelectProblemsDTOs);
     }
 
