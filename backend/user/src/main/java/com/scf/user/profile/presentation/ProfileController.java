@@ -1,20 +1,16 @@
 package com.scf.user.profile.presentation;
 
-import com.scf.user.profile.application.service.KafkaMessageProducer;
 import com.scf.user.profile.application.service.ProfileService;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
-import com.scf.user.profile.domain.dto.kafka.MultiGameResult;
-import com.scf.user.profile.domain.dto.kafka.RenewExp;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,8 +56,8 @@ public class ProfileController {
     }
 
     // 경험치 반영 (single에서 사용)
-    @PostMapping("/addExp")
-    public ResponseEntity<?> requestAddExp(@RequestHeader("memberId") Long memberId) {
+    @PostMapping("/public/addExp/{memberId}")
+    public ResponseEntity<?> requestAddExp(@PathVariable("memberId") Long memberId) {
         profileService.addSingleExp(memberId);
         return ResponseEntity.ok("경험치 누적이 완료되었습니다.");
     }
