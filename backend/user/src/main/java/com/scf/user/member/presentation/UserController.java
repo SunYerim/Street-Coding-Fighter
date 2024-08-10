@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("user")
@@ -96,18 +97,25 @@ public class UserController {
     @PostMapping("/public/reissue")
     public ResponseEntity<?> refreshAccessToken(HttpServletRequest request,
         HttpServletResponse response) {
-        // 쿠키에서 리프레시 토큰 추출
-        String refresh = userService.extractRefreshTokenFromCookie(request);
-        if (refresh == null) {
-            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+        try {
+            // 쿠키에서 리프레시 토큰 추출
+            String refresh = userService.extractRefreshTokenFromCookie(request);
+            if (refresh == null) {
+                return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+            }
+
+            // 새로운 토큰 받아오기.
+            TokenDto newAccessToken = userService.refreshToken(refresh);
+
+            response.setHeader("Authorization", "Bearer " + newAccessToken.getAccessToken());
+            response.addCookie(
+                jwtCookieUtil.createCookie("refresh", newAccessToken.getRefreshToken()));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResponseStatusException ex) {
+            // ResponseStatusException을 처리하여 적절한 HTTP 상태 코드를 반환
+            return new ResponseEntity<>(ex.getReason(), ex.getStatusCode());
         }
 
-        // 새로운 토큰 받아오기.
-        TokenDto newAccessToken = userService.refreshToken(refresh);
-
-        response.setHeader("Authorization", "Bearer " + newAccessToken.getAccessToken());
-        response.addCookie(jwtCookieUtil.createCookie("refresh", newAccessToken.getRefreshToken()));
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 비밀번호 변경

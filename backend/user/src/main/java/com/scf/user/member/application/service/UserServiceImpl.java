@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -144,7 +146,8 @@ public class UserServiceImpl implements UserService {
         // 리프레시 토큰이 유효한지 확인
         if (storedRefreshToken == null || !storedRefreshToken.equals(refresh)) {
             log.debug("Invalid refresh token: " + storedRefreshToken);
-            throw new RuntimeException("Invalid refresh token.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                "refresh 토큰이 유효하지 않습니다. 또는 redis에 저장되어있지 않습니다.");
         }
 
         // 토큰 유효성 검사
