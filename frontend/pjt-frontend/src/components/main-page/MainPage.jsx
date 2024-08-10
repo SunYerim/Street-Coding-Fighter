@@ -67,8 +67,8 @@ function MainPage() {
       description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
       imageUrl: "/characters/movingGreenSlime.gif"
     },
-    "싱글플레이": {
-      description: "혼자서 도전할 수 있는 싱글플레이 모드입니다.",
+    "스토리모드": {
+      description: "혼자서 학습할 수 있는 스토리모드 입니다.",
       imageUrl: "/characters/movingIceSlime.gif"
     },
     "랭킹": {
