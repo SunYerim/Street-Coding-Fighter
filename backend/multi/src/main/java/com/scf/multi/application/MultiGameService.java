@@ -166,7 +166,7 @@ public class MultiGameService {
 
     public Player handlePlayerExit(String roomId, String sessionId) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        MultiGameRoom room = findOneById(roomId);
 
         Player exitPlayer = findPlayerBySessionId(room, sessionId);
         exitPlayer.setIsOnRoom(false);
