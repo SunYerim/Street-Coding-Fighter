@@ -36,6 +36,12 @@ public class GameResultConsumer {
 
         // 해당 게임에서 얻은 경험치
         List<Integer> players = profileService.calculateBattleExp(win);
+        // 해당 게임에서 얻은 경험치를 전송합니다.
+        RenewExp a = new RenewExp(playerA, playerAName, players.get(0));
+        RenewExp b = new RenewExp(playerB, playerBName, players.get(1));
+
+        kafkaMessageProducer.sendProcessedGameResults(a);
+        kafkaMessageProducer.sendProcessedGameResults(b);
 
         // 게임결과와 해당 게임에서 얻은 경험치를 db에 저장합니다.
         profileService.submitBattleGameResultList(battleGameResult);
@@ -52,8 +58,9 @@ public class GameResultConsumer {
         RenewExp arenew = new RenewExp(playerA, playerAName, newExpA);
         RenewExp brenew = new RenewExp(playerB, playerBName, newExpB);
 
-        kafkaMessageProducer.sendProcessedGameResults(arenew);
-        kafkaMessageProducer.sendProcessedGameResults(brenew);
+        // 게임 참여한 유저 수 만큼 새로운 게임 결과가 반영된 개인의 경험치를 전송합니다.
+        kafkaMessageProducer.sendProcessedTotalGameResults(arenew);
+        kafkaMessageProducer.sendProcessedTotalGameResults(brenew);
 
     }
 
@@ -64,6 +71,17 @@ public class GameResultConsumer {
 
         // multi 게임이면
         if (multiGameResult.getGameType().equals(0)) {
+            // 해당 게임에서 얻은 경험치를 user-exp 토픽으로 전송합니다.
+            // 해당 게임에서 얻은 경험치
+            List<Rank> ranks = multiGameResult.getGameRank();
+            for (Rank rank : ranks) {
+                Integer gameExp = profileService.calculateMultiExp(ranks.size(), rank.getScore(),
+                    rank.getRank());
+                RenewExp renewExp = new RenewExp(rank.getUserId(), rank.getUsername(), gameExp);
+                // user-exp 토픽으로 전송
+                kafkaMessageProducer.sendProcessedGameResults(renewExp);
+            }
+
             // 경험치를 업데이트
             List<RenewExp> updatedExp = updateExperiencePoints(multiGameResult.getGameRank());
 
@@ -71,9 +89,9 @@ public class GameResultConsumer {
             profileService.submitMultiGameResultList(multiGameResult);
 
             // 처리된 데이터를 다시 전송
-            // 게임 참여한 유저 수 만큼 for문을 돌면서 RenewExp자체를 전송합니다.
+            // 게임 참여한 유저 수 만큼 for문을 돌면서 새로운 게임 결과가 반영된 개인의 경험치를 전송합니다.
             for (RenewExp exp : updatedExp) {
-                kafkaMessageProducer.sendProcessedGameResults(exp);
+                kafkaMessageProducer.sendProcessedTotalGameResults(exp);
             }
         }
     }
@@ -92,7 +110,8 @@ public class GameResultConsumer {
 
             // 반영할 경험치
             int newExp =
-                currentExp + profileService.calculateMultiExp(ranks.size(), rank.getScore(), rank.getRank());
+                currentExp + profileService.calculateMultiExp(ranks.size(), rank.getScore(),
+                    rank.getRank());
 
             // 경험치를 업데이트
             profileService.updateExp(memberId, newExp);
