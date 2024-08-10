@@ -34,14 +34,18 @@ public class GameResultConsumer {
         String playerAName = profileService.getProfileInfo(playerA).getName();
         String playerBName = profileService.getProfileInfo(playerB).getName();
 
-        List<Integer> players = calculateBattleExp(win);
+        // 해당 게임에서 얻은 경험치
+        List<Integer> players = profileService.calculateBattleExp(win);
+
+        // 게임결과와 해당 게임에서 얻은 경험치를 db에 저장합니다.
+        profileService.submitBattleGameResultList(battleGameResult);
 
         // 경험치를 업데이트.
         int newExpA = expA + players.get(0);
         int newExpB = expB + players.get(1);
 
-        updateExpoint(playerA, newExpA);
-        updateExpoint(playerB, newExpB);
+        profileService.updateExpoint(playerA, newExpA);
+        profileService.updateExpoint(playerB, newExpB);
 
         // 처리된 데이터를 다시 전송
         // List형식이 아닌 RenewExp 객체로 보내도록 수정합니다.
@@ -62,6 +66,9 @@ public class GameResultConsumer {
         if (multiGameResult.getGameType().equals(0)) {
             // 경험치를 업데이트
             List<RenewExp> updatedExp = updateExperiencePoints(multiGameResult.getGameRank());
+
+            // 게임결과와 받아온 경험치를 db에 저장합니다.
+            profileService.submitMultiGameResultList(multiGameResult);
 
             // 처리된 데이터를 다시 전송
             // 게임 참여한 유저 수 만큼 for문을 돌면서 RenewExp자체를 전송합니다.
@@ -84,7 +91,8 @@ public class GameResultConsumer {
             int currentExp = profileService.getProfileInfo(memberId).getExp();
 
             // 반영할 경험치
-            int newExp = currentExp + calculateMultiExp(rank.getScore(), rank.getRank());
+            int newExp =
+                currentExp + profileService.calculateMultiExp(ranks.size(), rank.getScore(), rank.getRank());
 
             // 경험치를 업데이트
             profileService.updateExp(memberId, newExp);
@@ -97,78 +105,5 @@ public class GameResultConsumer {
         return updatedExpList;
     }
 
-    // 사용자의 경험치를 누적하여 db에 저장
-    private void updateExpoint(Long memberId, int addExp) {
-        // 사용자를 조회합니다.
-        int currentExp = profileService.getProfileInfo(memberId).getExp();
-        int newExp = currentExp + addExp;
 
-        profileService.updateExp(memberId, newExp);
-    }
-
-    // multi 모드 경험치 계산
-    private int calculateMultiExp(int score, int rank) {
-        // 기본 경험치
-        int baseExp = score;
-
-        // 순위 보너스: 1등에게는 30%, 2등에게는 20%, 3등에게는 10% 보너스
-        // 4등부터는 보너스 없음
-        int rankBonusPercentage;
-        if (rank == 1) {
-            rankBonusPercentage = 30;
-        } else if (rank == 2) {
-            rankBonusPercentage = 20;
-        } else if (rank == 3) {
-            rankBonusPercentage = 10;
-        } else {
-            rankBonusPercentage = 0;
-        }
-
-        // 순위 보너스 계산
-        int rankBonus = (baseExp * rankBonusPercentage) / 100;
-
-        int expGain = baseExp + rankBonus;
-
-        return Math.max(expGain, 0);
-    }
-
-    // battle 모드 경험치 계산
-    private List<Integer> calculateBattleExp(int win) {
-        List<Integer> returnExp = new ArrayList<>();
-
-        // 기본 경험치
-        int baseExp = 100; // 기본경험치 (임시)
-
-        // 순위 보너스: 1등에게는 50%, 2등에게는 10% 보너스
-        int aRankBonusPercentage;
-        int bRankBonusPercentage;
-
-        // a win
-        if (win == 1) {
-            aRankBonusPercentage = 50;
-            bRankBonusPercentage = 10;
-
-        }
-        // b win
-        else if (win == 2) {
-            aRankBonusPercentage = 10;
-            bRankBonusPercentage = 50;
-        }
-        // 무승부 (rank == 0)
-        else {
-            aRankBonusPercentage = 5;
-            bRankBonusPercentage = 5;
-        }
-
-        // 순위 보너스 계산
-        int aRankBonus = (baseExp * aRankBonusPercentage) / 100;
-        int bRankBonus = (baseExp * bRankBonusPercentage) / 100;
-
-        int aExpGain = baseExp + aRankBonus;
-        int bExpGain = baseExp + bRankBonus;
-
-        returnExp.add(aExpGain);
-        returnExp.add(bExpGain);
-        return returnExp;
-    }
 }

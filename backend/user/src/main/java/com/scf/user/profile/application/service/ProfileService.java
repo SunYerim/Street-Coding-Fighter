@@ -3,8 +3,13 @@ package com.scf.user.profile.application.service;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
 import com.scf.user.profile.domain.dto.HistoryListResponseDto;
 import com.scf.user.profile.domain.dto.ProfileResponseDto;
+import com.scf.user.profile.domain.dto.SubmitGameResultDto;
+import com.scf.user.profile.domain.dto.SubmitGameResultListDto;
+import com.scf.user.profile.domain.dto.kafka.BattleGameResult;
+import com.scf.user.profile.domain.dto.kafka.MultiGameResult;
 import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
+import java.util.List;
 
 public interface ProfileService {
 
@@ -25,4 +30,16 @@ public interface ProfileService {
 
     // 푼 문제를 등록
     void submitSolved(Long memberId, SolvedProblemKafkaRequestDto problemRequestDto);
+
+    // 멀티 게임 결과를 저장
+    void submitMultiGameResultList(MultiGameResult multiGameResult);
+
+    // 배틀 게임 결과를 저장
+    void submitBattleGameResultList(BattleGameResult battleGameResult);
+
+    public Integer calculateMultiExp(int partCnt, int score, int rank);
+
+    void updateExpoint(Long memberId, int addExp);
+
+    List<Integer> calculateBattleExp(int win);
 }
