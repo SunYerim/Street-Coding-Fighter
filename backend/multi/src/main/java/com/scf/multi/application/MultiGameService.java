@@ -96,6 +96,10 @@ public class MultiGameService {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
+        if(room == null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
+        }
+
         boolean isReconnect = room.getPlayers().stream()
             .anyMatch(player -> player.getUserId().equals(userId));
 
