@@ -180,4 +180,11 @@ public class UserController {
         return ResponseEntity.ok(userInfoListResponseDto);
     }
 
+    // 유저 이름 조회
+    @GetMapping("/public/name/{memberId}")
+    public ResponseEntity<?> getUsername(@PathVariable("memberId") Long memberId) {
+        String username = userService.findUsername(memberId);
+        return ResponseEntity.ok(username);
+    }
+
 }

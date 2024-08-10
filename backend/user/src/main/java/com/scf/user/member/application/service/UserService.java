@@ -25,4 +25,7 @@ public interface UserService {
 
     // 유저 전체 리스트 조회
     public UserInfoListResponseDto sendUserList();
+
+    // 유저 이름 조회
+    public String findUsername(Long memberId);
 }
