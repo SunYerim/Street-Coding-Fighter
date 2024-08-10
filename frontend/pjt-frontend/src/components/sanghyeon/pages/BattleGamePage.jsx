@@ -183,6 +183,7 @@ const BattleGamePage = () => {
       userId: memberId,
       username: name,
       roomPassword: roomPassword,
+      guestCharacterType: character,
     };
     battleStompClient.current.send(
       `/room/${roomId}/join`,
@@ -202,10 +203,10 @@ const BattleGamePage = () => {
         setEnemyCharacterType(body.guestCharacterType);
       }
 
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        `${body.username}님이 입장하셨습니다.`,
-      ]);
+      // setChatMessages((prevMessages) => [
+      //   ...prevMessages,
+      //   `${body.username}님이 입장하셨습니다.`,
+      // ]);
     });
   };
 
