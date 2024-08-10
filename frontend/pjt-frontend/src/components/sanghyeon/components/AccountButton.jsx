@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import LoginPageButton from "../../buttons/LoginPageButton";
 export default function AccountButton(props) {
   const { buttonType } = props;
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function AccountButton(props) {
 
   return (
     <>
-      <button onClick={handleClick}>{buttonType}</button>
+      <LoginPageButton onClick={handleClick}>{buttonType}</LoginPageButton>
     </>
   );
 }

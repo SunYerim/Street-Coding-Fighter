@@ -8,6 +8,7 @@ import { Howl } from "howler";
 import SoundStore from "../../../stores/SoundStore.jsx";
 import createAuthClient from "../apis/createAuthClient.js";
 import Swal from "sweetalert2";
+import LoginPageButton from "../../buttons/LoginPageButton.jsx";
 
 const LoginPage = () => {
   const {
@@ -88,7 +89,7 @@ const LoginPage = () => {
             ref={password}
             placeholder="비밀번호"
           />
-          <button onClick={noAuthLogin}>Login</button>
+          <LoginPageButton onClick={noAuthLogin}>Login</LoginPageButton>
           <AccountButton buttonType="Sign Up" />
           <div className="find-and-kakao">
             <div
