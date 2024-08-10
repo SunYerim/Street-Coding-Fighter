@@ -80,7 +80,8 @@ const ItemPage = () => {
         },
       });
 
-      const nextCharacter = purchaseRes.data.type * 100 + (character % 100);
+      const nextCharacter =
+        purchaseRes.data.characterType * 100 + (character % 100);
       setCharacter(nextCharacter);
       setExp(exp - 500);
     } catch (error) {
@@ -113,7 +114,7 @@ const ItemPage = () => {
       });
 
       const nextCharacter =
-        character - (character % 100) + purchaseRes.data.type;
+        character - (character % 100) + purchaseRes.data.characterClothType;
       setCharacter(nextCharacter);
       setExp(exp - 500);
     } catch (error) {
