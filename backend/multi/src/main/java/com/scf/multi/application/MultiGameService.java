@@ -100,13 +100,15 @@ public class MultiGameService {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        if (room.getIsStart()) {
-            boolean isReconnect = room.getPlayers().stream()
-                .anyMatch(player -> player.getUserId().equals(userId));
+        if (room == null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
+        }
 
-            if (!isReconnect && room.getIsStart()) {
-                throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
-            }
+        boolean isReconnect = room.getPlayers().stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!isReconnect && room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
         }
     }
 
