@@ -49,7 +49,7 @@ function ProfilePage() {
 
   useEffect(() => {
     const getProfile = async () => {
-      if (exp !== null) return;
+      if (exp !== "") return;
 
       try {
         const profileRes = await authClient({
