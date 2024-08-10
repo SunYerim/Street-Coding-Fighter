@@ -1,16 +1,33 @@
+.base-Input-root {
+  width: 100%;
+  border: 2px solid white;
+  /* background-color: none; */
+}
+
+.base-Input-input {
+  width: 90%;
+  height: 100%;
+  background-color: rgb(250, 248, 250, 0);
+  color: white;
+  border-radius: 0;
+  font-size: 1.2rem;
+}
+
 .input-area {
     min-height:50px;
     display: flex;
-    border-radius: 20px;
+    border-radius: 5px;
     bottom: 0;
-    width: 100%;
-    background-color: white;
+    width: 94%;
+    /* background-color: white; */
+    border: 2px solid white;
+    margin: 0 2% 2% 2%;
   }
   
   .input-container {
     display: flex;
     justify-content: space-between;
-    border-radius: 20px;
+    border-radius: 5px;
     width: 100%;
   }
   
@@ -32,19 +49,18 @@
   input:focus{
     outline:none;
   }
+
   
   .send-button{
     min-width: 70px;
-    border-radius: 20px;
-    background-color:#a16dbb;
+    background-color: rgb(250, 248, 250, 0.5);
+    border: 2px solid white;
     font-size: 16px;
     color: white;
-    border:none;
+    /* border:none; */
   }
   .send-button:hover {
     cursor:pointer;
-  }
-  .send-button:active {
-    background-color: rgb(170, 110, 181);
+    background-color: rgb(250, 248, 250, 0.75);
   }
   

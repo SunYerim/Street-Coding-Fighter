@@ -1,14 +1,8 @@
-.MuiContainer-root.message-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .system-message-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 210px;
+  width: 100%;
 }
 
 .system-message {

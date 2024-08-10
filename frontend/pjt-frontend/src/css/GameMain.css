@@ -172,20 +172,6 @@
 }
 
 
-.before-start {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 100%;
-}
-
-.before-start h2 {
-  margin-top: 15%;
-}
-
 .side-container {
   width: 25%;
   height: 95%;
