@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -56,8 +56,8 @@ public class ProfileController {
     }
 
     // 경험치 반영 (single에서 사용)
-    @PostMapping("/public/addExp/{memberId}")
-    public ResponseEntity<?> requestAddExp(@PathVariable("memberId") Long memberId) {
+    @PostMapping("/public/addExp")
+    public ResponseEntity<?> requestAddExp(@RequestParam("memberId") Long memberId) {
         profileService.addSingleExp(memberId);
         return ResponseEntity.ok("경험치 누적이 완료되었습니다.");
     }
