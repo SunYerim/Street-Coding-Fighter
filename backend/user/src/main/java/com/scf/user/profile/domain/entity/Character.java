@@ -21,13 +21,13 @@ public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "character_id")
-    private int characterId;
+    private Integer characterId;
 
     @Column(name = "exp")
-    private int exp = 0;
+    private Long exp = 0L;
 
     @Column(name = "character_type")
-    private int characterType;
+    private Integer characterType;
 
     @OneToOne
     @JoinColumn(name = "member_id", nullable = false) // FK 설정
