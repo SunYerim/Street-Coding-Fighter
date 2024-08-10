@@ -40,7 +40,7 @@ export default function SingleMain() {
       <Header />
       <div id="container">
         <TitleDiv>
-          <h1>Single Play</h1>
+          <h1>Story Mode</h1>
         </TitleDiv>
         <EpisodeList rownum={3}></EpisodeList>
       </div>

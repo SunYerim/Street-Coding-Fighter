@@ -140,17 +140,17 @@ const Setting = ({ isOpen, onClose }) => {
           </div>
           <hr />
           <div className="settings">
-            <div style={styles.setting}>
+            <p style={styles.setting}>
               BGM Volume
               <VolumeSlider volume={bgmVolume * 100} handler={setBgmVolume} />
-            </div>
-            <div style={styles.setting}>
+            </p>
+            <p style={styles.setting}>
               Effect Volume
               <VolumeSlider
                 volume={effectVolume * 100}
                 handler={setEffectVolume}
               />
-            </div>
+            </p>
             <p style={styles.setting} onClick={() => navigate("/")}>
               Back to Title
             </p>

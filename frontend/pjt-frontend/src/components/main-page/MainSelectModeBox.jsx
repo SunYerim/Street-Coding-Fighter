@@ -6,7 +6,7 @@ function MainSelectModeBox(props) {
   const [isHovered, setIsHovered] = useState(false);
 
   const selectMode = (mode) => {
-    if (mode === "싱글플레이") {
+    if (mode === "스토리모드") {
       navigate("/single-main");
     } else if (mode === "멀티플레이") {
       navigate("/multi");

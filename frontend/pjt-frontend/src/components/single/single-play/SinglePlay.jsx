@@ -177,7 +177,7 @@ export default function SinglePlay() {
   };
   const goToList = (isFinish) => {
     if (isFinish && !checkIsCompleted()) {
-      console.log('axios 요청 드갑니다')
+      console.log('axios 요청 드갑니다');
       axios({
         method: 'post',
         url: `${baseURL}/single/${content_id}`,
@@ -313,12 +313,18 @@ export default function SinglePlay() {
                 </S.DialogueContent>
               </S.DialogueBody>
               <S.DialogueBodyRight>
-                <p>
-                  <PiMouseLeftClick /> 클릭 : 다음
-                </p>
-                <p>
-                  <PiMouseRightClick /> 우클릭 : 이전
-                </p>
+                <div style={styles.directionBox}>
+                  <span style={styles.clickIcon}>
+                    <PiMouseLeftClick />
+                  </span>
+                  클릭 : 다음
+                </div>
+                <div style={styles.directionBox}>
+                  <span style={styles.clickIcon}>
+                    <PiMouseRightClick />
+                  </span>
+                  우클릭 : 이전
+                </div>
               </S.DialogueBodyRight>
             </S.DialogueBox>
           </S.DialogueSection>
@@ -370,6 +376,14 @@ export default function SinglePlay() {
   );
 }
 const styles = {
+  directionBox: {
+    display: 'flex',
+    alignItems: 'center',
+    magrinBottom: '20px',
+  },
+  clickIcon: {
+    fontSize: '60px',
+  },
   chatButton: {
     position: 'fixed',
     right: '10px',

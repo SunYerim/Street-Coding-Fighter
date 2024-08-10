@@ -63,21 +63,21 @@ function MainPage() {
 
   const modeDetails = {
     "1 vs 1": {
-      description: "1 대 1 대결 모드입니다. 서로의 실력을 겨뤄보세요.",
-      imageUrl: "/characters/movingFireSlime.gif",
+      description: "1 대 1 대결 모드입니다.\n 서로의 실력을 겨뤄보세요.",
+      imageUrl: "/characters/movingFireSlime.gif"
     },
-    멀티플레이: {
-      description: "여러 명이 동시에 참여할 수 있는 멀티플레이 모드입니다.",
-      imageUrl: "/characters/movingGreenSlime.gif",
+    "멀티플레이": {
+      description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
+      imageUrl: "/characters/movingGreenSlime.gif"
     },
-    싱글플레이: {
-      description: "혼자서 도전할 수 있는 싱글플레이 모드입니다.",
-      imageUrl: "/characters/movingIceSlime.gif",
+    "스토리모드": {
+      description: "혼자서 학습할 수 있는 스토리모드 입니다.",
+      imageUrl: "/characters/movingIceSlime.gif"
     },
-    랭킹: {
-      description: "순위를 겨루는 랭킹 모드입니다. 높은 점수를 기록해보세요.",
-      imageUrl: "/characters/movingThunderSlime.gif",
-    },
+    "랭킹": {
+      description: "순위를 겨루는 랭킹 모드입니다. \n 높은 점수를 기록해보세요.",
+      imageUrl: "/characters/movingThunderSlime.gif"
+    }
   };
 
   const defaultMode = {
@@ -123,7 +123,8 @@ function MainPage() {
           </p>
         </div>
       </div>
-      <div style={styles.logo}>Street Coding Fighter</div>
+      <div style={styles.logo}>
+      </div>
     </>
   );
 }
@@ -155,15 +156,16 @@ const styles = {
   },
   description: {
     flex: 1,
-    padding: "20px",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "white",
-    fontSize: "18px",
-    textAlign: "center",
+    padding: '20px',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    fontSize: '1.7rem',
+    whiteSpace: 'pre-wrap',
+    textAlign: 'center',
   },
   image: {
     marginTop: "10px",
