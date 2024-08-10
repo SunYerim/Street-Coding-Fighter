@@ -1,5 +1,6 @@
 package com.scf.user.member.presentation;
 
+import com.scf.user.member.application.service.GachaService;
 import com.scf.user.member.application.service.ResetService;
 import com.scf.user.member.application.service.RedisService;
 import com.scf.user.member.application.service.UserService;
