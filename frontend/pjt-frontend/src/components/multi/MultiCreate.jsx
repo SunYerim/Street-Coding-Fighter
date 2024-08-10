@@ -79,26 +79,30 @@ export default function MultiCreate() {
         <div className="create-container">
           <h1>Create Room [ Multi Mode ]</h1>
           <div className="pink-line"></div>
-          <form className="multi-create-input" onSubmit={createMultiRoom}>
-            <div className="create-box">
-              <span>방 제목 : </span>
-                <input name="title" className="create-title" type="text" placeholder="Enter Room Title" maxLength={20} />
-            </div>
-            <div className="create-box">
-              <span>최대인원 : </span>
-              <input name="maxPlayer" className="create-max-number" type="number" min="2" max="100" placeholder="10" defaultValue={10} />
-            </div>
-            <div className="create-box">
-              <span>비밀번호 : </span>
-              <input name="password" className="create-password" type="password" maxLength={20} />
-            </div>
-            <div className="create-box">
-              <span>라운드 : </span>
-              <input name="gameRound" className="create-problems" type="number" min="2" max="10" placeholder="5" defaultValue={5} />
-            </div>
-            <div className="create-button-container">
-              <button className="create-button" type="submit">Create</button>
-              <button className="create-button" onClick={() => navigate("/multi")}>Cancle</button>
+          <form onSubmit={createMultiRoom}>
+            <div className="multi-create-form">
+              <div className="multi-create-input">
+                <div className="create-box">
+                  <span>방 제목 : </span>
+                    <input name="title" className="create-title" type="text" placeholder="Enter Room Title" maxLength={20} />
+                </div>
+                <div className="create-box">
+                  <span>최대인원 : </span>
+                  <input name="maxPlayer" className="create-max-number" type="number" min="2" max="100" placeholder="10" defaultValue={10} />
+                </div>
+                <div className="create-box">
+                  <span>비밀번호 : </span>
+                  <input name="password" className="create-password" type="password" maxLength={20} />
+                </div>
+                <div className="create-box">
+                  <span>라운드 : </span>
+                  <input name="gameRound" className="create-problems" type="number" min="2" max="20" placeholder="5" defaultValue={5} />
+                </div>
+              </div>
+              <div className="create-button-container">
+                <button className="create-button" type="submit">Create</button>
+                <button className="create-button" onClick={() => navigate("/multi")}>Cancle</button>
+              </div>
             </div>
           </form>
         </div>

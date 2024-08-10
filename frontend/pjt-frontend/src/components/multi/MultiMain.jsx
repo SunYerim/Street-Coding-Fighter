@@ -108,12 +108,21 @@ export default function MultiMain() {
                 </div>
               </div>
             </div>
-            <div className="button-container">
-              <div>
-                <button className="create-button" onClick={refreshPage}>Refresh</button>
+            <div className="side-container">
+              <div className="multi-list-search-container">
+                <input
+                  ref={searchKeyword}
+                  type="text"
+                  placeholder="검색어 입력"
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && multiListSearch(searchKeyword)
+                  }
+                />
+                <button onClick={multiListSearch}>검색</button>
               </div>
-              <div>
-                <button className="create-button" onClick={() => navigate("/multi-create")}>Create</button>
+              <div className="button-container">
+                <button onClick={refreshPage}>새로고침</button>
+                <button onClick={() => navigate("/multi-create")}>방 만들기</button>
               </div>
             </div>
           </div>

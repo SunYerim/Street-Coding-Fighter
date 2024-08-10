@@ -1,200 +1,119 @@
-.multi-game-main {
+@font-face {
+  font-family: "Galmuri11-Bold";
+  font-weight: bold;
+  src: url("../fonts/Galmuri11-Bold.ttf");
+}
+
+.container {
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  width: 100%;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   background-color: rgba(0, 0, 50, 0.7);
-  width: 80vw;
+  border-radius: 20px;
   height: 80vh;
-  border-radius: 20px;
-  /* color: white; */
-  padding: 0px 5px;
+  width: 80vw;
+  margin: 0;
 }
 
-.multi-game-left {
+.title-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 22%;
-  height: 98%;
-  border-radius: 20px;
   color: white;
-  /* border: 3px solid black; */
-  border-radius: 10px;
+  height: 10%;
 }
 
-.multi-game-center {
+.sub-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 56%;
-  height: 98%;
-  border-radius: 20px;
-  /* color: white; */
-  /* border: 3px solid black; */
-  background-color: rgba(248, 248, 248, 0.7);
-  border-radius: 10px;
-  margin: 1%;
-}
-
-.multi-game-right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 22%;
-  height: 98%;
-  border-radius: 20px;
-  color: white;
-  /* border: 3px solid black; */
-  border-radius: 10px;
-}
-
-.multi-timer {
-  display: flex;
-  justify-content: center;
   flex-direction: row;
+  justify-content: space-around;
   align-items: center;
-  width: 100%;
-  height: 20%;
-  border-radius: 10px;
-  font-size: 400%;
-  color: yellow;
-  background-color: rgba(0, 0, 50, 0.7);
-  margin: 1%;
+  /* background-color: rgba(0, 0, 50, 0.7);
+  border-radius: 5px; */
+  height: 80vh;
+  width: 80vw; 
+  /* margin: 0; */
 }
 
-.multi-rank-table {
-  overflow-y: auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
+.list-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  /* background-color: rgba(0, 0, 50, 0.4); */
+  width: 70%;
+  border: 3px solid #ccc;
+  border-radius: 5px;
+  height: 95%;
+  color: white;
+}
+
+.game-list-header {
+  display: flex;
+  width: 98%;
+  height: 20%;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 80%;
-  background-color: rgba(0, 0, 50, 0.7);
-  margin: 1%;
-  border-radius: 10px;
+  justify-content: center;
+  font-size: 1.5rem;
+  /* border: 3px solid black;
+  border-radius: 10px; */
 }
 
-/* 스크롤바의 폭 너비 */
-.multi-rank-table::-webkit-scrollbar {
-  width: 10px;
+.white-line {
+  width: 98%;
+  height: 3px;
+  background-color: white;
+  margin: 10px;
 }
 
-/* 스크롤바 막대 */
-.multi-rank-table::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    to bottom,
-    rgb(148, 226, 148),
-    rgb(72, 129, 199),
-    rgb(229, 141, 229),
-    pink,
-    rgb(228, 103, 103)
-  );
-  border-radius: 10px;
-}
-
-.multi-rank-table::-webkit-scrollbar-track {
-  background: rgba(214, 193, 212, 0.1);
-}
-
-.multi-rank-table::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    to bottom,
-    rgb(148, 226, 148),
-    rgb(72, 129, 199),
-    rgb(229, 141, 229),
-    pink,
-    rgb(228, 103, 103)
-  );
-}
-
-.multi-rank-items {
+.game-room-index {
   display: grid;
-  grid-template-columns: 1fr 3fr 3fr;
+  grid-template-columns: 1fr 4fr 2fr 2fr 2fr 2fr;
   justify-items: center;
   align-items: center;
-  width: 95%;
-  height: 50px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  border: 3px solid white;
-  border-radius: 10px;
-  margin: 1%;
+  width: 99%;
+  height: 60%;
 }
 
-.multi-rank-items h3,
-h4 {
+.game-room-index h2 {
   justify-self: start;
-  padding: 0px 25px;
+  padding-left: 20px;
   max-width: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.multi-current-player {
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  width: 95%;
-  height: 50px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  border: 3px solid white;
-  border-radius: 10px;
-  margin: 1%;
-}
-
-.multi-current-player h3 {
-  justify-self: start;
-  padding: 0px 25px;
-  max-width: 80%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.multi-round {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 20%;
-  background-color: rgba(0, 0, 50, 0.7);
-  margin: 1%;
-  border-radius: 10px;
-}
-
-.multi-round p {
-  font-size: 2rem;
-  font-weight: 900;
-}
-
-
-.multi-message-room {
+.game-list {
   overflow-y: auto;
   overflow-y: scroll;
   overflow-x: hidden;
-  flex-direction: column; 
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  width: 98%;
   height: 80%;
+  display: flex;
+  justify-content: center;
   /* border: 3px solid black; */
-  background-color: rgba(0, 0, 50, 0.7);
-  margin: 1%;
+  /* background-color: rgba(5, 7, 66, 0.4); */
   border-radius: 10px;
 }
 
+
 /* 스크롤바의 폭 너비 */
-.multi-message-room::-webkit-scrollbar {
+.game-list::-webkit-scrollbar {
   width: 10px;
 }
 
 /* 스크롤바 막대 */
-.multi-message-room::-webkit-scrollbar-thumb {
+.game-list::-webkit-scrollbar-thumb {
   background: linear-gradient(
     to bottom,
     rgb(148, 226, 148),
@@ -203,57 +122,141 @@ h4 {
     pink,
     rgb(228, 103, 103)
   );
+  /* border: 2px solid #a480b9; */
   border-radius: 10px;
 }
 
-.multi-message-room::-webkit-scrollbar-track {
+.game-list::-webkit-scrollbar-track {
   background: rgba(214, 193, 212, 0.1);
 }
 
-.multi-message-room::-webkit-scrollbar-thumb:hover {
+.game-list::-webkit-scrollbar-thumb:hover {
   background-color: #181883;
 }
 
-.result-modal-content {
-  display: flex;
-  justify-content: center;
+.room-items {
+  display: grid;
+  grid-template-columns: 1fr 4fr 2fr 2fr 2fr 2fr;
+  justify-items: center;
   align-items: center;
-  width: 30vw;
-  height: 60vh;
+  width: 99%;
+  height: 80px;
+  margin: 5px 0px;
+  border: 3px solid white;
+  border-radius: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.result-modal-container {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
+.room-items h3 {
+  justify-self: start;
+  padding-left: 25px;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.multi-button {
-  width: 120px;
-  height: 50px;
-  background-color: rgba(255, 255, 255, 0.7);
-  font-size: 1.5rem;
-  font-weight: bold;
-  letter-spacing: 2px;
-  cursor: pointer;
+.room-items img {
+  justify-self: start;
+  padding-right: 25px;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.multi-button:hover {
-  background-color: #eee;
+.room-items:hover {
+  background-color: #0056b3;
 }
 
-.after-start {
+
+.before-start {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
+}
+
+.before-start h2 {
+  margin-top: 15%;
+}
+
+.side-container {
+  width: 25%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+
+.multi-list-search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   width: 90%;
-  height: 90%;
-  border: 3px solid rgba(255, 255, 255, 0);
-  border-radius: 10px;
+  margin: 30px 0px;
+}
+
+.multi-list-search-container input {
+  width: 70%;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.multi-list-search-container button {
+  width: 25%;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f3f5f7;
+  color: black;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 5px;
+  color: black;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+
+.button-container button {
+  width: 90%;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f3f5f7;
+  color: black;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-bottom: 30px;
 }
