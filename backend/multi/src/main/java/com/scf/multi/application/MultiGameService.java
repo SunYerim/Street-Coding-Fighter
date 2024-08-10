@@ -23,12 +23,10 @@ import com.scf.multi.domain.repository.MultiGameRepository;
 import com.scf.multi.global.error.ErrorCode;
 import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.infrastructure.KafkaMessageProducer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -96,11 +94,18 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public void validateRoomIsNotStart(String roomId) {
+    public void validatePlayerToRoom(String roomId, Long userId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        if (room.getIsStart()) {
+        if (room == null) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.ROOM_NOT_FOUND);
+        }
+
+        boolean isReconnect = room.getPlayers().stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!isReconnect && room.getIsStart()) {
             throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
         }
     }
@@ -164,14 +169,19 @@ public class MultiGameService {
         return score;
     }
 
+
     public Player handlePlayerExit(String roomId, String sessionId) {
 
-        MultiGameRoom room = multiGameRepository.findOneById(roomId);
+        MultiGameRoom room = findOneById(roomId);
 
-        Player exitPlayer = findPlayerBySessionId(room, sessionId);
-        exitPlayer.setIsOnRoom(false);
+        if(room != null) {
+            Player exitPlayer = findPlayerBySessionId(room, sessionId);
+            exitPlayer.setIsOnRoom(false);
 
-        return exitPlayer;
+            return exitPlayer;
+        }
+
+        return null;
     }
 
     public Player rotateHost(String roomId) {
@@ -310,6 +320,7 @@ public class MultiGameService {
             .curPlayer(room.getPlayers().size())
             .isLock(room.getPassword() != null)
             .isStart(room.getIsStart())
+            .gameRound(room.getPlayRound())
             .build();
     }
 

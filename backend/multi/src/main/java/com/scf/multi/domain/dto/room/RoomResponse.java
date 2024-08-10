@@ -17,5 +17,6 @@ public class RoomResponse {
         private Integer curPlayer;
         private Boolean isLock;
         private Boolean isStart;
+        private Integer gameRound;
     }
 }
