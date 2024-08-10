@@ -37,7 +37,7 @@ public class BattleSocketController {
         roomService.joinRoom(roomId, joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), joinRoomSocketRequestDTO.getRoomPassword());
         Integer guestCharacterType = userService.getCharacterType(joinRoomSocketRequestDTO.getUserId()).getCharacterType();
         messagingTemplate.convertAndSend("/room/" + roomId, new JoinRoomSocketResponseDTO(
-            joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), guestCharacterType)); // 실제로는 입장 메세지
+            joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), guestCharacterType)); // 입장한 사람의 정보를 방에 있는 사람한테 줌
     }
 
     @MessageMapping("/game/{roomId}/answer")
