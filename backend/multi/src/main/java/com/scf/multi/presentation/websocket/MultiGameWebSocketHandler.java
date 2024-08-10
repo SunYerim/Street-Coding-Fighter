@@ -46,7 +46,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String roomId = (String) session.getAttributes().get("roomId");
         Long userId = (Long) session.getAttributes().get("userId");
 
-        multiGameService.validateRoom(roomId);
+        multiGameService.validatePlayerToRoom(roomId, userId);
 
         Player connectedPlayer = multiGameService.connectPlayer(roomId, userId, session.getId());
 

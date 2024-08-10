@@ -92,11 +92,14 @@ public class MultiGameService {
         room.add(roomPassword, player);
     }
 
-    public void validateRoom(String roomId) {
+    public void validatePlayerToRoom(String roomId, Long userId) {
 
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
-        if (room.getIsStart()) {
+        boolean isReconnect = room.getPlayers().stream()
+            .anyMatch(player -> player.getUserId().equals(userId));
+
+        if (!isReconnect && room.getIsStart()) {
             throw new BusinessException(roomId, "roomId", GAME_ALREADY_STARTED);
         }
     }
