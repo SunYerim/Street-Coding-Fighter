@@ -39,7 +39,10 @@
   font-size: 1.5rem;
   cursor: pointer;
   margin-top: 30px;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+
 }
+
 
 .modal {
   width: 100%;
@@ -92,13 +95,18 @@
   border-radius: 5px;
   margin-top: 10px;
   margin-left: 2%;
-
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.duplicate-chk:hover {
+  background-color: #d3d3d3;
+}
+
 
 /* Hide date input icon for different browsers while keeping the date picker functionality */
 .custom-date-input {

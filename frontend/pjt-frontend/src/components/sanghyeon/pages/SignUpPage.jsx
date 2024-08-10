@@ -4,7 +4,7 @@ import "../../../css/SignUpPage.css";
 import { useNavigate } from "react-router-dom";
 import store from "../../../store/store.js";
 import Swal from "sweetalert2";
-
+import LoginPageButton from "../../buttons/LoginPageButton.jsx";
 const SignUpPage = () => {
   const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
@@ -139,7 +139,7 @@ const SignUpPage = () => {
             className="custom-date-input"
             required
           />
-          <button type="submit">NEXT</button>
+          <LoginPageButton type="submit">NEXT</LoginPageButton>
         </form>
       </div>
     </>
