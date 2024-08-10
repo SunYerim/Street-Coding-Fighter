@@ -18,23 +18,7 @@ public class ProblemResponseDTO {
         private ProblemType problemType;
         private String category;
         private Integer difficulty;
-//        private ProblemContent problemContent;
-//        private List<ProblemChoice> problemChoices;
-    }
-
-    @Data
-    @Builder
-    public static class SelectProblemDTO {
-
-        private Long problemId;
-        private String title;
-        private ProblemType problemType;
-        private String category;
-        private Integer difficulty;
-        private ProblemContent problemContent;
-        private List<ProblemChoice> problemChoices;
         private Item item;
-
         public void setItemBasedOnDifficulty() {
             Random random = new Random();
             double randomValue = random.nextDouble();
@@ -48,5 +32,19 @@ public class ProblemResponseDTO {
                 }
             }
         }
+    }
+
+    @Data
+    @Builder
+    public static class SelectProblemDTO {
+
+        private Long problemId;
+        private String title;
+        private ProblemType problemType;
+        private String category;
+        private Integer difficulty;
+        private ProblemContent problemContent;
+        private List<ProblemChoice> problemChoices;
+
     }
 }
