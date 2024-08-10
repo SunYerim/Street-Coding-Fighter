@@ -17,6 +17,7 @@ import com.scf.user.member.domain.dto.UserRegistEmailVerifyDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import com.scf.user.member.domain.dto.VerifyCodeRequestDto;
+import com.scf.user.member.domain.enums.GachaType;
 import com.scf.user.member.infrastructure.security.JwtCookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -197,52 +198,35 @@ public class UserController {
 
     @GetMapping("/gacha/character-cloth")
     public ResponseEntity<?> gachaCloth(@RequestHeader("memberId") Long memberId) {
-        try {
-            // 랜덤으로 옷 타입을 뽑음
-            int characterClothType = gachaService.drawClothingType();
-            UserCharaterClothTypeResponseDTO userCharaterClothTypeResponseDTO = new UserCharaterClothTypeResponseDTO(characterClothType);
-            // 뽑힌 옷 타입을 해당 사용자의 캐릭터에 업데이트
-            userService.updateCharacterCloth(memberId, characterClothType);
-
-            // 성공 응답 반환
-            return ResponseEntity.ok(userCharaterClothTypeResponseDTO);
-
-        } catch (UsernameNotFoundException e) {
-            // 회원을 찾을 수 없는 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            // 캐릭터가 없는 경우 등
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operation: " + e.getMessage());
-        } catch (Exception e) {
-            // 기타 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
-        }
+        return handleGachaRequest(memberId, GachaType.CLOTH);
     }
 
     @GetMapping("/gacha/character-type")
     public ResponseEntity<?> gachaCharacterType(@RequestHeader("memberId") Long memberId) {
+        return handleGachaRequest(memberId, GachaType.TYPE);
+    }
+
+    private ResponseEntity<?> handleGachaRequest(Long memberId, GachaType gachaType) {
         try {
-            // 랜덤으로 캐릭터 타입을 뽑음
-            int characterType = gachaService.drawCharacterType();
-            UserCharaterTypeResponseDTO userCharaterTypeResponseDTO = new UserCharaterTypeResponseDTO(characterType);
-            // 뽑힌 캐릭터 타입을 해당 사용자의 캐릭터에 업데이트
-            userService.updateCharacterType(memberId, characterType);
-
-            // 성공 응답 반환
-            return ResponseEntity.ok(userCharaterTypeResponseDTO);
-
+            int result;
+            if (gachaType == GachaType.CLOTH) {
+                result = gachaService.drawClothingType();
+                userService.updateCharacterCloth(memberId, result);
+                return ResponseEntity.ok(new UserCharaterClothTypeResponseDTO(result));
+            } else if (gachaType == GachaType.TYPE) {
+                result = gachaService.drawCharacterType();
+                userService.updateCharacterType(memberId, result);
+                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(result));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Gacha Type");
+            }
         } catch (UsernameNotFoundException e) {
-            // 회원을 찾을 수 없는 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("Member not found: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found: " + e.getMessage());
         } catch (IllegalStateException e) {
-            // 캐릭터가 없는 경우 등
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Invalid operation: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operation: " + e.getMessage());
         } catch (Exception e) {
-            // 기타 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
+
 }
