@@ -77,8 +77,6 @@ public class MultiGameRoom {
         }
 
         this.players.add(player);
-        this.scoreBoard.put(player.getUserId(), 0);
-        this.leaderBoard.put(player.getUserId(), 0);
     }
 
     public void remove(Long userId) {
@@ -107,9 +105,7 @@ public class MultiGameRoom {
             throw new BusinessException(null, "문제", ErrorCode.INVALID_PROBLEM);
         }
 
-        this.problems.clear();
-        this.problems.addAll(problems);
-        this.isStart = true;
+        readyGameState(problems);
     }
 
     public void updateLeaderBoard(Long userId, int score) {
@@ -175,7 +171,6 @@ public class MultiGameRoom {
         return ranks;
     }
 
-
     public List<Rank> getRoundRank() {
 
         List<Rank> ranks = scoreBoard.entrySet().stream()
@@ -222,5 +217,15 @@ public class MultiGameRoom {
         this.scoreBoard.clear();
         this.round = 0;
         this.curSubmitCount.set(0);
+    }
+
+    private void readyGameState(List<Problem> problems) {
+        this.problems.clear();
+        this.problems.addAll(problems);
+        this.isStart = true;
+        for(Player player : players) {
+            this.leaderBoard.put(player.getUserId(), 0);
+            this.scoreBoard.put(player.getUserId(), 0);
+        }
     }
 }
