@@ -37,9 +37,15 @@ public interface ProfileService {
     // 배틀 게임 결과를 저장
     void submitBattleGameResultList(BattleGameResult battleGameResult);
 
+    // multi게임 후 반영해줄 경험치 계산
     public Integer calculateMultiExp(int partCnt, int score, int rank);
 
+    // 경험치를 update
     void updateExpoint(Long memberId, int addExp);
 
+    // battle게임 후 반영해줄 경험치 계산
     List<Integer> calculateBattleExp(int win);
+
+    // single 컨텐츠 학습 완료 후 경험치 갱신 -> 한 코스당 100씩 더해준다.
+    void addSingleExp(Long memberId);
 }

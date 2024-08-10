@@ -16,8 +16,10 @@ import com.scf.user.profile.domain.dto.kafka.Rank;
 import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
+import com.scf.user.profile.domain.entity.Character;
 import com.scf.user.profile.domain.entity.Record;
 import com.scf.user.profile.domain.entity.Solved;
+import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.profile.domain.repository.SolvedRepository;
 import com.scf.user.profile.domain.repository.RecordReposiotry;
 import com.scf.user.profile.global.exception.ProblemNotFoundException;
@@ -36,6 +38,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final UserRepository userRepository;
     private final SolvedRepository solvedRepository;
     private final RecordReposiotry recordReposiotry;
+    private final CharacterRepository characterRepository;
     private final ProblemClient problemClient;
 
     // 멤버 조회 메소드 추가
@@ -380,6 +383,25 @@ public class ProfileServiceImpl implements ProfileService {
         returnExp.add(aExpGain);
         returnExp.add(bExpGain);
         return returnExp;
+    }
+
+    @Override
+    @Transactional
+    public void addSingleExp(Long memberId) {
+        // 해당 요청이 들어오면 유저의 기존 경험치에서 100씩 더해줍니다.
+
+        // memberId로 Character 조회
+        Character character = characterRepository.findByMemberId(memberId);
+
+        if (character != null) {
+            // 기존 경험치에 100을 더함
+            character.setExp(character.getExp() + 100);
+            // 변경된 값 저장
+            characterRepository.save(character);
+        } else {
+            throw new IllegalArgumentException("해당 memberId를 가진 캐릭터가 존재하지 않습니다.");
+        }
+
     }
 
 }

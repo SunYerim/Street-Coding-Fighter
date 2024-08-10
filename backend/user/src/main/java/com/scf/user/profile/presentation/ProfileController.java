@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProfileController {
 
     private final ProfileService profileService;
-    private final KafkaMessageProducer kafkaMessageProducer;
 
     // 프로필 정보 조회
     @GetMapping
@@ -58,6 +57,13 @@ public class ProfileController {
         DjangoResponseDto djangoResponse = profileService.getDjangoInfo(memberId);
 
         return ResponseEntity.ok(djangoResponse);
+    }
+
+    // 경험치 반영 (single에서 사용)
+    @PostMapping("/addExp")
+    public ResponseEntity<?> requestAddExp(@RequestHeader("memberId") Long memberId) {
+        profileService.addSingleExp(memberId);
+        return ResponseEntity.ok("경험치 누적이 완료되었습니다.");
     }
 
     // produce test api
