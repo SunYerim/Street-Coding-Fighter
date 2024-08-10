@@ -123,7 +123,7 @@ const store = create(
       accessToken: "",
       setAccessToken: (accessToken) => set({ accessToken }),
 
-      exp: null,
+      exp: "",
       setExp: (exp) => set({ exp }),
 
       normalQuit: false,
