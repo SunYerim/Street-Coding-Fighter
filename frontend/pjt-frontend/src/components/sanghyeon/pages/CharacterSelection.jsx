@@ -81,17 +81,17 @@ const CharacterSelection = () => {
   const characterTypeConvert = (characterType) => {
     switch (characterType) {
       case "green":
-        return 0;
+        return 101;
       case "ice":
-        return 1;
+        return 501;
       case "fire":
-        return 2;
+        return 401;
       case "thunder":
-        return 3;
+        return 301;
       case "nyan":
-        return 4;
+        return 1201;
       default:
-        return 0;
+        return 101;
     }
   };
 

@@ -15,6 +15,7 @@ function MainPage() {
     setBirth,
     setCharacter,
     setExp,
+    name,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -24,6 +25,7 @@ function MainPage() {
     setBirth: state.setBirth,
     setCharacter: state.setCharacter,
     setExp: state.setExp,
+    name: state.name,
   }));
 
   const authClient = createAuthClient(
@@ -34,6 +36,7 @@ function MainPage() {
 
   useEffect(() => {
     const getUserInfo = async () => {
+      if (name) return;
       try {
         const userInfoRes = await authClient({
           method: "GET",
@@ -79,7 +82,7 @@ function MainPage() {
 
   const defaultMode = {
     description: "모드를 선택해주세요.",
-    imageUrl: "/characters/movingNyanSlime.gif"
+    imageUrl: "/characters/movingNyanSlime.gif",
   };
 
   const [hoveredMode, setHoveredMode] = useState(null);
@@ -96,8 +99,8 @@ function MainPage() {
               onMouseEnter={() => setHoveredMode(mode)}
               onMouseLeave={() => setHoveredMode(null)}
             >
-              <MainSelectModeBox 
-                mode={mode} 
+              <MainSelectModeBox
+                mode={mode}
                 playEffectSound={playEffectSound} // playEffectSound 전달
               />
             </div>
@@ -105,11 +108,19 @@ function MainPage() {
         </div>
         <div style={styles.description}>
           <img
-            src={(hoveredMode ? modeDetails[hoveredMode].imageUrl : defaultMode.imageUrl)}
+            src={
+              hoveredMode
+                ? modeDetails[hoveredMode].imageUrl
+                : defaultMode.imageUrl
+            }
             alt={hoveredMode ? hoveredMode : "기본 이미지"}
             style={styles.image}
           />
-          <p>{hoveredMode ? modeDetails[hoveredMode].description : defaultMode.description}</p>
+          <p>
+            {hoveredMode
+              ? modeDetails[hoveredMode].description
+              : defaultMode.description}
+          </p>
         </div>
       </div>
       <div style={styles.logo}>
@@ -120,28 +131,28 @@ function MainPage() {
 
 const styles = {
   container: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'rgba(27, 26, 85, 0.8)',
-    width: '80vw',
-    borderRadius: '30px',
-    height: '80vh',
-    marginTop: '20px',
-    color: 'white',
-    display: 'flex',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "rgba(27, 26, 85, 0.8)",
+    width: "80vw",
+    borderRadius: "30px",
+    height: "80vh",
+    marginTop: "20px",
+    color: "white",
+    display: "flex",
   },
   modes: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "20px",
   },
   modeItem: {
-    margin: '10px 0',
+    margin: "10px 0",
   },
   description: {
     flex: 1,
@@ -157,18 +168,18 @@ const styles = {
     textAlign: 'center',
   },
   image: {
-    marginTop: '10px',
-    maxWidth: '100%',
-    borderRadius: '10px',
+    marginTop: "10px",
+    maxWidth: "100%",
+    borderRadius: "10px",
   },
   logo: {
-    position: 'absolute',
-    bottom: '20px',
-    right: '20px',
-    fontSize: '48px',
-    fontWeight: 'bold',
-    color: 'rgba(0, 0, 0, 0.7)',
+    position: "absolute",
+    bottom: "20px",
+    right: "20px",
+    fontSize: "48px",
+    fontWeight: "bold",
+    color: "rgba(0, 0, 0, 0.7)",
   },
-}
+};
 
 export default MainPage;

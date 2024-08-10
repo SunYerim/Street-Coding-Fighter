@@ -1,18 +1,9 @@
-.multi-game-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-  width: 100%;
-  margin: 0;
-}
-
 .multi-game-main {
   display: flex;
   flex-direction: row;
   align-items: center;
   background-color: rgba(0, 0, 50, 0.7);
-  width: 90vw;
+  width: 80vw;
   height: 80vh;
   border-radius: 20px;
   /* color: white; */
@@ -134,6 +125,28 @@
 
 .multi-rank-items h3,
 h4 {
+  justify-self: start;
+  padding: 0px 25px;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multi-current-player {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: 95%;
+  height: 50px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: 3px solid white;
+  border-radius: 10px;
+  margin: 1%;
+}
+
+.multi-current-player h3 {
   justify-self: start;
   padding: 0px 25px;
   max-width: 80%;

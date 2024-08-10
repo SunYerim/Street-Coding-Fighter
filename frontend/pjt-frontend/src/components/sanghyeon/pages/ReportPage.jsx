@@ -1,11 +1,12 @@
 import Header from "../components/Header";
 import "../../../css/ReportPage.css";
-import greenSlime from "../../../assets/characters/movingGreenSlime.gif";
 import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
+import renderCharacter from "../apis/renderCharacter.js";
+import createAuthClient from "../apis/createAuthClient.js";
 
 const ReportPage = () => {
   const navigate = useNavigate();
@@ -39,8 +40,10 @@ const ReportPage = () => {
     }
   };
 
-  const { baseURL } = store((state) => ({
+  const { baseURL, character, name } = store((state) => ({
     baseURL: state.baseURL,
+    character: state.character,
+    name: state.name,
   }));
 
   return (
@@ -52,11 +55,12 @@ const ReportPage = () => {
             <div className="report-upper-container">
               <div className="report-profile-container">
                 <img
-                  src={greenSlime}
+                  src={renderCharacter(101)}
+                  // src={renderCharacter(character)}
                   alt="profile-character"
                   className="report-profile-character"
                 />
-                <div className="report-profile-name">Jack</div>
+                <div className="report-profile-name">Falcon</div>
               </div>
               <div className="report-upper-title-container">
                 <div className="report-upper-title-inner-container">
@@ -68,7 +72,7 @@ const ReportPage = () => {
                 </div>
                 <div className="report-upper-title-button-container">
                   <button className="report-upper-title-button">
-                    맞춘 문제 수: 25 개
+                    시도한 문제 수: 25 개
                   </button>
                   <button className="report-upper-title-button">
                     시도한 문제 수: 26 개
@@ -85,6 +89,7 @@ const ReportPage = () => {
             <div className="report-lower-container">
               <div className="report-lower-title-container">
                 <div className="report-lower-title">AI 종합 분석</div>
+                <br />
                 <div className="report-lower-sub-title">
                   SCF AI가 예측한 문제 해결 확률과 점수를 토대로 앞으로의 학습
                   방향을 제안해드립니다.
@@ -92,22 +97,14 @@ const ReportPage = () => {
               </div>
               <div className="report-inner-container">
                 <div className="report">
-                  <span style={{ color: "blue" }}>
-                    자료구조, 탐색, 구현, 수학
-                  </span>{" "}
-                  영역에서 높은 문제 해결력을 갖추고 있습니다. 문제 해결력을 더
-                  높이고 싶다면{" "}
-                  <span style={{ color: "red" }}>수학, 문자열, 구현</span>{" "}
-                  카테고리를 학습해보는 것을 권장합니다. 자료구조, 탐색, 구현,
-                  수학 영역에서 높은 문제 해결력을 갖추고 있습니다.{" "}
-                  <span style={{ color: "blue" }}>
-                    자료구조, 탐색, 구현, 수학
-                  </span>{" "}
-                  영역에서 높은 문제 해결력을 갖추고 있습니다. 문제 해결력을 더
-                  높이고 싶다면{" "}
-                  <span style={{ color: "red" }}>수학, 문자열, 구현</span>{" "}
-                  카테고리를 학습해보는 것을 권장합니다. 자료구조, 탐색, 구현,
-                  수학 영역에서 높은 문제 해결력을 갖추고 있습니다.
+                  <div className="report-lower-title">유의 사항</div>
+                  <br />
+                  <div className="report-lower-sub-title">
+                    본 리포트는 스트리트 코딩 파이터 플랫폼에 축적된 데이터를
+                    학습한 AI 모델의 예측에 기반하고 있습니다. 본 리포트는
+                    학습을 위한 참고 목적으로 활용할 수 있도록 제공되며, 증빙
+                    등의 다른 목적으로는 사용할 수 없습니다.
+                  </div>
                 </div>
               </div>
             </div>
