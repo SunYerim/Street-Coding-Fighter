@@ -2,6 +2,8 @@ package com.scf.user.member.application.service;
 
 
 import com.scf.user.member.application.client.ContentClient;
+import com.scf.user.member.domain.dto.UserInfoListResponseDto;
+import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
 import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
@@ -22,6 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,6 +195,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String findUsername(Long memberId) {
+        // 유저 정보 조회
+        Optional<Member> memberOpt = userRepository.findById(memberId);
+
+        // Optional의 값을 가져오는 방법
+        if (memberOpt.isPresent()) {
+            // Optional이 비어있지 않으면 내부의 Member 객체를 가져옴
+            Member member = memberOpt.get();
+            // Member 객체에서 이름을 가져와 반환
+            return member.getUsername();
+        } else {
+            // Optional이 비어있다면 (즉, memberId에 해당하는 사용자가 없다면) 예외 처리 또는 기본값 반환
+            throw new IllegalArgumentException("해당 memberId를 가진 유저가 존재하지 않습니다.");
+        }
+
+    }
+
+
     public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
         Member member = userRepository.getById(memberId);
         int userCharater = member.getCharacter().getCharacterType()*100 + member.getCharacter().getCharacterCloth();

@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,22 +23,23 @@ public class Record {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int recordId;
+    private Integer recordId;
 
     @Column(name = "time", nullable = false)
-    private Timestamp time;
+    private LocalDateTime time;
 
     @Column(name = "ranking", nullable = false)
-    private int ranking;
+    private Integer ranking;
 
     @Column(name = "score", nullable = false)
-    private int score;
+    private Integer score;
 
     @Column(name = "part_cnt", nullable = false)
-    private int partCnt;
+    private Integer partCnt;
 
     @Column(name = "game_type", nullable = false)
-    private int gameType;
+    private Integer gameType;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

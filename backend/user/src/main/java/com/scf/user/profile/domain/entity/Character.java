@@ -21,10 +21,10 @@ public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "character_id")
-    private int characterId;
+    private Integer characterId;
 
     @Column(name = "exp")
-    private int exp = 0;
+    private Integer exp = 0;
 
     @Column(name = "character_type")
     private int characterType;

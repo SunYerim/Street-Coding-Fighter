@@ -23,7 +23,7 @@ public class Solved {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "solved_id")
-    private int solvedId;
+    private Integer solvedId;
 
     @Column(name = "isCorrect")
     private boolean isCorrect;
