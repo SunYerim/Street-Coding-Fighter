@@ -192,9 +192,16 @@ const BattleGamePage = () => {
   };
 
   const subscribeEnterRoom = () => {
-    const endpoint = `/game/${roomId}/join`;
+    const endpoint = `/room/${roomId}/join`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
+
+      console.log(message);
+
+      if (body.guestCharacterType) {
+        setEnemyCharacterType(body.guestCharacterType);
+      }
+
       setChatMessages((prevMessages) => [
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
@@ -330,12 +337,6 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
-
-      console.log(message);
-
-      if (body.guestCharacterType) {
-        setEnemyCharacterType(body.guestCharacterType);
-      }
 
       if (body.result && typeof body.result === "object") {
         setWinner(body.result.winner);
