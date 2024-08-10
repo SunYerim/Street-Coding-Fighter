@@ -173,7 +173,7 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         Player exitPlayer = findPlayerBySessionId(room, sessionId);
-        room.exitRoom(exitPlayer);
+        exitPlayer.setIsOnRoom(false);
 
         return exitPlayer;
     }
