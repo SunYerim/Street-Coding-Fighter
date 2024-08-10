@@ -53,19 +53,19 @@ public class ProfileServiceImpl implements ProfileService {
         // 멤버 정보 조회
         Member member = getMemberById(memberId);
 
-        // 프로필 DTO 생성
-        return ProfileResponseDto.builder()
-            .name(member.getName())
-            .birth(member.getBirth())
-            .exp(member.getCharacter().getExp())
-            .character(member.getCharacter().getCharacterType())
-            .school(member.getSchoolName())
-            .build();
-
         Character character = member.getCharacter();
 
         // characterType * 100 + characterCloth 값을 계산
         int characterValue = character.getCharacterType() * 100 + character.getCharacterCloth();
+
+        // 프로필 DTO 생성
+        return ProfileResponseDto.builder()
+            .name(member.getName())
+            .birth(member.getBirth())
+            .exp(character.getExp())
+            .character(characterValue) // 계산된 값 설정
+            .school(member.getSchoolName())
+            .build();
     }
 
     // 전체 전적 조회
