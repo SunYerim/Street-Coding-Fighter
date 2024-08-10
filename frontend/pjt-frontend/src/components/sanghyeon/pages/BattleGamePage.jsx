@@ -112,9 +112,9 @@ const BattleGamePage = () => {
   const [enemyHealth, setEnemyHealth] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
-  const [EnemyProblems, setEnemyProblems] = useState([]);
+  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(false);
+  const [gameStart, setGameStart] = useState(true); // 여기
   const [myProblem, setMyProblem] = useState({});
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
@@ -195,7 +195,6 @@ const BattleGamePage = () => {
     const endpoint = `/game/${roomId}/join`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
-      setEnemyCharacterType(body.guestCharacterType);
       setChatMessages((prevMessages) => [
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
@@ -329,6 +328,10 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
+
+      if (body.enemyCharacterType) {
+        setEnemyCharacterType(body.guestCharacterType);
+      }
 
       if (body.result && typeof body.result === "object") {
         setWinner(body.result.winner);
@@ -487,7 +490,7 @@ const BattleGamePage = () => {
     }
   }, [count]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
 
   const openModal = () => {
     setModalIsOpen(true);

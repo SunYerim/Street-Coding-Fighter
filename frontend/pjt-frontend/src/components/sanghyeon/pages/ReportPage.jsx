@@ -39,9 +39,10 @@ const ReportPage = () => {
     }
   };
 
-  const { baseURL, character } = store((state) => ({
+  const { baseURL, character, name } = store((state) => ({
     baseURL: state.baseURL,
     character: state.character,
+    name: state.name,
   }));
 
   return (
@@ -53,11 +54,12 @@ const ReportPage = () => {
             <div className="report-upper-container">
               <div className="report-profile-container">
                 <img
-                  src={renderCharacter(character)}
+                  src={renderCharacter(101)}
+                  // src={renderCharacter(character)}
                   alt="profile-character"
                   className="report-profile-character"
                 />
-                <div className="report-profile-name">Jack</div>
+                <div className="report-profile-name">Falcon</div>
               </div>
               <div className="report-upper-title-container">
                 <div className="report-upper-title-inner-container">
@@ -69,7 +71,7 @@ const ReportPage = () => {
                 </div>
                 <div className="report-upper-title-button-container">
                   <button className="report-upper-title-button">
-                    맞춘 문제 수: 25 개
+                    시도한 문제 수: 25 개
                   </button>
                   <button className="report-upper-title-button">
                     시도한 문제 수: 26 개
@@ -99,16 +101,7 @@ const ReportPage = () => {
                   영역에서 높은 문제 해결력을 갖추고 있습니다. 문제 해결력을 더
                   높이고 싶다면{" "}
                   <span style={{ color: "red" }}>수학, 문자열, 구현</span>{" "}
-                  카테고리를 학습해보는 것을 권장합니다. 자료구조, 탐색, 구현,
-                  수학 영역에서 높은 문제 해결력을 갖추고 있습니다.{" "}
-                  <span style={{ color: "blue" }}>
-                    자료구조, 탐색, 구현, 수학
-                  </span>{" "}
-                  영역에서 높은 문제 해결력을 갖추고 있습니다. 문제 해결력을 더
-                  높이고 싶다면{" "}
-                  <span style={{ color: "red" }}>수학, 문자열, 구현</span>{" "}
-                  카테고리를 학습해보는 것을 권장합니다. 자료구조, 탐색, 구현,
-                  수학 영역에서 높은 문제 해결력을 갖추고 있습니다.
+                  카테고리를 학습해보는 것을 권장합니다.
                 </div>
               </div>
             </div>
