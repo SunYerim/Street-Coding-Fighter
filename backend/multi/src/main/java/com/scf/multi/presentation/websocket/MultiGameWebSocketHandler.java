@@ -156,7 +156,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     }
 
     private void hostRotateIfNecessary(String roomId, Player exitPlayer) throws Exception {
-        if (exitPlayer.getIsHost() && !rooms.get(roomId).isEmpty()) {
+        if (exitPlayer.getIsHost() && !sessionRooms.get(roomId).isEmpty()) {
 
             Player newHost = multiGameService.rotateHost(roomId);
 
