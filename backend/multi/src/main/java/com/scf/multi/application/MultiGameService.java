@@ -183,6 +183,7 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         Player newHost = room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .findFirst()
             .orElseThrow(() -> new BusinessException(null, "newHost", USER_NOT_FOUND));
         newHost.setIsHost(true);
