@@ -115,7 +115,7 @@ public class MultiGameRoom {
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+            return;
         }
 
         int newScore = leaderBoard.get(userId) + score;
@@ -129,7 +129,7 @@ public class MultiGameRoom {
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+            return;
         }
 
         this.scoreBoard.put(userId, score);
