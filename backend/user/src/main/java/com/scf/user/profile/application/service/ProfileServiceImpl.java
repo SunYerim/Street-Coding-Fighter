@@ -13,6 +13,7 @@ import com.scf.user.profile.domain.dto.ProfileResponseDto;
 import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemResponseDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
+import com.scf.user.profile.domain.entity.Character;
 import com.scf.user.profile.domain.entity.Record;
 import com.scf.user.profile.domain.entity.Solved;
 import com.scf.user.profile.domain.repository.SolvedRepository;
@@ -21,7 +22,6 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,14 +39,19 @@ public class ProfileServiceImpl implements ProfileService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
+        Character character = member.getCharacter();
+
+        // characterType * 100 + characterCloth 값을 계산
+        int characterValue = character.getCharacterType() * 100 + character.getCharacterCloth();
+
         // 프로필 DTO 생성
         return ProfileResponseDto.builder()
-            .name(member.getName())
-            .birth(member.getBirth())
-            .exp(member.getCharacter().getExp())
-            .character(member.getCharacter().getCharacterType())
-            .school(member.getSchoolName())
-            .build();
+                .name(member.getName())
+                .birth(member.getBirth())
+                .exp(character.getExp())
+                .character(characterValue) // 계산된 값 설정
+                .school(member.getSchoolName())
+                .build();
     }
 
     // 전체 전적 조회
