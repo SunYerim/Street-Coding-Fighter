@@ -106,6 +106,7 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
         Player connectedPlayer = findPlayerByUserId(room, userId);
         connectedPlayer.setSessionId(sessionId);
+        connectedPlayer.setIsOnRoom(true);
 
         return connectedPlayer;
     }
