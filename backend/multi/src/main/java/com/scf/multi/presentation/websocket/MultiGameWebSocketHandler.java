@@ -11,6 +11,7 @@ import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
+import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.global.utils.JsonConverter;
 import java.io.IOException;
 import java.util.List;
@@ -101,6 +102,19 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
         hostRotateIfNecessary(roomId, exitPlayer);
+    }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception)
+        throws Exception {
+        // 예외 처리 로직
+        if (exception instanceof BusinessException e) {
+            session.sendMessage(new TextMessage(
+                "[Error]: " + e.getMessage() + " " + e.getFieldName() + " : "
+                    + e.getInvalidValue()));
+        } else {
+            super.handleTransportError(session, exception);
+        }
     }
 
     private void sendMessage(WebSocketSession session, String attainScoreMessage)
