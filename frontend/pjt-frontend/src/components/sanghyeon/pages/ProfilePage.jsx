@@ -10,12 +10,15 @@ import Swal from "sweetalert2";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { baseURL, accessToken, setAccessToken, memberId } = store((state) => ({
-    baseURL: state.baseURL,
-    accessToken: state.accessToken,
-    setAccessToken: state.setAccessToken,
-    memberId: state.memberId,
-  }));
+  const { baseURL, accessToken, setAccessToken, memberId, name } = store(
+    (state) => ({
+      baseURL: state.baseURL,
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+      memberId: state.memberId,
+      name: state.name,
+    })
+  );
 
   const {
     name,
@@ -49,6 +52,8 @@ function ProfilePage() {
 
   useEffect(() => {
     const getProfile = async () => {
+      if (name) return;
+
       try {
         const profileRes = await authClient({
           method: "GET",

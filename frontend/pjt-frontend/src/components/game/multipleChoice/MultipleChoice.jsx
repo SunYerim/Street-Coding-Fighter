@@ -115,7 +115,8 @@ const MultipleChoice = () => {
                 }}
                 onClick={() => handleChoiceSelect(choice.choiceId)}
               >
-                {index + 1}. {choice.choiceText}
+                {index + 1}.{" "}
+                {<StyleToPythonCode codeString={choice.choiceText} />}
               </button>
             ))}
         </div>
