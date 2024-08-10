@@ -173,6 +173,7 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
     // 유저 전체 리스트 조회
     @GetMapping("/public/list")
