@@ -291,7 +291,6 @@ public class ProfileServiceImpl implements ProfileService {
         Arecord.setPartCnt(2);
         Arecord.setMember(playerA);
         Arecord.setScore(players.get(0));
-
         recordReposiotry.save(Arecord);
 
         // playerB
@@ -310,7 +309,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public Integer calculateMultiExp(int partCnt, int score, int rank) {
         // 기본 경험치
-        int baseExp = 100 * partCnt;
+        int baseExp = 50 * partCnt;
 
         // 순위 보너스: 1등에게는 30%, 2등에게는 20%, 3등에게는 10% 보너스
         // 4등부터는 보너스 없음
