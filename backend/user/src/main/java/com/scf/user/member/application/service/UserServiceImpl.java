@@ -194,7 +194,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
         Member member = userRepository.getById(memberId);
-        return new UserCharaterTypeResponseDTO(member.getCharacter().getCharacterType());
+        int userCharater = member.getCharacter().getCharacterType()*100 + member.getCharacter().getCharacterCloth();
+        return new UserCharaterTypeResponseDTO(userCharater);
     }
 
     @Transactional
