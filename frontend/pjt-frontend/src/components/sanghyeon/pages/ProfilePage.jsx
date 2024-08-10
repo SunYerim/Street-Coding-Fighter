@@ -90,7 +90,6 @@ function ProfilePage() {
                   <h3>Name : {name}</h3>
                   <h3>Birth Day : {birth}</h3>
                   <h3>Exp: {exp ? exp.toLocaleString() : 0} exp</h3>
-                  <h3>Character : {character}</h3>
                   <h3>School : {schoolName}</h3>
                   <div className="profile-status-button">
                     <button onClick={() => navigate("/reset-password")}>
