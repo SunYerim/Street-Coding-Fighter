@@ -1,10 +1,12 @@
 import "../../index.css";
 import "../../css/GameMain.css";
 import "../../css/GameCreate.css";
+import MultiHeader from "../game/MultiHeader.jsx"
 import { useNavigate } from "react-router-dom";
 import multiStore from '../../stores/multiStore.jsx';
 import store from '../../store/store.js';
 import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
+
 
 export default function MultiCreate() {
   const navigate = useNavigate();
@@ -72,6 +74,7 @@ export default function MultiCreate() {
 
   return (
     <>
+      <MultiHeader />
       <div className="container">
         <div className="create-container">
           <h1>Create Room [ Multi Mode ]</h1>

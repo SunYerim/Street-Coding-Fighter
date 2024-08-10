@@ -4,7 +4,7 @@ const newSocket = (roomId, memberId, name) => {
   console.log(url);
 
   let socket;
-  let reconnectInterval = 5000; // 5초 후 재연결 시도
+  let reconnectInterval = 1000; // 1초 후 재연결 시도
 
   const connect = () => {
     socket = new WebSocket(url);

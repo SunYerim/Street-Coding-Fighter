@@ -508,7 +508,7 @@ useEffect(() => {
           console.error("Reconnection failed: ", error);
           reconnectWebSocket(); // 재연결 시도
         }
-      }, 2000); // 3초 후 재연결 시도
+      }, 2000); // 2초 후 재연결 시도
     };
 
     // ---------------------- 채팅 WebSocket ----------------------
