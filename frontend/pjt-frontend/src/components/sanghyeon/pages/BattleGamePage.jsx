@@ -199,7 +199,7 @@ const BattleGamePage = () => {
 
       console.log(message);
 
-      if (body.guestCharacterType) {
+      if (body.userId !== memberId && body.guestCharacterType) {
         setEnemyCharacterType(body.guestCharacterType);
       }
 
