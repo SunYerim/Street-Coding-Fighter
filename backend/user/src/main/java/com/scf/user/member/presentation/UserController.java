@@ -1,7 +1,6 @@
 package com.scf.user.member.presentation;
 
-import com.scf.user.member.application.service.GachaService;
-import com.scf.user.member.application.service.PasswordResetService;
+import com.scf.user.member.application.service.ResetService;
 import com.scf.user.member.application.service.RedisService;
 import com.scf.user.member.application.service.UserService;
 import com.scf.user.member.domain.dto.LogoutDto;
@@ -12,6 +11,8 @@ import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
 import com.scf.user.member.domain.dto.UserPasswordRequestDto;
+import com.scf.user.member.domain.dto.UserRegistEmailRequestDto;
+import com.scf.user.member.domain.dto.UserRegistEmailVerifyDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import com.scf.user.member.domain.dto.VerifyCodeRequestDto;
@@ -42,7 +43,7 @@ public class UserController {
     private final RedisService redisService;
     private final GachaService gachaService;
     private final JwtCookieUtil jwtCookieUtil;
-    private final PasswordResetService passwordResetService;
+    private final ResetService resetService;
 
     // 회원가입
     @PostMapping("/public/join")
@@ -116,19 +117,19 @@ public class UserController {
     @PostMapping("/public/change-password")
     public ResponseEntity<?> changePassword(
         @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
-        passwordResetService.resetPassword(passwordResetRequestDto.getUserId(),
+        resetService.resetPassword(passwordResetRequestDto.getUserId(),
             passwordResetRequestDto.getNewPassword());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 인증번호 전송
+    // 인증번호 전송 (비밀번호 수정)
     @PostMapping("/public/request-verification-code")
     public ResponseEntity<?> sendVerificationCode(
         @RequestBody UserPasswordRequestDto passwordRequestDto) {
         try {
             String userId = passwordRequestDto.getUserId();
-            passwordResetService.sendResetUUID(userId);
+            resetService.sendRestRandomNumber(userId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -137,10 +138,10 @@ public class UserController {
         }
     }
 
-    // 인증번호 일치 확인
+    // 인증번호 일치 확인 (비밀번호 수정)
     @PostMapping("/public/request-verification")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeRequestDto verifyrequest) {
-        boolean isValid = passwordResetService.validateAuthCode(verifyrequest.getUserId(),
+        boolean isValid = resetService.validateAuthCode(verifyrequest.getUserId(),
             verifyrequest.getCode());
 
         if (isValid) {
@@ -149,6 +150,29 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    // 인증번호 요청 (회원가입)
+    @PostMapping("/public/regist-verification-code")
+    public ResponseEntity<?> verifyRegistCode(
+        @RequestBody UserRegistEmailRequestDto emailRequestDto) {
+        try {
+            resetService.sendRegistrationCode(emailRequestDto.getEmail());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 인증번호 요청 일치 확인 (회원가입)
+    @PostMapping("/pulbic/regist-verification")
+    public ResponseEntity<?> isEqualRegistCode(
+        @RequestBody UserRegistEmailVerifyDto emailVerifyDto) {
+        try {
+            resetService.isEqualNumber(emailVerifyDto.getEmail(), emailVerifyDto.getCode());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     // 유저 전체 리스트 조회
     @GetMapping("/public/list")
