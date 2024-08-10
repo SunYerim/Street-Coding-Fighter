@@ -1,5 +1,6 @@
 package com.scf.single.application.service;
 
+import com.scf.single.application.Client.ProfileClient;
 import com.scf.single.application.Client.UserClient;
 import com.scf.single.domain.dto.ContentCompletionRequestDto;
 import com.scf.single.domain.dto.ContentCreateRequestDto;
@@ -30,6 +31,7 @@ public class SingleServiceImpl implements SingleService {
     private final ScriptRepository scriptRepository;
     private final ContentRepository contentRepository;
     private final UserClient userClient;
+    private final ProfileClient profileClient;
 
     // content 목록 조회
     @Override
@@ -81,6 +83,8 @@ public class SingleServiceImpl implements SingleService {
             } else {
                 // 수강 미완료 상태인 경우 완료로 업데이트.
                 record.setComplete(1);
+                // 경험치도 누적 시킵니다.
+                profileClient.addExp(memberId);
                 contentCheckUserRepository.save(record);
             }
         }
