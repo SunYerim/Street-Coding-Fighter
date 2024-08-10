@@ -10,7 +10,6 @@ import com.scf.multi.domain.dto.socket_message.response.ResponseMessage;
 import com.scf.multi.domain.dto.user.Player;
 import com.scf.multi.domain.dto.user.Rank;
 import com.scf.multi.domain.dto.user.Solved;
-import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.global.error.exception.BusinessException;
 import com.scf.multi.global.utils.JsonConverter;
 import java.io.IOException;
