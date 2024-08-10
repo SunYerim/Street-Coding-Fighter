@@ -120,7 +120,7 @@ const store = create(
       birth: "",
       setBirth: (birth) => set({ birth }),
 
-      accessToken: '',
+      accessToken: "",
       setAccessToken: (accessToken) => set({ accessToken }),
 
       exp: 0,
@@ -160,6 +160,10 @@ const store = create(
 
       enemyName: "",
       setEnemyName: (enemyName) => set({ enemyName }),
+
+      enemyCharacterType: "",
+      setEnemyCharacterType: (enemyCharacterType) =>
+        set({ enemyCharacterType }),
 
       blankSolve: {},
       setBlankSolve: (blankSolve) => set({ blankSolve }),

@@ -24,6 +24,7 @@ const BattleGameListPage = () => {
     setNormalQuit,
     setEnemyId,
     setEnemyName,
+    setEnemyCharacterType,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -36,6 +37,7 @@ const BattleGameListPage = () => {
     setNormalQuit: state.setNormalQuit,
     setEnemyId: state.setEnemyId,
     setEnemyName: state.setEnemyName,
+    setEnemyCharacterType: state.setEnemyCharacterType,
   }));
 
   const authClient = createAuthClient(
@@ -128,6 +130,7 @@ const BattleGameListPage = () => {
       setHostId(res.data.memberId);
       setEnemyId(res.data.memberId);
       setEnemyName(res.data.username);
+      setEnemyCharacterType(res.data.hostCharacterType);
       navigate("/battle-game");
     } catch (error) {
       Swal.fire({

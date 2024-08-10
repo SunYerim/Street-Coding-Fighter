@@ -14,10 +14,14 @@ import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
 import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoice.jsx";
 
 import Modal from "react-modal";
-//음악 변경부분입니다. 아래 SoundStore import 해야됨
+
 import SoundStore from "../../../stores/SoundStore.jsx";
 
 import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
+import movingIceSlime from "../../../assets/characters/movingIceSlime.gif";
+import movingFireSlime from "../../../assets/characters/movingFireSlime.gif";
+import movingThunderSlime from "../../../assets/characters/movingThunderSlime.gif";
+import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
 
 Modal.setAppElement("#root");
 
@@ -58,6 +62,8 @@ const BattleGamePage = () => {
     setEnemyId,
     enemyName,
     setEnemyName,
+    enemyCharacterType,
+    setEnemyCharacterType,
     normalQuit,
     setNormalQuit,
     blankSolve,
@@ -84,6 +90,8 @@ const BattleGamePage = () => {
     setEnemyId: state.setEnemyId,
     enemyName: state.enemyName,
     setEnemyName: state.setEnemyName,
+    enemyCharacterType: state.enemyCharacterType,
+    setEnemyCharacterType: state.setEnemyCharacterType,
     normalQuit: state.normalQuit,
     setNormalQuit: state.setNormalQuit,
     blankSolve: state.blankSolve,

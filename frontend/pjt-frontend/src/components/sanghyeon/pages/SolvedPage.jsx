@@ -102,6 +102,7 @@ function SolvedPage() {
               <select name="" id="" className="" onChange={handleSortChange}>
                 <option value="title">제목순</option>
                 <option value="difficulty">난이도순</option>
+                <option value="correct">정답순</option>
               </select>
             </div>
             <hr />
