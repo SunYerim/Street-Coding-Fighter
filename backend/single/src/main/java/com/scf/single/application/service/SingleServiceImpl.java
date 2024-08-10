@@ -10,6 +10,7 @@ import com.scf.single.domain.dto.ContentListResponseDto;
 import com.scf.single.domain.dto.ContentListResponsesDto;
 import com.scf.single.domain.dto.MemberDto;
 import com.scf.single.domain.dto.ScriptCreateRequestListDto;
+import com.scf.single.domain.dto.kafka.RenewExp;
 import com.scf.single.domain.entity.Content;
 import com.scf.single.domain.entity.ContentCheckUser;
 import com.scf.single.domain.entity.Script;
@@ -32,6 +33,7 @@ public class SingleServiceImpl implements SingleService {
     private final ContentRepository contentRepository;
     private final UserClient userClient;
     private final ProfileClient profileClient;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     // content 목록 조회
     @Override
@@ -82,9 +84,28 @@ public class SingleServiceImpl implements SingleService {
                 throw new IllegalStateException("이미 수강 완료된 콘텐츠입니다.");
             } else {
                 // 수강 미완료 상태인 경우 완료로 업데이트.
+                // kafka user-exp 토픽으로 전송
                 record.setComplete(1);
+
                 // 경험치도 누적 시킵니다.
                 profileClient.addExp(memberId);
+
+                // 유저 이름을 비동기적으로 가져오고 이후 작업 처리
+                userClient.getUsername(memberId)
+                    .doOnNext(userNameDto -> {
+                        String memberName = userNameDto.getUsername();
+
+                        // kafka 전송
+                        RenewExp renewExp = new RenewExp(memberId, memberName, 100);
+                        kafkaMessageProducer.sendProcessedSingleContents(renewExp);
+                    })
+                    .doOnError(e -> {
+                        // 오류 처리
+                        System.err.println(
+                            "Error fetching username or sending Kafka message: " + e.getMessage());
+                    })
+                    .subscribe();
+
                 contentCheckUserRepository.save(record);
             }
         }
