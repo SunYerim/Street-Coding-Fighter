@@ -4,6 +4,7 @@ import store from "../../../store/store.js";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import createAuthClient from "../apis/createAuthClient.js";
+import renderCharacter from "../apis/renderCharacter.js";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -16,14 +17,6 @@ import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoi
 import Modal from "react-modal";
 
 import SoundStore from "../../../stores/SoundStore.jsx";
-
-import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
-import movingIceSlime from "../../../assets/characters/movingIceSlime.gif";
-import movingFireSlime from "../../../assets/characters/movingFireSlime.gif";
-import movingThunderSlime from "../../../assets/characters/movingThunderSlime.gif";
-import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
-
-Modal.setAppElement("#root");
 
 const BattleGamePage = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -594,23 +587,6 @@ const BattleGamePage = () => {
     setAnswerSubmitted(false);
   };
 
-  const profileCharacter = (character) => {
-    switch (character) {
-      case 0:
-        return movingGreenSlime;
-      case 1:
-        return movingIceSlime;
-      case 2:
-        return movingFireSlime;
-      case 3:
-        return movingThunderSlime;
-      case 4:
-        return movingNyanSlime;
-      default:
-        return;
-    }
-  };
-
   return (
     <>
       <div className="battle-game-entire-container">
@@ -703,7 +679,7 @@ const BattleGamePage = () => {
                 <div className="battle-game-left-cam">
                   <div className="battle-game-my-character-container">
                     <img
-                      src={profileCharacter(character)}
+                      src={renderCharacter(character)}
                       alt="battle-game-my-character"
                     />
                   </div>
@@ -773,7 +749,7 @@ const BattleGamePage = () => {
                       <></>
                     ) : (
                       <img
-                        src={profileCharacter(enemyCharacterType)}
+                        src={renderCharacter(enemyCharacterType)}
                         alt="battle-game-enemy-character"
                       />
                     )}

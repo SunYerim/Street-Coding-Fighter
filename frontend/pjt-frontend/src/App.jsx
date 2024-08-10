@@ -84,7 +84,8 @@ function App() {
           {/* <Route path="/main" element={accessToken ? <MainPage /> : <LoginPage />} /> */}
           <Route
             path="/profile"
-            element={accessToken ? <ProfilePage /> : <LoginPage />}
+            element={<ProfilePage />}
+            // element={accessToken ? <ProfilePage /> : <LoginPage />}
           />
           <Route
             path="/record"

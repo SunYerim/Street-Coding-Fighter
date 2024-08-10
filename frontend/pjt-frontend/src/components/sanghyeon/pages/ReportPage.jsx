@@ -1,11 +1,11 @@
 import Header from "../components/Header";
 import "../../../css/ReportPage.css";
-import greenSlime from "../../../assets/characters/movingGreenSlime.gif";
 import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
+import renderCharacter from "../apis/renderCharacter.js";
 
 const ReportPage = () => {
   const navigate = useNavigate();
@@ -39,8 +39,9 @@ const ReportPage = () => {
     }
   };
 
-  const { baseURL } = store((state) => ({
+  const { baseURL, character } = store((state) => ({
     baseURL: state.baseURL,
+    character: state.character,
   }));
 
   return (
@@ -52,7 +53,7 @@ const ReportPage = () => {
             <div className="report-upper-container">
               <div className="report-profile-container">
                 <img
-                  src={greenSlime}
+                  src={renderCharacter(character)}
                   alt="profile-character"
                   className="report-profile-character"
                 />

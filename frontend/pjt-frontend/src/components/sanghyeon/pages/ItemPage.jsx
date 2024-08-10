@@ -5,7 +5,6 @@ import createAuthClient from "../apis/createAuthClient";
 import Swal from "sweetalert2";
 import store from "../../../store/store.js";
 import pixelTicket from "/pixel-ticket.jpg";
-import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
 import renderCharacter from "../apis/renderCharacter.js";
 
 const ItemPage = () => {
@@ -80,9 +79,10 @@ const ItemPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(purchaseRes.data);
-      // setCharacter(purchaseRes.data.type);
-      // setExp(exp - 500);
+
+      const nextCharacter = purchaseRes.data.type * 100 + (character % 100);
+      setCharacter(nextCharacter);
+      setExp(exp - 500);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -111,9 +111,11 @@ const ItemPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(purchaseRes.data);
-      // setCharacter(purchaseRes.data.type);
-      // setExp(exp - 500);
+
+      const nextCharacter =
+        character - (character % 100) + purchaseRes.data.type;
+      setCharacter(nextCharacter);
+      setExp(exp - 500);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -224,7 +226,10 @@ const ItemPage = () => {
                       <div className="item-character-rank">R</div>
                     </div>
                     <div className="item-character-img-container">
-                      <img src={renderCharacter(0)} alt="my-character" />
+                      <img
+                        src={renderCharacter(character)}
+                        alt="my-character"
+                      />
                     </div>
                     <div className="item-character-name-container">
                       <div className="item-character-name">The Slime.</div>

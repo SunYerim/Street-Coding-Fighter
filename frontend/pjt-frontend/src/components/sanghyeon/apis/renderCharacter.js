@@ -1,12 +1,5 @@
-import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
-
 const renderCharacter = (character) => {
-  switch (character) {
-    case 0:
-      return movingGreenSlime;
-    default:
-      return movingGreenSlime;
-  }
+  return `src/assets/characters/GIFS/${character}.gif`;
 };
 
 export default renderCharacter;
