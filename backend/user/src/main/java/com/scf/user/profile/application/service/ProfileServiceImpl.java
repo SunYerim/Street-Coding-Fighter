@@ -156,7 +156,6 @@ public class ProfileServiceImpl implements ProfileService {
             .solvedCount(solvedProblemDtoList.size())
             .list(solvedProblemDtoList)
             .build();
-
     }
 
     // 경험치 업데이트
@@ -325,7 +324,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         // 순위 보너스 계산
-        int rankBonus = (baseExp * rankBonusPercentage) / 100;
+        int rankBonus = (baseExp * rankBonusPercentage) / 10;
 
         int expGain = baseExp + rankBonus;
 
@@ -348,7 +347,7 @@ public class ProfileServiceImpl implements ProfileService {
         List<Integer> returnExp = new ArrayList<>();
 
         // 기본 경험치
-        int baseExp = 100; // 기본경험치 (임시)
+        int baseExp = 100; // 기본경험치
 
         // 순위 보너스: 1등에게는 50%, 2등에게는 10% 보너스
         int aRankBonusPercentage;
