@@ -78,11 +78,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         handleRoundCompletion(room);
     }
 
-    private static void sendMessage(WebSocketSession session, String attainScoreMessage)
-        throws IOException {
-        session.sendMessage(new TextMessage(attainScoreMessage));
-    }
-
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
         throws Exception {
@@ -96,6 +91,11 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
         hostRotateIfNecessary(roomId, exitPlayer);
+    }
+
+    private static void sendMessage(WebSocketSession session, String attainScoreMessage)
+        throws IOException {
+        session.sendMessage(new TextMessage(attainScoreMessage));
     }
 
     private void broadcastMessageToRoom(String roomId, String type, Object payload)
