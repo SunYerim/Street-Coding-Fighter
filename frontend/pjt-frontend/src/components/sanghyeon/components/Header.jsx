@@ -19,8 +19,8 @@ const Header = ({ type = 'default' }) => {
     '/solved': '/profile',
   };
   //뒤로가기 기능
+  const currentPath = useLocation().pathname;
   const backToPrevPage = () => {
-    const currentPath = useLocation().pathname;
     console.log('currentPath', currentPath);
     if (currentPath in backPaths) {
       navigate(backPaths[currentPath]);
