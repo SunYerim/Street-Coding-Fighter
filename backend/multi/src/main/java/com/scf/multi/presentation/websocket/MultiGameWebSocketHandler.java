@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -31,6 +34,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     private final MultiGameService multiGameService;
     private final static Map<String, String> rooms = new ConcurrentHashMap<>(); // session ID -> room ID (유저가 어떤 방에 연결됐는지 알려고)
     private final static Map<String, Set<WebSocketSession>> sessionRooms = new ConcurrentHashMap<>(); // room ID -> sessions (방에 연결된 유저들을 알려고)
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     @EventListener
     public void onGameStarted(GameStartedEvent event) throws Exception {
@@ -92,6 +96,16 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
         hostRotateIfNecessary(roomId, exitPlayer);
+
+        // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
+        executorService.submit(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                throw new RuntimeException();
+            }
+            checkAndDeleteRoom(roomId);
+        });
     }
 
     @Override
@@ -188,6 +202,13 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 sessionRooms.remove(roomId);
                 multiGameService.deleteRoom(roomId);
             }
+        }
+    }
+
+    private void checkAndDeleteRoom(String roomId) {
+        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
+        if (roomSessions == null || roomSessions.isEmpty()) {
+            multiGameService.deleteRoom(roomId);
         }
     }
 }
