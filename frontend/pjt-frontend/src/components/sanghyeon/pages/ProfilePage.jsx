@@ -49,8 +49,6 @@ function ProfilePage() {
 
   useEffect(() => {
     const getProfile = async () => {
-      if (exp !== "") return;
-
       try {
         const profileRes = await authClient({
           method: "GET",

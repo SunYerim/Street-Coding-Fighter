@@ -173,7 +173,7 @@ const ItemPage = () => {
                 </div>
                 <div className="item-point-container">
                   <div className="item-point">
-                    포인트: {exp ? exp.toLocaleString() : 0} P
+                    포인트: {exp !== "" ? exp.toLocaleString() : 0} P
                   </div>
                 </div>
                 <div className="item-info-container">
