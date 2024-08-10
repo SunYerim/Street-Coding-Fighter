@@ -223,6 +223,8 @@ public class MultiGameRoom {
         this.problems.clear();
         this.problems.addAll(problems);
         this.isStart = true;
+        this.leaderBoard.clear();
+        this.scoreBoard.clear();
         for(Player player : players) {
             this.leaderBoard.put(player.getUserId(), 0);
             this.scoreBoard.put(player.getUserId(), 0);
