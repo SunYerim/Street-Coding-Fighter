@@ -33,4 +33,26 @@ public class ProfileClient {
         }
     }
 
+    // 경험치를 조회해오는 로직 추가
+    public Integer inquiryExp(Long memberId) {
+        try {
+            return webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/public/getExp")
+                    .queryParam("memberId", memberId)
+                    .build())
+                .retrieve()
+                .bodyToMono(Integer.class)  // 경험치를 Integer 타입으로 받아옵니다.
+                .block(); // 블록킹 방식으로 동기 처리
+
+        } catch (WebClientResponseException e) {
+            // 예외 처리
+            System.err.println("경험치 조회 요청에 실패했습니다: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.err.println("알 수 없는 오류가 발생했습니다: " + e.getMessage());
+            return null;
+        }
+    }
+
+
 }

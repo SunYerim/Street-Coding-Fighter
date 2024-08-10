@@ -17,4 +17,12 @@ public class KafkaMessageProducer {
         renewExpKafkaTemplate.send(topic, renewExp);
         System.out.println("Sent processed Exp: " + renewExp);
     }
+
+    // 전체 누적된 경험치를 전송
+    public void sendProcessedTotalExp(RenewExp renewExp) {
+        String topic = "user-total-exp";
+        renewExpKafkaTemplate.send(topic, renewExp);
+        System.out.println("Sent processed Exp: " + renewExp);
+    }
+
 }

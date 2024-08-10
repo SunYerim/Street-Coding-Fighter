@@ -90,14 +90,21 @@ public class SingleServiceImpl implements SingleService {
                 // 경험치도 누적 시킵니다.
                 profileClient.addExp(memberId);
 
+                // 해당 유저의 전체 경험치를 조회해옵니다.
+                Integer memberExp = profileClient.inquiryExp(memberId);
+
                 // 유저 이름을 비동기적으로 가져오고 이후 작업 처리
                 userClient.getUsername(memberId)
                     .doOnNext(userNameDto -> {
                         String memberName = userNameDto.getUsername();
 
-                        // kafka 전송
+                        // kafka 전송 (해당 코스)
                         RenewExp renewExp = new RenewExp(memberId, memberName, 100);
                         kafkaMessageProducer.sendProcessedSingleContents(renewExp);
+
+                        // kafka 전송 (전체 exp)
+                        RenewExp renewTotalExp = new RenewExp(memberId, memberName, memberExp);
+                        kafkaMessageProducer.sendProcessedTotalExp(renewTotalExp);
                     })
                     .doOnError(e -> {
                         // 오류 처리
