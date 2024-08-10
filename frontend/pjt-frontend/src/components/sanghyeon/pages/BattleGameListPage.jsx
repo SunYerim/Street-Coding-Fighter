@@ -169,6 +169,7 @@ const BattleGameListPage = () => {
 
       setEnemyId(null);
       setEnemyName(null);
+      setEnemyCharacterType(null);
       console.log(createRes.data);
       setRoomId(createRes.data);
       setHostId(memberId);

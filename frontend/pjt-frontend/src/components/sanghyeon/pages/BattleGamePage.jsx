@@ -4,6 +4,7 @@ import store from "../../../store/store.js";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import createAuthClient from "../apis/createAuthClient.js";
+import renderCharacter from "../apis/renderCharacter.js";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -16,14 +17,6 @@ import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoi
 import Modal from "react-modal";
 
 import SoundStore from "../../../stores/SoundStore.jsx";
-
-import movingGreenSlime from "../../../assets/characters/movingGreenSlime.gif";
-import movingIceSlime from "../../../assets/characters/movingIceSlime.gif";
-import movingFireSlime from "../../../assets/characters/movingFireSlime.gif";
-import movingThunderSlime from "../../../assets/characters/movingThunderSlime.gif";
-import movingNyanSlime from "../../../assets/characters/movingNyanSlime.gif";
-
-Modal.setAppElement("#root");
 
 const BattleGamePage = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -73,6 +66,7 @@ const BattleGamePage = () => {
     multipleChoiceSolve,
     setMyMultipleChoiceProblem,
     setRoomId,
+    character,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -80,6 +74,7 @@ const BattleGamePage = () => {
     hostId: state.hostId,
     userId: state.userId,
     name: state.name,
+    character: state.character,
     roomId: state.roomId,
     setRoomId: state.setRoomId,
     roomPassword: state.roomPassword,
@@ -117,9 +112,9 @@ const BattleGamePage = () => {
   const [enemyHealth, setEnemyHealth] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
-  const [EnemyProblems, setEnemyProblems] = useState([]);
+  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(false);
+  const [gameStart, setGameStart] = useState(false); // 여기
   const [myProblem, setMyProblem] = useState({});
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
@@ -188,22 +183,30 @@ const BattleGamePage = () => {
       userId: memberId,
       username: name,
       roomPassword: roomPassword,
+      guestCharacterType: character,
     };
     battleStompClient.current.send(
-      `/game/${roomId}/join`,
+      `/room/${roomId}/join`,
       {},
       JSON.stringify(joinRoomDTO)
     );
   };
 
   const subscribeEnterRoom = () => {
-    const endpoint = `/game/${roomId}/join`;
+    const endpoint = `/room/${roomId}/join`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        `${body.username}님이 입장하셨습니다.`,
-      ]);
+
+      console.log(message);
+
+      if (body.userId !== memberId && body.guestCharacterType) {
+        setEnemyCharacterType(body.guestCharacterType);
+      }
+
+      // setChatMessages((prevMessages) => [
+      //   ...prevMessages,
+      //   `${body.username}님이 입장하셨습니다.`,
+      // ]);
     });
   };
 
@@ -212,8 +215,10 @@ const BattleGamePage = () => {
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
       setEnemyProblems(body);
+      setAnswerSubmitted(false);
       openModal();
       setCurrentRound((prevRound) => prevRound + 1);
+      setCount(30);
     });
   };
 
@@ -353,7 +358,6 @@ const BattleGamePage = () => {
           });
         }, 3000);
       } else {
-        setCount(30);
         if (body.userId === memberId) {
           if (body.isAttack === true) {
             setEnemyHealth((prevHealth) => prevHealth - body.power);
@@ -410,6 +414,11 @@ const BattleGamePage = () => {
 
       if (body.type === "JOIN" && body.sender !== name) {
         setEnemyName(body.sender);
+      }
+
+      if (body.type === "LEAVE") {
+        setEnemyName("");
+        setEnemyCharacterType("");
       }
 
       setChatMessages((prevMessages) => [
@@ -491,7 +500,7 @@ const BattleGamePage = () => {
     }
   }, [count]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -683,7 +692,7 @@ const BattleGamePage = () => {
                 <div className="battle-game-left-cam">
                   <div className="battle-game-my-character-container">
                     <img
-                      src={movingGreenSlime}
+                      src={renderCharacter(character)}
                       alt="battle-game-my-character"
                     />
                   </div>
@@ -748,10 +757,15 @@ const BattleGamePage = () => {
               <div className="battle-game-right-container">
                 <div className="battle-game-right-cam">
                   <div className="battle-game-enemy-character-container">
-                    <img
-                      src={movingGreenSlime}
-                      alt="battle-game-enemy-character"
-                    />
+                    {enemyCharacterType === null ||
+                    enemyCharacterType === "" ? (
+                      <></>
+                    ) : (
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="battle-game-enemy-character"
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="battle-game-chatting-container">
