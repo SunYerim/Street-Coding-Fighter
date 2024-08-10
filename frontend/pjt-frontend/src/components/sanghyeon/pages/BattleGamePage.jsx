@@ -114,7 +114,7 @@ const BattleGamePage = () => {
   const [currentRound, setCurrentRound] = useState(0);
   const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(true); // 여기
+  const [gameStart, setGameStart] = useState(false); // 여기
   const [myProblem, setMyProblem] = useState({});
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
@@ -490,7 +490,7 @@ const BattleGamePage = () => {
     }
   }, [count]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   const openModal = () => {
     setModalIsOpen(true);
