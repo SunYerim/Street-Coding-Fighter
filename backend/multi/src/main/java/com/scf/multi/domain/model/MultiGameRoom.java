@@ -115,6 +115,7 @@ public class MultiGameRoom {
     public void updateLeaderBoard(Long userId, int score) {
 
         boolean hasPlayer = this.players.stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
@@ -128,6 +129,7 @@ public class MultiGameRoom {
     public void updateScoreBoard(Long userId, int score) {
 
         boolean hasPlayer = this.players.stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
