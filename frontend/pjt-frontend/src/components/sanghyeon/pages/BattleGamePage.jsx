@@ -416,6 +416,11 @@ const BattleGamePage = () => {
         setEnemyName(body.sender);
       }
 
+      if (body.type === "LEAVE") {
+        setEnemyName("");
+        setEnemyCharacterType("");
+      }
+
       setChatMessages((prevMessages) => [
         ...prevMessages,
         body.type === "CHAT"
