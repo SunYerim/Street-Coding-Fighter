@@ -160,12 +160,6 @@ const ItemPage = () => {
     );
   };
 
-  const authClient = createAuthClient(
-    baseURL,
-    () => accessToken,
-    setAccessToken
-  );
-
   useEffect(() => {
     const getProfile = async () => {
       if (name) return;
