@@ -160,37 +160,6 @@ const ItemPage = () => {
     );
   };
 
-  useEffect(() => {
-    const getProfile = async () => {
-      if (name) return;
-
-      try {
-        const profileRes = await authClient({
-          method: "GET",
-          url: `${baseURL}/profile`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        setName(profileRes.data.name);
-        setSchoolName(profileRes.data.school);
-        setBirth(profileRes.data.birth);
-        setCharacter(profileRes.data.character);
-        setExp(profileRes.data.exp);
-      } catch (error) {
-        Swal.fire({
-          text: "프로필을 불러오는데 실패했습니다.",
-          icon: "error",
-          timer: 3000,
-        });
-        console.log(error);
-      }
-    };
-
-    getProfile();
-  }, []);
-
   return (
     <>
       <div className="item-outer-outer-container">
