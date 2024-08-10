@@ -1,6 +1,6 @@
 import "../../../css/Header.css";
 import Setting from "./Setting";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
@@ -12,7 +12,23 @@ const Header = ({ type = "default" }) => {
   const userIcon = "/memberIcon.png";
   const settingIcon = "/settingIcon.png";
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  
+  const backPaths = {
+    "/record" : "/profile",
+    "/report" : "/profile",
+    "/solved" : "/profile",
+  }
+  //뒤로가기 기능
+  const backToPrevPage = () => {
+    const currentPath = useLocation().pathname
+    console.log("currentPath",currentPath)
+    if(currentPath in backPaths){
+      navigate(backPaths[currentPath])
+    }
+    else{
+      navigate("/main");
+    }
+  }
   const openModal = () => {
     setModalIsOpen(true);
   };

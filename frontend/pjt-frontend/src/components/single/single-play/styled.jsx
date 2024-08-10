@@ -45,7 +45,7 @@ const DialogueBox = styled.div`
     width: 0;
     height: 0;
     border: 20px solid transparent;
-    border-right-color: rgba(240, 240, 240, 0.8);
+    border-right-color: rgba(240, 240, 240, 0.9);
     border-left: 0;
     border-top: 0;
     margin-top: -10px;
@@ -78,6 +78,9 @@ const DialogueBodyRight = styled.div`
   width : 100%;
   bottom: 10px;
   color: white;
+  display : flex;
+  flex-direction: column;
+  
   // background-color: rgba(240, 240, 240, 0.9);
 `;
 const DialogueContent = styled.div`
@@ -131,7 +134,7 @@ const CharacterName = styled.div`
   font-size: 1em;
   border-radius: 10px;
   border: 1px solid black;
-  background-color: rgba(240, 240, 240, 0.9);
+  background-color: rgba(240, 240, 240);
   padding: 5px;
   padding-right: 15px;
   padding-left: 15px;
@@ -153,8 +156,8 @@ const MenuContainer = styled.div`
   right: 10px;
 `;
 const MenuButton = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
 
   background-color: #e4f0f6;
   color: #466398;
@@ -164,8 +167,8 @@ const MenuButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 25px;
-  margin: 0px 3px;
+  font-size: 50px;
+  margin: 0px 10px;
   &:hover {
     background-color: #466398;
     color: #e4f0f6;
