@@ -98,7 +98,7 @@ export default function MultiMain() {
                 <div>
                   { multiList.length > 0 ? (
                     multiList.map((room, i) => {
-                      return <MultiRoom roomNum={i+1} room={room.title} hostname={room.hostname} maxPlayer={room.maxPlayer} curPlayer={room.curPlayer} gameRound={gameRound} isLock={room.isLock} roomId={room.roomId} key={i} />
+                      return <MultiRoom roomNum={i+1} room={room.title} hostname={room.hostname} maxPlayer={room.maxPlayer} curPlayer={room.curPlayer} gameRound={room.gameRound} isLock={room.isLock} roomId={room.roomId} key={i} />
                     })
                   ) : (
                     <div className="empty-room">
