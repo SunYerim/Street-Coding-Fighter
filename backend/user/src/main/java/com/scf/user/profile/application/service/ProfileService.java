@@ -26,7 +26,7 @@ public interface ProfileService {
     public DjangoResponseDto getDjangoInfo(String memberId);
 
     // 경험치를 update
-    void updateExp(Long memberId, int newExp);
+    public void updateExp(Long memberId, Integer newExp);
 
     // 푼 문제를 등록
     void submitSolved(Long memberId, SolvedProblemKafkaRequestDto problemRequestDto);
@@ -48,4 +48,7 @@ public interface ProfileService {
 
     // single 컨텐츠 학습 완료 후 경험치 갱신 -> 한 코스당 100씩 더해준다.
     void addSingleExp(Long memberId);
+
+    // 경험치 조회
+    public Integer getTotalExp(Long memberId);
 }

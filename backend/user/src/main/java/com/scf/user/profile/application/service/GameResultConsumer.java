@@ -106,10 +106,10 @@ public class GameResultConsumer {
             String name = rank.getUsername();
 
             // 기존 경험치
-            int currentExp = profileService.getProfileInfo(memberId).getExp();
+            Integer currentExp = profileService.getProfileInfo(memberId).getExp();
 
             // 반영할 경험치
-            int newExp =
+            Integer newExp =
                 currentExp + profileService.calculateMultiExp(ranks.size(), rank.getScore(),
                     rank.getRank());
 

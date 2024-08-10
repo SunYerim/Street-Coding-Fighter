@@ -16,7 +16,7 @@ public class ProfileResponseDto {
 
     private String name;
     private LocalDate birth;
-    private int exp;
+    private Integer exp;
     private int character;
     private String school;
 }

@@ -62,6 +62,13 @@ public class ProfileController {
         return ResponseEntity.ok("경험치 누적이 완료되었습니다.");
     }
 
+    // 경험치 조회
+    @GetMapping("/public/getExp")
+    public ResponseEntity<?> requestGetExp(@RequestParam("memberId") Long memberId) {
+        Integer memberExp = profileService.getTotalExp(memberId);
+        return ResponseEntity.ok(memberExp);
+    }
+
     // produce test api
     // 경험치를 내려주고,
 //    @PostMapping("/produce")

@@ -163,7 +163,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     // 경험치 업데이트
     @Override
-    public void updateExp(Long memberId, int newExp) {
+    public void updateExp(Long memberId, Integer newExp) {
         // 멤버 정보 조회
         Member member = getMemberById(memberId);
 
@@ -338,8 +338,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void updateExpoint(Long memberId, int addExp) {
         // 사용자를 조회합니다.
-        int currentExp = getProfileInfo(memberId).getExp();
-        int newExp = currentExp + addExp;
+        Integer currentExp = getProfileInfo(memberId).getExp();
+        Integer newExp = currentExp + addExp;
 
         updateExp(memberId, newExp);
     }
@@ -402,6 +402,14 @@ public class ProfileServiceImpl implements ProfileService {
             throw new IllegalArgumentException("해당 memberId를 가진 캐릭터가 존재하지 않습니다.");
         }
 
+    }
+
+    @Override
+    public Integer getTotalExp(Long memberId) {
+        // 해당 유저의 전체 exp 조회
+        Character character = characterRepository.findByMemberId(memberId);
+        Integer memberExp = character.getExp();
+        return memberExp;
     }
 
 }

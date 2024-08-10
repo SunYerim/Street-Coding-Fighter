@@ -24,7 +24,7 @@ public class Character {
     private Integer characterId;
 
     @Column(name = "exp")
-    private Long exp = 0L;
+    private Integer exp = 0;
 
     @Column(name = "character_type")
     private Integer characterType;
