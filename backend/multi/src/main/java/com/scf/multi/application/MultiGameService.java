@@ -169,14 +169,19 @@ public class MultiGameService {
         return score;
     }
 
+
     public Player handlePlayerExit(String roomId, String sessionId) {
 
         MultiGameRoom room = findOneById(roomId);
 
-        Player exitPlayer = findPlayerBySessionId(room, sessionId);
-        exitPlayer.setIsOnRoom(false);
+        if(room != null) {
+            Player exitPlayer = findPlayerBySessionId(room, sessionId);
+            exitPlayer.setIsOnRoom(false);
 
-        return exitPlayer;
+            return exitPlayer;
+        }
+
+        return null;
     }
 
     public Player rotateHost(String roomId) {
