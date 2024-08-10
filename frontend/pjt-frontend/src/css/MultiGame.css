@@ -133,6 +133,28 @@ h4 {
   white-space: nowrap;
 }
 
+.multi-current-player {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: 95%;
+  height: 50px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: 3px solid white;
+  border-radius: 10px;
+  margin: 1%;
+}
+
+.multi-current-player h3 {
+  justify-self: start;
+  padding: 0px 25px;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .multi-round {
   display: flex;
   justify-content: center;

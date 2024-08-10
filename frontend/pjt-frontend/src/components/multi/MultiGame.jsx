@@ -29,16 +29,16 @@ import SoundStore from "../../stores/SoundStore.jsx";
     //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
   SoundStore();
-useEffect(() => {
-  switchBackgroundMusic("multi", (newBackgroundMusic) => {
-    newBackgroundMusic.play();
-  });
-  return () => {
-    switchBackgroundMusic("main", (newBackgroundMusic) => {
+  useEffect(() => {
+    switchBackgroundMusic("multi", (newBackgroundMusic) => {
       newBackgroundMusic.play();
     });
-  };
-}, []);
+    return () => {
+      switchBackgroundMusic("main", (newBackgroundMusic) => {
+        newBackgroundMusic.play();
+      });
+    };
+  }, []);
 
 // --------------------------페이지에서 나가면 다시 음악바뀝니다.-----------------------//
     const navigate = useNavigate();
@@ -54,7 +54,7 @@ useEffect(() => {
       problemList,
       setProblemList,
       clearProblemList,
-      playererList,
+      playerList,
       setPlayerList,
       clearPlayerList,
       roundRank,
@@ -546,7 +546,7 @@ useEffect(() => {
     return (
       <>
         <MultiHeader />
-        <div className="multi-game-container">
+        <div className="container">
           <div className="multi-game-main">
             <div className="multi-game-left">
               <div className="multi-timer">
@@ -555,7 +555,8 @@ useEffect(() => {
                 )}
               </div>
               <div className="multi-rank-table">
-                {gameRank.map((user, i) => {
+              {playing ? (
+                gameRank.map((user, i) => {
                   return (
                     <UserRank
                       rank={user.rank}
@@ -564,7 +565,17 @@ useEffect(() => {
                       key={i}
                     />
                   );
-                })}
+                })
+              ) : (
+                playerList.map((user, i) => {
+                  return (
+                    <CurrentPlayer
+                      username={user.username}
+                      key={i}
+                    />
+                  );
+                })
+              )}
                 {/* {mergedList.map((user, i) => {
                   return (
                     <UserRank
@@ -644,6 +655,17 @@ useEffect(() => {
           <h3>{props.rank}</h3>
           <h3>{props.username}</h3>
           <h4>{props.score}</h4>
+        </div>
+      </>
+    );
+  }
+
+  function CurrentPlayer(props) {  
+
+    return (
+      <>
+        <div className="multi-current-player">
+          <h3>{props.username}</h3>
         </div>
       </>
     );
