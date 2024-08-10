@@ -1,11 +1,13 @@
 package com.scf.user.member.application.service;
 
 import com.scf.user.member.domain.dto.TokenDto;
+import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 public interface UserService {
 
@@ -28,4 +30,12 @@ public interface UserService {
 
     // 유저 이름 조회
     public String findUsername(Long memberId);
+
+    public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId);
+
+    @Transactional
+    void updateCharacterCloth(Long memberId, int characterCloth);
+
+    @Transactional
+    void updateCharacterType(Long memberId, int characterType);
 }

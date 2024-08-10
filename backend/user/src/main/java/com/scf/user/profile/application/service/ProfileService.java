@@ -10,6 +10,8 @@ import com.scf.user.profile.domain.dto.kafka.MultiGameResult;
 import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
 import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 import java.util.List;
+import com.scf.user.profile.domain.dto.kafka.SolvedProblemKafkaRequestDto;
+import com.scf.user.profile.domain.dto.SolvedProblemsListDto;
 
 public interface ProfileService {
 

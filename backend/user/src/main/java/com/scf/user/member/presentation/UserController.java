@@ -1,11 +1,14 @@
 package com.scf.user.member.presentation;
 
+import com.scf.user.member.application.service.GachaService;
 import com.scf.user.member.application.service.ResetService;
 import com.scf.user.member.application.service.RedisService;
 import com.scf.user.member.application.service.UserService;
 import com.scf.user.member.domain.dto.LogoutDto;
 import com.scf.user.member.domain.dto.PasswordResetRequestDto;
 import com.scf.user.member.domain.dto.TokenDto;
+import com.scf.user.member.domain.dto.UserCharaterClothTypeResponseDTO;
+import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
 import com.scf.user.member.domain.dto.UserPasswordRequestDto;
@@ -14,6 +17,7 @@ import com.scf.user.member.domain.dto.UserRegistEmailVerifyDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import com.scf.user.member.domain.dto.VerifyCodeRequestDto;
+import com.scf.user.member.domain.enums.GachaType;
 import com.scf.user.member.infrastructure.security.JwtCookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,6 +43,7 @@ public class UserController {
 
     private final UserService userService;
     private final RedisService redisService;
+    private final GachaService gachaService;
     private final JwtCookieUtil jwtCookieUtil;
     private final ResetService resetService;
 
@@ -170,7 +175,6 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     // 유저 전체 리스트 조회
@@ -185,6 +189,51 @@ public class UserController {
     public ResponseEntity<?> getUsername(@PathVariable("memberId") Long memberId) {
         String username = userService.findUsername(memberId);
         return ResponseEntity.ok(username);
+    }
+
+    @GetMapping("/public/charaterType")
+    public ResponseEntity<?> getCharaterType(@RequestHeader("memberId") Long memberId){
+        String memberIdString = String.valueOf(memberId);
+        Object userInfo = userService.getUserInfo(memberIdString);
+        if (userInfo != null) {
+            return new ResponseEntity<>(userService.getUserCharaterType(memberId),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/gacha/character-cloth")
+    public ResponseEntity<?> gachaCloth(@RequestHeader("memberId") Long memberId) {
+        return handleGachaRequest(memberId, GachaType.CLOTH);
+    }
+
+    @GetMapping("/gacha/character-type")
+    public ResponseEntity<?> gachaCharacterType(@RequestHeader("memberId") Long memberId) {
+        return handleGachaRequest(memberId, GachaType.TYPE);
+    }
+
+    private ResponseEntity<?> handleGachaRequest(Long memberId, GachaType gachaType) {
+        try {
+            int result;
+            if (gachaType == GachaType.CLOTH) {
+                result = gachaService.drawClothingType();
+                userService.updateCharacterCloth(memberId, result);
+                return ResponseEntity.ok(new UserCharaterClothTypeResponseDTO(result));
+            } else if (gachaType == GachaType.TYPE) {
+                result = gachaService.drawCharacterType();
+                userService.updateCharacterType(memberId, result);
+                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(result));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Gacha Type");
+            }
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operation: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
+        }
     }
 
 }

@@ -27,7 +27,10 @@ public class Character {
     private Integer exp = 0;
 
     @Column(name = "character_type")
-    private Integer characterType;
+    private int characterType;
+
+    @Column(name = "character_cloth")
+    private int characterCloth;
 
     @OneToOne
     @JoinColumn(name = "member_id", nullable = false) // FK 설정

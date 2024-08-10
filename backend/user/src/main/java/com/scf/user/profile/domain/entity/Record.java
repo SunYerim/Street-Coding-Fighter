@@ -10,7 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+<<<<<<< backend/user/src/main/java/com/scf/user/profile/domain/entity/Record.java
 import java.time.LocalDateTime;
+=======
+import java.sql.Timestamp;
+>>>>>>> backend/user/src/main/java/com/scf/user/profile/domain/entity/Record.java
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +42,7 @@ public class Record {
 
     @Column(name = "game_type", nullable = false)
     private Integer gameType;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

@@ -61,6 +61,11 @@ public class ProfileServiceImpl implements ProfileService {
             .character(member.getCharacter().getCharacterType())
             .school(member.getSchoolName())
             .build();
+
+        Character character = member.getCharacter();
+
+        // characterType * 100 + characterCloth 값을 계산
+        int characterValue = character.getCharacterType() * 100 + character.getCharacterCloth();
     }
 
     // 전체 전적 조회
