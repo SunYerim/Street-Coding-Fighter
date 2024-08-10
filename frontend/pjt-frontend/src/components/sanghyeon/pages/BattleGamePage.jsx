@@ -73,6 +73,7 @@ const BattleGamePage = () => {
     multipleChoiceSolve,
     setMyMultipleChoiceProblem,
     setRoomId,
+    character,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -80,6 +81,7 @@ const BattleGamePage = () => {
     hostId: state.hostId,
     userId: state.userId,
     name: state.name,
+    character: state.character,
     roomId: state.roomId,
     setRoomId: state.setRoomId,
     roomPassword: state.roomPassword,
@@ -190,7 +192,7 @@ const BattleGamePage = () => {
       roomPassword: roomPassword,
     };
     battleStompClient.current.send(
-      `/game/${roomId}/join`,
+      `/room/${roomId}/join`,
       {},
       JSON.stringify(joinRoomDTO)
     );
@@ -200,6 +202,7 @@ const BattleGamePage = () => {
     const endpoint = `/game/${roomId}/join`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
+      setEnemyCharacterType(body.guestCharacterType);
       setChatMessages((prevMessages) => [
         ...prevMessages,
         `${body.username}님이 입장하셨습니다.`,
@@ -591,6 +594,23 @@ const BattleGamePage = () => {
     setAnswerSubmitted(false);
   };
 
+  const profileCharacter = (character) => {
+    switch (character) {
+      case 0:
+        return movingGreenSlime;
+      case 1:
+        return movingIceSlime;
+      case 2:
+        return movingFireSlime;
+      case 3:
+        return movingThunderSlime;
+      case 4:
+        return movingNyanSlime;
+      default:
+        return;
+    }
+  };
+
   return (
     <>
       <div className="battle-game-entire-container">
@@ -683,7 +703,7 @@ const BattleGamePage = () => {
                 <div className="battle-game-left-cam">
                   <div className="battle-game-my-character-container">
                     <img
-                      src={movingGreenSlime}
+                      src={profileCharacter(character)}
                       alt="battle-game-my-character"
                     />
                   </div>
@@ -748,10 +768,15 @@ const BattleGamePage = () => {
               <div className="battle-game-right-container">
                 <div className="battle-game-right-cam">
                   <div className="battle-game-enemy-character-container">
-                    <img
-                      src={movingGreenSlime}
-                      alt="battle-game-enemy-character"
-                    />
+                    {enemyCharacterType === null ||
+                    enemyCharacterType === "" ? (
+                      <></>
+                    ) : (
+                      <img
+                        src={profileCharacter(enemyCharacterType)}
+                        alt="battle-game-enemy-character"
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="battle-game-chatting-container">
