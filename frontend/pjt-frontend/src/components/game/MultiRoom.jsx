@@ -111,6 +111,7 @@ function MultiRoom(props) {
         <h3>{props.roomNum}</h3>
         <h3>{props.room}</h3>
         <h4>{props.hostname}</h4>
+        <h4>{props.gameRound}</h4>
         <h4>{props.curPlayer} / {props.maxPlayer}</h4>
         <img src={props.isLock ? lock : unlock} alt="lock" />
       </div>

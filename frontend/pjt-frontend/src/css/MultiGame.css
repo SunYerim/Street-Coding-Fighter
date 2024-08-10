@@ -1,18 +1,9 @@
-.multi-game-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-  width: 100%;
-  margin: 0;
-}
-
 .multi-game-main {
   display: flex;
   flex-direction: row;
   align-items: center;
   background-color: rgba(0, 0, 50, 0.7);
-  width: 90vw;
+  width: 80vw;
   height: 80vh;
   border-radius: 20px;
   /* color: white; */
