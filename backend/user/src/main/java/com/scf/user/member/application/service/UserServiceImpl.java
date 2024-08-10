@@ -5,6 +5,7 @@ import com.scf.user.member.application.client.ContentClient;
 import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
+import com.scf.user.member.global.exception.NotEnoughExperienceException;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.dto.TokenDto;
 import com.scf.user.member.domain.dto.UserInfoResponseDto;
@@ -200,8 +201,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateCharacterCloth(Long memberId, int characterCloth) {
         Member member = userRepository.findById(memberId)
-            .orElseThrow(
-                () -> new UsernameNotFoundException("Member not found with id: " + memberId));
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found with id: " + memberId));
 
         Character character = member.getCharacter();
 
@@ -209,6 +209,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("Character not found for member with id: " + memberId);
         }
 
+        if (character.getExp() < 500) {
+            throw new NotEnoughExperienceException("Not enough experience to update character cloth for member with id: " + memberId);
+        }
+
+        character.setExp(character.getExp() - 500); // 경험치 갱신
         character.setCharacterCloth(characterCloth);
     }
 
@@ -216,8 +221,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateCharacterType(Long memberId, int characterType) {
         Member member = userRepository.findById(memberId)
-            .orElseThrow(
-                () -> new UsernameNotFoundException("Member not found with id: " + memberId));
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found with id: " + memberId));
 
         Character character = member.getCharacter();
 
@@ -225,6 +229,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("Character not found for member with id: " + memberId);
         }
 
+        if (character.getExp() < 500) {
+            throw new NotEnoughExperienceException("Not enough experience to update character type for member with id: " + memberId);
+        }
+
+        character.setExp(character.getExp() - 500); // 경험치 갱신
         character.setCharacterType(characterType);
     }
 }
