@@ -209,7 +209,9 @@ const ItemPage = () => {
                   <div className="item-title">아이템 샵</div>
                 </div>
                 <div className="item-point-container">
-                  <div className="item-point">포인트: 1,000,000 P</div>
+                  <div className="item-point">
+                    포인트: {exp ? exp.toLocaleString() : 0} P
+                  </div>
                 </div>
                 <div className="item-info-container">
                   <div className="carousel">

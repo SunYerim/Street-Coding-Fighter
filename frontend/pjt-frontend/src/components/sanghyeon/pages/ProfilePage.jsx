@@ -10,15 +10,12 @@ import Swal from "sweetalert2";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { baseURL, accessToken, setAccessToken, memberId, name } = store(
-    (state) => ({
-      baseURL: state.baseURL,
-      accessToken: state.accessToken,
-      setAccessToken: state.setAccessToken,
-      memberId: state.memberId,
-      name: state.name,
-    })
-  );
+  const { baseURL, accessToken, setAccessToken, memberId } = store((state) => ({
+    baseURL: state.baseURL,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    memberId: state.memberId,
+  }));
 
   const {
     name,
