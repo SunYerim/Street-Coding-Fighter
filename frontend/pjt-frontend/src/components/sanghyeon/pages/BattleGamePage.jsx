@@ -331,6 +331,8 @@ const BattleGamePage = () => {
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
 
+      console.log(message);
+
       if (body.guestCharacterType) {
         setEnemyCharacterType(body.guestCharacterType);
       }
