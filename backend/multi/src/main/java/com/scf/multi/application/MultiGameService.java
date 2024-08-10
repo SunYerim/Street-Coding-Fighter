@@ -110,6 +110,7 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
         Player connectedPlayer = findPlayerByUserId(room, userId);
         connectedPlayer.setSessionId(sessionId);
+        connectedPlayer.setIsOnRoom(true);
 
         room.addSubmitItem(userId);
 
@@ -168,7 +169,7 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         Player exitPlayer = findPlayerBySessionId(room, sessionId);
-        room.exitRoom(exitPlayer);
+        exitPlayer.setIsOnRoom(false);
 
         return exitPlayer;
     }
@@ -178,6 +179,7 @@ public class MultiGameService {
         MultiGameRoom room = multiGameRepository.findOneById(roomId);
 
         Player newHost = room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .findFirst()
             .orElseThrow(() -> new BusinessException(null, "newHost", USER_NOT_FOUND));
         newHost.setIsHost(true);

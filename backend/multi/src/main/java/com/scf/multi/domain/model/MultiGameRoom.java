@@ -155,6 +155,7 @@ public class MultiGameRoom {
                 Long userId = entry.getKey();
                 String username = players.stream()
                     .filter(player -> player.getUserId().equals(userId))
+                    .filter(player -> player.getIsOnRoom().equals(true))
                     .map(Player::getUsername)
                     .findFirst()
                     .orElse("Unknown");
@@ -182,6 +183,7 @@ public class MultiGameRoom {
                 Long userId = entry.getKey();
                 String username = players.stream()
                     .filter(player -> player.getUserId().equals(userId))
+                    .filter(player -> player.getIsOnRoom().equals(true))
                     .map(Player::getUsername)
                     .findFirst()
                     .orElse("Unknown");
