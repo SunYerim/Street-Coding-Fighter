@@ -135,7 +135,7 @@ public class GameService {
         if (submitTime > 30) {
             throw new BusinessException(String.valueOf(submitTime), "submitTime", ErrorCode.SUBMIT_TIME_EXCEEDED);
         }
-        int initialScore = 20;
+        int initialScore = 30;
         double decrementPerSecond = 0.3333;
         return Math.max((int) (initialScore - (submitTime * decrementPerSecond)), 0);
     }
