@@ -320,6 +320,7 @@ public class MultiGameService {
             .curPlayer(room.getPlayers().size())
             .isLock(room.getPassword() != null)
             .isStart(room.getIsStart())
+            .gameRound(room.getPlayRound())
             .build();
     }
 
