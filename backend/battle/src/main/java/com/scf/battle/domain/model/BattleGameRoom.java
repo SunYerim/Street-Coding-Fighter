@@ -77,10 +77,10 @@ public class BattleGameRoom {
         }
         if (playerA.getUserId().equals(userId)) {
             hasPlayerASubmitted = true;
-            updatePlayerHp(playerB, power);
+            if(power != 0) updatePlayerHp(playerB, power);
         } else if (playerB.getUserId().equals(userId)) {
             hasPlayerBSubmitted = true;
-            updatePlayerHp(playerA, power);
+            if(power != 0) updatePlayerHp(playerA, power);
         } else {
             throw new IllegalArgumentException("Invalid userId");
         }
