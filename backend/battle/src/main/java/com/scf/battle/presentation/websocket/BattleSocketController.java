@@ -68,11 +68,8 @@ public class BattleSocketController {
 
         selectedProblem.ifPresent(problem -> {
             battleSocketService.assignProblemToOpponent(room, selectingUser, problem);
-            problem.setItemBasedOnDifficulty(); // 아이템 설정 메서드 호출
+
         });
         messagingTemplate.convertAndSend("/room/" + roomId + "/" + opponentUser.getUserId(), selectedProblem);
     }
-
-
-
 }
