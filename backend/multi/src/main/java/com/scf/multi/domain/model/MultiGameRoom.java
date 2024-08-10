@@ -79,8 +79,6 @@ public class MultiGameRoom {
         }
 
         this.players.add(player);
-        this.scoreBoard.put(player.getUserId(), 0);
-        this.leaderBoard.put(player.getUserId(), 0);
     }
 
     public void remove(Long userId) {
@@ -109,18 +107,17 @@ public class MultiGameRoom {
             throw new BusinessException(null, "문제", ErrorCode.INVALID_PROBLEM);
         }
 
-        this.problems.clear();
-        this.problems.addAll(problems);
-        this.isStart = true;
+        readyGameState(problems);
     }
 
     public void updateLeaderBoard(Long userId, int score) {
 
         boolean hasPlayer = this.players.stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+            return;
         }
 
         int newScore = leaderBoard.get(userId) + score;
@@ -130,10 +127,11 @@ public class MultiGameRoom {
     public void updateScoreBoard(Long userId, int score) {
 
         boolean hasPlayer = this.players.stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .anyMatch(player -> player.getUserId().equals(userId));
 
         if (!hasPlayer || !this.scoreBoard.containsKey(userId)) {
-            throw new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND);
+            return;
         }
 
         this.scoreBoard.put(userId, score);
@@ -174,7 +172,6 @@ public class MultiGameRoom {
 
         return ranks;
     }
-
 
     public List<Rank> getRoundRank() {
 
@@ -231,5 +228,17 @@ public class MultiGameRoom {
     public void addSubmitItem(Long userId) {
 
         this.submits.add(SubmitItem.builder().userId(userId).isSubmit(false).build());
+    }
+
+    private void readyGameState(List<Problem> problems) {
+        this.problems.clear();
+        this.problems.addAll(problems);
+        this.isStart = true;
+        this.leaderBoard.clear();
+        this.scoreBoard.clear();
+        for(Player player : players) {
+            this.leaderBoard.put(player.getUserId(), 0);
+            this.scoreBoard.put(player.getUserId(), 0);
+        }
     }
 }
