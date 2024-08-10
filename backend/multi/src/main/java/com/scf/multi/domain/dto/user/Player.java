@@ -14,6 +14,7 @@ public class Player {
     private Integer streakCount;
     private final List<Solved> solveds = new ArrayList<>();
     private String sessionId;
+    private Boolean isOnRoom;
 
     @Builder
     public Player(Long userId, String username, Boolean isHost, Integer streakCount) {
@@ -21,6 +22,7 @@ public class Player {
         this.username = username;
         this.isHost = isHost;
         this.streakCount = streakCount;
+        this.isOnRoom = false;
     }
 
     public void addSolved(Solved solved) {
