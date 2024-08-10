@@ -54,16 +54,21 @@ const useLeaderboardStore = create((set) => ({
   setTotalList: (newList) =>
     set((state) => {
       console.log('total set', newList);
+      console.log(state)
+
       return { rankingList: { ...state.rankingList, total: newList } };
     }),
   setWeeklyList: (newList) =>
     set((state) => {
       console.log('weekly set', newList);
+      console.log(state)
+
       return { rankingList: { ...state.rankingList, weekly: newList } };
     }),
   setDailyList: (newList) =>
     set((state) => {
       console.log('daily set', newList);
+      console.log(state)
       return { rankingList: { ...state.rankingList, daily: newList } };
     }),
 
