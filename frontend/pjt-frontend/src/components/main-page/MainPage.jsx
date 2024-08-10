@@ -60,11 +60,11 @@ function MainPage() {
 
   const modeDetails = {
     "1 vs 1": {
-      description: "1 대 1 대결 모드입니다. 서로의 실력을 겨뤄보세요.",
+      description: "1 대 1 대결 모드입니다.\n 서로의 실력을 겨뤄보세요.",
       imageUrl: "/characters/movingFireSlime.gif"
     },
     "멀티플레이": {
-      description: "여러 명이 동시에 참여할 수 있는 멀티플레이 모드입니다.",
+      description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
       imageUrl: "/characters/movingGreenSlime.gif"
     },
     "싱글플레이": {
@@ -72,7 +72,7 @@ function MainPage() {
       imageUrl: "/characters/movingIceSlime.gif"
     },
     "랭킹": {
-      description: "순위를 겨루는 랭킹 모드입니다. 높은 점수를 기록해보세요.",
+      description: "순위를 겨루는 랭킹 모드입니다. \n 높은 점수를 기록해보세요.",
       imageUrl: "/characters/movingThunderSlime.gif"
     }
   };
@@ -113,7 +113,6 @@ function MainPage() {
         </div>
       </div>
       <div style={styles.logo}>
-        Street Coding Fighter
       </div>
     </>
   );
@@ -153,7 +152,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     color: 'white',
-    fontSize: '18px',
+    fontSize: '1.7rem',
+    whiteSpace: 'pre-wrap',
     textAlign: 'center',
   },
   image: {
