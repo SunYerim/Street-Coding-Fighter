@@ -446,6 +446,9 @@ const BattleGamePage = () => {
       const quitBattleRoomRes = await authClient({
         method: "POST",
         url: `${baseURL}/battle/room/${roomId}/leave`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
     } catch (error) {
       Swal.fire({
