@@ -10,7 +10,7 @@ import createAuthClient from "../apis/createAuthClient.js";
 
 const ReportPage = () => {
   const navigate = useNavigate();
-  const { reportInfo, setReportInfo } = useState(null);
+  const [reportInfo, setReportInfo] = useState(null);
 
   const { baseURL, character, name, accessToken, setAccessToken } = store(
     (state) => ({
@@ -24,6 +24,12 @@ const ReportPage = () => {
 
   useEffect(() => {
     try {
+      const authClient = createAuthClient(
+        baseURL,
+        () => accessToken,
+        setAccessToken
+      );
+
       authClient({
         method: "GET",
         url: `${baseURL}/profile/reportdetail`,
@@ -37,12 +43,6 @@ const ReportPage = () => {
       console.log(error);
     }
   }, []);
-
-  const authClient = createAuthClient(
-    baseURL,
-    () => accessToken,
-    setAccessToken
-  );
 
   const getReport = async () => {
     try {
