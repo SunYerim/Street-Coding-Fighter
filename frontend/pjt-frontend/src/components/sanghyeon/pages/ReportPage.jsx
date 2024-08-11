@@ -22,26 +22,27 @@ const ReportPage = () => {
     })
   );
 
-  useEffect(() => {
-    try {
-      const authClient = createAuthClient(
-        baseURL,
-        () => accessToken,
-        setAccessToken
-      );
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
 
-      authClient({
-        method: "GET",
-        url: `${baseURL}/profile/reportdetail`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }).then((response) => {
-        setReportInfo(response.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(() => {
+    const getReportDetail = async () => {
+      try {
+        const reportDetailRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/reportdetail`,
+        });
+
+        setReportInfo(reportDetailRes.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getReportDetail();
   }, []);
 
   const getReport = async () => {
