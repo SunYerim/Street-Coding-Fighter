@@ -8,6 +8,7 @@ import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RankService {
 
     private final RedisTemplate<String, UserExp> redisTemplate;
-    private static final String KEY_PREFIX = "user:";
+    private static final String KEY_PREFIX = "rank:";
 
     private ZSetOperations<String, UserExp> zSetOps() {
         return redisTemplate.opsForZSet();
@@ -52,29 +53,39 @@ public class RankService {
     }
 
     public void updateRank(UserExp userExp, String datePrefix) {
+
+        String key = datePrefix + userExp.getUserId();
+
         // 플레이어가 이미 점수를 가지고 있는지 확인
-        Double currentScore = zSetOps().score(datePrefix, userExp);
+        Double currentScore = zSetOps().score(key, userExp);
 
         // 플레이어가 존재하면 점수를 증가시키고, 그렇지 않으면 추가
         if (currentScore != null) {
-            zSetOps().incrementScore(datePrefix, userExp, userExp.getExp());
+            zSetOps().incrementScore(key, userExp, userExp.getExp());
         } else {
-            zSetOps().add(datePrefix, userExp, userExp.getExp());
+            zSetOps().add(key, userExp, userExp.getExp());
         }
     }
 
-    private List<UserExp> getRankings(String datePrefix) {
+    public List<UserExp> getRankings(String datePrefix) {
+        // RedisTemplate을 사용하여 모든 키 조회
+        Set<String> keys = redisTemplate.keys(datePrefix + ":*");
+        List<UserExp> userExps = new ArrayList<>();
 
-        Set<ZSetOperations.TypedTuple<UserExp>> rankedUsers = zSetOps().reverseRangeWithScores(
-            datePrefix, 0, -1);
-
-        List<UserExp> ranks = new ArrayList<>();
-        if (rankedUsers != null) {
-            for (ZSetOperations.TypedTuple<UserExp> tuple : rankedUsers) {
-                ranks.add(tuple.getValue());
+        if (keys != null) {
+            for (String key : keys) {
+                // RedisTemplate을 사용하여 각 키의 값 가져오기
+                UserExp userExp = redisTemplate.opsForValue().get(key);
+                if (userExp != null) {
+                    userExps.add(userExp);
+                }
             }
         }
-        return ranks;
+
+        // exp를 기준으로 내림차순 정렬
+        return userExps.stream()
+            .sorted((r1, r2) -> Integer.compare(r2.getExp(), r1.getExp()))
+            .collect(Collectors.toList());
     }
 
     public String getWeeklyPrefix(LocalDate date) {
@@ -91,13 +102,13 @@ public class RankService {
     // 일간 랭킹 초기화
     @Scheduled(cron = "59 59 23 * * ?") // 매일 23:59:59에 실행
     public void resetDailyRankings() {
-        resetRankings("user:daily:*");
+        resetRankings("rank:daily:*");
     }
 
     // 주간 랭킹 초기화
     @Scheduled(cron = "59 59 23 * * SUN") // 매주 일요일 23:59:59에 실행
     public void resetWeeklyRankings() {
-        resetRankings("user:weekly:*");
+        resetRankings("rank:weekly:*");
     }
 
     // 공통적인 랭킹 초기화 메서드

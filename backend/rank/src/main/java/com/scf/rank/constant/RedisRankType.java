@@ -2,9 +2,9 @@ package com.scf.rank.constant;
 
 public enum RedisRankType {
 
-    ALL_TIME("user:alltime"),
-    WEEKLY("user:weekly"),
-    DAILY("user:daily");
+    ALL_TIME("rank:alltime:"),
+    WEEKLY("rank:weekly:"),
+    DAILY("rank:daily:");
     public final String key;
     RedisRankType(String key) {
         this.key = key;
