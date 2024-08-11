@@ -69,7 +69,7 @@ public class RankService {
 
     public List<UserExp> getRankings(String datePrefix) {
         // RedisTemplate을 사용하여 모든 키 조회
-        Set<String> keys = redisTemplate.keys(datePrefix + ":*");
+        Set<String> keys = redisTemplate.keys(datePrefix + "*");
         List<UserExp> userExps = new ArrayList<>();
 
         if (keys != null) {
@@ -91,12 +91,12 @@ public class RankService {
     public String getWeeklyPrefix(LocalDate date) {
         // 주간 랭킹 키 생성 (예: "user:weekly:2024-W31")
         String weekOfYear = String.format("W%02d", date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR));
-        return RedisRankType.WEEKLY.key + date.getYear() + "-" + weekOfYear;
+        return RedisRankType.WEEKLY.key + date.getYear() + "-" + weekOfYear + ":";
     }
 
     public String getDailyPrefix(LocalDate date) {
         // 일간 랭킹 키 생성 (예: "user:daily:2024-07-31")
-        return RedisRankType.DAILY.key + date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return RedisRankType.DAILY.key + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + ":";
     }
 
     // 일간 랭킹 초기화

@@ -32,7 +32,7 @@ class RankServiceTest {
     @Test
     void getAllTimeRankingsTest() {
         // Arrange
-        String datePrefix = "rank:total";
+        String datePrefix = "rank:total:";
         UserExp user1 = new UserExp(1L, "User1", 100);
         UserExp user2 = new UserExp(2L, "User2", 150);
 
@@ -40,7 +40,7 @@ class RankServiceTest {
         ValueOperations<String, UserExp> valueOps = mock(ValueOperations.class);
 
         // Mocking RedisTemplate behavior
-        when(redisTemplate.keys(datePrefix + ":*")).thenReturn(keys);
+        when(redisTemplate.keys(datePrefix + "*")).thenReturn(keys);
         when(redisTemplate.opsForValue()).thenReturn(valueOps);
         when(valueOps.get(datePrefix + user1.getUserId())).thenReturn(user1);
         when(valueOps.get(datePrefix + user2.getUserId())).thenReturn(user2);
@@ -58,7 +58,7 @@ class RankServiceTest {
     @Test
     void getWeeklyRankingsTest() {
         // Arrange
-        String datePrefix = "rank:weekly";
+        String datePrefix = "rank:weekly:";
         UserExp user1 = new UserExp(1L, "User1", 100);
         UserExp user2 = new UserExp(2L, "User2", 150);
 
@@ -66,7 +66,7 @@ class RankServiceTest {
         ValueOperations<String, UserExp> valueOps = mock(ValueOperations.class);
 
         // Mocking RedisTemplate behavior
-        when(redisTemplate.keys(datePrefix + ":*")).thenReturn(keys);
+        when(redisTemplate.keys(datePrefix + "*")).thenReturn(keys);
         when(redisTemplate.opsForValue()).thenReturn(valueOps);
         when(valueOps.get(datePrefix + user1.getUserId())).thenReturn(user1);
         when(valueOps.get(datePrefix + user2.getUserId())).thenReturn(user2);
@@ -84,7 +84,7 @@ class RankServiceTest {
     @Test
     void getDailyRankingsTest() {
         // Arrange
-        String datePrefix = "rank:daily";
+        String datePrefix = "rank:daily:";
         UserExp user1 = new UserExp(1L, "User1", 100);
         UserExp user2 = new UserExp(2L, "User2", 150);
 
@@ -92,7 +92,7 @@ class RankServiceTest {
         ValueOperations<String, UserExp> valueOps = mock(ValueOperations.class);
 
         // Mocking RedisTemplate behavior
-        when(redisTemplate.keys(datePrefix + ":*")).thenReturn(keys);
+        when(redisTemplate.keys(datePrefix + "*")).thenReturn(keys);
         when(redisTemplate.opsForValue()).thenReturn(valueOps);
         when(valueOps.get(datePrefix + user1.getUserId())).thenReturn(user1);
         when(valueOps.get(datePrefix + user2.getUserId())).thenReturn(user2);
@@ -128,7 +128,7 @@ class RankServiceTest {
     void getWeeklyPrefixTest() {
         // Arrange
         LocalDate date = LocalDate.of(2024, 7, 31);
-        String expectedPrefix = "rank:weekly:2024-W31";
+        String expectedPrefix = "rank:weekly:2024-W31:";
 
         // Act
         String prefix = rankService.getWeeklyPrefix(date);
@@ -141,7 +141,7 @@ class RankServiceTest {
     void getDailyPrefixTest() {
         // Arrange
         LocalDate date = LocalDate.of(2024, 7, 31); // Example date
-        String expectedPrefix = "rank:daily:2024-07-31";
+        String expectedPrefix = "rank:daily:2024-07-31:";
 
         // Act
         String prefix = rankService.getDailyPrefix(date);
