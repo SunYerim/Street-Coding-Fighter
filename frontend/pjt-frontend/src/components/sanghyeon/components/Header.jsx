@@ -19,6 +19,7 @@ const Header = ({ type = 'default' }) => {
     '/solved': '/profile',
     '/find-password': '/login',
     '/signup': '/login',
+    '/reset-password': '/profile',
   };
   //뒤로가기 기능
   const currentPath = useLocation().pathname;
@@ -89,17 +90,19 @@ const Header = ({ type = 'default' }) => {
           <MdOutlineKeyboardBackspace />
         </div>
         <div className="header-right">
-          <div className="header-icon">
-            <img
-              onClick={() => {
-                navigate('/profile');
-              }}
-              className="user-icon"
-              src={userIcon}
-              alt="memberIcon"
-            />
-            <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
-          </div>
+          {accessToken ? (
+            <div className="header-icon">
+              <img
+                onClick={() => {
+                  navigate('/profile');
+                }}
+                className="user-icon"
+                src={userIcon}
+                alt="memberIcon"
+              />
+              <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
+            </div>
+          ) : null}
         </div>
       </div>
       <Setting isOpen={modalIsOpen} onClose={closeModal} />
