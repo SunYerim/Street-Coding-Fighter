@@ -11,11 +11,38 @@ import createAuthClient from "../apis/createAuthClient.js";
 const ReportPage = () => {
   const navigate = useNavigate();
 
+  const { baseURL, character, name, accessToken, setAccessToken } = store(
+    (state) => ({
+      baseURL: state.baseURL,
+      character: state.character,
+      name: state.name,
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+    })
+  );
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
+
   const getReport = async () => {
     try {
-      const reportRes = await axios({
+      const reportInfoRes = await authClient({
         method: "GET",
+        url: `${baseURL}/profile/reportdetail`,
+        heaeders: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const reportInfo = { name: name, ...reportInfoRes.data };
+
+      const reportRes = await axios({
+        method: "POST",
         url: "https://www.ssafy11th-songsam.site/bots/",
+        data: reportInfo,
         responseType: "blob",
       });
       const file = new Blob([reportRes.data], { type: "application/pdf" });
@@ -39,12 +66,6 @@ const ReportPage = () => {
       console.log(error);
     }
   };
-
-  const { baseURL, character, name } = store((state) => ({
-    baseURL: state.baseURL,
-    character: state.character,
-    name: state.name,
-  }));
 
   return (
     <>
