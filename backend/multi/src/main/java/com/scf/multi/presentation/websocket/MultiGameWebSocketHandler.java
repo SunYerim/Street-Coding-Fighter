@@ -43,17 +43,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String roomId = event.getRoomId();
         List<ListDTO> problems = multiGameService.getProblems(roomId);
         broadcastMessageToRoom(roomId, "gameStart", problems);
-
-
-        // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
-        executorService.submit(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                throw new RuntimeException();
-            }
-            checkAndDeleteRoom(roomId);
-        });
     }
 
     @Override
@@ -124,6 +113,16 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         broadcastMessageToRoom(roomId, "player-list", playerList);
 
         hostRotateIfNecessary(roomId, exitPlayer);
+
+        // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
+        executorService.submit(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                throw new RuntimeException();
+            }
+            checkAndDeleteRoom(roomId);
+        });
     }
 
     @Override
