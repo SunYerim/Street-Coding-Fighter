@@ -32,7 +32,7 @@ const ReportPage = () => {
       const reportInfoRes = await authClient({
         method: "GET",
         url: `${baseURL}/profile/reportdetail`,
-        heaeders: {
+        headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
