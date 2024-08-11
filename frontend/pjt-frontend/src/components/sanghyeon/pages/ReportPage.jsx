@@ -47,12 +47,10 @@ const ReportPage = () => {
 
   const getReport = async () => {
     try {
-      await setReportInfo({ name: name, ...reportInfo });
-
       const reportRes = await axios({
         method: "POST",
         url: "https://www.ssafy11th-songsam.site/bots/",
-        data: reportInfo,
+        data: { name: name, ...reportInfo },
         responseType: "blob",
       });
       const file = new Blob([reportRes.data], { type: "application/pdf" });
