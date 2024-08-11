@@ -75,7 +75,7 @@ const LoginPage = () => {
 
   return (
     <>
-    <Header />
+    {/* <Header /> */}
       <div className="login-outer-container">
         <div className="login-title">Login Page</div>
         <div className="login-container">
