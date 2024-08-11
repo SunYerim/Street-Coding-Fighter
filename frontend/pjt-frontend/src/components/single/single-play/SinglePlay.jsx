@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import S from './styled';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
@@ -57,6 +57,7 @@ export default function SinglePlay() {
 
   //타이핑 애니메이션 진행중인지 확인여부 상태 추가
   const [isTyping, setIsTyping] = useState(true);
+  const currentPageRef = useRef(page);
 
   useEffect(() => {
     switchBackgroundMusic('single', (newBackgroundMusic) => {
@@ -102,12 +103,15 @@ export default function SinglePlay() {
   }, [content_id]);
   //useEffect 끝
 
+  useEffect(() => {
+    setIsTyping(true);
+    currentPageRef.current = page;
+  }, [page]);
 
-  
 
   //페이지 변경함수
   const changePage = (increment) => {
-    // console.log('click');
+    console.log('click');
     if (loading || !showDialogue) return;
 
     // 모달이 열려있으면 모달을 닫고 함수 종료
@@ -164,6 +168,7 @@ export default function SinglePlay() {
       // }, 2000);
     }
     setIsTyping(true);
+    setIsClickable(true);
     playEffectSound('singleClickSound');
     // console.log(page);
   };
@@ -326,7 +331,12 @@ export default function SinglePlay() {
                         color: 'black',
                         whiteSpace: 'pre-line',
                       }}
-                      sequence={[currentDialogue.scriptContent, 500, ()=>{setIsTyping(false)}]}
+                      sequence={[currentDialogue.scriptContent, 500, ()=>{
+                        if(currentPageRef.current === page){
+
+                          setIsTyping(false);
+                        }
+                        }]}
                       wrapper="p"
                       speed={50}
                     />
