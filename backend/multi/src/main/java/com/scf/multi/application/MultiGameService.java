@@ -217,25 +217,22 @@ public class MultiGameService {
             .toList();
     }
 
-    public boolean increaseSubmit(String roomId) {
+    public void increaseSubmit(String roomId) {
 
         MultiGameRoom room = findOneById(roomId);
+        room.getCurSubmitCount().incrementAndGet();
+    }
 
-        int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
+    public boolean checkIsAllPlayerSubmit(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
 
         long PlayerCountOnRoom = room.getPlayers()
             .stream()
             .filter(player -> player.getIsOnRoom().equals(true))
             .count();
 
-        if (curSubmitCount >= PlayerCountOnRoom) {
-            room.nextRound();
-
-            room.getCurSubmitCount().set(0);
-
-            return true;
-        }
-        return false;
+        return room.getCurSubmitCount().get() >= PlayerCountOnRoom;
     }
 
     public List<Rank> getRoundRank(String roomId) {
@@ -475,5 +472,13 @@ public class MultiGameService {
         if (!room.getIsStart()) {
             throw new BusinessException(roomId, "roomId", ErrorCode.NOT_YET_START_GAME);
         }
+    }
+
+    public void processRound(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.nextRound();
+        room.getCurSubmitCount().set(0);
     }
 }
