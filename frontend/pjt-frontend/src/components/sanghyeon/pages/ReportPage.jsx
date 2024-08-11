@@ -47,6 +47,11 @@ const ReportPage = () => {
 
   const getReport = async () => {
     try {
+      Swal.fire({
+        text: "리포트 다운로드 중...",
+        icon: "info",
+        showConfirmButton: false,
+      });
       const reportRes = await axios({
         method: "POST",
         url: "https://www.ssafy11th-songsam.site/bots/",
