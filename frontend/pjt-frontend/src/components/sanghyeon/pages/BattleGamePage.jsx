@@ -441,6 +441,21 @@ const BattleGamePage = () => {
     chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
   };
 
+  const quitBattleRoom = async () => {
+    try {
+      const quitBattleRoomRes = await authClient({
+        method: "POST",
+        url: `${baseURL}/battle/room/${roomId}/leave`,
+      });
+    } catch (error) {
+      Swal.fire({
+        text: "게임 종료에 실패했습니다.",
+        icon: "error",
+      });
+      console.log(error);
+    }
+  };
+
   const reconnectWebSocket = () => {
     setTimeout(async () => {
       try {
@@ -474,6 +489,7 @@ const BattleGamePage = () => {
       await delay(5000);
 
       sendQuitMessage();
+      quitBattleRoom();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
     };
