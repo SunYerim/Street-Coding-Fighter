@@ -3,13 +3,14 @@ import "../../../css/ReportPage.css";
 import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import renderCharacter from "../apis/renderCharacter.js";
 import createAuthClient from "../apis/createAuthClient.js";
 
 const ReportPage = () => {
   const navigate = useNavigate();
+  const { reportInfo, setReportInfo } = useState(null);
 
   const { baseURL, character, name, accessToken, setAccessToken } = store(
     (state) => ({
@@ -21,6 +22,22 @@ const ReportPage = () => {
     })
   );
 
+  useEffect(() => {
+    try {
+      authClient({
+        method: "GET",
+        url: `${baseURL}/profile/reportdetail`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((response) => {
+        setReportInfo(response.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const authClient = createAuthClient(
     baseURL,
     () => accessToken,
@@ -29,15 +46,7 @@ const ReportPage = () => {
 
   const getReport = async () => {
     try {
-      const reportInfoRes = await authClient({
-        method: "GET",
-        url: `${baseURL}/profile/reportdetail`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const reportInfo = { name: name, ...reportInfoRes.data };
+      await setReportInfo({ name: name, ...reportInfo });
 
       const reportRes = await axios({
         method: "POST",
@@ -76,12 +85,11 @@ const ReportPage = () => {
             <div className="report-upper-container">
               <div className="report-profile-container">
                 <img
-                  src={renderCharacter(101)}
-                  // src={renderCharacter(character)}
+                  src={renderCharacter(character)}
                   alt="profile-character"
                   className="report-profile-character"
                 />
-                <div className="report-profile-name">Falcon</div>
+                <div className="report-profile-name">{name}</div>
               </div>
               <div className="report-upper-title-container">
                 <div className="report-upper-title-inner-container">
@@ -93,10 +101,12 @@ const ReportPage = () => {
                 </div>
                 <div className="report-upper-title-button-container">
                   <button className="report-upper-title-button">
-                    시도한 문제 수: 25 개
+                    시도한 문제 수:{" "}
+                    {reportInfo.solvedCount ? reportInfo.solvedCount : 0} 개
                   </button>
                   <button className="report-upper-title-button">
-                    시도한 문제 수: 26 개
+                    평균 순위:{" "}
+                    {reportInfo.averageRank ? reportInfo.averageRank : 0} 위
                   </button>
                   <button
                     onClick={() => getReport()}
