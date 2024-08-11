@@ -17,6 +17,8 @@ const Header = ({ type = 'default' }) => {
     '/record': '/profile',
     '/report': '/profile',
     '/solved': '/profile',
+    '/find-password': '/login',
+    '/signup': '/login',
   };
   //뒤로가기 기능
   const currentPath = useLocation().pathname;
@@ -83,11 +85,10 @@ const Header = ({ type = 'default' }) => {
         >
           Street Coding Figther
         </div>
-      </div>
         <div className="header-back-button" onClick={backToPrevPage}>
           <MdOutlineKeyboardBackspace />
         </div>
-        <div className='header-right'>
+        <div className="header-right">
           <div className="header-icon">
             <img
               onClick={() => {
@@ -100,6 +101,7 @@ const Header = ({ type = 'default' }) => {
             <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
           </div>
         </div>
+      </div>
       <Setting isOpen={modalIsOpen} onClose={closeModal} />
     </>
   );

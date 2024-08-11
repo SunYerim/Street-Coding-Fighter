@@ -1,5 +1,5 @@
 .header-container {
-  padding: 0px 20px;
+  position: relative;
   padding-top: 20px;
   display : flex;
   justify-content: center;
@@ -28,7 +28,7 @@
 }
 
 .header-back-button {
-  position:fixed;
+  position:absolute;
   left : 30px;
   top : 30px;
 
@@ -41,7 +41,7 @@
   font-size : 2rem;
 }
 .header-right{
-  position:fixed;
+  position:absolute;
   right : 30px;
   top : 30px;
 
