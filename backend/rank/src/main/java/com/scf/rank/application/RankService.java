@@ -102,13 +102,13 @@ public class RankService {
     // 일간 랭킹 초기화
     @Scheduled(cron = "59 59 23 * * ?") // 매일 23:59:59에 실행
     public void resetDailyRankings() {
-        resetRankings("user:daily:*");
+        resetRankings("rank:daily:*");
     }
 
     // 주간 랭킹 초기화
     @Scheduled(cron = "59 59 23 * * SUN") // 매주 일요일 23:59:59에 실행
     public void resetWeeklyRankings() {
-        resetRankings("user:weekly:*");
+        resetRankings("rank:weekly:*");
     }
 
     // 공통적인 랭킹 초기화 메서드
