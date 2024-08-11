@@ -53,6 +53,11 @@ export default function SinglePlay() {
 
   const isVibrating = dialogueList?.[page].action === 1;
   const isCloseUp = dialogueList?.[page].action === 2;
+  //useEffect 시작
+
+  //타이핑 애니메이션 진행중인지 확인여부 상태 추가
+  const [isTyping, setIsTyping] = useState(true);
+
   useEffect(() => {
     switchBackgroundMusic('single', (newBackgroundMusic) => {
       newBackgroundMusic.play();
@@ -78,6 +83,8 @@ export default function SinglePlay() {
         console.error('Error fetching content: ', error);
         setLoading(false);
       });
+
+    //로딩화면
     const loadingTimer = setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -93,9 +100,14 @@ export default function SinglePlay() {
       clearTimeout(timer);
     };
   }, [content_id]);
+  //useEffect 끝
 
+
+  
+
+  //페이지 변경함수
   const changePage = (increment) => {
-    console.log('click');
+    // console.log('click');
     if (loading || !showDialogue) return;
 
     // 모달이 열려있으면 모달을 닫고 함수 종료
@@ -114,19 +126,23 @@ export default function SinglePlay() {
     // console.log(page);
 
     //넘어가면 안될때 누르면 바로 return!
-    console.log(isClickable);
+    // console.log(isClickable);
+    if(isTyping){
+      setIsTyping(false);
+      return;
+    }
     if (!isClickable) {
       return;
     }
-
-    // 클릭이 불가능하게 만든 후 1초 후 클릭이 가능하게 상태 변경
-    // 대사 넘어가고나서 1초동안 못넘어가게하기
+    // 클릭이 불가능하게 만든 후 0.5초 후 클릭이 가능하게 상태 변경
+    // 대사 넘어가고나서 0.5초동안 못넘어가게하기
+    // 0.5초 후에 한번 더 클릭하면 바꿔
     setIsClickable(false);
-    console.log('false로 바뀜');
+    // console.log('false로 바뀜');
     setTimeout(() => {
       setIsClickable(true);
-      console.log('true로 바뀜');
-    }, 1500);
+      // console.log('true로 바뀜');
+    }, 500);
     if (increment) {
       if (page < dialogueList.length - 1) {
         setPage((prevPage) => prevPage + 1);
@@ -147,17 +163,20 @@ export default function SinglePlay() {
       // setIsVibrating(false);
       // }, 2000);
     }
+    setIsTyping(true);
     playEffectSound('singleClickSound');
-    console.log(page);
+    // console.log(page);
   };
-  const handleChatOpen = () => {
-    // console.log('chat handle');
-    if (isChatOpen) {
-      setIsChatOpen(false); // 채팅 닫기
-    } else {
-      setIsChatOpen(true); // 채팅 열기
-    }
-  };
+
+  //채팅 열고 닫기 함수, 이부분은 추후 채팅 추가 시 주석 해제
+  // const handleChatOpen = () => {
+  //   // console.log('chat handle');
+  //   if (isChatOpen) {
+  //     setIsChatOpen(false); // 채팅 닫기
+  //   } else {
+  //     setIsChatOpen(true); // 채팅 열기
+  //   }
+  // };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -300,16 +319,28 @@ export default function SinglePlay() {
                   </p>
                 </S.DialogueBodyLeft>
                 <S.DialogueContent>
-                  <TypeAnimation
-                    key={page}
-                    style={{
-                      color: 'black',
-                      whiteSpace: 'pre-line',
-                    }}
-                    sequence={[currentDialogue.scriptContent, 500]}
-                    wrapper="p"
-                    speed={50}
-                  />
+                  {isTyping ? (
+                    <TypeAnimation
+                      key={page}
+                      style={{
+                        color: 'black',
+                        whiteSpace: 'pre-line',
+                      }}
+                      sequence={[currentDialogue.scriptContent, 500, ()=>{setIsTyping(false)}]}
+                      wrapper="p"
+                      speed={50}
+                    />
+                  ) : (
+                    <p
+                      style={{
+                        color: 'black',
+                        whiteSpace: 'pre-line',
+                      }}
+                    >
+                      {currentDialogue.scriptContent}
+                    </p>
+                  )}
+                  
                 </S.DialogueContent>
               </S.DialogueBody>
               <S.DialogueBodyRight>
