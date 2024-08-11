@@ -10,7 +10,7 @@ function MainSelectModeBox(props) {
       navigate("/single-main");
     } else if (mode === "멀티플레이") {
       navigate("/multi");
-    } else if (mode === "1 vs 1") {
+    } else if (mode === "배틀 모드") {
       navigate("/battle-list");
     } else if (mode === "랭킹") {
       navigate("/ranking");
