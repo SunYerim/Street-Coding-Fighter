@@ -223,7 +223,12 @@ public class MultiGameService {
 
         int curSubmitCount = room.getCurSubmitCount().incrementAndGet();
 
-        if (curSubmitCount == room.getPlayers().size()) {
+        long PlayerCountOnRoom = room.getPlayers()
+            .stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .count();
+
+        if (curSubmitCount >= PlayerCountOnRoom) {
             room.nextRound();
 
             room.getCurSubmitCount().set(0);
