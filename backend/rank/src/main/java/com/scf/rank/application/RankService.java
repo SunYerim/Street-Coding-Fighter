@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -19,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -68,17 +72,27 @@ public class RankService {
     }
 
     public List<UserExp> getRankings(String datePrefix) {
-        // RedisTemplate을 사용하여 모든 키 조회
-        Set<String> keys = redisTemplate.keys(datePrefix + "*");
         List<UserExp> userExps = new ArrayList<>();
 
-        if (keys != null) {
-            for (String key : keys) {
-                // RedisTemplate을 사용하여 각 키의 값 가져오기
-                UserExp userExp = redisTemplate.opsForValue().get(key);
-                if (userExp != null) {
-                    userExps.add(userExp);
+        RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
+        if (connectionFactory != null) {
+            try (RedisConnection connection = connectionFactory.getConnection()) {
+                // SCAN 명령어 사용하여 키 검색
+                Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match(datePrefix + "*").build());
+
+                while (cursor.hasNext()) {
+                    byte[] keyBytes = cursor.next();
+                    String key = new String(keyBytes);
+
+                    // 각 키의 값 가져오기
+                    UserExp userExp = redisTemplate.opsForValue().get(key);
+                    if (userExp != null) {
+                        userExps.add(userExp);
+                    }
                 }
+                cursor.close();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
         }
 
