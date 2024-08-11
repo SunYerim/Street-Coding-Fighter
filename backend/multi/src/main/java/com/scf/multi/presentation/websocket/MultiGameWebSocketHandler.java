@@ -43,17 +43,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         String roomId = event.getRoomId();
         List<ListDTO> problems = multiGameService.getProblems(roomId);
         broadcastMessageToRoom(roomId, "gameStart", problems);
-
-
-        // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
-        executorService.submit(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                throw new RuntimeException();
-            }
-            checkAndDeleteRoom(roomId);
-        });
     }
 
     @Override
@@ -99,8 +88,13 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         List<SubmitItem> submits = multiGameService.getSubmits(roomId);
         broadcastMessageToRoom("submit-list", roomId, submits);
 
-        boolean isAllPlayerSubmit = multiGameService.increaseSubmit(roomId);
-        handleRoundCompletion(isAllPlayerSubmit, roomId);
+        multiGameService.increaseSubmit(roomId);
+
+        boolean isAllPlayerSubmit = multiGameService.checkIsAllPlayerSubmit(roomId);
+
+        if(isAllPlayerSubmit) {
+            handleRoundCompletion(roomId);
+        }
     }
 
     @Override
@@ -115,7 +109,20 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
+        List<PlayerListDTO> playerList = multiGameService.getPlayerList(roomId);
+        broadcastMessageToRoom(roomId, "player-list", playerList);
+
         hostRotateIfNecessary(roomId, exitPlayer);
+
+        // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
+        executorService.submit(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                throw new RuntimeException();
+            }
+            checkAndDeleteRoom(roomId);
+        });
     }
 
     @Override
@@ -192,26 +199,34 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void handleRoundCompletion(boolean isAllPlayerSubmit, String roomId) throws Exception {
+    private void handleRoundCompletion(String roomId) throws Exception {
 
-        if (isAllPlayerSubmit) { // 모든 Player가 제출했으면
-            List<Rank> roundRank = multiGameService.getRoundRank(roomId);
-            broadcastMessageToRoom(roomId, "roundRank", roundRank);
+        multiGameService.processRound(roomId);
 
-            List<Rank> gameRank = multiGameService.getGameRank(roomId);
-            broadcastMessageToRoom(roomId, "gameRank", gameRank);
+        deliveryRoundRank(roomId);
 
-            multiGameService.resetSubmits(roomId);
+        deliveryGameRank(roomId);
 
-            if(multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
+        multiGameService.resetSubmits(roomId);
 
-                boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
+        if (multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
 
-                if(isFinishGame) {
-                    multiGameService.finalizeGame(roomId);
-                }
+            boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
+
+            if (isFinishGame) {
+                multiGameService.finalizeGame(roomId);
             }
         }
+    }
+
+    private void deliveryGameRank(String roomId) throws Exception {
+        List<Rank> gameRank = multiGameService.getGameRank(roomId);
+        broadcastMessageToRoom(roomId, "gameRank", gameRank);
+    }
+
+    private void deliveryRoundRank(String roomId) throws Exception {
+        List<Rank> roundRank = multiGameService.getRoundRank(roomId);
+        broadcastMessageToRoom(roomId, "roundRank", roundRank);
     }
 
     private void checkAndDeleteRoom(String roomId) {
