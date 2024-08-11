@@ -90,8 +90,8 @@ const Header = ({ type = 'default' }) => {
           <MdOutlineKeyboardBackspace />
         </div>
         <div className="header-right">
-          {accessToken ? (
-            <div className="header-icon">
+          <div className="header-icon">
+            {accessToken ? (
               <img
                 onClick={() => {
                   navigate('/profile');
@@ -100,9 +100,9 @@ const Header = ({ type = 'default' }) => {
                 src={userIcon}
                 alt="memberIcon"
               />
-              <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
-            </div>
-          ) : null}
+            ) : null}
+            <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
+          </div>
         </div>
       </div>
       <Setting isOpen={modalIsOpen} onClose={closeModal} />
