@@ -102,11 +102,17 @@ const ReportPage = () => {
                 <div className="report-upper-title-button-container">
                   <button className="report-upper-title-button">
                     시도한 문제 수:{" "}
-                    {reportInfo.solvedCount ? reportInfo.solvedCount : 0} 개
+                    {reportInfo && reportInfo.solvedCount
+                      ? reportInfo.solvedCount
+                      : 0}{" "}
+                    개
                   </button>
                   <button className="report-upper-title-button">
                     평균 순위:{" "}
-                    {reportInfo.averageRank ? reportInfo.averageRank : 0} 위
+                    {reportInfo && reportInfo.averageRank
+                      ? reportInfo.averageRank
+                      : 0}{" "}
+                    위
                   </button>
                   <button
                     onClick={() => getReport()}
