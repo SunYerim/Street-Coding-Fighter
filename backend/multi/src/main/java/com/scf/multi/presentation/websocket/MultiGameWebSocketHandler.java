@@ -120,6 +120,9 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         broadcastMessageToRoom(roomId, "notice", exitPlayer.getUsername() + "님이 게임을 나갔습니다.");
 
+        List<PlayerListDTO> playerList = multiGameService.getPlayerList(roomId);
+        broadcastMessageToRoom(roomId, "player-list", playerList);
+
         hostRotateIfNecessary(roomId, exitPlayer);
     }
 

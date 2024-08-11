@@ -213,6 +213,7 @@ public class MultiGameService {
         MultiGameRoom room = findOneById(roomId);
         return room.getPlayers()
             .stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
             .map(PlayerListDTO::fromPlayer)
             .toList();
     }
