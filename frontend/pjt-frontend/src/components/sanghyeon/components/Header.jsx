@@ -20,6 +20,7 @@ const Header = ({ type = 'default' }) => {
     '/find-password': '/login',
     '/signup': '/login',
     '/reset-password': '/profile',
+    '/main' : '/',
   };
   //뒤로가기 기능
   const currentPath = useLocation().pathname;
