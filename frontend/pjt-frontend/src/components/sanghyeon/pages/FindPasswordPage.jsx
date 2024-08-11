@@ -4,6 +4,9 @@ import store from "../../../store/store.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import LoginPageButton from "../../buttons/LoginPageButton.jsx";
+import Header from "../components/Header";
+
 
 const FindPasswordPage = () => {
   const { userId, baseURL, code, setCode, setUserId } = store((state) => ({
@@ -84,6 +87,7 @@ const FindPasswordPage = () => {
 
   return (
     <>
+    <Header />
       <div className="find-password-outer-container">
         <div className="find-password-title">
           비밀번호를 찾고자하는 아이디를 입력해주세요.
@@ -97,9 +101,9 @@ const FindPasswordPage = () => {
             <input type="text" placeholder="인증코드" ref={verificationCode} />
             <button onClick={checkVerificationCode}>인증코드 확인</button>
           </div>
-          <button onClick={completeVerification} className="find-password-next">
-            다음
-          </button>
+          <LoginPageButton onClick={completeVerification} className="find-password-next">
+            NEXT
+          </LoginPageButton>
         </div>
       </div>
     </>

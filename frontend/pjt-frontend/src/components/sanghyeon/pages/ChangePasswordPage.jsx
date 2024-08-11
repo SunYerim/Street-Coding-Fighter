@@ -4,7 +4,7 @@ import { useRef } from "react";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import Header from "../components/Header.jsx"
 const ChangePasswordPage = () => {
   const newPassword = useRef(null);
   const newPasswordCheck = useRef(null);
@@ -63,6 +63,7 @@ const ChangePasswordPage = () => {
   };
   return (
     <>
+    <Header />
       <div className="change-password-outer-container">
         <div className="change-password-title">비밀번호 변경</div>
         <div className="change-password-container">

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import store from "../../../store/store.js";
 import Swal from "sweetalert2";
 import LoginPageButton from "../../buttons/LoginPageButton.jsx";
+import Header from "../components/Header";
+
 const SignUpPage = () => {
   const { baseURL, registerInfo, setRegisterInfo } = store((state) => ({
     baseURL: state.baseURL,
@@ -108,8 +110,9 @@ const SignUpPage = () => {
 
   return (
     <>
+    <Header />
       <div className="signup-outer-container">
-        <h1 className="signup-title">SIGN UP</h1>
+        {/* <h1 className="signup-title">SIGN UP</h1> */}
         <form className="signup-container" onSubmit={signUp}>
           <div className="signup-userId">
             <input type="text" ref={userId} placeholder="아이디" required />

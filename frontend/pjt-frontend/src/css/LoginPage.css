@@ -3,7 +3,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .login-container {
@@ -51,7 +50,7 @@
 .login-title {
   font-family: "Galmuri11-Bold";
   font-size: 4.5rem;
-  margin: 40px;
+  margin-top: 50px;
   margin-bottom: 60px;
 }
 
