@@ -678,10 +678,12 @@ function UserRank(props) {
   const backgroundColor = props.isSubmit ? 'yellow' : '';
   const borderColor = props.userId === memberId ? 'pink' : 'white';
 
+  console.log("유저랭크의 memberId: " + memberId)
+
   return (
     <>
       {/* <div className="multi-rank-items"> */}
-      <div className="multi-rank-items" style={{ backgroundColor, border: `3px solid ${borderColor}` }}>
+      <div className="multi-rank-items" style={{ backgroundColor, border: `3px solid ${borderColor}`, borderRadius: '10px' }}>
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
@@ -699,6 +701,8 @@ function CurrentPlayer(props) {
 
   const backgroundColor = props.isSubmit ? 'yellow' : '';
   const borderColor = props.userId === memberId ? 'pink' : 'white';
+
+  console.log("현재플레이어의 memberId: " + memberId)
 
   return (
     <>
