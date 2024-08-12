@@ -4,13 +4,13 @@
   src: url("../fonts/Galmuri11-Bold.ttf");
 }
 
-.container {
+/* .container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 90vh;
   width: 100%;
-}
+} */
 
 .main-container {
   display: flex;
