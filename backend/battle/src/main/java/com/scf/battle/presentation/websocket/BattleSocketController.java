@@ -20,6 +20,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 @Controller
@@ -33,8 +34,13 @@ public class BattleSocketController {
     private final BattleSocketService battleSocketService;
 
     @MessageMapping("/game/{roomId}/join")
-    public void joinRoom(@DestinationVariable String roomId, JoinRoomSocketRequestDTO joinRoomSocketRequestDTO) {
+    public void joinRoom(@DestinationVariable String roomId, JoinRoomSocketRequestDTO joinRoomSocketRequestDTO, SimpMessageHeaderAccessor headerAccessor) {
         roomService.joinRoom(roomId, joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), joinRoomSocketRequestDTO.getRoomPassword());
+
+        // 사용자 세션에 roomId와 userId를 저장
+        headerAccessor.getSessionAttributes().put("roomId", roomId);
+        headerAccessor.getSessionAttributes().put("userId", joinRoomSocketRequestDTO.getUserId());
+
         Integer guestCharacterType = userService.getCharacterType(joinRoomSocketRequestDTO.getUserId()).getCharacterType();
         messagingTemplate.convertAndSend("/room/" + roomId, new JoinRoomSocketResponseDTO(
             joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), guestCharacterType)); // 입장한 사람의 정보를 방에 있는 사람한테 줌
