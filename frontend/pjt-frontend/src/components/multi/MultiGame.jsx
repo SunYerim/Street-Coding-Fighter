@@ -390,7 +390,7 @@ useEffect(() => {
 
   function Timer({ setTimerEnded }) {
     useEffect(() => {
-      if (count <= 1) {
+      if (count <= 0) {
         setTimerEnded(true);
         return;
       }
@@ -403,7 +403,7 @@ useEffect(() => {
     }, [count]);
   
     useEffect(() => {
-      if (timerEnded && !isSubmitRef.current) {
+      if (count === 0 && !isSubmitRef.current) {
         // 타이머가 끝났을 때 문제 제출 로직을 처리
         switch (problemList[round].problemType) {
           case "FILL_IN_THE_BLANK":
@@ -638,7 +638,7 @@ useEffect(() => {
             {!playing ? (
               <div className="before-start">
                 <h1>. . . Waiting for start . . .</h1>
-                {hostId == memberId ? (
+                {hostId == memberId && playerList.length >= 2 ? (
                   <button className="game-start-button" onClick={handleStart}>
                     Start
                   </button>
