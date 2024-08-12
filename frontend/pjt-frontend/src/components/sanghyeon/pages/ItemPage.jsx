@@ -71,6 +71,19 @@ const ItemPage = () => {
   };
 
   const purchaseCharacterTicket = async () => {
+    Swal.fire({
+      icon: "info",
+      title: "알쏭달쏭 캐릭터 티켓 구매",
+      text: "알쏭달쏭 캐릭터 티켓을 구매하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "구매",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+    });
+
     if (exp < 500) {
       Swal.fire({
         icon: "error",
@@ -106,6 +119,19 @@ const ItemPage = () => {
   };
 
   const purchaseClothesTicket = async () => {
+    Swal.fire({
+      icon: "info",
+      title: "알쏭달쏭 의상 티켓 구매",
+      text: "알쏭달쏭 의상 티켓을 구매하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "구매",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+    });
+
     if (exp < 500) {
       Swal.fire({
         icon: "error",
