@@ -282,6 +282,7 @@ public class MultiGameService {
         log.debug(sessionId);
 
         Player player = room.getPlayers().stream()
+            .filter(p -> p.getIsOnRoom().equals(true))
             .filter(p -> p.getSessionId().equals(sessionId))
             .toList()
             .getFirst();
@@ -296,9 +297,10 @@ public class MultiGameService {
         log.debug(sessionId);
 
         Player player = room.getPlayers().stream()
-            .filter(p -> p.getSessionId().equals(sessionId)).toList().getFirst();
-
-        room.updateScoreBoard(player.getUserId(), score);
+            .filter(p -> p.getIsOnRoom().equals(true))
+            .filter(p -> p.getSessionId().equals(sessionId))
+            .toList()
+            .getFirst();
 
         room.updateLeaderBoard(player.getUserId(), score);
     }
