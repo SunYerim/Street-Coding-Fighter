@@ -43,7 +43,7 @@ function ProfilePage() {
 
   const authClient = createAuthClient(
     baseURL,
-    () => accessToken,
+    () => {localStorage.getItem('accessToken')},
     setAccessToken
   );
 
