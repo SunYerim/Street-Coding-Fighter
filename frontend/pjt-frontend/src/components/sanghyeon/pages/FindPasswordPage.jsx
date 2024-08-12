@@ -109,7 +109,7 @@ const FindPasswordPage = () => {
           sx={{
             maxWidth: "500px",
             backgroundColor: "rgba(255, 255, 255, 0.5)", // 반투명 화이트 배경
-            backdropFilter: "blur(30px)", // 블러 효과 추가
+            backdropFilter: "blur(40px)", // 블러 효과 추가
             padding: 4, // 패딩 조정
             borderRadius: 10, // 둥근 모서리
             boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.2)", // 그림자 추가
