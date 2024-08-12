@@ -223,6 +223,14 @@ public class MultiGameRoom {
         for (Player player : players) {
             player.getSolveds().clear();
         }
+
+        // 게임 끝나고 isOnRoom false인 유저 제거
+        List<Player> filteredPlayers = this.players.stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .toList();
+
+        this.players.clear();
+        this.players.addAll(filteredPlayers);
     }
 
     public void addSubmitItem(Long userId) {
