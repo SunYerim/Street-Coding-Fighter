@@ -12,6 +12,8 @@ import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const ItemPage = () => {
+  const [rarity, setRarity] = useState("");
+
   const {
     baseURL,
     accessToken,
@@ -106,6 +108,7 @@ const ItemPage = () => {
       const nextCharacter =
         purchaseRes.data.characterType * 100 + (character % 100);
       setCharacter(nextCharacter);
+      setRarity(purchaseRes.data.rarity);
       setExp(exp - 500);
       openModal();
     } catch (error) {
@@ -154,6 +157,7 @@ const ItemPage = () => {
       const nextCharacter =
         character - (character % 100) + purchaseRes.data.characterClothType;
       setCharacter(nextCharacter);
+      setRarity(purchaseRes.data.rarity);
       setExp(exp - 500);
       openModal();
     } catch (error) {
@@ -201,7 +205,7 @@ const ItemPage = () => {
     );
   };
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -238,7 +242,9 @@ const ItemPage = () => {
             <div className={`item-modal-inner-container back`}>
               <div className="item-modal-inner-container-back">
                 <div className="item-modal-inner-rank-container-back">
-                  <div className="item-modal-inner-rank-back">Common</div>
+                  <div className="item-modal-inner-rank-back">
+                    {rarity ? rarity : null}
+                  </div>
                 </div>
                 <div className="item-modal-inner-img-container-back">
                   <img src={renderCharacter(character)} alt="character-image" />
@@ -314,7 +320,7 @@ const ItemPage = () => {
                 <div className="item-character-outer-container">
                   <div className="item-character-inner-container">
                     <div className="item-character-rank-container">
-                      <div className="item-character-rank">R</div>
+                      <div className="item-character-rank"></div>
                     </div>
                     <div className="item-character-img-container">
                       <img
