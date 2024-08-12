@@ -7,6 +7,7 @@ const MultiRanking = () => {
     gameRank: state.gameRank,
     roundRank: state.roundRank,
     playing: state.playing,
+    getScore: state.getScore,
   }));
 
   let userList = [];
@@ -116,7 +117,7 @@ const LeaderBoardFirst = styled.div`
   margin: 0 20px;
   background-color: #ffd700;
   width: 25%;
-  height: 50%;
+  height: 70%;
   border-radius: 10px;
   display: flex;
   align-items: flex-end;
@@ -133,7 +134,7 @@ const LeaderBoardSecond = styled.div`
   margin: 0 20px;
   background-color: #c0c0c0;
   width: 20%;
-  height: 40%;
+  height: 55%;
   border-radius: 10px;
   display: flex;
   align-items: flex-end;
@@ -150,7 +151,7 @@ const LeaderBoardThird = styled.div`
   margin: 0 20px;
   background-color: #cd7f32;
   width: 20%;
-  height: 30%;
+  height: 40%;
   border-radius: 10px;
   display: flex;
   align-items: flex-end;
