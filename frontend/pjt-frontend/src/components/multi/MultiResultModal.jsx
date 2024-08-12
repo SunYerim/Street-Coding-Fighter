@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import MultiRanking from "./MultiRanking.jsx";
 
 
-const MultiResultModal = ({userList}) => {
+const MultiResultModal = ({getScore}) => {
   
   const [modalOpen, setModalOpen] = useState(true);
   const modalOutsisde = useRef();
@@ -17,7 +17,7 @@ const MultiResultModal = ({userList}) => {
           }
         }}>
           <div className="result-modal-content">
-              <MultiRanking userList={userList} />
+              <MultiRanking getScore={getScore} />
           </div>
         </div>
       }
