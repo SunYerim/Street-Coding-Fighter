@@ -74,7 +74,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         SolvedMessage solvedMessage = getSolvedMessage(textMessage);
 
-        Solved solved = multiGameService.addSolved(roomId, session.getId(),
+        Solved solved = multiGameService.makeSolved(roomId, session.getId(),
             solvedMessage.getContent());
 
         int attainedScore = multiGameService.markSolution(roomId, solved); // 문제 채점
@@ -202,6 +202,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         multiGameService.processRound(roomId);
 
+        multiGameService.saveSolved(roomId);
+
         deliveryRoundRank(roomId);
 
         deliveryGameRank(roomId);
@@ -216,6 +218,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
                 multiGameService.finalizeGame(roomId);
             }
         }
+
+        multiGameService.finishRound(roomId);
     }
 
     private void deliveryGameRank(String roomId) throws Exception {

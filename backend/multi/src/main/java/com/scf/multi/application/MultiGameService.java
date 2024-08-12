@@ -134,7 +134,7 @@ public class MultiGameService {
         eventPublisher.publishEvent(new GameStartedEvent(roomId));
     }
 
-    public Solved addSolved(String roomId, String sessionId, Content content) {
+    public Solved makeSolved(String roomId, String sessionId, Content content) {
 
         MultiGameRoom room = findOneById(roomId);
 
@@ -149,7 +149,7 @@ public class MultiGameService {
             .solveText(content.getSolveText())
             .submitTime(content.getSubmitTime())
             .build();
-        player.addSolved(solved);
+        player.setSolveds(solved);
 
         return solved;
     }
@@ -257,13 +257,8 @@ public class MultiGameService {
 
         MultiGameRoom room = findOneById(roomId);
 
-        room.getPlayers().forEach(player ->
-            Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
-                solveds.forEach(kafkaMessageProducer::sendSolved)
-            )
-        );
-
-        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(room.getGameRank()).build());
+        List<Rank> gameRank = room.getGameRank().stream().toList();
+        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());
 
         room.finishGame();
     }
@@ -325,13 +320,59 @@ public class MultiGameService {
         return room.getSubmits();
     }
 
+    public void resetSubmits(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
+    }
+
+    public void validateRoomIsStart(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+        if (!room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.NOT_YET_START_GAME);
+        }
+    }
+
+    public void processRound(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.nextRound();
+        room.getCurSubmitCount().set(0);
+    }
+
+    public void saveSolved(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .forEach(player ->
+                Optional.ofNullable(player.getSolveds()).ifPresent(kafkaMessageProducer::sendSolved)
+            );
+    }
+
+    public void finishRound(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().forEach(player -> player.setSolveds(null));
+    }
+
     private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
+
+        List<Player> playersIsOnRoom = room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .toList();
+
         return RoomResponse.ListDTO.builder()
             .roomId(room.getRoomId())
             .title(room.getTitle())
             .hostname(room.getHostname())
             .maxPlayer(room.getMaxPlayer())
-            .curPlayer(room.getPlayers().size())
+            .curPlayer(playersIsOnRoom.size())
             .isLock(room.getPassword() != null)
             .isStart(room.getIsStart())
             .gameRound(room.getPlayRound())
@@ -470,28 +511,5 @@ public class MultiGameService {
         }
 
         return BASE_SCORE * (MAX_SUBMIT_TIME - submitTime) + (streakCount * STREAK_BONUS);
-    }
-
-    public void resetSubmits(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
-    }
-
-    public void validateRoomIsStart(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-        if (!room.getIsStart()) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.NOT_YET_START_GAME);
-        }
-    }
-
-    public void processRound(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.nextRound();
-        room.getCurSubmitCount().set(0);
     }
 }
