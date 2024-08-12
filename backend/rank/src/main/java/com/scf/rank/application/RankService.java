@@ -29,10 +29,6 @@ public class RankService {
     private final RedisTemplate<String, UserExp> redisTemplate;
     private static final String KEY_PREFIX = "rank:";
 
-    private ZSetOperations<String, UserExp> zSetOps() {
-        return redisTemplate.opsForZSet();
-    }
-
     public List<UserExp> getAllTimeRankings() {
         return getRankings(RedisRankType.ALL_TIME.key);
     }
@@ -56,6 +52,21 @@ public class RankService {
 
     @Transactional
     public void updateRank(UserExp userExp, String key) {
+
+        // 기존 점수를 가져옵니다.
+        UserExp updatedExp = (UserExp) redisTemplate.opsForHash().get(key, userExp.getUserId());
+
+        if (updatedExp != null) {
+
+            // 기존 점수가 있는 경우, exp를 더합니다.
+            updatedExp.addExp(userExp.getExp());
+
+            // 사용자 데이터를 Redis에 저장합니다.
+            redisTemplate.opsForHash().put(key, userExp.getUserId(), updatedExp);
+
+            return;
+        }
+
         redisTemplate.opsForHash().put(key, userExp.getUserId(), userExp);
     }
 

@@ -24,8 +24,7 @@ public class UserExp implements Serializable {
     private String name;
     private int exp;
 
-    @Override
-    public String toString() {
-        return "UserExp [userId=" + userId + ", name=" + name + ", exp=" + exp + "]";
+    public void addExp(int exp) {
+        this.exp += exp;
     }
 }
