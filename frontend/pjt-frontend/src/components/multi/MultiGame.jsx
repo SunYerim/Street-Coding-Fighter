@@ -254,7 +254,6 @@ useEffect(() => {
             setTimeout(() => {
               // setCurrentRound(cnt + 1);
               // setRound((prevVal) => prevVal + 1);
-              renderProblem();
               setCount(30);
               setTimerEnded(false);
               setModalOpen(false);
@@ -364,7 +363,7 @@ useEffect(() => {
   };
 
 
-  const renderProblem = () => {
+  const renderProblem = (round) => {
     return problemList[round] ? (
       <>
         {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
@@ -652,7 +651,7 @@ useEffect(() => {
                     <h2>Submitted!</h2>
                   </div>
                 ) : (
-                  <div>{problemList.length > 0 && renderProblem()}</div>
+                  <div>{problemList.length > 0 && renderProblem(round)}</div>
                 )}
               </div>
             )}
