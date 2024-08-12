@@ -8,7 +8,7 @@ function MainSelectModeBox(props) {
   const selectMode = (mode) => {
     if (mode === "스토리모드") {
       navigate("/single-main");
-    } else if (mode === "멀티플레이") {
+    } else if (mode === "멀티 모드") {
       navigate("/multi");
     } else if (mode === "배틀 모드") {
       navigate("/battle-list");
@@ -19,6 +19,7 @@ function MainSelectModeBox(props) {
   };
   const styles = {
     selectBox: {
+      cursor: 'pointer',
       
       backgroundColor: isHovered ? '#6a1b9a' : '#3f51b5', // 단색 배경으로 변경
       border: isHovered ? '2px solid #FFD700' : '2px solid transparent',
