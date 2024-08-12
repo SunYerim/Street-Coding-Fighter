@@ -99,6 +99,9 @@ const store = create(
       baseURL: "https://www.ssafy11s.com",
       // baseURL: "http://localhost:8080",
 
+      authClient : "",
+      setAuthClient: (authClient) => set({ authClient }),
+
       wsBattle: "ws-battle",
       wsChat: "ws-chat",
 
@@ -120,8 +123,11 @@ const store = create(
       birth: "",
       setBirth: (birth) => set({ birth }),
 
-      accessToken: localStorage.getItem("accessToken"),
-      setAccessToken: (accessToken) => set({ accessToken }),
+      accessToken: "",
+      setAccessToken: (accessToken) => {
+        set({ accessToken })
+        localStorage.setItem("accessToken", accessToken);
+      },
 
       exp: "",
       setExp: (exp) => set({ exp }),
@@ -143,7 +149,7 @@ const store = create(
       code: "",
       setCode: (code) => set({ code }),
 
-      character: "",
+      character: "1203",
       setCharacter: (character) => set({ character }),
 
       roomId: "",

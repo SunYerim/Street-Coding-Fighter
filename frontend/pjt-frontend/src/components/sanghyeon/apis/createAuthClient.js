@@ -49,7 +49,7 @@ const createAuthClient = (baseURL, getAccessToken, setAccessToken) => {
 
   authClient.interceptors.request.use(async (config) => {
     let accessToken = getAccessToken();
-
+    
     if (accessToken) {
       const { exp } = jwtDecode(accessToken);
       if (Date.now() >= exp * 1000) {

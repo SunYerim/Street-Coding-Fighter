@@ -23,6 +23,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const LoginPage = () => {
   const {
@@ -36,6 +37,7 @@ const LoginPage = () => {
     setSchoolName,
     setBirth,
     setRefreshToken,
+    setAuthClient,
   } = store((state) => ({
     accessToken: state.accessToken,
     setAccessToken: state.setAccessToken,
@@ -47,6 +49,7 @@ const LoginPage = () => {
     setSchoolName: state.setSchoolName,
     setBirth: state.setBirth,
     setRefreshToken: state.setRefreshToken,
+    setAuthClient : state.setAuthClient
   }));
   const userId = useRef(null);
   const password = useRef(null);
@@ -69,9 +72,7 @@ const LoginPage = () => {
       const accessToken = authorizationHeader
         ? authorizationHeader.replace(/^Bearer\s+/i, "")
         : null;
-
       const memberId = res.data["memberId"];
-
       setAccessToken(accessToken);
       setMemberId(memberId);
       setUserId(userId.current.value);
