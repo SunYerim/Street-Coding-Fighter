@@ -4,7 +4,7 @@ spring:
 
 logging:
   level:
-    root: DEBUG
+    com.scf.multi: DEBUG
 
 problem:
   server:
