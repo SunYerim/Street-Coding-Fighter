@@ -89,7 +89,7 @@ function App() {
             path="/ranking"
             element={accessToken ? <Ranking /> : <LoginPage />}
           /> */}
-          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/ran" element={<Ranking />} />
           <Route path="/main" element={<MainPage />} />
           {/* <Route path="/main" element={accessToken ? <MainPage /> : <LoginPage />} /> */}
           <Route
