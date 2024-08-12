@@ -7,6 +7,10 @@ import store from "../../../store/store.js";
 import pixelTicket from "/pixel-ticket.jpg";
 import renderCharacter from "../apis/renderCharacter.js";
 
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
+
 const ItemPage = () => {
   const {
     baseURL,
@@ -46,8 +50,8 @@ const ItemPage = () => {
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * 45;
-    const rotateY = ((centerX - x) / centerX) * 45;
+    const rotateX = ((centerY - y) / centerY) * 45;
+    const rotateY = ((x - centerX) / centerX) * 45;
 
     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
@@ -63,6 +67,10 @@ const ItemPage = () => {
     overlay.style.backgroundPosition = `100% 100%`; // 애니메이션과 함께 되돌리기
   };
 
+  const purchase = () => {
+    openModal();
+  };
+
   const purchaseCharacterTicket = async () => {
     if (exp < 500) {
       Swal.fire({
@@ -71,6 +79,7 @@ const ItemPage = () => {
         text: "포인트가 부족합니다.",
         timer: 3000,
       });
+      return;
     }
 
     try {
@@ -104,6 +113,7 @@ const ItemPage = () => {
         text: "포인트가 부족합니다.",
         timer: 3000,
       });
+      return;
     }
 
     try {
@@ -138,7 +148,8 @@ const ItemPage = () => {
         "사용하면 프로필의 캐릭터를 10가지 캐릭터와 일부 특별한 캐릭터 중 임의로 바꿔 주는 아이템입니다. 아이템을 사용하는 순간 프로필의 캐릭터가 바뀌며 영구적으로 적용되고, 현재 캐릭터는 사라집니다.",
       imgSrc: pixelTicket,
       buttonText: "구매 (500 P)",
-      onClick: () => purchaseCharacterTicket(), // 여기에 클릭 핸들러 추가
+      // onClick: () => purchaseCharacterTicket(),
+      onClick: () => purchase(),
     },
     {
       title: "알쏭달쏭 의상 티켓",
@@ -146,7 +157,8 @@ const ItemPage = () => {
         "사용하면 프로필의 캐릭터의 의상을 10가지 의상과 일부 특별한 의상 중 임의로 바꿔 주는 아이템입니다. 아이템을 사용하는 순간 프로필의 캐릭터의 의상이 바뀌며 영구적으로 적용되고, 현재 의상은 사라집니다.",
       imgSrc: pixelTicket,
       buttonText: "구매 (500 P)",
-      onClick: () => purchaseClothesTicket(), // 여기에 클릭 핸들러 추가
+      // onClick: () => purchaseClothesTicket(),
+      onClick: () => purchase(),
     },
   ];
 
@@ -160,10 +172,51 @@ const ItemPage = () => {
     );
   };
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   return (
     <>
       <div className="item-outer-outer-container">
         <Header />
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Item Purchase Modal"
+          className="item-purchase-modal"
+          overlayClassName="item-purchase-modal-overlay"
+        >
+          <>
+            <div
+              className="item-right-container"
+              ref={cardRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="item-character-overlay" ref={overlayRef}></div>
+              <div className="item-character-outer-container">
+                <div className="item-character-inner-container">
+                  <div className="item-character-rank-container">
+                    <div className="item-character-rank">R</div>
+                  </div>
+                  <div className="item-character-img-container">
+                    <img src={renderCharacter(101)} alt="my-character" />
+                  </div>
+                  <div className="item-character-name-container">
+                    <div className="item-character-name">The Slime.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        </Modal>
         <div className="item-outer-container">
           <div className="item-container">
             <div className="item-inner-container">
@@ -231,10 +284,7 @@ const ItemPage = () => {
                       <div className="item-character-rank">R</div>
                     </div>
                     <div className="item-character-img-container">
-                      <img
-                        src={renderCharacter(character)}
-                        alt="my-character"
-                      />
+                      <img src={renderCharacter(101)} alt="my-character" />
                     </div>
                     <div className="item-character-name-container">
                       <div className="item-character-name">The Slime.</div>
