@@ -234,7 +234,7 @@ export default function SinglePlay() {
     } else {
       console.log('비정상적인 나가기 또는 이미 학습한 컨텐츠임');
     }
-    navigate('/single-main');
+    navigate('/story-main');
   };
 
   const currentDialogue = dialogueList[page] || {};

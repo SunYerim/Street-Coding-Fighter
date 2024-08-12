@@ -33,7 +33,7 @@ export default function EpisodeList({ rownum }) {
     if (id <= nextIndex+1) {
       // console.log(id);
       playEffectSound('clickSound');
-      navigate(`/single-play/${id}`);
+      navigate(`/story-play/${id}`);
     } else {
       // alert("이전 에피소드를 먼저 클리어해주세요.");
     }
