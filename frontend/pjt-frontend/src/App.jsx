@@ -43,6 +43,7 @@ function App() {
     //초기 화면 렌더링 시 accessToken 불러오기
     if(!accessToken){
       setAccessToken(localStorage.getItem("accessToken"))
+      console.log('새로고침 후 토큰 불러오기...!')
     }
 
 
