@@ -232,6 +232,13 @@ public class MultiGameRoom {
 
     public void addSubmitItem(Long userId) {
 
+        boolean alreadyHasSubmitItem = submits.stream()
+            .anyMatch(player -> player.getUserId().equals(userId)); // 이미 Player가 submitItem을 가지는지 확인
+
+        if (alreadyHasSubmitItem) { // 이미 submitItem을 가지고 있으면 추가하지 않음
+            return;
+        }
+
         this.submits.add(SubmitItem.builder().userId(userId).isSubmit(false).build());
     }
 
