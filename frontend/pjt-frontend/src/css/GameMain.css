@@ -4,20 +4,20 @@
   src: url("../fonts/Galmuri11-Bold.ttf");
 }
 
-.container {
+/* .container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 90vh;
   width: 100%;
-}
+} */
 
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(0, 0, 50, 0.7);
-  border-radius: 20px;
+  /* background-color: rgba(0, 0, 50, 0.7);
+  border-radius: 20px; */
   height: 80vh;
   width: 80vw;
   margin: 0;
@@ -136,7 +136,7 @@
 
 .room-items {
   display: grid;
-  grid-template-columns: 1fr 4fr 2fr 2fr 2fr 2fr;
+  grid-template-columns: 2fr 4fr 3fr 2fr 2fr 1fr;
   justify-items: center;
   align-items: center;
   width: 99%;
@@ -161,7 +161,7 @@
 .room-items img {
   justify-self: start;
   padding-right: 25px;
-  max-width: 80%;
+  max-width: 50%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -213,7 +213,6 @@
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 1px;
-  cursor: pointer;
 }
 
 
@@ -228,7 +227,6 @@
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 1px;
-  cursor: pointer;
   margin-bottom: 30px;
 }
 
@@ -243,6 +241,5 @@
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 1px;
-  cursor: pointer;
   margin-bottom: 30px;
 }

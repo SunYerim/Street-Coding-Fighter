@@ -66,19 +66,19 @@ function MainPage() {
   const { playEffectSound } = SoundStore();
 
   const modeDetails = {
-    "1 vs 1": {
-      description: "1 대 1 대결 모드입니다.\n 서로의 실력을 겨뤄보세요.",
-      imageUrl: "/characters/movingFireSlime.gif",
-    },
-    멀티플레이: {
-      description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
-      imageUrl: "/characters/movingGreenSlime.gif",
-    },
-    스토리모드: {
+    "스토리모드": {
       description: "혼자서 학습할 수 있는 스토리모드 입니다.",
       imageUrl: "/characters/movingIceSlime.gif",
     },
-    랭킹: {
+    "멀티플레이": {
+      description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
+      imageUrl: "/characters/movingGreenSlime.gif",
+    },
+    "배틀 모드": {
+      description: "1 대 1 대결 모드입니다.\n 서로의 실력을 겨뤄보세요.",
+      imageUrl: "/characters/movingFireSlime.gif",
+    },
+    "랭킹": {
       description:
         "순위를 겨루는 랭킹 모드입니다. \n 높은 점수를 기록해보세요.",
       imageUrl: "/characters/movingThunderSlime.gif",
@@ -170,6 +170,9 @@ const styles = {
     fontSize: "1.7rem",
     whiteSpace: "pre-wrap",
     textAlign: "center",
+    borderTopRightRadius: '30px',
+    borderBottomRightRadius: '30px',
+
   },
   image: {
     marginTop: "10px",

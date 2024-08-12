@@ -33,18 +33,28 @@ import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx"
 function App() {
   const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
-  const { accessToken } = store((state) => ({
-    accessToken: state.accessToken,
-  }));
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
-
+  const { accessToken, setAccessToken } = store((state) => ({
+    accessToken: state.accessToken,
+    setAccessToken : state.setAccessToken,
+  }));
+  
   useEffect(() => {
+    //초기 화면 렌더링 시 accessToken 불러오기
+    if(!accessToken){
+      setAccessToken(localStorage.getItem("accessToken"))
+      console.log('새로고침 후 토큰 불러오기...!')
+    }
+
+
+
     // 배경음악 초기화 및 재생
     setTimeout(() => {
       setIsLoading(false);
       console.log("loading end");
       playBackgroundMusic();
     }, 2000);
+    
     // 시간에 따라 배경화면 변화    const updateBackgroundImage = () => {
     const now = new Date();
     const minutes = now.getMinutes();

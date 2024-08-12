@@ -35,7 +35,6 @@ export const ModalHeader = styled.div`
   button {
     background: none;
     border: none;
-    cursor: pointer;
   }
 `;
 
@@ -61,7 +60,6 @@ export const ModalFooter = styled.div`
     background: #007bff;
     color: white;
     border-radius: 4px;
-    cursor: pointer;
   }
 `;
 

@@ -3,19 +3,59 @@ import "../../../css/ReportPage.css";
 import axios from "axios";
 import store from "../../../store/store.js";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import renderCharacter from "../apis/renderCharacter.js";
 import createAuthClient from "../apis/createAuthClient.js";
 
 const ReportPage = () => {
   const navigate = useNavigate();
+  const [reportInfo, setReportInfo] = useState(null);
+
+  const { baseURL, character, name, accessToken, setAccessToken } = store(
+    (state) => ({
+      baseURL: state.baseURL,
+      character: state.character,
+      name: state.name,
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+    })
+  );
+
+  const authClient = createAuthClient(
+    baseURL,
+    () => accessToken,
+    setAccessToken
+  );
+
+  useEffect(() => {
+    const getReportDetail = async () => {
+      try {
+        const reportDetailRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/reportdetail`,
+        });
+
+        setReportInfo(reportDetailRes.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getReportDetail();
+  }, []);
 
   const getReport = async () => {
     try {
+      Swal.fire({
+        text: "리포트 다운로드 중...",
+        icon: "info",
+        showConfirmButton: false,
+      });
       const reportRes = await axios({
-        method: "GET",
+        method: "POST",
         url: "https://www.ssafy11th-songsam.site/bots/",
+        data: { name: name, ...reportInfo },
         responseType: "blob",
       });
       const file = new Blob([reportRes.data], { type: "application/pdf" });
@@ -40,12 +80,6 @@ const ReportPage = () => {
     }
   };
 
-  const { baseURL, character, name } = store((state) => ({
-    baseURL: state.baseURL,
-    character: state.character,
-    name: state.name,
-  }));
-
   return (
     <>
       <div className="report-entire-container">
@@ -55,12 +89,11 @@ const ReportPage = () => {
             <div className="report-upper-container">
               <div className="report-profile-container">
                 <img
-                  src={renderCharacter(101)}
-                  // src={renderCharacter(character)}
+                  src={renderCharacter(character)}
                   alt="profile-character"
                   className="report-profile-character"
                 />
-                <div className="report-profile-name">Falcon</div>
+                <div className="report-profile-name">{name}</div>
               </div>
               <div className="report-upper-title-container">
                 <div className="report-upper-title-inner-container">
@@ -72,10 +105,18 @@ const ReportPage = () => {
                 </div>
                 <div className="report-upper-title-button-container">
                   <button className="report-upper-title-button">
-                    시도한 문제 수: 25 개
+                    시도한 문제 수:{" "}
+                    {reportInfo && reportInfo.solvedCount
+                      ? reportInfo.solvedCount
+                      : 0}{" "}
+                    개
                   </button>
                   <button className="report-upper-title-button">
-                    시도한 문제 수: 26 개
+                    평균 순위:{" "}
+                    {reportInfo && reportInfo.averageRank
+                      ? reportInfo.averageRank
+                      : 0}{" "}
+                    위
                   </button>
                   <button
                     onClick={() => getReport()}

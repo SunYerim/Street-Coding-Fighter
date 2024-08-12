@@ -36,7 +36,6 @@
   color: white;
   font-weight: bold;
   font-size: 1.5rem;
-  cursor: pointer;
   margin-top: 20px;
 
 }
@@ -61,7 +60,6 @@
 
 .find-password {
   margin: 20px;
-  cursor: pointer;
   position: relative;
   display: inline-block;
 }

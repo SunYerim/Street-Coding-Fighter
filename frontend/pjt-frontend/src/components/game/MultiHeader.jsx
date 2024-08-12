@@ -23,9 +23,9 @@ const MultiHeader = () => {
 
   return (
     <>
-      <div className="header-container">
+      <div className="multi-header-container">
         <div
-          className="header-title"
+          className="multi-header-title"
           onClick={() => {
             navigate('/');
           }}
@@ -33,14 +33,14 @@ const MultiHeader = () => {
           Street Coding Figther
         </div>
       </div>
-        <div className="header-back-button"  onClick={() => {
+        <div className="multi-header-back-button"  onClick={() => {
             navigate("/main");
           }}
         >
           <MdOutlineKeyboardBackspace />
         </div>
-        <div className='header-right'>
-          <div className="header-icon">
+        <div className='multi-header-right'>
+          <div className="multi-header-icon">
             <img
               onClick={() => {
                 navigate('/profile');

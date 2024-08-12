@@ -25,7 +25,6 @@ const CheckPoint = styled.div`
   align-items: center;
   border-radius: 10%;
   transition: background-color 0.3s;
-  cursor: pointer;
   background-color: ${(props) => (props.$completed ? '#02285A' : 'gray')};
   border: ${(props) => (props.$isNext ? '2px solid white' : null)};
   &:hover {

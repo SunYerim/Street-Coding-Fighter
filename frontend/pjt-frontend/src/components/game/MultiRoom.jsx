@@ -63,6 +63,37 @@ function MultiRoom(props) {
     setIsModalOpen(false);
   };
 
+  const handleOpenSubmit = async () => {
+    try {
+      const response = await axios.post(
+        `${baseURL}/multi/room/${props.roomId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'text/plain',
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        setRoomId(props.roomId);
+        console.log('props.roomId', props.roomId);
+        console.log('state.roomId', roomId);
+        
+        navigate(`/multi-game/${props.roomId}`);
+      } else {  
+        alert('Enterance error');
+      }
+    } catch (error) {
+      console.error('Error entering the room:', error);
+      // 실패 모달창
+      setErrorMessage("잘못된 접근입니다!"); 
+      openModal();
+    }
+    handleCloseModal();
+  };
+
   const handleSubmit = async (password) => {
     try {
       const response = await axios.post(
@@ -80,6 +111,7 @@ function MultiRoom(props) {
         setRoomId(props.roomId);
         console.log('props.roomId', props.roomId);
         console.log('state.roomId', roomId);
+        
         navigate(`/multi-game/${props.roomId}`);
       } else {  
         alert('Incorrect password');
@@ -100,7 +132,8 @@ function MultiRoom(props) {
       handleOpenModal();
     } else {
       setRoomId(props.roomId);
-      navigate(`/multi-game/${props.roomId}`);
+      handleOpenSubmit();
+      // navigate(`/multi-game/${props.roomId}`);
     }
   };
 

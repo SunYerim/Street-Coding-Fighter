@@ -10,7 +10,7 @@ function MainSelectModeBox(props) {
       navigate("/single-main");
     } else if (mode === "멀티플레이") {
       navigate("/multi");
-    } else if (mode === "1 vs 1") {
+    } else if (mode === "배틀 모드") {
       navigate("/battle-list");
     } else if (mode === "랭킹") {
       navigate("/ranking");
@@ -19,7 +19,6 @@ function MainSelectModeBox(props) {
   };
   const styles = {
     selectBox: {
-      cursor: 'pointer',
       
       backgroundColor: isHovered ? '#6a1b9a' : '#3f51b5', // 단색 배경으로 변경
       border: isHovered ? '2px solid #FFD700' : '2px solid transparent',
