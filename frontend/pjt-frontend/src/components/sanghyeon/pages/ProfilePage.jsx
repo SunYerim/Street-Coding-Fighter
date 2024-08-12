@@ -28,7 +28,7 @@ function ProfilePage() {
     setBirth,
     setCharacter,
     setExp,
-    authClient,
+    // authClient,
   } = store((state) => ({
     name: state.name,
     schoolName: state.schoolName,
@@ -40,15 +40,15 @@ function ProfilePage() {
     setBirth: state.setBirth,
     setCharacter: state.setCharacter,
     setExp: state.setExp,
-    authClient : state.authClient,
+    //authClient : state.authClient,
 
   }));
 
-  // const authClient = createAuthClient(
-  //   baseURL,
-  //   () => {localStorage.getItem('accessToken')},
-  //   setAccessToken
-  // );
+  const authClient = createAuthClient(
+    baseURL,
+    () => {localStorage.getItem('accessToken')},
+    setAccessToken
+  );
 
   useEffect(() => {
     const getProfile = async () => {
