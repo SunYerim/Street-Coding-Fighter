@@ -38,7 +38,7 @@ export default function SingleMain() {
   return (
     <>
       <Header />
-      <div id="container">
+      <div style={styles.container}>
         <TitleDiv>
           <h1>Story Mode</h1>
         </TitleDiv>
