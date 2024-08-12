@@ -718,10 +718,12 @@ const BattleGamePage = () => {
                       </div>
                       <hr />
                       <div className="">
-                        {data.item ? <>아이템: {data.item.name}</> : null}
+                        {data && data.item && data.item.name ? (
+                          <>아이템: {data.item.name}</>
+                        ) : null}
                       </div>
                       <div>
-                        {data.item.rarity ? (
+                        {data && data.item && data.item.rarity ? (
                           <>등급: {data.item.rarity}</>
                         ) : null}
                       </div>
