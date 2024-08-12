@@ -224,8 +224,9 @@ const BattleGamePage = () => {
 
   const subscribeEnemyProblem = () => {
     const endpoint = `/room/${roomId}/RoundChoiceProblem`;
-    battleStompClient.current.subscribe(endpoint, (message) => {
+    battleStompClient.current.subscribe(endpoint, async (message) => {
       const body = JSON.parse(message.body);
+      await delay(3000);
       setItem1(false);
       setItem2(false);
       setItem3(false);
