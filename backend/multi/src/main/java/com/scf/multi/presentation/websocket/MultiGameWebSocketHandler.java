@@ -120,14 +120,17 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         log.debug("sessionRooms.get({}).size() = {}", roomId, sessionRooms.get(roomId).size());
 
         // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
-        executorService.submit(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                throw new RuntimeException();
-            }
-            checkAndDeleteRoom(roomId);
-        });
+        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
+        if (roomSessions == null || roomSessions.isEmpty()) {
+            executorService.submit(() -> {
+                try {
+                    TimeUnit.SECONDS.sleep(3); // 3초간 재접속을 기다림
+                } catch (InterruptedException e) {
+                    throw new RuntimeException();
+                }
+                checkAndDeleteRoom(roomId); // 3초 후 연결 상태를 확인하고, 연결된 세션이 없으면 방 제거
+            });
+        }
     }
 
     @Override
