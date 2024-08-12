@@ -161,7 +161,7 @@
 .room-items img {
   justify-self: start;
   padding-right: 25px;
-  max-width: 80%;
+  max-width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
