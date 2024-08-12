@@ -36,7 +36,6 @@ const styles = {
     backgroundColor: "#007bff",
     border: "none",
     borderRadius: "5px",
-    cursor: "pointer",
     // marginTop: '20px',
     marginLeft: "20px",
   },

@@ -452,7 +452,6 @@ const styles = {
     backgroundColor: 'yellow',
     borderRadius: '5px',
     padding: '10px',
-    cursor: 'pointer',
   },
   modalHeader: {
     display: 'flex',
@@ -466,7 +465,6 @@ const styles = {
     top: '5px',
     right: '5px',
     fontSize: '30px',
-    cursor: 'pointer',
   },
   modalContent: {
     textAlign: 'center',
@@ -478,7 +476,6 @@ const styles = {
     gap: '10px',
     padding: '10px',
     border: 'none',
-    // cursor: 'pointer',
   },
   completeButton: {
     padding: '10px 20px',
@@ -486,7 +483,6 @@ const styles = {
     color: '#233551',
     border: 'none',
     borderRadius: '5px',
-    cursor: 'pointer',
   },
   cancelButton: {
     padding: '10px 20px',
@@ -494,7 +490,6 @@ const styles = {
     color: '#233551',
     border: 'none',
     borderRadius: '5px',
-    cursor: 'pointer',
   },
   modal: {
     content: {

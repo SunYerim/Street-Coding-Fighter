@@ -19,7 +19,6 @@ const Choice = ({ choice }) => {
       margin: "0 5px",
       backgroundColor: isDragging ? "gray" : "black",
       color: "white",
-      cursor: "move",
       opacity: isDragging ? 0.5 : 1,
       transition: "opacity 0.3s ease",
     },

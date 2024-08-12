@@ -152,7 +152,6 @@
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 2px;
-  cursor: pointer;
 }
 
 .battle-game-left-cam {
@@ -260,7 +259,6 @@
   border: none;
   border-radius: 5px;
   color: black;
-  cursor: pointer;
 }
 
 .battle-game-history-container {
@@ -343,7 +341,6 @@
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 2px;
-  cursor: pointer;
 }
 
 .battle-game-select-problem-modal {
@@ -390,7 +387,6 @@
   align-items: center;
   border: 2px solid black;
   border-radius: 5px;
-  cursor: pointer;
   width: 25%;
   margin: 20px;
 }
@@ -435,7 +431,6 @@
   font-size: 1.2rem;
   font-weight: 600;
   letter-spacing: 2px;
-  cursor: pointer;
   border: none;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
