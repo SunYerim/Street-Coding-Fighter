@@ -563,7 +563,7 @@ useEffect(() => {
   });
   
 
-  console.log(mergedList);
+  console.log("mergedList", mergedList);
 
   return (
     <>
@@ -590,7 +590,7 @@ useEffect(() => {
                 );
               })
             ) : (
-              playerList.map((user, i) => {
+              mergedList.map((user, i) => {
                 return (
                   <CurrentPlayer
                     username={user.username}
@@ -697,11 +697,12 @@ function CurrentPlayer(props) {
     memberId: state.memberId,
   }));
 
+  const backgroundColor = props.isSubmit ? 'yellow' : '';
   const borderColor = props.userId === memberId ? 'pink' : 'white';
 
   return (
     <>
-      <div className="multi-current-player" style={{ border: `3px solid ${borderColor}` }}>
+      <div className="multi-current-player" style={{ backgroundColor, border: `3px solid ${borderColor}` }}>
         <h3>{props.username}</h3>
       </div>
     </>
