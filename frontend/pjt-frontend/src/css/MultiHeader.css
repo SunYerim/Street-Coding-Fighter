@@ -1,4 +1,4 @@
-.header-container {
+.multi-header-container {
   padding: 0px 20px;
   padding-top: 20px;
   display : flex;
@@ -7,7 +7,7 @@
   flex-direction: column;
 }
 
-.header-title {
+.multi-header-title {
   font-size: 2.2rem;
   font-weight: bold;
   cursor: pointer;
@@ -15,7 +15,7 @@
   text-shadow: #1B1A55 1px 1px, #1B1A55 -1px 0px, #1B1A55 1px 0px,#1B1A55 0px 1px,#1B1A55 0px -1px,#1B1A55 -0px 0px, #1B1A55 -1px 1px, #1B1A55 -2px 2px, #1B1A55 -3px 3px, #1B1A55 -4px 4px, #1B1A55 -5px 5px, #1B1A55 -6px 6px, #1B1A55 -7px 7px, #1B1A55 -8px 8px, #1B1A55 -9px 9px;
 }
 
-.header-icon {
+.multi-header-icon {
   display: flex;
 }
 
@@ -27,7 +27,7 @@
   margin: 0 10px;
 }
 
-.header-back-button {
+.multi-header-back-button {
   position:fixed;
   left : 30px;
   top : 30px;
@@ -40,7 +40,7 @@
   border-radius : 5px;
   font-size : 2rem;
 }
-.header-right{
+.multi-header-right{
   position:fixed;
   right : 30px;
   top : 30px;

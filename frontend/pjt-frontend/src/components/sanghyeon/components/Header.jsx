@@ -13,7 +13,6 @@ const Header = ({ type = "default" }) => {
   const settingIcon = "/settingIcon.png";
   const giftIcon = "/giftIcon.png";
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const backPaths = {
     "/record": "/profile",
     "/report": "/profile",

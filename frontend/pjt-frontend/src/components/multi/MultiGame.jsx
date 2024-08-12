@@ -1,6 +1,7 @@
   import "../../index.css";
   import "../../css/GameMain.css";
   import "../../css/MultiGame.css";
+  import '../../css/Container.css';
   import "../../css/Timer.css";
   import MultiHeader from "../game/MultiHeader.jsx"
   import InputField from "../game/InputField.jsx";
@@ -546,7 +547,8 @@ import SoundStore from "../../stores/SoundStore.jsx";
     return (
       <>
         <MultiHeader />
-        <div className="container">
+        {/* <div className="container"> */}
+        <div id="container">
           <div className="multi-game-main">
             <div className="multi-game-left">
               <div className="multi-timer">
