@@ -2,7 +2,6 @@ import "../../index.css";
 import "../../css/GameMain.css";
 import "../../css/MultiGame.css";
 import '../../css/Container.css';
-import "../../css/Timer.css";
 import MultiHeader from "../game/MultiHeader.jsx"
 import InputField from "../game/InputField.jsx";
 import MessageContainer from "../game/MessageContainer.jsx";
