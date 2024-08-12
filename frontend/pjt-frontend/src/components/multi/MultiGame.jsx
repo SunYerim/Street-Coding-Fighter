@@ -586,6 +586,8 @@ useEffect(() => {
                     username={user.username}
                     score={user.score}
                     key={i}
+                    backgroundColor={user.isSubmit ? 'yellow' : ''}
+                    borderColor={user.userId === memberId ? 'pink' : 'white'}
                   />
                 );
               })
@@ -595,22 +597,12 @@ useEffect(() => {
                   <CurrentPlayer
                     username={user.username}
                     key={i}
+                    backgroundColor={user.isSubmit ? 'yellow' : ''}
+                    borderColor={user.userId === memberId ? 'pink' : 'white'}
                   />
                 );
               })
             )}
-              {/* {mergedList.map((user, i) => {
-                return (
-                  <UserRank
-                    rank={user.rank}
-                    username={user.username}
-                    score={user.score}
-                    isSubmit={user.isSubmit}
-                    key={i}
-                  />
-                );
-              })} */}
-
             </div>
           </div>
           <div className="multi-game-center">
@@ -669,27 +661,14 @@ useEffect(() => {
 }
 
 function UserRank(props) {  
-  // 유저정보 받아오기
-  const { memberId } =
-  store((state) => ({
-    memberId: state.memberId,
-  }));
-
-  const backgroundColor = props.isSubmit ? 'yellow' : '';
-  const borderColor = props.userId == memberId ? 'pink' : 'white';
-
-  console.log("유저랭크의 memberId: " + memberId)
-  console.log("props.userId: " + props.userId)
-  console.log("props" + props)
-
   return (
     <>
       {/* <div className="multi-rank-items"> */}
       <div 
-        className="multi-current-player" 
+        className="multi-rank-items" 
         style={{ 
-          backgroundColor: props.isSubmit ? 'yellow' : '', 
-          border: `3px solid ${props.userId == memberId ? 'pink' : 'white'}`, 
+          backgroundColor: props.backgroundColor, 
+          border: `3px solid ${props.borderColor}`, 
           borderRadius: '10px' 
         }}
       >
@@ -702,28 +681,13 @@ function UserRank(props) {
 }
 
 function CurrentPlayer(props) {  
-  // 유저정보 받아오기
-  const { memberId } =
-  store((state) => ({
-    memberId: state.memberId,
-  }));
-
-  const backgroundColor = props.isSubmit ? 'yellow' : '';
-  const borderColor = props.userId == memberId ? 'pink' : 'white';
-
-  console.log("현재플레이어의 memberId: " + memberId)
-  console.log("props.userId: " + props.userId)
-  console.log("props" + props)
-  
-  
-
   return (
     <>
       <div 
-        className="multi-current-player" 
+        className="multi-rank-items" 
         style={{ 
-          backgroundColor: props.isSubmit ? 'yellow' : '', 
-          border: `3px solid ${props.userId == memberId ? 'pink' : 'white'}`, 
+          backgroundColor: props.backgroundColor, 
+          border: `3px solid ${props.borderColor}`, 
           borderRadius: '10px' 
         }}
       >
