@@ -15,23 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class KafkaUserExpConsumer {
 
     private final RankService rankService;
-    @KafkaListener(topics = "user-total-exp", groupId = "ranking-group", containerFactory = "kafkaListenerContainerFactory")
-    @Transactional
-    public void consumeUserTotalExp(UserExp userExp, Acknowledgment acknowledgment) {
-
-        rankService.updateRank(userExp, RedisRankType.ALL_TIME.key); // 전체 기간 업데이트
-
-        acknowledgment.acknowledge(); // 메시지 처리 완료 후 ACK 전송
-    }
+//    @KafkaListener(topics = "user-total-exp", groupId = "ranking-group", containerFactory = "kafkaListenerContainerFactory")
+//    @Transactional
+//    public void consumeUserTotalExp(UserExp userExp, Acknowledgment acknowledgment) {
+//
+//        rankService.updateRank(userExp, RedisRankType.ALL_TIME.key); // 전체 기간 업데이트
+//
+//        acknowledgment.acknowledge(); // 메시지 처리 완료 후 ACK 전송
+//    }
 
     @KafkaListener(topics = "user-exp", groupId = "ranking-group", containerFactory = "kafkaListenerContainerFactory")
     @Transactional
     public void consumeUserExp(UserExp userExp, Acknowledgment acknowledgment) {
 
+        rankService.updateRank(userExp, RedisRankType.ALL_TIME.key); // 전체 기간 업데이트
+
         LocalDate today = LocalDate.now();
         String dailyPrefix = rankService.getDailyPrefix(today);
         String weeklyPrefix = rankService.getWeeklyPrefix(today);
-
         rankService.updateRank(userExp, dailyPrefix);
         rankService.updateRank(userExp, weeklyPrefix);
 
