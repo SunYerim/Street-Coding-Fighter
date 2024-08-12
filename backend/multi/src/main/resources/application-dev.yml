@@ -17,7 +17,7 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
+    root: DEBUG
 
 problem:
   server:
