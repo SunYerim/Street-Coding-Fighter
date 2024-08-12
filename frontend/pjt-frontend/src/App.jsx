@@ -15,8 +15,6 @@ import SingleMain from "./components/single/SingleMain.jsx";
 import SinglePlay from "./components/single/single-play/SinglePlay.jsx";
 import MultiMain from "./components/multi/MultiMain.jsx";
 import MultiCreate from "./components/multi/MultiCreate.jsx";
-import BattleCreate from "./components/battle/BattleCreate.jsx";
-import BattleMain from "./components/battle/BattleMain.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
 import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
