@@ -362,12 +362,17 @@ public class MultiGameService {
     }
 
     private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
+
+        List<Player> playersIsOnRoom = room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .toList();
+
         return RoomResponse.ListDTO.builder()
             .roomId(room.getRoomId())
             .title(room.getTitle())
             .hostname(room.getHostname())
             .maxPlayer(room.getMaxPlayer())
-            .curPlayer(room.getPlayers().size())
+            .curPlayer(playersIsOnRoom.size())
             .isLock(room.getPassword() != null)
             .isStart(room.getIsStart())
             .gameRound(room.getPlayRound())
