@@ -14,12 +14,12 @@ const Header = ({ type = "default" }) => {
   const giftIcon = "/giftIcon.png";
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const backPaths = {
-    "/record": "/profile",
-    "/report": "/profile",
-    "/solved": "/profile",
+    "/record": "/account",
+    "/report": "/account",
+    "/solved": "/account",
     "/find-password": "/login",
     "/signup": "/login",
-    "/reset-password": "/profile",
+    "/reset-password": "/account",
     "/main": "/",
   };
   //뒤로가기 기능
@@ -103,7 +103,7 @@ const Header = ({ type = "default" }) => {
             {accessToken ? (
               <img
                 onClick={() => {
-                  navigate("/profile");
+                  navigate("/account");
                 }}
                 className="user-icon"
                 src={userIcon}

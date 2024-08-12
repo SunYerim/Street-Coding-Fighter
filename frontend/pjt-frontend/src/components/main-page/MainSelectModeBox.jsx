@@ -13,7 +13,7 @@ function MainSelectModeBox(props) {
     } else if (mode === "배틀 모드") {
       navigate("/battle-list");
     } else if (mode === "랭킹") {
-      navigate("/ranking");
+      navigate("/leaderboard");
     }
     playEffectSound('clickSound'); // 클릭 시 소리 재생
   };
