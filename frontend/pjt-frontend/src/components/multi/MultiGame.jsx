@@ -254,6 +254,7 @@ useEffect(() => {
             setTimeout(() => {
               // setCurrentRound(cnt + 1);
               // setRound((prevVal) => prevVal + 1);
+              renderProblem();
               setCount(30);
               setTimerEnded(false);
               setModalOpen(false);
@@ -291,8 +292,6 @@ useEffect(() => {
 
   
   useEffect(() => {
-    renderProblem();
-
     if (round >= problemList.length) {
       setPlaying(false);
       clearProblemList();
