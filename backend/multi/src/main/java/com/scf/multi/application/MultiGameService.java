@@ -177,6 +177,7 @@ public class MultiGameService {
         if(room != null) {
             Player exitPlayer = findPlayerBySessionId(room, sessionId);
             exitPlayer.setIsOnRoom(false);
+            exitPlayer.setSessionId(null);
 
             return exitPlayer;
         }
