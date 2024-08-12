@@ -142,6 +142,8 @@ useEffect(() => {
   const [timerEnded, setTimerEnded] = useState(false);
   
   const [count, setCount] = useState(30);
+
+  const [mergedList, setMergedList] = useState([]);
   
 
   // 방생성할때 방장의 memberId 가져오기
@@ -554,16 +556,19 @@ useEffect(() => {
   //   {userId: "8", isSubmit: false},
   // ]
 
-  let mergedList = (gameRank.length > 1 ? gameRank : playerList).map(rankItem => {
-    const submitItem = submitList.find(submitItem => submitItem.userId === rankItem.userId);
-    return {
-      ...rankItem,
-      isSubmit: submitItem ? submitItem.isSubmit : null 
-    };
-  });
   
+  useEffect(() => {
+    const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(rankItem => {
+      const submitItem = submitList.find(submitItem => submitItem.userId === rankItem.userId);
+      return {
+        ...rankItem,
+        isSubmit: submitItem ? submitItem.isSubmit : null 
+      };
+    });
+  
+    setMergedList(updatedMergedList);
+  }, [gameRank, playerList, submitList]);
 
-  console.log("mergedList", mergedList);
 
   return (
     <>
