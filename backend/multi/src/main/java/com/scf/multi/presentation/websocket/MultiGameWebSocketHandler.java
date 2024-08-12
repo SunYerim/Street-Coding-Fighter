@@ -116,8 +116,8 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         hostRotateIfNecessary(roomId, exitPlayer);
 
-        log.debug(rooms.get(session.getId()));
-        log.debug("sessionRooms.get({}).size() = {}", roomId, sessionRooms.get(roomId).size());
+        log.debug("roomId: {}", rooms.get(session.getId()));
+        log.debug("sessionRooms.get(roomId = {}).size() = {}", roomId, !sessionRooms.isEmpty() ? sessionRooms.get(roomId).size() : "empty");
 
         // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
         Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
