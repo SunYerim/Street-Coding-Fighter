@@ -13,51 +13,78 @@ const MultiRanking = () => {
   userList = playing ? roundRank : gameRank;
 
   return (
-    <GraphContainer>
-      <LeaderBoardSecond>
-        <PodiumPlayerContainer>
-          {userList.length > 1 ? (
-            <>
-              <div>{userList[1].username}</div>
-              <div>{userList[1].score}</div>
-            </>
-          ) : (
-            <NoPlayerData>No Data</NoPlayerData>
-          )}
-        </PodiumPlayerContainer>
-        <PlaceHolder>2</PlaceHolder>
-      </LeaderBoardSecond>
-      <LeaderBoardFirst>
-        <PodiumPlayerContainer>
-          {userList.length > 0 ? (
-            <>
-              <div>{userList[0].username}</div>
-              <div>{userList[0].score}</div>
-            </>
-          ) : (
-            <NoPlayerData>No Data</NoPlayerData>
-          )}
-        </PodiumPlayerContainer>
-        <PlaceHolder>1</PlaceHolder>
-      </LeaderBoardFirst>
-      <LeaderBoardThird>
-        <PodiumPlayerContainer>
-          {userList.length > 2 ? (
-            <>
-              <div>{userList[2].username}</div>
-              <div>{userList[2].score}</div>
-            </>
-          ) : (
-            <NoPlayerData>No Data</NoPlayerData>
-          )}
-        </PodiumPlayerContainer>
-        <PlaceHolder>3</PlaceHolder>
-      </LeaderBoardThird>
-    </GraphContainer>
+    <TotalContainers>
+      <GetScore>
+        getScore
+      </GetScore>
+      <GraphContainer>
+        <LeaderBoardSecond>
+          <PodiumPlayerContainer>
+            {userList.length > 1 ? (
+              <>
+                <div>{userList[1].username}</div>
+                <div>{userList[1].score}</div>
+              </>
+            ) : (
+              <NoPlayerData>No Data</NoPlayerData>
+            )}
+          </PodiumPlayerContainer>
+          <PlaceHolder>2</PlaceHolder>
+        </LeaderBoardSecond>
+        <LeaderBoardFirst>
+          <PodiumPlayerContainer>
+            {userList.length > 0 ? (
+              <>
+                <div>{userList[0].username}</div>
+                <div>{userList[0].score}</div>
+              </>
+            ) : (
+              <NoPlayerData>No Data</NoPlayerData>
+            )}
+          </PodiumPlayerContainer>
+          <PlaceHolder>1</PlaceHolder>
+        </LeaderBoardFirst>
+        <LeaderBoardThird>
+          <PodiumPlayerContainer>
+            {userList.length > 2 ? (
+              <>
+                <div>{userList[2].username}</div>
+                <div>{userList[2].score}</div>
+              </>
+            ) : (
+              <NoPlayerData>No Data</NoPlayerData>
+            )}
+          </PodiumPlayerContainer>
+          <PlaceHolder>3</PlaceHolder>
+        </LeaderBoardThird>
+      </GraphContainer>
+    </TotalContainers>
   );
 };
 
 export default MultiRanking;
+
+const TotalContainers = styled.div`
+  display: flex;
+  background-color: #f1f3f5;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 30vw;
+  height: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`
+
+const GetScore = styled.div`
+  font-size: 1.3em;
+  color: green;
+  width: 30vw;
+  height: 20%;
+  padding: 20px;
+`
 
 const GraphContainer = styled.div`
   display: flex;
@@ -67,7 +94,7 @@ const GraphContainer = styled.div`
   align-items: flex-end;
   justify-content: center;
   width: 30vw;
-  height: 100%;
+  height: 80%;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
