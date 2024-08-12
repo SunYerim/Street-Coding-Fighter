@@ -27,14 +27,14 @@ const MultiHeader = () => {
         <div
           className="multi-header-title"
           onClick={() => {
-            navigate('/_multi');
+            navigate('/main');
           }}
         >
           Street Coding Figther
         </div>
       </div>
         <div className="multi-header-back-button"  onClick={() => {
-            navigate("/main");
+            navigate("/_multi");
           }}
         >
           <MdOutlineKeyboardBackspace />
