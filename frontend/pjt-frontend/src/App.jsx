@@ -33,11 +33,11 @@ import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx"
 function App() {
   const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
   const { accessToken } = store((state) => ({
     accessToken: state.accessToken,
   }));
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
-
+  
   useEffect(() => {
     // 배경음악 초기화 및 재생
     setTimeout(() => {

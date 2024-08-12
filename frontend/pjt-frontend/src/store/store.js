@@ -120,7 +120,7 @@ const store = create(
       birth: "",
       setBirth: (birth) => set({ birth }),
 
-      accessToken: "",
+      accessToken: localStorage.getItem("accessToken"),
       setAccessToken: (accessToken) => set({ accessToken }),
 
       exp: "",
