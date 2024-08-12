@@ -229,10 +229,6 @@ useEffect(() => {
           // setRound((prevVal) => prevVal + 1);
           // setTimerEnded(false);
 
-          console.log('게임여기!', cnt);
-          console.log('게임여기!', currentRound);
-          console.log('게임여기!', round);
-
           if (cnt == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
@@ -251,10 +247,6 @@ useEffect(() => {
           // setTimerEnded(false);
           setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
-
-          console.log('라운드여기!', cnt);
-          console.log('라운드여기!', currentRound);
-          console.log('라운드여기!', round);
 
           if (cnt < problemLength - 1) {
             // 모달 열고 4초 대기
@@ -299,6 +291,7 @@ useEffect(() => {
 
   
   useEffect(() => {
+    renderProblem();
 
     if (round >= problemList.length) {
       setPlaying(false);
@@ -370,6 +363,7 @@ useEffect(() => {
       }
     }
   };
+
 
   const renderProblem = () => {
     return problemList[round] ? (
