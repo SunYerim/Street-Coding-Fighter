@@ -225,37 +225,39 @@ useEffect(() => {
           console.log("전체랭킹: ", data.payload);
           isSubmitRef.current = false;
           // setCount(30);
-          setCurrentRound(cnt + 1);
-          setRound((prevVal) => prevVal + 1);
+          // setCurrentRound(cnt + 1);
+          // setRound((prevVal) => prevVal + 1);
+          setTimerEnded(false);
 
           console.log('게임여기!', cnt);
           if (cnt == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
-              setPlaying(false);
+              setPlaying(false);            ///////////////////////////////////////////////////////////////
               clearGameRank();
               clearRoundRank();
               clearProblemList();
-              setTimerEnded(false);
             }, 4000);
           }
 
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
+          setTimerEnded(false);
 
-            console.log('라운드여기!', cnt);
-            if (cnt < problemLength - 1) {
-              // 모달 열고 4초 대기
-              setModalOpen(true);
-              setTimeout(() => {
-                setModalOpen(false);
-                setCount(30);
-                setTimerEnded(false);
-              }, 4000);
-            }
-
+          console.log('라운드여기!', cnt);
+          if (cnt < problemLength - 1) {
+            // 모달 열고 4초 대기
+            setModalOpen(true);
+            setTimeout(() => {
+              setCurrentRound(cnt + 1);
+              setRound((prevVal) => prevVal + 1);
+              setModalOpen(false);
+              setCount(30);
+              // setTimerEnded(false);
+            }, 4000);
+          }
         }
       } else {
         console.error("Received non-JSON message:", messageData);
@@ -360,7 +362,6 @@ useEffect(() => {
   };
 
   const renderProblem = () => {
-    // const problem = problemList[currentRound];
     return problemList[round] ? (
       <>
         {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
@@ -383,7 +384,7 @@ useEffect(() => {
 
   function Timer({ setTimerEnded }) {
     useEffect(() => {
-      if (count <= 0) {
+      if (count <= 1) {
         setTimerEnded(true);
         return;
       }
@@ -552,27 +553,6 @@ useEffect(() => {
   };
 
   // ---------------------- 채팅 WebSocket ----------------------
-
-  // const exRank = [
-  //   {rank: "1", username: "Hermes", score: "2000", userId: "1"},
-  //   {rank: "2", username: "Bernie", score: "2000", userId: "23"},
-  //   {rank: "3", username: "Jack", score: "2000", userId: "2"},
-  //   {rank: "4", username: "Ethan", score: "2000", userId: "4"},
-  //   {rank: "5", username: "Falcon", score: "2000", userId: "5"},
-  //   {rank: "6", username: "Sophia", score: "2000", userId: "77"},
-  //   {rank: "7", username: "SR", score: "2000", userId: "8"},
-  // ]
-
-  // const submitList = [
-  //   {userId: "1", isSubmit: false},
-  //   {userId: "23", isSubmit: true},
-  //   {userId: "2", isSubmit: true},
-  //   {userId: "4", isSubmit: false},
-  //   {userId: "5", isSubmit: true},
-  //   {userId: "77", isSubmit: false},
-  //   {userId: "8", isSubmit: false},
-  // ]
-
   
   useEffect(() => {
     const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(rankItem => {
@@ -583,7 +563,28 @@ useEffect(() => {
       };
     });
   
-    setMergedList(updatedMergedList);
+    const allSubmitted = updatedMergedList.every(item => item.isSubmit === true);
+
+    if (allSubmitted) {
+      // 모든 submitList 요소를 false로 설정
+      const resetSubmitList = submitList.map(item => ({
+        ...item,
+        isSubmit: false
+      }));
+  
+      // mergedList를 다시 업데이트
+      const resetMergedList = updatedMergedList.map(rankItem => {
+        const submitItem = resetSubmitList.find(submitItem => submitItem.userId === rankItem.userId);
+        return {
+          ...rankItem,
+          isSubmit: submitItem ? submitItem.isSubmit : null
+        };
+      });
+  
+      setMergedList(resetMergedList);
+    } else {
+      setMergedList(updatedMergedList);
+    }
   }, [gameRank, playerList, submitList]);
 
 
@@ -608,7 +609,7 @@ useEffect(() => {
                     username={user.username}
                     score={user.score}
                     key={i}
-                    backgroundColor={user.isSubmit ? 'yellow' : ''}
+                    backgroundColor={user.isSubmit ? 'orange' : ''}
                     borderColor={user.userId === memberId ? 'pink' : 'white'}
                   />
                 );
@@ -619,7 +620,7 @@ useEffect(() => {
                   <CurrentPlayer
                     username={user.username}
                     key={i}
-                    backgroundColor={user.isSubmit ? 'yellow' : ''}
+                    backgroundColor={user.isSubmit ? 'orange' : ''}
                     borderColor={user.userId === memberId ? 'pink' : 'white'}
                   />
                 );
