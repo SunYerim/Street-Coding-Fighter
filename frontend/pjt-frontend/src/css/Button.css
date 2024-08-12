@@ -8,7 +8,6 @@
   align-items: center;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
   background-color: #007bff;
   color: white;
   overflow: hidden;
@@ -49,7 +48,6 @@
   align-items: center;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
   background-color: #007bff;
   color: white;
   overflow: hidden;

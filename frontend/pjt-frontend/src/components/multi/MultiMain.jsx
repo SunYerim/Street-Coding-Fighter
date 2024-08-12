@@ -1,6 +1,7 @@
 import "../../index.css";
 import Header from"../sanghyeon/components/Header.jsx";
 import "../../css/GameMain.css";
+import '../../css/Container.css';
 import MultiRoom from "../game/MultiRoom.jsx";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
@@ -76,7 +77,8 @@ export default function MultiMain() {
   return (
     <>
       <Header />
-      <div className="container">
+      {/* <div className="container"> */}
+      <div id="container">
         <div className="main-container">
           <div className="title-container">
             <h1>Multi Game</h1>
@@ -131,4 +133,20 @@ export default function MultiMain() {
     </>
   );
 }
+
+const styles = {
+  container: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "rgba(27, 26, 85, 0.8)",
+    width: "80vw",
+    borderRadius: "30px",
+    height: "80vh",
+    marginTop: "20px",
+    color: "white",
+    display: "flex",
+  },
+};
 

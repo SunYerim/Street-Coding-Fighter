@@ -108,6 +108,26 @@ export default function SinglePlay() {
     currentPageRef.current = page;
   }, [page]);
 
+  const { setCompleted } = SingleInfoStore();
+
+  const getSingleInfo = () => {
+    axios({
+      method: 'get',
+      url: `${baseURL}/single`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMwOTczNjgsImV4cCI6MTcyMzEwMDk2OH0.4wZxyxS2RwHVFiZZWq7e3QIV54UZ1_XNdYb0x-92qAQ`,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setCompleted(res.data.contentList);
+      })
+      .catch((error) => {
+        console.log('완료목록 로드 실패');
+        console.log(error);
+      });
+  };
 
   //페이지 변경함수
   const changePage = (increment) => {
@@ -210,7 +230,7 @@ export default function SinglePlay() {
         },
       })
         .then(console.log('요청 보내기 성공!'))
-        .catch(console.log('요청보내기 실패 ㅜㅜ'));
+        .catch(console.log('요청보내기 실패 ㅜㅜ')).then(getSingleInfo())
     } else {
       console.log('비정상적인 나가기 또는 이미 학습한 컨텐츠임');
     }
@@ -432,7 +452,6 @@ const styles = {
     backgroundColor: 'yellow',
     borderRadius: '5px',
     padding: '10px',
-    cursor: 'pointer',
   },
   modalHeader: {
     display: 'flex',
@@ -446,7 +465,6 @@ const styles = {
     top: '5px',
     right: '5px',
     fontSize: '30px',
-    cursor: 'pointer',
   },
   modalContent: {
     textAlign: 'center',
@@ -458,7 +476,6 @@ const styles = {
     gap: '10px',
     padding: '10px',
     border: 'none',
-    // cursor: 'pointer',
   },
   completeButton: {
     padding: '10px 20px',
@@ -466,7 +483,6 @@ const styles = {
     color: '#233551',
     border: 'none',
     borderRadius: '5px',
-    cursor: 'pointer',
   },
   cancelButton: {
     padding: '10px 20px',
@@ -474,7 +490,6 @@ const styles = {
     color: '#233551',
     border: 'none',
     borderRadius: '5px',
-    cursor: 'pointer',
   },
   modal: {
     content: {

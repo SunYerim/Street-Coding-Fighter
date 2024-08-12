@@ -7,6 +7,10 @@ import store from "../../../store/store.js";
 import pixelTicket from "/pixel-ticket.jpg";
 import renderCharacter from "../apis/renderCharacter.js";
 
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
+
 const ItemPage = () => {
   const {
     baseURL,
@@ -41,13 +45,15 @@ const ItemPage = () => {
     const card = cardRef.current;
     const overlay = overlayRef.current;
 
+    if (!card || !overlay) return;
+
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * 45;
-    const rotateY = ((centerX - x) / centerX) * 45;
+    const rotateX = ((centerY - y) / centerY) * 45;
+    const rotateY = ((x - centerX) / centerX) * 45;
 
     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
@@ -59,6 +65,7 @@ const ItemPage = () => {
   const handleMouseLeave = () => {
     const card = cardRef.current;
     const overlay = overlayRef.current;
+    if (!card || !overlay) return;
     card.style.transform = `rotateX(0) rotateY(0)`; // 원상 복귀
     overlay.style.backgroundPosition = `100% 100%`; // 애니메이션과 함께 되돌리기
   };
@@ -71,6 +78,7 @@ const ItemPage = () => {
         text: "포인트가 부족합니다.",
         timer: 3000,
       });
+      return;
     }
 
     try {
@@ -86,6 +94,7 @@ const ItemPage = () => {
         purchaseRes.data.characterType * 100 + (character % 100);
       setCharacter(nextCharacter);
       setExp(exp - 500);
+      openModal();
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -104,6 +113,7 @@ const ItemPage = () => {
         text: "포인트가 부족합니다.",
         timer: 3000,
       });
+      return;
     }
 
     try {
@@ -119,6 +129,7 @@ const ItemPage = () => {
         character - (character % 100) + purchaseRes.data.characterClothType;
       setCharacter(nextCharacter);
       setExp(exp - 500);
+      openModal();
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -138,7 +149,9 @@ const ItemPage = () => {
         "사용하면 프로필의 캐릭터를 10가지 캐릭터와 일부 특별한 캐릭터 중 임의로 바꿔 주는 아이템입니다. 아이템을 사용하는 순간 프로필의 캐릭터가 바뀌며 영구적으로 적용되고, 현재 캐릭터는 사라집니다.",
       imgSrc: pixelTicket,
       buttonText: "구매 (500 P)",
-      onClick: () => purchaseCharacterTicket(), // 여기에 클릭 핸들러 추가
+      onClick: () => {
+        purchaseCharacterTicket();
+      },
     },
     {
       title: "알쏭달쏭 의상 티켓",
@@ -146,7 +159,9 @@ const ItemPage = () => {
         "사용하면 프로필의 캐릭터의 의상을 10가지 의상과 일부 특별한 의상 중 임의로 바꿔 주는 아이템입니다. 아이템을 사용하는 순간 프로필의 캐릭터의 의상이 바뀌며 영구적으로 적용되고, 현재 의상은 사라집니다.",
       imgSrc: pixelTicket,
       buttonText: "구매 (500 P)",
-      onClick: () => purchaseClothesTicket(), // 여기에 클릭 핸들러 추가
+      onClick: () => {
+        purchaseClothesTicket();
+      },
     },
   ];
 
@@ -160,15 +175,60 @@ const ItemPage = () => {
     );
   };
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setModalIsFlipped(false); // 모달 닫을 때 원래 상태로 되돌리기
+  };
+
+  const [modalIsFlipped, setModalIsFlipped] = useState(false);
+
+  const flipModal = () => {
+    setModalIsFlipped(!modalIsFlipped);
+  };
+
   return (
     <>
       <div className="item-outer-outer-container">
         <Header />
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Item Purchase Modal"
+          className={`item-purchase-modal ${modalIsFlipped ? "flipped" : ""}`}
+          overlayClassName="item-purchase-modal-overlay"
+        >
+          <div className="item-modal-container" onClick={flipModal}>
+            <div className={`item-modal-inner-container front`}>
+              <div className="item-modal-inner-container-front">
+                <p>?</p>
+              </div>
+            </div>
+            <div className={`item-modal-inner-container back`}>
+              <div className="item-modal-inner-container-back">
+                <div className="item-modal-inner-rank-container-back">
+                  <div className="item-modal-inner-rank-back">Common</div>
+                </div>
+                <div className="item-modal-inner-img-container-back">
+                  <img src={renderCharacter(character)} alt="character-image" />
+                </div>
+                <div className="item-modal-inner-name-container-back">
+                  <div className="item-modal-inner-name-back">The Slime.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
         <div className="item-outer-container">
           <div className="item-container">
             <div className="item-inner-container">
               <div className="item-left-container">
-                <div className="item-title-container">
+                <div className="item-title-con tainer">
                   <div className="item-title">아이템 샵</div>
                 </div>
                 <div className="item-point-container">

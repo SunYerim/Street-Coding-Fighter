@@ -16,26 +16,26 @@ const multiStore = create((set) => ({
   // 문제 리스트
   problemList: [
     {
-      problemId: 3,
-      title: "조건문 문제",
+      problemId: null,
+      title: "",
       problemType: "SHORT_ANSWER_QUESTION",
-      category: "조건문",
-      difficulty: 1,
+      category: "",
+      difficulty: null,
       problemContent: {
-        problemId: 3,
+        problemId: null,
         content:
-          '다음 코드를 실행했을 때의 출력을 예상하시오.\\n\\n코드:\\n\\nif 10 % 3 == 1:\\n    print("True")\\nelse:\\n    print("False")',
+          '',
         numberOfBlanks: 0,
       },
       problemChoices: [],
       problemAnswers: [
         {
-          answerId: 5,
-          problemId: 3,
+          answerId: null,
+          problemId: null,
           blankPosition: null,
           correctChoice: {
             choiceId: null,
-            problemId: 3,
+            problemId: null,
             choiceText: "True",
           },
           correctAnswerText: "True",
@@ -48,26 +48,26 @@ const multiStore = create((set) => ({
     set({
       problemList: [
         {
-          problemId: 3,
-          title: "조건문 문제",
+          problemId: null,
+          title: "",
           problemType: "SHORT_ANSWER_QUESTION",
-          category: "조건문",
-          difficulty: 1,
+          category: "",
+          difficulty: null,
           problemContent: {
-            problemId: 3,
+            problemId: null,
             content:
-              '다음 코드를 실행했을 때의 출력을 예상하시오.\\n\\n코드:\\n\\nif 10 % 3 == 1:\\n    print("True")\\nelse:\\n    print("False")',
+              '',
             numberOfBlanks: 0,
           },
           problemChoices: [],
           problemAnswers: [
             {
-              answerId: 5,
-              problemId: 3,
+              answerId: null,
+              problemId: null,
               blankPosition: null,
               correctChoice: {
                 choiceId: null,
-                problemId: 3,
+                problemId: null,
                 choiceText: "True",
               },
               correctAnswerText: "True",
@@ -111,6 +111,10 @@ const multiStore = create((set) => ({
   blankSolve: null,
   setBlankSolve: (blankSolve) => set({ blankSolve }),
   clearBlankSolve: () => set({ blankSolve: null }),
+
+  // 얻은 점수
+  getScore: 0,
+  setGetScore: (getScore) => set({ getScore }),
 }));
 
 export default multiStore;

@@ -152,7 +152,6 @@
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 2px;
-  cursor: pointer;
 }
 
 .battle-game-left-cam {
@@ -260,7 +259,6 @@
   border: none;
   border-radius: 5px;
   color: black;
-  cursor: pointer;
 }
 
 .battle-game-history-container {
@@ -333,9 +331,6 @@
   height: 100%;
 }
 
-.battle-game-game-start-title {
-}
-
 .battle-game-game-start-button {
   margin-top: 20px;
   padding: 10px;
@@ -343,7 +338,6 @@
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 2px;
-  cursor: pointer;
 }
 
 .battle-game-select-problem-modal {
@@ -356,9 +350,9 @@
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  max-width: 600px;
-  width: 60%;
-  max-height: 300px;
+  max-width: 60vw;
+  width: 60vw;
+  max-height: 60vh;
   height: auto;
 
   display: flex;
@@ -368,18 +362,16 @@
 }
 
 .battle-game-select-problem-title {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  margin-bottom: 20px;
-
   text-align: center;
 }
 
 .battle-game-select-problem-container {
   display: flex;
   flex-direction: row;
-  width: 500px;
-  height: 200px;
+  width: 60vw;
+  height: 60vh;
   justify-content: center;
 }
 
@@ -390,13 +382,18 @@
   align-items: center;
   border: 2px solid black;
   border-radius: 5px;
-  cursor: pointer;
   width: 25%;
   margin: 20px;
 }
 
+.battle-game-select-problem:hover {
+  background-color: #f0f0f0;
+  border-color: #007bff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .battle-game-select-problem hr {
-  width: 80%;
+  width: 85%;
   margin: 10px;
 }
 
@@ -435,7 +432,6 @@
   font-size: 1.2rem;
   font-weight: 600;
   letter-spacing: 2px;
-  cursor: pointer;
   border: none;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);

@@ -5,8 +5,9 @@
   transform: translate(-50%, -50%);
   background-color: rgba(27, 26, 85, 0.8);
   width: 80vw;
-  border-radius: 30px;
+  border-radius: 20px;
   height: 80vh;
   margin-top : 20px;
   color: white;
+  display: flex;
 }

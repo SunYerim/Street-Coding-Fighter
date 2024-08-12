@@ -32,7 +32,7 @@ const SignOutButton = function () {
     try {
       await authClient({
         method: "DELETE",
-        url: `${baseURL}/user/quit/`,
+        url: `${baseURL}/user/quit`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

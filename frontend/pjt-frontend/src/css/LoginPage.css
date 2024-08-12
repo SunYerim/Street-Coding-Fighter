@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 90vh;
 }
 
 .login-container {
@@ -14,7 +15,7 @@
   width: 50vw;
   max-width: 500px;
   border-radius: 20px;
-  height: 50vh;
+  /* height: 50vh; */
 }
 
 .login-container input {
@@ -35,7 +36,6 @@
   color: white;
   font-weight: bold;
   font-size: 1.5rem;
-  cursor: pointer;
   margin-top: 20px;
 
 }
@@ -60,7 +60,6 @@
 
 .find-password {
   margin: 20px;
-  cursor: pointer;
   position: relative;
   display: inline-block;
 }

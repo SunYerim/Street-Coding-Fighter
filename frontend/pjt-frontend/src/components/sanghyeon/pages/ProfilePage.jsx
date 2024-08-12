@@ -25,6 +25,7 @@ function ProfilePage() {
     setBirth,
     setCharacter,
     setExp,
+    // authClient,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -40,6 +41,8 @@ function ProfilePage() {
     setBirth: state.setBirth,
     setCharacter: state.setCharacter,
     setExp: state.setExp,
+    //authClient : state.authClient,
+
   }));
 
   const authClient = createAuthClient(

@@ -8,9 +8,9 @@ function MainSelectModeBox(props) {
   const selectMode = (mode) => {
     if (mode === "스토리모드") {
       navigate("/single-main");
-    } else if (mode === "멀티플레이") {
+    } else if (mode === "멀티 모드") {
       navigate("/multi");
-    } else if (mode === "1 vs 1") {
+    } else if (mode === "배틀 모드") {
       navigate("/battle-list");
     } else if (mode === "랭킹") {
       navigate("/ranking");

@@ -60,7 +60,6 @@
     /* border:none; */
   }
   .send-button:hover {
-    cursor:pointer;
     background-color: rgb(250, 248, 250, 0.75);
   }
   
