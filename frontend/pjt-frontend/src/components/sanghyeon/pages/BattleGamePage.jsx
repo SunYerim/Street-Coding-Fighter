@@ -300,6 +300,10 @@ const BattleGamePage = () => {
         timer: 3000,
       });
 
+      setTimeout(() => {
+        setCount(30);
+      }, 3000);
+
       const timer = setTimeout(async () => {
         await closeModal();
         await stopTimer();

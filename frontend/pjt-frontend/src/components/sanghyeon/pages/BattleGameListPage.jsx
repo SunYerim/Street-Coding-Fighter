@@ -264,7 +264,7 @@ const BattleGameListPage = () => {
         <div className="battle-list-outer-outer-container">
           <div className="battle-list-outer-container">
             <div className="battle-list-title-container">
-              <h2 className="battle-list-title">1 vs 1</h2>
+              <h1 className="battle-list-title">Battle Game</h1>
             </div>
             <div className="battle-list-side-container">
               <div className="battle-list-container">
@@ -276,23 +276,27 @@ const BattleGameListPage = () => {
                   <p>공개 여부</p>
                 </div>
                 <hr />
-                {currentBattleList.map((data, index) => (
-                  <div
-                    onClick={() =>
-                      joinBattleRoom(data.roomId, data.curPlayer, data.isLock)
-                    }
-                    className="battle-room"
-                    key={index}
-                  >
-                    <p>{index + 1}</p>
-                    <p>{data.title}</p>
-                    <p>{data.hostId}</p>
-                    <p>
-                      {data.curPlayer} / {data.maxPlayer}
-                    </p>
-                    <p>{data.isLock === true ? "Private" : "Public"}</p>
-                  </div>
-                ))}
+                {currentBattleList && currentBattleList.length > 0 ? (
+                  currentBattleList.map((data, index) => (
+                    <div
+                      onClick={() =>
+                        joinBattleRoom(data.roomId, data.curPlayer, data.isLock)
+                      }
+                      className="battle-room"
+                      key={index}
+                    >
+                      <p>{index + 1}</p>
+                      <p>{data.title}</p>
+                      <p>{data.hostId}</p>
+                      <p>
+                        {data.curPlayer} / {data.maxPlayer}
+                      </p>
+                      <p>{data.isLock === true ? "Private" : "Public"}</p>
+                    </div>
+                  ))
+                ) : (
+                  <h2 className="battle-room-none">검색 결과가 없습니다.</h2>
+                )}
               </div>
               <div className="battle-side-container">
                 <div className="battle-list-search-container">
