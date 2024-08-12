@@ -16,7 +16,7 @@
   width: 80vw;
   max-width: 1200px;
   border-radius: 20px;
-  height: 70vh;
+  height: 73vh;
   margin: 20px;
   padding: 30px;
   margin-top: 50px;
@@ -227,7 +227,7 @@
   top: 50%; /* 부모 컨테이너의 중앙에 맞추기 */
   left: 50%; /* 부모 컨테이너의 중앙에 맞추기 */
   transform: translate(-50%, -50%); /* 중앙 정렬을 위한 변환 */
-  z-index: 2; /* .item-character-outer-container 위에 배치 */
+  z-index: 1001; /* .item-character-outer-container 위에 배치 */
   padding: 20px;
 
   background: linear-gradient(
@@ -293,4 +293,31 @@
 
 .item-info-container:hover .carousel-control {
   opacity: 1; /* 호버 시 화살표 보이기 */
+}
+
+.item-purchase-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.item-purchase-modal {
+  width: 40vw;
+  height: 60vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
 }

@@ -1,5 +1,6 @@
 import "../../index.css";
 import "../../css/GameMain.css";
+import '../../css/Container.css';
 import "../../css/GameCreate.css";
 import MultiHeader from "../game/MultiHeader.jsx"
 import { useNavigate } from "react-router-dom";
@@ -75,10 +76,11 @@ export default function MultiCreate() {
   return (
     <>
       <MultiHeader />
-      <div className="container">
+      {/* <div className="container"> */}
+      <div id="container">
         <div className="create-container">
           <h1>Create Room [ Multi Mode ]</h1>
-          <div className="pink-line"></div>
+          <div className="pink-line" />
           <form onSubmit={createMultiRoom}>
             <div className="multi-create-form">
               <div className="multi-create-input">

@@ -3,68 +3,74 @@ import styled from 'styled-components';
 import multiStore from '../../stores/multiStore.jsx';
 
 const MultiRanking = () => {
-  const { gameRank, roundRank, playing } = multiStore((state) => ({
+  const { gameRank, roundRank, playing, getScore } = multiStore((state) => ({
     gameRank: state.gameRank,
     roundRank: state.roundRank,
     playing: state.playing,
+    getScore: state.getScore,
   }));
 
   let userList = [];
   userList = playing ? roundRank : gameRank;
 
   return (
-    <GraphContainer>
-      <LeaderBoardSecond>
-        <PodiumPlayerContainer>
-          {userList.length > 1 ? (
-            <>
-              <div>{userList[1].username}</div>
-              <div>{userList[1].score}</div>
-            </>
-          ) : (
-            <NoPlayerData>No Data</NoPlayerData>
-          )}
-        </PodiumPlayerContainer>
-        <PlaceHolder>2</PlaceHolder>
-      </LeaderBoardSecond>
-      <LeaderBoardFirst>
-        <PodiumPlayerContainer>
-          {userList.length > 0 ? (
-            <>
-              <div>{userList[0].username}</div>
-              <div>{userList[0].score}</div>
-            </>
-          ) : (
-            <NoPlayerData>No Data</NoPlayerData>
-          )}
-        </PodiumPlayerContainer>
-        <PlaceHolder>1</PlaceHolder>
-      </LeaderBoardFirst>
-      <LeaderBoardThird>
-        <PodiumPlayerContainer>
-          {userList.length > 2 ? (
-            <>
-              <div>{userList[2].username}</div>
-              <div>{userList[2].score}</div>
-            </>
-          ) : (
-            <NoPlayerData>No Data</NoPlayerData>
-          )}
-        </PodiumPlayerContainer>
-        <PlaceHolder>3</PlaceHolder>
-      </LeaderBoardThird>
-    </GraphContainer>
+    <TotalContainers>
+      <GetScore>
+        + {getScore}
+      </GetScore>
+      <GraphContainer>
+        <LeaderBoardSecond>
+          <PodiumPlayerContainer>
+            {userList.length > 1 ? (
+              <>
+                <div>{userList[1].username}</div>
+                <div>{userList[1].score}</div>
+              </>
+            ) : (
+              <NoPlayerData>No Data</NoPlayerData>
+            )}
+          </PodiumPlayerContainer>
+          <PlaceHolder>2</PlaceHolder>
+        </LeaderBoardSecond>
+        <LeaderBoardFirst>
+          <PodiumPlayerContainer>
+            {userList.length > 0 ? (
+              <>
+                <div>{userList[0].username}</div>
+                <div>{userList[0].score}</div>
+              </>
+            ) : (
+              <NoPlayerData>No Data</NoPlayerData>
+            )}
+          </PodiumPlayerContainer>
+          <PlaceHolder>1</PlaceHolder>
+        </LeaderBoardFirst>
+        <LeaderBoardThird>
+          <PodiumPlayerContainer>
+            {userList.length > 2 ? (
+              <>
+                <div>{userList[2].username}</div>
+                <div>{userList[2].score}</div>
+              </>
+            ) : (
+              <NoPlayerData>No Data</NoPlayerData>
+            )}
+          </PodiumPlayerContainer>
+          <PlaceHolder>3</PlaceHolder>
+        </LeaderBoardThird>
+      </GraphContainer>
+    </TotalContainers>
   );
 };
 
 export default MultiRanking;
 
-const GraphContainer = styled.div`
+const TotalContainers = styled.div`
   display: flex;
   background-color: #f1f3f5;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   width: 30vw;
   height: 100%;
@@ -73,12 +79,45 @@ const GraphContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
+const GetScore = styled.div`
+  font-size: 1.3em;
+  color: green;
+  width: 30vw;
+  height: 20%;
+  text-align: center;
+  font-weight: bold;
+`;
+
+// const GraphContainer = styled.div`
+//   display: flex;
+//   background-color: #f1f3f5;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   align-items: flex-end;
+//   justify-content: center;
+//   width: 30vw;
+//   height: 80%;
+//   padding: 20px;
+//   border-radius: 10px;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+// `;
+
+const GraphContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  width: 30vw;
+  height: 80%;
+`;
+
 const LeaderBoardFirst = styled.div`
   position: relative;
   margin: 0 20px;
   background-color: #ffd700;
   width: 25%;
-  height: 50%;
+  height: 70%;
   border-radius: 10px;
   display: flex;
   align-items: flex-end;
@@ -95,7 +134,7 @@ const LeaderBoardSecond = styled.div`
   margin: 0 20px;
   background-color: #c0c0c0;
   width: 20%;
-  height: 40%;
+  height: 55%;
   border-radius: 10px;
   display: flex;
   align-items: flex-end;
@@ -112,7 +151,7 @@ const LeaderBoardThird = styled.div`
   margin: 0 20px;
   background-color: #cd7f32;
   width: 20%;
-  height: 30%;
+  height: 40%;
   border-radius: 10px;
   display: flex;
   align-items: flex-end;
