@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import multiStore from '../../stores/multiStore.jsx';
 
-const MultiRanking = () => {
+const MultiRanking = ({ getScore }) => {
   const { gameRank, roundRank, playing } = multiStore((state) => ({
     gameRank: state.gameRank,
     roundRank: state.roundRank,
@@ -15,7 +15,7 @@ const MultiRanking = () => {
   return (
     <TotalContainers>
       <GetScore>
-        getScore
+        + {getScore}
       </GetScore>
       <GraphContainer>
         <LeaderBoardSecond>
@@ -83,6 +83,8 @@ const GetScore = styled.div`
   color: green;
   width: 30vw;
   height: 20%;
+  text-align: center;
+  font-weight: bold;
 `;
 
 // const GraphContainer = styled.div`

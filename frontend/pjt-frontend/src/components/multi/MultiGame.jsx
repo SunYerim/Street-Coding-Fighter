@@ -135,7 +135,7 @@ useEffect(() => {
   let cnt = 0;
   const [round, setRound] = useState(0);
   let problemLength = 0;
-  // let getScore = 0;
+  let getScore = 0;
 
   const [timerEnded, setTimerEnded] = useState(false);
   
@@ -206,6 +206,7 @@ useEffect(() => {
           console.log(data.payload);
           setHostId(data.payload);
         } else if (data.type === "attainScore") {
+          getScore = data.payload;
           console.log(`얻은 점수: ${data.payload}`);
         }else if (data.type === "player-list") {
           // 플레이어 리스트
@@ -658,8 +659,8 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal />}
-      {resultModalOpen && <MultiResultModal />}
+      {modalOpen && <MultiResultModal {getScore} />}
+      {resultModalOpen && <MultiResultModal {getScore} />}
     </>
   );
 }
