@@ -264,24 +264,6 @@ const FindPasswordPage = () => {
             </LoginPageButton>
           </Box>
         </Container>
-
-        {/* <div className="find-password-outer-container">
-        <div className="find-password-title">
-          비밀번호를 찾고자하는 아이디를 입력해주세요.
-        </div>
-        <div className="find-password-container">
-          <div className="find-password-user-id-container">
-            <input type="text" placeholder="아이디" ref={currentUserId} />
-            <button onClick={sendVerificationCode}>인증코드 받기</button>
-          </div>
-          <div className="find-password-password-container">
-            <input type="text" placeholder="인증코드" ref={verificationCode} />
-            <button onClick={checkVerificationCode}>인증코드 확인</button>
-          </div>
-          <LoginPageButton onClick={completeVerification} className="find-password-next">
-            NEXT
-          </LoginPageButton>
-        </div> */}
       </div>
     </>
   );
