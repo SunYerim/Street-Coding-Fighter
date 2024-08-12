@@ -676,18 +676,18 @@ function UserRank(props) {
   }));
 
   const backgroundColor = props.isSubmit ? 'yellow' : '';
-  const borderColor = props.userId === memberId ? 'pink' : '';
+  const borderColor = props.userId === memberId ? 'pink' : 'white';
 
   return (
     <>
       {/* <div className="multi-rank-items"> */}
-      <div className="multi-rank-items" style={{ backgroundColor, border: borderColor ? `3px solid ${borderColor}` : '' }}>
+      <div className="multi-rank-items" style={{ backgroundColor, border: `3px solid ${borderColor}` }}>
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
       </div>
     </>
-  );
+  );  
 }
 
 function CurrentPlayer(props) {  
@@ -697,11 +697,11 @@ function CurrentPlayer(props) {
     memberId: state.memberId,
   }));
 
-  const borderColor = props.userId === memberId ? 'pink' : '';
+  const borderColor = props.userId === memberId ? 'pink' : 'white';
 
   return (
     <>
-      <div className="multi-current-player" style={{ border: borderColor ? `3px solid ${borderColor}` : '' }}>
+      <div className="multi-current-player" style={{ border: `3px solid ${borderColor}` }}>
         <h3>{props.username}</h3>
       </div>
     </>
