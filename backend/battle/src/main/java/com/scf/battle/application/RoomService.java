@@ -7,6 +7,8 @@ import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.domain.repository.BattleGameRepository;
 import com.scf.battle.global.error.ErrorCode;
 import com.scf.battle.global.error.exception.BusinessException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class RoomService {
     public List<BattleGameRoom> findAllRooms() {
         return battleGameRepository.findAllRooms();
     }
+    private final Map<String, BattleGameRoom> roomMap = new ConcurrentHashMap<>();
 
     public BattleGameRoom findById(String roomId) {
         return battleGameRepository.findById(roomId);
@@ -60,6 +63,7 @@ public class RoomService {
                 .currentRound(0)
                 .hostCharacterType(userService.getCharacterType(memberId).getCharacterType())
                 .build();
+        roomMap.put(roomId, room);
         battleGameRepository.addRoom(room);
         return roomId;
     }
