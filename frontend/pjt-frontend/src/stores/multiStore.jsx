@@ -14,66 +14,62 @@ const multiStore = create((set) => ({
   setPlaying: (playing) => set({ playing }),
 
   // 문제 리스트
-  problemList: [
-    {
-      problemId: null,
-      title: "",
-      problemType: "SHORT_ANSWER_QUESTION",
-      category: "",
-      difficulty: null,
-      problemContent: {
-        problemId: null,
-        content:
-          '',
-        numberOfBlanks: 0,
-      },
-      problemChoices: [],
-      problemAnswers: [
-        {
-          answerId: null,
-          problemId: null,
-          blankPosition: null,
-          correctChoice: {
-            choiceId: null,
-            problemId: null,
-            choiceText: "True",
-          },
-          correctAnswerText: "True",
-        },
-      ],
+  problemList: [{
+    "problemId": 3,
+    "title": "조건문 문제",
+    "problemType": "SHORT_ANSWER_QUESTION",
+    "category": "조건문",
+    "difficulty": 1,
+    "problemContent": {
+        "problemId": 3,
+        "content": "다음 코드를 실행했을 때의 출력을 예상하시오.\\n\\n코드:\\n\\nif 10 % 3 == 1:\\n    print(\"True\")\\nelse:\\n    print(\"False\")",
+        "numberOfBlanks": 0
     },
-  ],
+    "problemChoices": [],
+    "problemAnswers": [
+        {
+            "answerId": 5,
+            "problemId": 3,
+            "blankPosition": null,
+            "correctChoice": {
+                "choiceId": null,
+                "problemId": 3,
+                "choiceText": "True"
+            },
+            "correctAnswerText": "True"
+        }
+    ]
+  }], 
   setProblemList: (problems) => set({ problemList: problems }),
   clearProblemList: () =>
     set({
       problemList: [
         {
-          problemId: null,
-          title: "",
-          problemType: "SHORT_ANSWER_QUESTION",
-          category: "",
-          difficulty: null,
-          problemContent: {
-            problemId: null,
-            content:
-              '',
-            numberOfBlanks: 0,
+          "problemId": 3,
+          "title": "조건문 문제",
+          "problemType": "SHORT_ANSWER_QUESTION",
+          "category": "조건문",
+          "difficulty": 1,
+          "problemContent": {
+              "problemId": 3,
+              "content": "다음 코드를 실행했을 때의 출력을 예상하시오.\\n\\n코드:\\n\\nif 10 % 3 == 1:\\n    print(\"True\")\\nelse:\\n    print(\"False\")",
+              "numberOfBlanks": 0
           },
-          problemChoices: [],
-          problemAnswers: [
-            {
-              answerId: null,
-              problemId: null,
-              blankPosition: null,
-              correctChoice: {
-                choiceId: null,
-                problemId: null,
-                choiceText: "True",
-              },
-              correctAnswerText: "True",
-            },
-          ],
-        },
+          "problemChoices": [],
+          "problemAnswers": [
+              {
+                  "answerId": 5,
+                  "problemId": 3,
+                  "blankPosition": null,
+                  "correctChoice": {
+                      "choiceId": null,
+                      "problemId": 3,
+                      "choiceText": "True"
+                  },
+                  "correctAnswerText": "True"
+              }
+          ]
+        }
       ],
     }),
 
