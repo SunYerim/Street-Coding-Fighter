@@ -12,8 +12,8 @@ const Choice = ({ choice }) => {
   const styles = {
     choice: {
       display: 'inline-block',
-      width: '80px',
-      height: '2em',
+      width: 'auto',
+      height: 'auto',
       alignContent: 'center',
       textAlign: 'center',
       margin: '0 5px',
