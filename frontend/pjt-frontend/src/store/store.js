@@ -143,7 +143,7 @@ const store = create(
       code: "",
       setCode: (code) => set({ code }),
 
-      character: "",
+      character: "1203",
       setCharacter: (character) => set({ character }),
 
       roomId: "",

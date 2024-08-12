@@ -17,6 +17,7 @@ import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoi
 import Modal from "react-modal";
 
 import SoundStore from "../../../stores/SoundStore.jsx";
+import { MdBloodtype } from "react-icons/md";
 
 const BattleGamePage = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -112,9 +113,49 @@ const BattleGamePage = () => {
   const [enemyHealth, setEnemyHealth] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
-  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
+  const [EnemyProblems, setEnemyProblems] = useState([
+    {
+      problemId: 456,
+      title: "Sample Problem",
+      problemType: "MULTIPLE_CHOICE",
+      category: "Math",
+      difficulty: 2,
+      item: {
+        name: "혼란의 스크린",
+        type: "Debuff",
+        rarity: "COMMON",
+        probability: 0.2,
+      },
+    },
+    {
+      problemId: 456,
+      title: "Sample Problem",
+      problemType: "MULTIPLE_CHOICE",
+      category: "Math",
+      difficulty: 2,
+      item: {
+        name: "혼란의 스크린",
+        type: "Debuff",
+        rarity: "COMMON",
+        probability: 0.2,
+      },
+    },
+    {
+      problemId: 456,
+      title: "Sample Problem",
+      problemType: "MULTIPLE_CHOICE",
+      category: "Math",
+      difficulty: 2,
+      item: {
+        name: "혼란의 스크린",
+        type: "Debuff",
+        rarity: "COMMON",
+        probability: 0.2,
+      },
+    },
+  ]); // 여기
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(false); // 여기
+  const [gameStart, setGameStart] = useState(true); // 여기
   const [myProblem, setMyProblem] = useState({});
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
@@ -124,6 +165,11 @@ const BattleGamePage = () => {
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
   const timerRef = useRef(null);
+
+  const [item1, setItem1] = useState(false); // 온전한 공격: 100% 데미지
+  const [item2, setItem2] = useState(false); // 시간 연장: +10초
+  const [item3, setItem3] = useState(false); // 시간 단축: -10초
+  const [item4, setItem4] = useState(false); // 답안 제출 방지: submitAnswer 버튼 비활성화
 
   // ---------------------- WebSocket ----------------------
 
@@ -214,11 +260,27 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/RoundChoiceProblem`;
     battleStompClient.current.subscribe(endpoint, (message) => {
       const body = JSON.parse(message.body);
+      setItem1(false);
+      setItem2(false);
+      setItem3(false);
+      setItem4(false);
       setEnemyProblems(body);
       setAnswerSubmitted(false);
       openModal();
       setCurrentRound((prevRound) => prevRound + 1);
-      setCount(30);
+
+      if (body && body.item && body.item.name === "시간 연장") {
+        setItem2(true);
+        setCount(40);
+      } else if (body && body.item && body.item.name === "시간 단축") {
+        setCount(20);
+      } else {
+        setCount(30);
+      }
+
+      if (body && body.item && body.item.name === "온전한 공격") {
+        setItem1(true);
+      }
     });
   };
 
@@ -317,7 +379,13 @@ const BattleGamePage = () => {
       problemId: myProblem.problemId,
       userId: memberId,
       solve: solveData,
-      submitTime: 30 - count,
+      submitTime: item1
+        ? 30
+        : item2
+        ? 40 - count > 30
+          ? 30
+          : 40 - count
+        : 30 - count,
       solveText: solveText,
       round: currentRound - 1,
     };
@@ -519,7 +587,7 @@ const BattleGamePage = () => {
     }
   }, [count]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
+  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -599,6 +667,17 @@ const BattleGamePage = () => {
     }
   };
 
+  const renderProblemType = (problemType) => {
+    switch (problemType) {
+      case "FILL_IN_THE_BLANK":
+        return "주관식";
+      case "SHORT_ANSWER_QUESTION":
+        return "단답형";
+      case "MULTIPLE_CHOICE":
+        return "객관식";
+    }
+  };
+
   const initBattleGame = () => {
     closeModal("clear");
     stopTimer();
@@ -665,17 +744,26 @@ const BattleGamePage = () => {
                       key={index}
                     >
                       <div className="battle-game-select-problem-sub-title">
-                        {data.title}
+                        {index + 1}. {data.title}
                       </div>
                       <hr />
                       <div className="battle-game-select-problem-type">
-                        {data.problemType}
+                        문제 유형: {renderProblemType(data.problemType)}
                       </div>
                       <div className="battle-game-select-problem-category">
-                        {data.category}
+                        카테고리: {data.category}
                       </div>
                       <div className="battle-game-select-problem-difficulty">
-                        {data.difficulty}
+                        난이도: {data.difficulty}
+                      </div>
+                      <hr />
+                      <div className="">
+                        {data.item ? <>아이템: {data.item.name}</> : null}
+                      </div>
+                      <div>
+                        {data.item.rarity ? (
+                          <>등급: {data.item.rarity}</>
+                        ) : null}
                       </div>
                     </div>
                   ))}
