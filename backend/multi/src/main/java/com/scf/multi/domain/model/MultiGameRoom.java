@@ -221,10 +221,6 @@ public class MultiGameRoom {
         this.round = 0;
         this.curSubmitCount.set(0);
 
-        for (Player player : players) {
-            player.getSolveds().clear();
-        }
-
         // 게임 끝나고 isOnRoom false인 유저 제거
         List<Player> filteredPlayers = this.players.stream()
             .filter(player -> player.getIsOnRoom().equals(true))

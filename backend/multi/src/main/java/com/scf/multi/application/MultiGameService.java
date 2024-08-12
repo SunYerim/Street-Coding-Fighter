@@ -134,7 +134,7 @@ public class MultiGameService {
         eventPublisher.publishEvent(new GameStartedEvent(roomId));
     }
 
-    public Solved addSolved(String roomId, String sessionId, Content content) {
+    public Solved makeSolved(String roomId, String sessionId, Content content) {
 
         MultiGameRoom room = findOneById(roomId);
 
@@ -149,7 +149,7 @@ public class MultiGameService {
             .solveText(content.getSolveText())
             .submitTime(content.getSubmitTime())
             .build();
-        player.addSolved(solved);
+        player.setSolveds(solved);
 
         return solved;
     }
@@ -256,14 +256,6 @@ public class MultiGameService {
     public void finalizeGame(String roomId) {
 
         MultiGameRoom room = findOneById(roomId);
-
-        room.getPlayers().stream()
-            .filter(player -> player.getIsOnRoom().equals(true))
-            .forEach(player ->
-                Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
-                    solveds.forEach(kafkaMessageProducer::sendSolved)
-                )
-            );
 
         List<Rank> gameRank = room.getGameRank().stream().toList();
         kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());
@@ -496,5 +488,23 @@ public class MultiGameService {
 
         room.nextRound();
         room.getCurSubmitCount().set(0);
+    }
+
+    public void saveSolved(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .forEach(player ->
+                Optional.ofNullable(player.getSolveds()).ifPresent(kafkaMessageProducer::sendSolved)
+            );
+    }
+
+    public void finishRound(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().forEach(player -> player.setSolveds(null));
     }
 }
