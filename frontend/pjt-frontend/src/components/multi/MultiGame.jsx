@@ -676,9 +676,10 @@ function UserRank(props) {
   }));
 
   const backgroundColor = props.isSubmit ? 'yellow' : '';
-  const borderColor = props.userId === memberId ? 'pink' : 'white';
+  const borderColor = props.userId == memberId ? 'pink' : 'white';
 
   console.log("유저랭크의 memberId: " + memberId)
+  console.log("props.userId: " + props.userId)
 
   return (
     <>
@@ -700,9 +701,11 @@ function CurrentPlayer(props) {
   }));
 
   const backgroundColor = props.isSubmit ? 'yellow' : '';
-  const borderColor = props.userId === memberId ? 'pink' : 'white';
+  const borderColor = props.userId == memberId ? 'pink' : 'white';
 
   console.log("현재플레이어의 memberId: " + memberId)
+  console.log("props.userId: " + props.userId)
+  
 
   return (
     <>
