@@ -225,8 +225,8 @@ useEffect(() => {
           console.log("전체랭킹: ", data.payload);
           // isSubmitRef.current = false;
           // setCount(30);
-          // setCurrentRound(cnt + 1);
-          // setRound((prevVal) => prevVal + 1);
+          setCurrentRound(cnt + 1);
+          setRound((prevVal) => prevVal + 1);
           // setTimerEnded(false);
 
           console.log('게임여기!', cnt);
