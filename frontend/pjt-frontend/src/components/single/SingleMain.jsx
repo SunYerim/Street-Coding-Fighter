@@ -11,10 +11,10 @@ import SingleInfoStore from '../../stores/SingleInfoStore.jsx';
 import Header from '../sanghyeon/components/Header.jsx';
 export default function SingleMain() {
   const { setCompleted } = SingleInfoStore();
-  const { baseURL, accessToken } = store();
   const navigate = useNavigate();
   // const tempToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMwMTMzOTksImV4cCI6MTcyMzAxNjk5OX0.39EpgNaDW4Pwp1taoqcsgB74ORG4ZbIfc7mG9ZWfj0s'
   useEffect(() => {
+    const { baseURL, accessToken } = store();
     const getSingleInfo = () => {
       axios({
         method: 'get',
