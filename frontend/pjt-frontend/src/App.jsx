@@ -34,17 +34,15 @@ function App() {
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
   const { accessToken, setAccessToken } = store((state) => ({
     accessToken: state.accessToken,
-    setAccessToken : state.setAccessToken,
+    setAccessToken: state.setAccessToken,
   }));
-  
+
   useEffect(() => {
     //초기 화면 렌더링 시 accessToken 불러오기
-    if(!accessToken){
-      setAccessToken(localStorage.getItem("accessToken"))
-      console.log('새로고침 후 토큰 불러오기...!')
+    if (!accessToken) {
+      setAccessToken(localStorage.getItem("accessToken"));
+      console.log("새로고침 후 토큰 불러오기...!");
     }
-
-
 
     // 배경음악 초기화 및 재생
     setTimeout(() => {
@@ -52,7 +50,7 @@ function App() {
       console.log("loading end");
       playBackgroundMusic();
     }, 2000);
-    
+
     // 시간에 따라 배경화면 변화    const updateBackgroundImage = () => {
     const now = new Date();
     const minutes = now.getMinutes();
@@ -96,31 +94,31 @@ function App() {
             // element={accessToken ? <ProfilePage /> : <LoginPage />}
           />
           <Route
-            path="/record"
+            path="/_record"
             element={accessToken ? <RecordPage /> : <LoginPage />}
           />
           <Route
-            path="/report"
+            path="/_report"
             // element={accessToken ? <ReportPage /> : <LoginPage />}
             element={<ReportPage />}
           />
           <Route
-            path="/solved"
+            path="/_solved"
             element={accessToken ? <SolvedPage /> : <LoginPage />}
           />
           <Route
-            path="/solved/:solvedId"
+            path="/_solved/:solvedId"
             element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
           />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
           <Route path="/_multi" element={<MultiMain />} />
           <Route path="/_multi-create" element={<MultiCreate />} />
           <Route
-            path="/battle-list"
+            path="/_battle-list"
             element={accessToken ? <BattleGameListPage /> : <LoginPage />}
             // element={<BattleGameListPage />}
           />
-          <Route path="/battle-game" element={<BattleGamePage />} />
+          <Route path="/_battle-game" element={<BattleGamePage />} />
           {/* <Route path="/multi-game" element={accessToken ? <MultiGame /> : <LoginPage />} /> */}
           <Route path="/_multi-game" element={<MultiGame />} />
           <Route path="/_multi-game/:room_id" element={<MultiGame />} />
@@ -128,7 +126,6 @@ function App() {
           <Route path="/story-main" element={<SingleMain />} />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
           <Route path="/story-play/:content_id" element={<SinglePlay />} />
-          <Route path="/multiple-choice" element={<BattleGamePage />} />
           <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
         </Routes>

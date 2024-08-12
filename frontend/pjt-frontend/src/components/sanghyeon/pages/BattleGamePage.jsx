@@ -113,9 +113,9 @@ const BattleGamePage = () => {
   const [enemyHealth, setEnemyHealth] = useState(100);
 
   const [currentRound, setCurrentRound] = useState(0);
-  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
+  const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(false); // 여기
+  const [gameStart, setGameStart] = useState(false);
   const [myProblem, setMyProblem] = useState({});
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
@@ -130,6 +130,12 @@ const BattleGamePage = () => {
   const [item2, setItem2] = useState(false); // 시간 연장: +10초
   const [item3, setItem3] = useState(false); // 시간 단축: -10초
   const [item4, setItem4] = useState(false); // 답안 제출 방지: submitAnswer 버튼 비활성화
+
+  const [blink, setBlink] = useState(false);
+  const [blinkEnemy, setBlinkEnemy] = useState(false);
+
+  const [isLeftCamBlinking, setIsLeftCamBlinking] = useState(false);
+  const [isRightCamBlinking, setIsRightCamBlinking] = useState(false);
 
   // ---------------------- WebSocket ----------------------
 
@@ -394,23 +400,39 @@ const BattleGamePage = () => {
       } else {
         if (body.userId === memberId) {
           if (body.isAttack === true) {
-            setEnemyHealth((prevHealth) => prevHealth - body.power);
-            setBattleHistory((prevHistory) => [...prevHistory, body]);
+            setBlinkEnemy(true);
+            setIsRightCamBlinking(true);
+            setTimeout(() => {
+              setBlinkEnemy(false);
+              setIsRightCamBlinking(false);
+              setEnemyHealth((prevHealth) => prevHealth - body.power);
+              setBattleHistory((prevHistory) => [...prevHistory, body]);
+            }, 1000);
           } else {
-            setMyHealth((prevHealth) =>
-              prevHealth + body.power > 100 ? 100 : prevHealth + body.power
-            );
-            setBattleHistory((prevHistory) => [...prevHistory, body]);
+            setTimeout(() => {
+              setMyHealth((prevHealth) =>
+                prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+              );
+              setBattleHistory((prevHistory) => [...prevHistory, body]);
+            }, 1000);
           }
         } else {
           if (body.isAttack === true) {
-            setMyHealth((prevHealth) => prevHealth - body.power);
-            setBattleHistory((prevHistory) => [...prevHistory, body]);
+            setBlink(true);
+            setIsLeftCamBlinking(true);
+            setTimeout(() => {
+              setBlink(false);
+              setIsLeftCamBlinking(false);
+              setMyHealth((prevHealth) => prevHealth - body.power);
+              setBattleHistory((prevHistory) => [...prevHistory, body]);
+            }, 1000);
           } else {
-            setEnemyHealth((prevHealth) =>
-              prevHealth + body.power > 100 ? 100 : prevHealth + body.power
-            );
-            setBattleHistory((prevHistory) => [...prevHistory, body]);
+            setTimeout(() => {
+              setEnemyHealth((prevHealth) =>
+                prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+              );
+              setBattleHistory((prevHistory) => [...prevHistory, body]);
+            }, 1000);
           }
         }
       }
@@ -553,7 +575,7 @@ const BattleGamePage = () => {
     }
   }, [count]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -673,6 +695,16 @@ const BattleGamePage = () => {
     setAnswerSubmitted(false);
   };
 
+  const handleTemp = () => {
+    setBlinkEnemy(true);
+    setIsRightCamBlinking(true);
+    setTimeout(() => {
+      setBlinkEnemy(false);
+      setIsRightCamBlinking(false);
+      setEnemyHealth((prevHealth) => prevHealth - 20);
+    }, 1000);
+  };
+
   return (
     <>
       <div className="battle-game-entire-container">
@@ -773,9 +805,14 @@ const BattleGamePage = () => {
             </div>
             <div className="battle-game-container">
               <div className="battle-game-left-container">
-                <div className="battle-game-left-cam">
+                <div
+                  className={`battle-game-left-cam ${
+                    isLeftCamBlinking ? "left-cam-blink" : ""
+                  }`}
+                >
                   <div className="battle-game-my-character-container">
                     <img
+                      className={`${blink ? "blink" : ""}`}
                       src={renderCharacter(character)}
                       alt="battle-game-my-character"
                     />
@@ -825,7 +862,8 @@ const BattleGamePage = () => {
                     </div>
                     {hostId === memberId ? (
                       <button
-                        onClick={handleStart}
+                        // onClick={handleStart}
+                        onClick={handleTemp}
                         className="battle-game-game-start-button"
                       >
                         게임 시작
@@ -839,13 +877,18 @@ const BattleGamePage = () => {
                 )}
               </div>
               <div className="battle-game-right-container">
-                <div className="battle-game-right-cam">
+                <div
+                  className={`battle-game-right-cam ${
+                    isRightCamBlinking ? "right-cam-blink" : ""
+                  }`}
+                >
                   <div className="battle-game-enemy-character-container">
                     {enemyCharacterType === null ||
                     enemyCharacterType === "" ? (
                       <></>
                     ) : (
                       <img
+                        className={`${blinkEnemy ? "enemy-blink" : ""}`}
                         src={renderCharacter(enemyCharacterType)}
                         alt="battle-game-enemy-character"
                       />
@@ -861,30 +904,30 @@ const BattleGamePage = () => {
                     ))}
                     <div ref={chatEndRef} />
                   </div>
-                  <div className="battle-game-chat-input">
-                    <input
-                      type="text"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="메시지를 입력하세요"
-                      onKeyUp={(e) => {
-                        if (e.key === "Enter" && message.trim() !== "") {
-                          e.preventDefault();
-                          sendMessage();
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (message.trim() !== "") {
-                          sendMessage();
-                        }
-                      }}
-                    >
-                      전송
-                    </button>
-                  </div>
+                </div>
+                <div className="battle-game-chat-input">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="메시지를 입력하세요"
+                    onKeyUp={(e) => {
+                      if (e.key === "Enter" && message.trim() !== "") {
+                        e.preventDefault();
+                        sendMessage();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (message.trim() !== "") {
+                        sendMessage();
+                      }
+                    }}
+                  >
+                    전송
+                  </button>
                 </div>
               </div>
             </div>

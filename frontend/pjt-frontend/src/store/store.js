@@ -99,7 +99,7 @@ const store = create(
       baseURL: "https://www.ssafy11s.com",
       // baseURL: "http://localhost:8080",
 
-      authClient : "",
+      authClient: "",
       setAuthClient: (authClient) => set({ authClient }),
 
       wsBattle: "ws-battle",
@@ -123,9 +123,9 @@ const store = create(
       birth: "",
       setBirth: (birth) => set({ birth }),
 
-      accessToken: "",
+      accessToken: "ss",
       setAccessToken: (accessToken) => {
-        set({ accessToken })
+        set({ accessToken });
       },
 
       exp: "",
@@ -166,7 +166,7 @@ const store = create(
       enemyName: "",
       setEnemyName: (enemyName) => set({ enemyName }),
 
-      enemyCharacterType: "",
+      enemyCharacterType: "101",
       setEnemyCharacterType: (enemyCharacterType) =>
         set({ enemyCharacterType }),
 

@@ -1,3 +1,67 @@
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.blink {
+  animation: blink 0.3s linear 2; /* 0.5초 깜빡임, 2회 반복 */
+}
+
+@keyframes enemyblink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.enemy-blink {
+  animation: enemyblink 0.3s linear 2; /* 0.5초 깜빡임, 2회 반복 */
+}
+
+@keyframes red-blink {
+  0% {
+    background-color: rgba(255, 0, 0, 0.5); /* 빨간색 반투명 */
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0); /* 투명 */
+  }
+  100% {
+    background-color: rgba(255, 0, 0, 0.5); /* 다시 빨간색 반투명 */
+  }
+}
+
+.left-cam-blink {
+  animation: red-blink 0.3s linear 2; /* 0.5초 동안 2회 깜빡임 */
+}
+
+@keyframes enemy-red-blink {
+  0% {
+    background-color: rgba(255, 0, 0, 0.5); /* 빨간색 반투명 */
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0); /* 투명 */
+  }
+  100% {
+    background-color: rgba(255, 0, 0, 0.5); /* 다시 빨간색 반투명 */
+  }
+}
+
+.right-cam-blink {
+  animation: enemy-red-blink 0.3s linear 2; /* 0.5초 동안 2회 깜빡임 */
+}
+
 .battle-game-entire-container {
   height: 100vh;
 }
@@ -15,9 +79,9 @@
   width: 80vw;
   max-width: 1200px;
   border-radius: 20px;
-  height: 75vh;
-  margin: 20px;
-  padding: 30px;
+  height: 76vh;
+  margin-top: 40px;
+  padding: 10px;
   min-width: 900px;
 }
 
@@ -32,6 +96,7 @@
 
 .battle-game-title {
   margin: 0;
+  font-size: 1.5rem;
   color: white;
   letter-spacing: 2px;
   border-radius: 2px;
@@ -61,7 +126,7 @@
   height: 100%;
   background-color: yellow;
   border-radius: 2px;
-  transition: width 1s ease; /* 애니메이션 추가 */
+  transition: width 1.5s ease; /* 애니메이션 추가 */
 }
 
 .battle-game-container {
@@ -74,12 +139,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid white;
+  border: 3px solid white;
   border-radius: 5px;
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
-  padding: 10px;
+  padding: 5px;
   width: 220px;
   min-width: 220px;
   height: auto;
@@ -89,12 +154,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid white;
+  border: 3px solid white;
   border-radius: 5px;
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
-  padding: 10px;
+  padding: 5px;
   width: 220px;
   min-width: 220px;
 }
@@ -103,7 +168,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid white;
+  border: 3px solid white;
   border-radius: 5px;
   font-size: 1.5rem;
   font-weight: bold;
@@ -156,35 +221,31 @@
 
 .battle-game-left-cam {
   width: 220px;
-  height: 200px;
-  min-height: 200px;
+  height: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid white;
+  border: 2px solid white;
 }
 
 .battle-game-right-cam {
   width: 220px;
-  height: 200px;
-  min-height: 200px;
+  height: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid white;
+  border: 2px solid white;
 }
 
 .battle-game-chatting-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 260px;
-  max-height: 260px;
-  border: 1px solid white;
-  margin: 0px 10px;
-  margin-top: 10px;
+  height: 60%;
+  border: 2px solid white;
+  margin-top: 5px;
 }
 
 .battle-game-chatting {
@@ -242,34 +303,35 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid white;
+  border-radius: 5px;
 }
 
 .battle-game-chat-input input {
   flex: 1;
-  border-radius: 5px;
-  border: 1px solid white;
-  color: black;
+  border-radius: 0;
+  color: white;
+  background-color: rgba(250, 248, 250, 0);
+  border: 3px solid white;
+  font-size: 16px;
 }
 
 .battle-game-chat-input button {
-  margin-left: 10px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: none;
-  border-radius: 5px;
-  color: black;
+  padding: 15px;
+  background-color: rgba(250, 248, 250, 0.5);
+  color: white;
+  font-size: 16px;
+  border: 2px solid white;
 }
 
 .battle-game-history-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 260px;
-  max-height: 260px;
-  border: 1px solid white;
-  margin: 0px 10px;
-  margin-top: 10px;
+  height: 60%;
+  border: 2px solid white;
+  margin-top: 5px;
 }
 
 .battle-game-history-title {
@@ -277,7 +339,7 @@
   justify-content: center;
   align-items: center;
   height: 10%;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: white;
 }
 
