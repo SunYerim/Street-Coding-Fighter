@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -30,6 +31,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
     private final MultiGameService multiGameService;
@@ -86,7 +88,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         multiGameService.changeSubmitItem(roomId, session.getId(), true);
         List<SubmitItem> submits = multiGameService.getSubmits(roomId);
-        broadcastMessageToRoom("submit-list", roomId, submits);
+        broadcastMessageToRoom(roomId, "submit-list", submits);
 
         multiGameService.increaseSubmit(roomId);
 
@@ -114,15 +116,21 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         hostRotateIfNecessary(roomId, exitPlayer);
 
+        log.debug(rooms.get(session.getId()));
+        log.debug("sessionRooms.get({}).size() = {}", roomId, sessionRooms.get(roomId).size());
+
         // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
-        executorService.submit(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                throw new RuntimeException();
-            }
-            checkAndDeleteRoom(roomId);
-        });
+        Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
+        if (roomSessions == null || roomSessions.isEmpty()) {
+            executorService.submit(() -> {
+                try {
+                    TimeUnit.SECONDS.sleep(3); // 3초간 재접속을 기다림
+                } catch (InterruptedException e) {
+                    throw new RuntimeException();
+                }
+                checkAndDeleteRoom(roomId); // 3초 후 연결 상태를 확인하고, 연결된 세션이 없으면 방 제거
+            });
+        }
     }
 
     @Override
