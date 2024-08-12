@@ -659,8 +659,8 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal {getScore} />}
-      {resultModalOpen && <MultiResultModal {getScore} />}
+      {modalOpen && <MultiResultModal getScore = {getScore} />}
+      {resultModalOpen && <MultiResultModal getScore = {getScore} />}
     </>
   );
 }
