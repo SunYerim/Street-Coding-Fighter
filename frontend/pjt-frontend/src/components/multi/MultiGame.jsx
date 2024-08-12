@@ -223,11 +223,11 @@ useEffect(() => {
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           console.log("전체랭킹: ", data.payload);
-          isSubmitRef.current = false;
+          // isSubmitRef.current = false;
           // setCount(30);
           // setCurrentRound(cnt + 1);
           // setRound((prevVal) => prevVal + 1);
-          setTimerEnded(false);
+          // setTimerEnded(false);
 
           console.log('게임여기!', cnt);
           if (cnt == problemLength - 1) {
@@ -244,7 +244,10 @@ useEffect(() => {
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
-          setTimerEnded(false);
+          isSubmitRef.current = false;
+          // setTimerEnded(false);
+          // setCurrentRound(cnt + 1);
+          // setRound((prevVal) => prevVal + 1);
 
           console.log('라운드여기!', cnt);
           if (cnt < problemLength - 1) {
@@ -253,9 +256,9 @@ useEffect(() => {
             setTimeout(() => {
               setCurrentRound(cnt + 1);
               setRound((prevVal) => prevVal + 1);
-              setModalOpen(false);
               setCount(30);
-              // setTimerEnded(false);
+              setTimerEnded(false);
+              setModalOpen(false);
             }, 4000);
           }
         }
@@ -285,6 +288,7 @@ useEffect(() => {
 
   useEffect(() => {
     cnt = currentRound;
+    console.log("cnt ", cnt);
   }, [currentRound]);
 
   
