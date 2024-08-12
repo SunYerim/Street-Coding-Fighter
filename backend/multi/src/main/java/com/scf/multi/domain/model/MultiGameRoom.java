@@ -146,17 +146,21 @@ public class MultiGameRoom {
         this.round += 1;
     }
 
+    private String getUsernameByUserId(Long userId) {
+        return players.stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .filter(player -> player.getUserId().equals(userId))
+            .map(Player::getUsername)
+            .findFirst()
+            .orElse("Unknown");
+    }
+
     public List<Rank> getGameRank() {
 
         List<Rank> ranks = leaderBoard.entrySet().stream()
             .map(entry -> {
                 Long userId = entry.getKey();
-                String username = players.stream()
-                    .filter(player -> player.getUserId().equals(userId))
-                    .filter(player -> player.getIsOnRoom().equals(true))
-                    .map(Player::getUsername)
-                    .findFirst()
-                    .orElse("Unknown");
+                String username = getUsernameByUserId(userId);
 
                 return Rank.builder()
                     .userId(userId)
@@ -164,7 +168,8 @@ public class MultiGameRoom {
                     .score(entry.getValue())
                     .build();
             })
-            .sorted(Comparator.comparingInt(Rank::getScore).reversed())
+            .filter(rank -> !rank.getUsername().equals("Unknown")) // 유효한 Rank 객체만 필터링
+            .sorted(Comparator.comparingInt(Rank::getScore).reversed()) // 점수 기준으로 내림차순 정렬
             .collect(Collectors.toList());
 
         AtomicInteger rankCounter = new AtomicInteger(1);
@@ -178,12 +183,7 @@ public class MultiGameRoom {
         List<Rank> ranks = scoreBoard.entrySet().stream()
             .map(entry -> {
                 Long userId = entry.getKey();
-                String username = players.stream()
-                    .filter(player -> player.getUserId().equals(userId))
-                    .filter(player -> player.getIsOnRoom().equals(true))
-                    .map(Player::getUsername)
-                    .findFirst()
-                    .orElse("Unknown");
+                String username = getUsernameByUserId(userId);
 
                 return Rank.builder()
                     .userId(userId)
@@ -191,8 +191,9 @@ public class MultiGameRoom {
                     .score(entry.getValue())
                     .build();
             })
-            .sorted(Comparator.comparingInt(Rank::getScore).reversed()) // Sort by score in descending order
-            .limit(3) // Limit to top 3
+            .filter(rank -> !rank.getUsername().equals("Unknown")) // 유효한 Rank 객체만 필터링
+            .sorted(Comparator.comparingInt(Rank::getScore).reversed()) // 점수 기준으로 내림차순 정렬
+            .limit(3) // 상위 3개의 순위로 제한
             .collect(Collectors.toList());
 
 
@@ -219,10 +220,6 @@ public class MultiGameRoom {
         this.scoreBoard.clear();
         this.round = 0;
         this.curSubmitCount.set(0);
-
-        for (Player player : players) {
-            player.getSolveds().clear();
-        }
 
         // 게임 끝나고 isOnRoom false인 유저 제거
         List<Player> filteredPlayers = this.players.stream()

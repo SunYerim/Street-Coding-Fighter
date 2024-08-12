@@ -14,7 +14,7 @@ public class Player {
     private String username;
     private Boolean isHost;
     private Integer streakCount;
-    private final List<Solved> solveds = new ArrayList<>();
+    private Solved solveds;
     private String sessionId;
     private Boolean isOnRoom;
 
@@ -25,9 +25,5 @@ public class Player {
         this.isHost = isHost;
         this.streakCount = streakCount;
         this.isOnRoom = false;
-    }
-
-    public void addSolved(Solved solved) {
-        this.solveds.add(solved);
     }
 }
