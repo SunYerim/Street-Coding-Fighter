@@ -386,10 +386,8 @@ import SoundStore from "../../stores/SoundStore.jsx";
         const id = setInterval(() => {
           setCount((prevCount) => {
             if (prevCount === 0) {
-              clearInterval(id);
-              
               if (!isSubmitRef.current) {
-                switch (type) {
+                switch (problemList[round].problemType) {
                   case "FILL_IN_THE_BLANK":
                     setBlankSolve(null);
                     handleBlankAnswer();
@@ -401,11 +399,11 @@ import SoundStore from "../../stores/SoundStore.jsx";
                     handleChoiceSelection(null);
                     break;
                   default:
-                    console.log("Unknown problem type: " + type);
+                    console.log("Unknown problem type: " + problemList[round].problemType);
                 }
                 isSubmitRef.current = true;
               }
-              
+              clearInterval(id);
               return 0;
             }
             
