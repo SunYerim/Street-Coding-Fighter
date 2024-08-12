@@ -46,10 +46,13 @@ function ProfilePage() {
     () => accessToken,
     setAccessToken
   );
-
+  const getAccessToken = ()=>{
+    return accessToken;
+  } 
   useEffect(() => {
     const getProfile = async () => {
       try {
+        await getProfile();
         const profileRes = await authClient({
           method: "GET",
           url: `${baseURL}/profile`,
