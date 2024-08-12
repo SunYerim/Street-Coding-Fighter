@@ -194,7 +194,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
             if (roomSessions.isEmpty()) { // 방에 포함된 마지막 유저가 나갔을 경우 방을 삭제
                 sessionRooms.remove(roomId);
-                multiGameService.deleteRoom(roomId);
             }
         }
     }
