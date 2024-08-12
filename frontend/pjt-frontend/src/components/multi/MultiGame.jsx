@@ -680,11 +680,19 @@ function UserRank(props) {
 
   console.log("유저랭크의 memberId: " + memberId)
   console.log("props.userId: " + props.userId)
+  console.log("props" + props)
 
   return (
     <>
       {/* <div className="multi-rank-items"> */}
-      <div className="multi-rank-items" style={{ backgroundColor, border: `3px solid ${borderColor}`, borderRadius: '10px' }}>
+      <div 
+        className="multi-current-player" 
+        style={{ 
+          backgroundColor: props.isSubmit ? 'yellow' : '', 
+          border: `3px solid ${props.userId == memberId ? 'pink' : 'white'}`, 
+          borderRadius: '10px' 
+        }}
+      >
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
@@ -705,11 +713,20 @@ function CurrentPlayer(props) {
 
   console.log("현재플레이어의 memberId: " + memberId)
   console.log("props.userId: " + props.userId)
+  console.log("props" + props)
+  
   
 
   return (
     <>
-      <div className="multi-current-player" style={{ backgroundColor, border: `3px solid ${borderColor}` }}>
+      <div 
+        className="multi-current-player" 
+        style={{ 
+          backgroundColor: props.isSubmit ? 'yellow' : '', 
+          border: `3px solid ${props.userId == memberId ? 'pink' : 'white'}`, 
+          borderRadius: '10px' 
+        }}
+      >
         <h3>{props.username}</h3>
       </div>
     </>
