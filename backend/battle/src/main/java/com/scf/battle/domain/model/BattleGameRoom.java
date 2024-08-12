@@ -23,7 +23,9 @@ public class BattleGameRoom {
     private String password;
 
     private final List<List<Problem>> roundProblems = new ArrayList<>(); // 라운드 마다 3문제로 나누기 위함
+    @Setter
     private Player playerA;
+    @Setter
     private Player playerB;
     private Boolean isAttack;
     private Boolean isStart;
@@ -143,5 +145,9 @@ public class BattleGameRoom {
         this.hasPlayerBSubmitted = false;
         this.isAttack = false;
         this.currentRound = 0;
+    }
+
+    public boolean isRoomEmpty() {
+        return playerA == null && playerB == null;
     }
 }
