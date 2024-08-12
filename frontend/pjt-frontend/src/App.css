@@ -3,5 +3,5 @@
 }
 
 * {
-  cursor: url('/cursor-default.png'), default;
+  cursor: url('/cursor-default.png') 1 1,default;
 }
