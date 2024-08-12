@@ -47,7 +47,19 @@ export default function SingleMain() {
     </>
   );
 }
-
+const styles = {
+  container:{  position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'rgba(27, 26, 85, 0.8)',
+    width: '80vw',
+    borderRadius: '20px',
+    height: '80vh',
+    marginTop : '20px',
+    color: 'white',
+  }
+}
 const TitleDiv = styled.div`
   display: flex;
   justify-content: center;

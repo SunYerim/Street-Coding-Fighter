@@ -126,7 +126,6 @@ const store = create(
       accessToken: "",
       setAccessToken: (accessToken) => {
         set({ accessToken })
-        localStorage.setItem("accessToken", accessToken);
       },
 
       exp: "",
