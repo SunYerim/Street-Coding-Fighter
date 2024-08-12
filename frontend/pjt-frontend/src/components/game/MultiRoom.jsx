@@ -100,7 +100,7 @@ function MultiRoom(props) {
       handleOpenModal();
     } else {
       setRoomId(props.roomId);
-      handleSubmit(null);
+      handleSubmit();
       // navigate(`/multi-game/${props.roomId}`);
     }
   };
