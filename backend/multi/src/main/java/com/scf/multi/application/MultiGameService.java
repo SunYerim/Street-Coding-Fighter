@@ -90,7 +90,13 @@ public class MultiGameService {
 
         MultiGameRoom room = findOneById(roomId);
 
-        Player player = createPlayer(userId, username, false);
+        List<Player> players = room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .toList();
+
+        boolean isHost = players.isEmpty(); // 빈 방에 입장할 경우, 방장 위임
+
+        Player player = createPlayer(userId, username, isHost);
         room.add(roomPassword, player);
     }
 
