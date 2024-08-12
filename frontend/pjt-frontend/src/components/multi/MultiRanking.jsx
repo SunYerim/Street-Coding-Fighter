@@ -80,7 +80,7 @@ const TotalContainers = styled.div`
 `;
 
 const GetScore = styled.div`
-  font-size: 1.3em;
+  font-size: 4rem;
   color: green;
   width: 30vw;
   height: 20%;
