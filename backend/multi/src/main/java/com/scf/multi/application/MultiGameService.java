@@ -395,6 +395,7 @@ public class MultiGameService {
 
     private Player findPlayerBySessionId(MultiGameRoom room, String sessionId) {
         return room.getPlayers().stream()
+            .filter(p -> p.getIsOnRoom().equals(true))
             .filter(p -> p.getSessionId().equals(sessionId)).findFirst()
             .orElseThrow(() -> new BusinessException(sessionId, "sessionId", USER_NOT_FOUND));
     }
