@@ -77,7 +77,6 @@
   flex-direction: column;
   background-color: rgba(27, 26, 85, 0.7);
   width: 80vw;
-  max-width: 1200px;
   border-radius: 20px;
   height: 76vh;
   margin-top: 40px;
@@ -145,8 +144,8 @@
   font-weight: bold;
   color: white;
   padding: 5px;
-  width: 220px;
-  min-width: 220px;
+  width: 250px;
+  min-width: 250px;
   height: auto;
 }
 
@@ -160,8 +159,8 @@
   font-weight: bold;
   color: white;
   padding: 5px;
-  width: 220px;
-  min-width: 220px;
+  width: 250px;
+  min-width: 250px;
 }
 
 .battle-game-inner-container {
@@ -220,7 +219,7 @@
 }
 
 .battle-game-left-cam {
-  width: 220px;
+  width: 250px;
   height: 40%;
   display: flex;
   flex-direction: column;
@@ -230,7 +229,7 @@
 }
 
 .battle-game-right-cam {
-  width: 220px;
+  width: 250px;
   height: 40%;
   display: flex;
   flex-direction: column;
@@ -397,9 +396,15 @@
   margin-top: 20px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.7);
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   letter-spacing: 2px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.battle-game-game-start-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
 }
 
 .battle-game-select-problem-modal {
@@ -416,7 +421,6 @@
   width: 60vw;
   max-height: 60vh;
   height: auto;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -446,6 +450,8 @@
   border-radius: 5px;
   width: 25%;
   margin: 20px;
+  font-size: 1.5rem;
+  padding: 10px;
 }
 
 .battle-game-select-problem:hover {

@@ -69,6 +69,11 @@
   flex-direction: column;
 }
 
+.solved-inner h1 {
+  color: white;
+  text-align: center;
+}
+
 .solved {
   color: white;
   display: flex;

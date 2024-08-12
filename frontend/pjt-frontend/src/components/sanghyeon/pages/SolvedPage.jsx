@@ -36,156 +36,17 @@ function SolvedPage() {
   useEffect(() => {
     const getSolved = async () => {
       try {
-        // const solvedRes = await authClient({
-        //   method: "GET",
-        //   url: `${baseURL}/profile/solved`,
-        //   headers: {
-        //     Authorization: `Bearer ${accessToken}`,
-        //   },
-        // });
+        const solvedRes = await authClient({
+          method: "GET",
+          url: `${baseURL}/profile/solved`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-        setSolvedData([
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "asdasdasdas", correct: false, difficulty: "2" },
-          { title: "Problem 1", correct: true, difficulty: "1" },
-          { title: "Problem 2", correct: false, difficulty: "2" },
-          { title: "Problem 3", correct: true, difficulty: "3" },
-          { title: "Problem 4", correct: false, difficulty: "2" },
-        ]);
-
-        // setSolvedData(
-        //   solvedRes.data.solvedList ? solvedRes.data.solvedList : []
-        // );
+        setSolvedData(
+          solvedRes.data.solvedList ? solvedRes.data.solvedList : []
+        );
       } catch (error) {
         Swal.fire({
           text: "문제를 불러오는데 실패했습니다.",
@@ -259,24 +120,30 @@ function SolvedPage() {
                 <p>난이도</p>
               </div>
               <div className="solved-inner">
-                {currentItems.map((data, index) => (
-                  <div
-                    className="solved"
-                    // onClick={() => navigate("/solved/" + data.solvedId)}
-                    onClick={() =>
-                      Swal.fire({
-                        text: "준비 중입니다.",
-                        icon: "warning",
-                        timer: 3000,
-                      })
-                    }
-                    key={index}
-                  >
-                    <p>{data.title}</p>
-                    <p>{data.correct ? "O" : "X"}</p>
-                    <p>{data.difficulty}</p>
-                  </div>
-                ))}
+                {currentItems && currentItems.length > 0 ? (
+                  currentItems.map((data, index) => (
+                    <div
+                      className="solved"
+                      // onClick={() => navigate("/solved/" + data.solvedId)}
+                      onClick={() =>
+                        Swal.fire({
+                          text: "준비 중입니다.",
+                          icon: "warning",
+                          timer: 3000,
+                        })
+                      }
+                      key={index}
+                    >
+                      <p>{data.title}</p>
+                      <p>{data.correct ? "O" : "X"}</p>
+                      <p>{data.difficulty}</p>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <h1>푼 문제가 없습니다.</h1>
+                  </>
+                )}
               </div>
               <div className="solved-pagination">
                 {currentPageGroup > 1 && (

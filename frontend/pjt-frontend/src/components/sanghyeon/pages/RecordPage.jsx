@@ -82,14 +82,20 @@ const RecordPage = () => {
                 <p>Score</p>
               </div>
               <div className="record-inner">
-                {currentItems.map((data, index) => (
-                  <div className="record" key={index}>
-                    <p>{data.gametype}</p>
-                    <p>{data.time}</p>
-                    <p>{data.rank}</p>
-                    <p>{data.score}</p>
-                  </div>
-                ))}
+                {currentItems && currentItems.length > 0 ? (
+                  currentItems.map((data, index) => (
+                    <div className="record" key={index}>
+                      <p>{data.gametype}</p>
+                      <p>{data.time}</p>
+                      <p>{data.rank}</p>
+                      <p>{data.score}</p>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <h1>최근 플레이한 게임이 없습니다.</h1>
+                  </>
+                )}
               </div>
               <div className="record-pagination">
                 {pageNumbers.map((number) => (

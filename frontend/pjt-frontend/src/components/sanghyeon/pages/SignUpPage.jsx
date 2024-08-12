@@ -34,6 +34,7 @@ const SignUpPage = () => {
   const idCheckComplete = useRef(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [passwordError, setPasswordError] = useState("");
+  const nameRegex = /^[a-zA-Z0-9]*$/;
 
   useEffect(() => {
     const checkPasswordMatch = () => {
@@ -84,6 +85,14 @@ const SignUpPage = () => {
 
   const signUp = async (event) => {
     event.preventDefault();
+
+    if (!nameRegex.test(name.current.value)) {
+      Swal.fire({
+        text: "닉네임은 영문자와 숫자만 입력 가능합니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+    }
 
     if (userId.current.value.length < 3 || userId.current.value.length > 15) {
       Swal.fire({
@@ -270,17 +279,18 @@ const SignUpPage = () => {
                     },
                     marginBottom: "1rem",
                   }}
-                /><Typography
-                variant="body2"
-                sx={{
-                  mt: -1,
-                  ml: 1,
-                  color: "inherit", // 비밀번호 유효성 오류가 있을 경우 빨간색으로 표시
-                  fontWeight: 500,
-                }}
-              >
-                * 3글자 이상 15글자 미만으로 작성해주세요.
-              </Typography>
+                />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mt: -1,
+                    ml: 1,
+                    color: "inherit", // 비밀번호 유효성 오류가 있을 경우 빨간색으로 표시
+                    fontWeight: 500,
+                  }}
+                >
+                  * 3글자 이상 15글자 미만으로 작성해주세요.
+                </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField

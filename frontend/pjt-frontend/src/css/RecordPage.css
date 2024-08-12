@@ -64,6 +64,11 @@
   flex-direction: column;
 }
 
+.record-inner h1 {
+  color: white;
+  text-align: center;
+}
+
 .record {
   color: white;
   display: flex;

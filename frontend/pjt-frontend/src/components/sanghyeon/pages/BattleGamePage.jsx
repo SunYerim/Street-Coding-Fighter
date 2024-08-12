@@ -756,7 +756,7 @@ const BattleGamePage = () => {
                       key={index}
                     >
                       <div className="battle-game-select-problem-sub-title">
-                        {index + 1}. {data.title}
+                        {data.title}
                       </div>
                       <hr />
                       <div className="battle-game-select-problem-type">
@@ -862,13 +862,12 @@ const BattleGamePage = () => {
                   </>
                 ) : (
                   <div className="battle-game-game-start-container">
-                    <div className="battle-game-game-start-title">
+                    <h2 className="battle-game-game-start-title">
                       게임 시작 전입니다.
-                    </div>
+                    </h2>
                     {hostId === memberId ? (
                       <button
                         onClick={handleStart}
-                        // onClick={handleTemp}
                         className="battle-game-game-start-button"
                       >
                         게임 시작
