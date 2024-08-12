@@ -326,13 +326,6 @@ public class MultiGameService {
         return room.getSubmits();
     }
 
-    public void resetSubmits(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
-    }
-
     public void validateRoomIsStart(String roomId) {
 
         MultiGameRoom room = findOneById(roomId);
@@ -364,7 +357,9 @@ public class MultiGameService {
 
         MultiGameRoom room = findOneById(roomId);
 
-        room.getPlayers().forEach(player -> player.setSolveds(null));
+        room.getPlayers().forEach(player -> player.setSolveds(null)); // solved 초기화
+
+        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false)); // submit 리스트 초기화
     }
 
     private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
