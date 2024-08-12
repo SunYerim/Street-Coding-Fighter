@@ -216,8 +216,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         deliveryGameRank(roomId);
 
-        multiGameService.resetSubmits(roomId);
-
         if (multiGameService.checkIsFinishGame(roomId)) { // 게임이 끝났으면
 
             boolean isFinishGame = multiGameService.checkIsFinishGame(roomId);
