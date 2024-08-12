@@ -384,46 +384,41 @@ useEffect(() => {
   function Timer({ setTimerEnded }) {
     useEffect(() => {
       if (count <= 0) {
+        setTimerEnded(true);
+        return;
+      }
+  
+      const id = setInterval(() => {
+        setCount((prevCount) => prevCount - 1);
+      }, 1000);
+  
+      return () => clearInterval(id);
+    }, [count]);
+  
+    useEffect(() => {
+      if (timerEnded && !isSubmitRef.current) {
+        // 타이머가 끝났을 때 문제 제출 로직을 처리
         switch (problemList[round].problemType) {
           case "FILL_IN_THE_BLANK":
             setBlankSolve(null);
             handleBlankAnswer();
-            isSubmitRef.current = true;
             break;
           case "SHORT_ANSWER_QUESTION":
             handleShortAnswer(null);
-            isSubmitRef.current = true;
             break;
           case "MULTIPLE_CHOICE":
             handleChoiceSelection(null);
-            isSubmitRef.current = true;
             break;
           default:
             console.log("Unknown problem type: " + problemList[round].problemType);
         }
-        setTimerEnded(true);
-        return;
+        isSubmitRef.current = true;
       }
-
-      const id = setInterval(() => {
-        setCount((prevCount) => {
-          if (prevCount < 0) {
-            clearInterval(id);
-            return 0;
-          }
-          return prevCount - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(id);
-    }, [count]);
-
-    return (
-      <div>
-        <span>{count}</span>
-      </div>
-    );
+    }, [timerEnded, isSubmitRef.current]); // 두 값을 의존성 배열에 추가하여 적절한 조건에서만 실행되도록 합니다.
+  
+    return <div><span>{count}</span></div>;
   }
+  
 
   // useEffect(() => {
   //   if (count === 0 && !isSubmitRef.current) {
