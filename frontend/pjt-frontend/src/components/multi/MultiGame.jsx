@@ -708,7 +708,6 @@ function CurrentPlayer(props) {
     memberId: state.memberId,
   }));
 
-
   const backgroundColor = props.isSubmit ? 'yellow' : '';
   const borderColor = props.userId == memberId ? 'pink' : 'white';
 
@@ -728,7 +727,6 @@ function CurrentPlayer(props) {
           borderRadius: '10px' 
         }}
       >
-        <h3>{props.userId}</h3>
         <h3>{props.username}</h3>
       </div>
     </>
