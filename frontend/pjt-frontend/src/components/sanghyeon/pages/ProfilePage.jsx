@@ -10,14 +10,11 @@ import Swal from "sweetalert2";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { baseURL, accessToken, setAccessToken, memberId } = store((state) => ({
-    baseURL: state.baseURL,
-    accessToken: state.accessToken,
-    setAccessToken: state.setAccessToken,
-    memberId: state.memberId,
-  }));
-
   const {
+    baseURL,
+    accessToken,
+    setAccessToken,
+    memberId,
     name,
     schoolName,
     birth,
@@ -29,6 +26,10 @@ function ProfilePage() {
     setCharacter,
     setExp,
   } = store((state) => ({
+    baseURL: state.baseURL,
+    accessToken: state.accessToken,
+    setAccessToken: state.setAccessToken,
+    memberId: state.memberId,
     name: state.name,
     schoolName: state.schoolName,
     birth: state.birth,
@@ -43,21 +44,21 @@ function ProfilePage() {
 
   const authClient = createAuthClient(
     baseURL,
-    () => accessToken,
+    () => accessToken || localStorage.getItem('accessToken'),
     setAccessToken
   );
-  const getAccessToken = ()=>{
-    return accessToken;
-  } 
+
   useEffect(() => {
     const getProfile = async () => {
       try {
-        await getAccessToken();
+        const token = accessToken || localStorage.getItem('accessToken');
+        if (!token) throw new Error('No token available');
+
         const profileRes = await authClient({
           method: "GET",
           url: `${baseURL}/profile`,
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -66,6 +67,7 @@ function ProfilePage() {
         setBirth(profileRes.data.birth);
         setCharacter(profileRes.data.character);
         setExp(profileRes.data.exp);
+        if (!accessToken) setAccessToken(token);
       } catch (error) {
         Swal.fire({
           text: "프로필을 불러오는데 실패했습니다.",
@@ -77,7 +79,7 @@ function ProfilePage() {
     };
 
     getProfile();
-  }, []);
+  }, [accessToken, baseURL, setAccessToken, setName, setSchoolName, setBirth, setCharacter, setExp]);
 
   return (
     <>
