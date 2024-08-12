@@ -385,10 +385,30 @@ import SoundStore from "../../stores/SoundStore.jsx";
 
         const id = setInterval(() => {
           setCount((prevCount) => {
-            if (prevCount <= 1) {
+            if (prevCount === 0) {
               clearInterval(id);
+              
+              if (!isSubmitRef.current) {
+                switch (type) {
+                  case "FILL_IN_THE_BLANK":
+                    setBlankSolve(null);
+                    handleBlankAnswer();
+                    break;
+                  case "SHORT_ANSWER_QUESTION":
+                    handleShortAnswer(null);
+                    break;
+                  case "MULTIPLE_CHOICE":
+                    handleChoiceSelection(null);
+                    break;
+                  default:
+                    console.log("Unknown problem type: " + type);
+                }
+                isSubmitRef.current = true;
+              }
+              
               return 0;
             }
+            
             return prevCount - 1;
           });
         }, 1000);
@@ -396,27 +416,27 @@ import SoundStore from "../../stores/SoundStore.jsx";
         return () => clearInterval(id);
       }, [count]);
 
-      useEffect(() => {
-        if (count === 0 && !isSubmitRef.current) {
-          switch (type) {
-            case "FILL_IN_THE_BLANK":
-              setBlankSolve(null);
-              handleBlankAnswer();
-              isSubmitRef.current = true;
-              break;
-            case "SHORT_ANSWER_QUESTION":
-              handleShortAnswer(null);
-              isSubmitRef.current = true;
-              break;
-            case "MULTIPLE_CHOICE":
-              handleChoiceSelection(null);
-              isSubmitRef.current = true;
-              break;
-            default:
-              console.log("Unknown problem type: " + type);
-          }
-        }
-      }, [count, isSubmitRef]);
+      // useEffect(() => {
+      //   if (count === 0 && !isSubmitRef.current) {
+      //     switch (type) {
+      //       case "FILL_IN_THE_BLANK":
+      //         setBlankSolve(null);
+      //         handleBlankAnswer();
+      //         isSubmitRef.current = true;
+      //         break;
+      //       case "SHORT_ANSWER_QUESTION":
+      //         handleShortAnswer(null);
+      //         isSubmitRef.current = true;
+      //         break;
+      //       case "MULTIPLE_CHOICE":
+      //         handleChoiceSelection(null);
+      //         isSubmitRef.current = true;
+      //         break;
+      //       default:
+      //         console.log("Unknown problem type: " + type);
+      //     }
+      //   }
+      // }, [count, isSubmitRef]);
 
       return (
         <div>
