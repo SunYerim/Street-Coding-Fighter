@@ -36,6 +36,7 @@ function App() {
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
   const { accessToken, setAccessToken } = store((state) => ({
     accessToken: state.accessToken,
+    setAccessToken : state.setAccessToken,
   }));
   
   useEffect(() => {
