@@ -122,7 +122,6 @@ const PeriodButton = styled.button`
   background-color: ${(props) => (props.$isSelected ? '#007bff' : 'gray')};
   color: #ffffff;
   font-size: 1em;
-  cursor: pointer;
   &:hover {
     background-color: #0056b3;
   }

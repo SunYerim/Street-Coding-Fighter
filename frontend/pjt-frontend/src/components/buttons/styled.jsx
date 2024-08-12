@@ -24,7 +24,6 @@ const Button = styled.div`
   overflow: hidden;
   text-align: center;
   transition: 0.2s;
-  cursor: pointer;
   border-radius: 3px;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 

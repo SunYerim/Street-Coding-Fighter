@@ -19,7 +19,6 @@ function MainSelectModeBox(props) {
   };
   const styles = {
     selectBox: {
-      cursor: 'pointer',
       
       backgroundColor: isHovered ? '#6a1b9a' : '#3f51b5', // 단색 배경으로 변경
       border: isHovered ? '2px solid #FFD700' : '2px solid transparent',

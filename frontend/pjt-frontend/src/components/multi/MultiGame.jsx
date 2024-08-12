@@ -1,19 +1,17 @@
-import "../../index.css";
-import "../../css/GameMain.css";
-import "../../css/MultiGame.css";
-import '../../css/Container.css';
-import "../../css/Timer.css";
-import MultiHeader from "../game/MultiHeader.jsx"
-import InputField from "../game/InputField.jsx";
-import MessageContainer from "../game/MessageContainer.jsx";
-import MultiResultModal from "./MultiResultModal.jsx";
-import newSocket from "../game/server.js";
-import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import multiStore from "../../stores/multiStore.jsx";
-import store from "../../store/store.js";
-import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
-import axios from "axios";
+  import "../../index.css";
+  import "../../css/GameMain.css";
+  import "../../css/MultiGame.css";
+  import MultiHeader from "../game/MultiHeader.jsx"
+  import InputField from "../game/InputField.jsx";
+  import MessageContainer from "../game/MessageContainer.jsx";
+  import MultiResultModal from "./MultiResultModal.jsx";
+  import newSocket from "../game/server.js";
+  import { useState, useEffect, useRef } from "react";
+  import { useLocation, useNavigate } from "react-router-dom";
+  import multiStore from "../../stores/multiStore.jsx";
+  import store from "../../store/store.js";
+  import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
+  import axios from "axios";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";

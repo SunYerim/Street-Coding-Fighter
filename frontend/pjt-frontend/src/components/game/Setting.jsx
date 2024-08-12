@@ -40,7 +40,6 @@ const styles = {
   settingClose: {
     width: "25px",
     height: "25px",
-    cursor: "pointer",
   },
   settingTitle: {
     display: "flex",
@@ -57,7 +56,6 @@ const styles = {
     border: "solid 1px black",
     padding: "10px",
     userSelect: "none",
-    cursor: "pointer",
   },
 };
 
