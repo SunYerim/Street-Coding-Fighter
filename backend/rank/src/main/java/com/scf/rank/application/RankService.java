@@ -30,7 +30,7 @@ public class RankService {
     private static final String KEY_PREFIX = "rank:";
 
     public List<UserExp> getAllTimeRankings() {
-        return getRankings(RedisRankType.ALL_TIME.key);
+        return getRankings(RedisRankType.TOTAL.key);
     }
 
     public List<UserExp> getWeeklyRankings() {
@@ -48,6 +48,14 @@ public class RankService {
         ValueOperations<String, UserExp> valueOps = redisTemplate.opsForValue();
 
         return valueOps.get(key);
+    }
+
+    @Transactional
+    public void updateTotalRank(UserExp userExp) {
+
+        String key = RedisRankType.TOTAL.key;
+
+        redisTemplate.opsForHash().put(key, userExp.getUserId(), userExp);
     }
 
     @Transactional
