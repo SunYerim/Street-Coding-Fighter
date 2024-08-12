@@ -76,28 +76,37 @@ const TotalContainers = styled.div`
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`
+`;
 
 const GetScore = styled.div`
   font-size: 1.3em;
   color: green;
   width: 30vw;
   height: 20%;
-  padding: 20px;
-`
+`;
+
+// const GraphContainer = styled.div`
+//   display: flex;
+//   background-color: #f1f3f5;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   align-items: flex-end;
+//   justify-content: center;
+//   width: 30vw;
+//   height: 80%;
+//   padding: 20px;
+//   border-radius: 10px;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+// `;
 
 const GraphContainer = styled.div`
   display: flex;
-  background-color: #f1f3f5;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: center;
   width: 30vw;
   height: 80%;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const LeaderBoardFirst = styled.div`
