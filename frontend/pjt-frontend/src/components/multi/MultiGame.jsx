@@ -219,17 +219,20 @@ useEffect(() => {
         } else if (data.type === "submit-list") {
           // 제출자 리스트
           setSubmitList(data.payload);
-          console.log(`제출자 리스트: ${data.payload}`);
+          console.log(`제출자 리스트: ${JSON.stringify(data.payload)}`);
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           console.log("전체랭킹: ", data.payload);
           // isSubmitRef.current = false;
           // setCount(30);
-          setCurrentRound(cnt + 1);
-          setRound((prevVal) => prevVal + 1);
+          // setCurrentRound(cnt + 1);
+          // setRound((prevVal) => prevVal + 1);
           // setTimerEnded(false);
 
           console.log('게임여기!', cnt);
+          console.log('게임여기!', currentRound);
+          console.log('게임여기!', round);
+
           if (cnt == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
@@ -246,16 +249,19 @@ useEffect(() => {
           console.log("라운드랭킹: ", data.payload);
           isSubmitRef.current = false;
           // setTimerEnded(false);
-          // setCurrentRound(cnt + 1);
-          // setRound((prevVal) => prevVal + 1);
+          setCurrentRound(cnt + 1);
+          setRound((prevVal) => prevVal + 1);
 
           console.log('라운드여기!', cnt);
+          console.log('라운드여기!', currentRound);
+          console.log('라운드여기!', round);
+
           if (cnt < problemLength - 1) {
             // 모달 열고 4초 대기
             setModalOpen(true);
             setTimeout(() => {
-              setCurrentRound(cnt + 1);
-              setRound((prevVal) => prevVal + 1);
+              // setCurrentRound(cnt + 1);
+              // setRound((prevVal) => prevVal + 1);
               setCount(30);
               setTimerEnded(false);
               setModalOpen(false);
