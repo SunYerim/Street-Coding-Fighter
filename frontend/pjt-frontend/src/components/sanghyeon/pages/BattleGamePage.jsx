@@ -300,7 +300,13 @@ const BattleGamePage = () => {
         await setSelectOpponentProblem(false);
         await setGameStart(true);
         await setAnswerSubmitted(false);
-        await setCount(30);
+
+        if (item2) {
+          await setCount(40);
+        } else if (item3) {
+          await setCount(20);
+        }
+
         await startTimer();
       }, 3000);
     }
@@ -580,6 +586,15 @@ const BattleGamePage = () => {
   };
 
   const handleSubmit = () => {
+    if (item4) {
+      Swal.fire({
+        text: "답안 제출 방지 아이템으로 인해 답안 제출이 불가능합니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
+
     if (answerSubmitted === true) {
       Swal.fire({
         text: "이미 답안을 제출하셨습니다.",
