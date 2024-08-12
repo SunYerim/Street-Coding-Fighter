@@ -72,14 +72,7 @@ const LoginPage = () => {
       const accessToken = authorizationHeader
         ? authorizationHeader.replace(/^Bearer\s+/i, "")
         : null;
-      const authClient = createAuthClient(
-        baseURL,
-        () => {localStorage.getItem('accessToken')},
-        setAccessToken
-      );
-      setAuthClient(authClient);
       const memberId = res.data["memberId"];
-
       setAccessToken(accessToken);
       setMemberId(memberId);
       setUserId(userId.current.value);
