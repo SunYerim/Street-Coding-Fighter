@@ -291,6 +291,8 @@ useEffect(() => {
 
   
   useEffect(() => {
+    cnt = round;
+
     if (round >= problemList.length) {
       setPlaying(false);
       clearProblemList();
@@ -365,6 +367,8 @@ useEffect(() => {
 
   const renderProblem = () => {
     console.log("현재 라운드에 대한 문제 렌더링:", round);
+    console.log("현재 라운드의 cnt:", cnt);
+
     return problemList[round] ? (
       <>
         {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
