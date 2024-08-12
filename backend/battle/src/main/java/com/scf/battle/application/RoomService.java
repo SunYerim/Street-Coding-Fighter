@@ -93,4 +93,23 @@ public class RoomService {
     private int determineCurrentPlayers(BattleGameRoom room) {
         return (room.getPlayerB() != null && room.getPlayerB().getUserId() != null) ? 2 : 1;
     }
+
+    public void handleUserDisconnect(String roomId, Long userId) {
+        BattleGameRoom room = roomMap.get(roomId);
+        if (room != null) {
+            // 플레이어를 제거하는 로직
+            if (room.getPlayerA().getUserId().equals(userId)) {
+                room.setPlayerA(null);
+            } else if (room.getPlayerB().getUserId().equals(userId)) {
+                room.setPlayerB(null);
+            }
+
+            // 방에 남아 있는 플레이어가 없으면 방 삭제
+            if (room.getPlayerA() == null && room.getPlayerB() == null) {
+                roomMap.remove(roomId);
+                // 방 삭제 로그 또는 추가 작업
+                System.out.println("Room " + roomId + " has been deleted because all players disconnected.");
+            }
+        }
+    }
 }
