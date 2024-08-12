@@ -54,23 +54,22 @@ public class RankService {
         return valueOps.get(key);
     }
 
+    @Transactional
     public void updateRank(UserExp userExp, String key) {
-
-        // 사용자 ID를 필드로 사용하여 점수 업데이트
-        redisTemplate.opsForHash().increment(key, userExp.getUserId(), userExp.getExp());
+        redisTemplate.opsForHash().put(key, userExp.getUserId(), userExp);
     }
 
     public List<UserExp> getRankings(String key) {
 
-        Map<Object, Object> userScores = redisTemplate.opsForHash().entries(key);
+        Map<Object, Object> userRanks = redisTemplate.opsForHash().entries(key);
 
         List<UserExp> userExps = new ArrayList<>();
-        for (Map.Entry<Object, Object> entry : userScores.entrySet()) {
+        for (Map.Entry<Object, Object> entry : userRanks.entrySet()) {
             UserExp userExp = (UserExp) entry.getValue();
-
             userExps.add(userExp);
         }
 
+        // exp를 기준으로 내림차순 정렬
         return userExps.stream()
             .sorted((r1, r2) -> Integer.compare(r2.getExp(), r1.getExp()))
             .collect(Collectors.toList());
