@@ -45,6 +45,8 @@ const ItemPage = () => {
     const card = cardRef.current;
     const overlay = overlayRef.current;
 
+    if (!card || !overlay) return;
+
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -193,29 +195,7 @@ const ItemPage = () => {
           className="item-purchase-modal"
           overlayClassName="item-purchase-modal-overlay"
         >
-          <>
-            <div
-              className="item-right-container"
-              ref={cardRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="item-character-overlay" ref={overlayRef}></div>
-              <div className="item-character-outer-container">
-                <div className="item-character-inner-container">
-                  <div className="item-character-rank-container">
-                    <div className="item-character-rank">R</div>
-                  </div>
-                  <div className="item-character-img-container">
-                    <img src={renderCharacter(101)} alt="my-character" />
-                  </div>
-                  <div className="item-character-name-container">
-                    <div className="item-character-name">The Slime.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
+          <></>
         </Modal>
         <div className="item-outer-container">
           <div className="item-container">
