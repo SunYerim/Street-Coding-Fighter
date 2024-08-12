@@ -131,7 +131,7 @@ const BattleGameListPage = () => {
       setEnemyId(res.data.memberId);
       setEnemyName(res.data.username);
       setEnemyCharacterType(res.data.hostCharacterType);
-      navigate("/battle-game");
+      navigate("/_battle-game");
     } catch (error) {
       Swal.fire({
         text: "방 입장에 실패했습니다.",
@@ -175,7 +175,7 @@ const BattleGameListPage = () => {
       setHostId(memberId);
       setRoomPassword(battleRoomPassword.current.value);
       setNormalQuit(false);
-      navigate("/battle-game");
+      navigate("/_battle-game");
     } catch (error) {
       Swal.fire({
         text: "방 생성에 실패했습니다.",

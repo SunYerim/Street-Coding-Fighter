@@ -41,17 +41,18 @@ function ProfilePage() {
     setCharacter: state.setCharacter,
     setExp: state.setExp,
     //authClient : state.authClient,
-
   }));
 
   const authClient = createAuthClient(
     baseURL,
-    () => {localStorage.getItem('accessToken')},
+    () => {
+      localStorage.getItem("accessToken");
+    },
     setAccessToken
   );
-  const getAccessToken = ()=>{
+  const getAccessToken = () => {
     return accessToken;
-  } 
+  };
   useEffect(() => {
     const getProfile = async () => {
       try {
@@ -113,9 +114,9 @@ function ProfilePage() {
                 </div>
               </div>
               <div className="profile-button-container">
-                <button onClick={() => navigate("/record")}>RECORD</button>
-                <button onClick={() => navigate("/report")}>REPORT</button>
-                <button onClick={() => navigate("/solved")}>SOLVED</button>
+                <button onClick={() => navigate("/_record")}>RECORD</button>
+                <button onClick={() => navigate("/_report")}>REPORT</button>
+                <button onClick={() => navigate("/_solved")}>SOLVED</button>
               </div>
             </div>
           </div>
