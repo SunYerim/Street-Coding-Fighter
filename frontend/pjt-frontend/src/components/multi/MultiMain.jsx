@@ -100,8 +100,27 @@ export default function MultiMain() {
                 <div>
                   { multiList.length > 0 ? (
                     multiList.map((room, i) => {
-                      return <MultiRoom roomNum={i+1} room={room.title} hostname={room.hostname} maxPlayer={room.maxPlayer} curPlayer={room.curPlayer} gameRound={room.gameRound} isLock={room.isLock} roomId={room.roomId} key={i} />
-                    })
+                      if (room.curPlayer === 0) {
+                        return null; // curPlayer가 0인 경우 아무것도 반환하지 않음
+                      }
+                      
+                      return (
+                        <MultiRoom 
+                          roomNum={i + 1} 
+                          room={room.title} 
+                          hostname={room.hostname} 
+                          maxPlayer={room.maxPlayer} 
+                          curPlayer={room.curPlayer} 
+                          gameRound={room.gameRound} 
+                          isLock={room.isLock} 
+                          roomId={room.roomId} 
+                          key={i} 
+                        />
+                      );
+                    })                    
+                    // multiList.map((room, i) => {
+                    //   return <MultiRoom roomNum={i+1} room={room.title} hostname={room.hostname} maxPlayer={room.maxPlayer} curPlayer={room.curPlayer} gameRound={room.gameRound} isLock={room.isLock} roomId={room.roomId} key={i} />
+                    // })
                   ) : (
                     <div className="empty-room">
                       <h2>검색결과가 없습니다.</h2>
