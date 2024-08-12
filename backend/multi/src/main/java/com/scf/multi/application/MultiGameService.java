@@ -28,11 +28,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MultiGameService {
 
     private static final int MAX_SUBMIT_TIME = 30;
@@ -88,9 +90,7 @@ public class MultiGameService {
 
         MultiGameRoom room = findOneById(roomId);
 
-        boolean isHost = room.getHostId().equals(userId);
-
-        Player player = createPlayer(userId, username, isHost);
+        Player player = createPlayer(userId, username, false);
         room.add(roomPassword, player);
     }
 
@@ -116,6 +116,8 @@ public class MultiGameService {
         Player connectedPlayer = findPlayerByUserId(room, userId);
         connectedPlayer.setSessionId(sessionId);
         connectedPlayer.setIsOnRoom(true);
+
+        log.debug(connectedPlayer.getSessionId());
 
         room.addSubmitItem(userId);
 
@@ -277,8 +279,12 @@ public class MultiGameService {
 
         MultiGameRoom room = findOneById(roomId);
 
+        log.debug(sessionId);
+
         Player player = room.getPlayers().stream()
-            .filter(p -> p.getSessionId().equals(sessionId)).toList().getFirst();
+            .filter(p -> p.getSessionId().equals(sessionId))
+            .toList()
+            .getFirst();
 
         room.updateScoreBoard(player.getUserId(), score);
     }
@@ -286,6 +292,8 @@ public class MultiGameService {
     public void updateLeaderBoard(String roomId, String sessionId, int score) {
 
         MultiGameRoom room = findOneById(roomId);
+
+        log.debug(sessionId);
 
         Player player = room.getPlayers().stream()
             .filter(p -> p.getSessionId().equals(sessionId)).toList().getFirst();
