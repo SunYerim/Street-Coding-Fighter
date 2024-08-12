@@ -5,8 +5,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
     networks:
       - network
 
@@ -17,8 +15,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - "9092:9092"
     depends_on:
       - zookeeper
     networks:
@@ -28,17 +24,15 @@ services:
     image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: user_db
+      MYSQL_DATABASE: member_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    ports:
-      - "3306:3306"
     networks:
       - network
     depends_on:
       - kafka  
     volumes:
-      - db_data_user:/var/lib/mysql
+      - db_data_member:/var/lib/mysql
 
   mariadb-problem:
     image: mariadb:latest
@@ -47,8 +41,6 @@ services:
       MYSQL_DATABASE: problem_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    ports:
-      - "3307:3306"
     networks:
       - network
     volumes:
@@ -61,8 +53,6 @@ services:
       MYSQL_DATABASE: edu_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    ports:
-      - "3308:3306"
     networks:
       - network
     depends_on:
@@ -72,8 +62,6 @@ services:
 
   redis-user:
     image: redis:latest
-    ports:
-      - "6379:6379"
     volumes:
       - ./config/redis.conf:/usr/local/etc/redis/redis.conf  # 로컬의 redis.conf 파일을 컨테이너에 복사
       - redis_data:/data  # Redis 데이터를 저장할 볼륨
@@ -87,7 +75,7 @@ services:
       - mariadb-user
       - redis-user
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db?characterEncoding=utf8mb4
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/member_db?characterEncoding=utf8mb4
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_REDIS_HOST: redis-user
@@ -99,8 +87,6 @@ services:
       LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
-    ports:
-      - "8080:8080"
     networks:
       - network
 
@@ -123,8 +109,6 @@ services:
       LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
-    ports:
-      - "8081:8081"
     networks:
       - network
 
@@ -149,8 +133,6 @@ services:
       SPRING_APPLICATION_NAME: scf-multi
       PROBLEM_SERVER_URL: http://www.ssafy11s.com/problem
       USER_SERVER_URL: http://www.ssafy11s.com/user
-    ports:
-      - "8082:8082"
     networks:
       - network
 
@@ -174,8 +156,6 @@ services:
       LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
-    ports:
-      - "8083:8083"
     networks:
       - network
 
@@ -199,8 +179,6 @@ services:
       SPRING_APPLICATION_NAME: scf-battle
       PROBLEM_SERVER_URL: http://www.ssafy11s.com/problem
       USER_SERVER_URL: http://www.ssafy11s.com/user/public/charaterType
-    ports:
-      - "8084:8084"
     networks:
       - network
 
@@ -212,11 +190,9 @@ services:
     environment:
       LOGGING_LEVEL_ORG_HIBERNATE_SQL: debug
       SPRING_APPLICATION_NAME: scf-chat
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/user_db?characterEncoding=utf8mb4
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-user:3306/member_db?characterEncoding=utf8mb4
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
-    ports:
-      - "8085:8085"
     networks:
       - network
 
@@ -233,8 +209,6 @@ services:
       LOGGING_LEVEL_COM_SCF_USER_GLOBAL_LOGINFILTER: debug
       SERVER_ERROR_INCLUDE_MESSAGE: always
       SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
-    ports:
-      - "8086:8086"
     networks:
       - network
 
@@ -244,7 +218,7 @@ networks:
     driver: bridge
 
 volumes:
-  db_data_user:
+  db_data_member:
   db_data_problem:
   db_data_edu:
   redis_data:
