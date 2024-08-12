@@ -114,7 +114,6 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 1px;
-  cursor: pointer;
 }
 
 .create-button:hover {
