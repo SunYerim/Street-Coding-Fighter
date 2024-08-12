@@ -95,6 +95,7 @@ const LoginPage = () => {
 
   return (
     <>
+      <Header />
       {/* <Header /> */}
       <div className="login-outer-container">
         {/* <div className="login-title">Login Page</div> */}
@@ -103,17 +104,18 @@ const LoginPage = () => {
           maxWidth={false}
           sx={{
             maxWidth: "500px",
-            backgroundColor: "rgba(255, 255, 255, 0.85)", // 반투명 화이트 배경
+            backgroundColor: "rgba(255, 255, 255, 0.5)", // 반투명 화이트 배경
             backdropFilter: "blur(30px)", // 블러 효과 추가
             padding: 4, // 패딩 조정
             borderRadius: 10, // 둥근 모서리
             boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.2)", // 그림자 추가
             display: "flex",
             height: "80vh",
+            maxHeight: "80vh",
             flexDirection: "column",
             alignItems: "center", // 수직 중앙 정렬
             justifyContent: "center", // 수평 중앙 정렬
-            marginTop: "20px", // 최상단과의 간격 추가
+            mx: "auto",
           }}
         >
           <CssBaseline />
@@ -149,7 +151,7 @@ const LoginPage = () => {
           >
             Log-in
           </Typography>
-          {/* 오른쪽 부분: 로그인 폼 */}
+          {/* 로그인 폼 */}
           <Box
             sx={{
               flex: 1,
@@ -179,13 +181,13 @@ const LoginPage = () => {
                     "& fieldset": {
                       borderColor: "#1b1a55", // Thicker border color
                       borderWidth: 2, // Increase border thickness
-                      borderRadius: "30px", // Make the borders rounded
+                      borderRadius: "15px", // Make the borders rounded
                     },
                     "&.Mui-focused fieldset": {
                       borderColor: "#1b1a55", // Border color when focused
                     },
                   },
-                  
+
                   marginBottom: "1rem",
                 }}
               />
@@ -209,7 +211,7 @@ const LoginPage = () => {
                     "& fieldset": {
                       borderColor: "black", // Thicker border color
                       borderWidth: 2, // Increase border thickness
-                      borderRadius: "30px", // Make the borders rounded
+                      borderRadius: "15px", // Make the borders rounded
                     },
                     "&:hover fieldset": {
                       borderColor: "black", // Border color on hover
