@@ -651,7 +651,7 @@ useEffect(() => {
                     <h2>Submitted!</h2>
                   </div>
                 ) : (
-                  <div>{problemList.length > 0 && renderProblem(round)}</div>
+                  <div>{problemList.length > 0 && renderProblem(cnt)}</div>
                 )}
               </div>
             )}
