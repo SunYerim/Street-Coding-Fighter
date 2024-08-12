@@ -7,7 +7,7 @@ function MainSelectModeBox(props) {
 
   const selectMode = (mode) => {
     if (mode === "스토리모드") {
-      navigate("/single-main");
+      navigate("/story-main");
     } else if (mode === "멀티 모드") {
       navigate("/multi");
     } else if (mode === "배틀 모드") {

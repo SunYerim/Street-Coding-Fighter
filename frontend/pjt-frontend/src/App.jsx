@@ -135,9 +135,9 @@ function App() {
           <Route path="/multi-game" element={<MultiGame />} />
           <Route path="/multi-game/:room_id" element={<MultiGame />} />
           {/* <Route path="/single-main" element={accessToken ? <SingleMain /> : <LoginPage />} /> */}
-          <Route path="/single-main" element={<SingleMain />} />
+          <Route path="/story-main" element={<SingleMain />} />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
-          <Route path="/single-play/:content_id" element={<SinglePlay />} />
+          <Route path="/story-play/:content_id" element={<SinglePlay />} />
           <Route path="/multiple-choice" element={<BattleGamePage />} />
           <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
