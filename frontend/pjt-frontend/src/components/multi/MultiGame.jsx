@@ -563,7 +563,7 @@ useEffect(() => {
   });
   
 
-  console.log(mergedList);
+  console.log("mergedList", mergedList);
 
   return (
     <>
@@ -579,38 +579,30 @@ useEffect(() => {
             </div>
             <div className="multi-rank-table">
             {round > 0 ? (
-              gameRank.map((user, i) => {
+              mergedList.map((user, i) => {
                 return (
                   <UserRank
                     rank={user.rank}
                     username={user.username}
                     score={user.score}
                     key={i}
+                    backgroundColor={user.isSubmit ? 'yellow' : ''}
+                    borderColor={user.userId === memberId ? 'pink' : 'white'}
                   />
                 );
               })
             ) : (
-              playerList.map((user, i) => {
+              mergedList.map((user, i) => {
                 return (
                   <CurrentPlayer
                     username={user.username}
                     key={i}
+                    backgroundColor={user.isSubmit ? 'yellow' : ''}
+                    borderColor={user.userId === memberId ? 'pink' : 'white'}
                   />
                 );
               })
             )}
-              {/* {mergedList.map((user, i) => {
-                return (
-                  <UserRank
-                    rank={user.rank}
-                    username={user.username}
-                    score={user.score}
-                    isSubmit={user.isSubmit}
-                    key={i}
-                  />
-                );
-              })} */}
-
             </div>
           </div>
           <div className="multi-game-center">
@@ -669,26 +661,36 @@ useEffect(() => {
 }
 
 function UserRank(props) {  
-  const backgroundColor = props.isSubmit ? 'yellow' : '';
-  const borderColor = props.userId === memberId ? 'pink' : '';
-
   return (
     <>
       {/* <div className="multi-rank-items"> */}
-      <div className="multi-rank-items" style={{ backgroundColor, border: borderColor ? `3px solid ${borderColor}` : '' }}>
+      <div 
+        className="multi-rank-items" 
+        style={{ 
+          backgroundColor: props.backgroundColor, 
+          border: `3px solid ${props.borderColor}`, 
+          borderRadius: '10px' 
+        }}
+      >
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
       </div>
     </>
-  );
+  );  
 }
 
 function CurrentPlayer(props) {  
-
   return (
     <>
-      <div className="multi-current-player">
+      <div 
+        className="multi-rank-items" 
+        style={{ 
+          backgroundColor: props.backgroundColor, 
+          border: `3px solid ${props.borderColor}`, 
+          borderRadius: '10px' 
+        }}
+      >
         <h3>{props.username}</h3>
       </div>
     </>
