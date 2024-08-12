@@ -99,6 +99,9 @@ const store = create(
       baseURL: "https://www.ssafy11s.com",
       // baseURL: "http://localhost:8080",
 
+      authClient : "",
+      setAuthClient: (authClient) => set({ authClient }),
+
       wsBattle: "ws-battle",
       wsChat: "ws-chat",
 

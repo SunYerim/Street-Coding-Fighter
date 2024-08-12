@@ -37,6 +37,7 @@ const LoginPage = () => {
     setSchoolName,
     setBirth,
     setRefreshToken,
+    setAuthClient,
   } = store((state) => ({
     accessToken: state.accessToken,
     setAccessToken: state.setAccessToken,
@@ -48,6 +49,7 @@ const LoginPage = () => {
     setSchoolName: state.setSchoolName,
     setBirth: state.setBirth,
     setRefreshToken: state.setRefreshToken,
+    setAuthClient : state.setAuthClient
   }));
   const userId = useRef(null);
   const password = useRef(null);
@@ -70,7 +72,12 @@ const LoginPage = () => {
       const accessToken = authorizationHeader
         ? authorizationHeader.replace(/^Bearer\s+/i, "")
         : null;
-
+      const authClient = createAuthClient(
+        baseURL,
+        () => {localStorage.getItem('accessToken')},
+        setAccessToken
+      );
+      setAuthClient(authClient);
       const memberId = res.data["memberId"];
 
       setAccessToken(accessToken);
