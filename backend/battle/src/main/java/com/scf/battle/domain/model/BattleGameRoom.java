@@ -95,6 +95,7 @@ public class BattleGameRoom {
             if (playerA.getUserId().equals(player.getUserId())) player = playerB; // 내가 B
             else player = playerA; // 내가 A
             isAttack = false;
+            power -= 10;
         } else if (!isAttack) { // 한번도 공격 안 한 경우
             this.isAttack = true;
         }

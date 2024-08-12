@@ -5,5 +5,6 @@ public enum ItemType {
     DEFENSE,
     SPECIAL,
     BUFF,
-    DEBUFF
+    DEBUFF,
+    NULL
 }
