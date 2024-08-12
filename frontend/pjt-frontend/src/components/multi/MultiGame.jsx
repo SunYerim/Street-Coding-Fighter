@@ -204,7 +204,7 @@ useEffect(() => {
           setPlaying(true);
           console.log(data.payload);
           handleSetProblemList(data.payload);
-          problemLength = data.payload.length;
+          // problemLength = data.payload.length;
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
@@ -223,13 +223,14 @@ useEffect(() => {
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           console.log("전체랭킹: ", data.payload);
+
           // isSubmitRef.current = false;
           // setCount(30);
           // setCurrentRound(cnt + 1);
           // setRound((prevVal) => prevVal + 1);
           // setTimerEnded(false);
 
-          if (round == problemLength - 1) {
+          if (round == problemList.length - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
@@ -243,19 +244,22 @@ useEffect(() => {
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
-          isSubmitRef.current = false;
-          // setCurrentRound(cnt + 1);
-          setRound((prevVal) => prevVal + 1);
-          // setTimerEnded(false);
 
-          if (round < problemLength - 1) {
+          // setCurrentRound(cnt + 1);
+          // setTimerEnded(false);
+          setRound((prevVal) => prevVal + 1);
+          setCount(30);
+          setTimerEnded(false);
+          isSubmitRef.current = false;
+
+          if (round < problemList.length - 1) {
             // 모달 열고 4초 대기
             setModalOpen(true);
             setTimeout(() => {
               // setCurrentRound(cnt + 1);
               // setRound((prevVal) => prevVal + 1);
-              setCount(30);
-              setTimerEnded(false);
+              // setCount(30);
+              // setTimerEnded(false);
               setModalOpen(false);
             }, 4000);
           }
@@ -291,8 +295,6 @@ useEffect(() => {
 
   
   useEffect(() => {
-    cnt = round;
-
     if (round >= problemList.length) {
       setPlaying(false);
       clearProblemList();
@@ -367,7 +369,6 @@ useEffect(() => {
 
   const renderProblem = () => {
     console.log("현재 라운드에 대한 문제 렌더링:", round);
-    console.log("현재 라운드의 cnt:", cnt);
 
     return problemList[round] ? (
       <>
