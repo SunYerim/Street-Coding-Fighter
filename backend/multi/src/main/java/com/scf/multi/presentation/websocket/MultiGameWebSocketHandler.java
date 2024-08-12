@@ -86,7 +86,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
 
         multiGameService.changeSubmitItem(roomId, session.getId(), true);
         List<SubmitItem> submits = multiGameService.getSubmits(roomId);
-        broadcastMessageToRoom("submit-list", roomId, submits);
+        broadcastMessageToRoom(roomId, "submit-list", submits);
 
         multiGameService.increaseSubmit(roomId);
 
