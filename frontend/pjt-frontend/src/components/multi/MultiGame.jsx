@@ -1,17 +1,19 @@
-  import "../../index.css";
-  import "../../css/GameMain.css";
-  import "../../css/MultiGame.css";
-  import MultiHeader from "../game/MultiHeader.jsx"
-  import InputField from "../game/InputField.jsx";
-  import MessageContainer from "../game/MessageContainer.jsx";
-  import MultiResultModal from "./MultiResultModal.jsx";
-  import newSocket from "../game/server.js";
-  import { useState, useEffect, useRef } from "react";
-  import { useLocation, useNavigate } from "react-router-dom";
-  import multiStore from "../../stores/multiStore.jsx";
-  import store from "../../store/store.js";
-  import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
-  import axios from "axios";
+import "../../index.css";
+import "../../css/GameMain.css";
+import "../../css/MultiGame.css";
+import '../../css/Container.css';
+import "../../css/Timer.css";
+import MultiHeader from "../game/MultiHeader.jsx"
+import InputField from "../game/InputField.jsx";
+import MessageContainer from "../game/MessageContainer.jsx";
+import MultiResultModal from "./MultiResultModal.jsx";
+import newSocket from "../game/server.js";
+import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import multiStore from "../../stores/multiStore.jsx";
+import store from "../../store/store.js";
+import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
+import axios from "axios";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -553,15 +555,16 @@ useEffect(() => {
   //   {userId: "8", isSubmit: false},
   // ]
 
-  // let mergedList = gameRank.map(rankItem => {
-  //   const submitItem = submitList.find(submitItem => submitItem.userId === rankItem.userId);
-  //   return {
-  //     ...rankItem,
-  //     isSubmit: submitItem ? submitItem.isSubmit : null 
-  //   };
-  // });
+  let mergedList = (gameRank.length > 1 ? gameRank : playerList).map(rankItem => {
+    const submitItem = submitList.find(submitItem => submitItem.userId === rankItem.userId);
+    return {
+      ...rankItem,
+      isSubmit: submitItem ? submitItem.isSubmit : null 
+    };
+  });
+  
 
-  // console.log(mergedList);
+  console.log(mergedList);
 
   return (
     <>
@@ -576,7 +579,7 @@ useEffect(() => {
               )}
             </div>
             <div className="multi-rank-table">
-            {playing ? (
+            {round > 0 ? (
               gameRank.map((user, i) => {
                 return (
                   <UserRank
@@ -667,12 +670,13 @@ useEffect(() => {
 }
 
 function UserRank(props) {  
-  // const backgroundColor = props.isSubmit ? 'yellow' : '';
+  const backgroundColor = props.isSubmit ? 'yellow' : '';
+  const borderColor = props.userId === memberId ? 'pink' : '';
 
   return (
     <>
-      {/* <div className="multi-rank-items" style={{ backgroundColor }}> */}
-      <div className="multi-rank-items">
+      {/* <div className="multi-rank-items"> */}
+      <div className="multi-rank-items" style={{ backgroundColor, border: borderColor ? `3px solid ${borderColor}` : '' }}>
         <h3>{props.rank}</h3>
         <h3>{props.username}</h3>
         <h4>{props.score}</h4>
