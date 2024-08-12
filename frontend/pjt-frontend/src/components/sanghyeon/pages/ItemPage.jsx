@@ -127,53 +127,42 @@ const ItemPage = () => {
       showCancelButton: true,
       confirmButtonText: "구매",
       cancelButtonText: "취소",
-    }).then((result) => {
-      Swal.fire({
-        icon: "info",
-        title: "알쏭달쏭 의상 티켓 구매",
-        text: "알쏭달쏭 의상 티켓을 구매하시겠습니까?",
-        showCancelButton: true,
-        confirmButtonText: "구매",
-        cancelButtonText: "취소",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          if (exp < 500) {
-            Swal.fire({
-              icon: "error",
-              title: "포인트 부족",
-              text: "포인트가 부족합니다.",
-              timer: 3000,
-            });
-            return;
-          }
-
-          try {
-            const purchaseRes = await authClient({
-              method: "GET",
-              url: "/user/gacha/character-cloth",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            });
-
-            const nextCharacter =
-              character -
-              (character % 100) +
-              purchaseRes.data.characterClothType;
-            setCharacter(nextCharacter);
-            setRarity(purchaseRes.data.rarity);
-            setExp(exp - 500);
-            openModal();
-          } catch (error) {
-            Swal.fire({
-              icon: "error",
-              title: "아이템 구매 실패",
-              text: "아이템 구매에 실패하였습니다. 다시 시도해주세요.",
-              timer: 3000,
-            });
-          }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (exp < 500) {
+          Swal.fire({
+            icon: "error",
+            title: "포인트 부족",
+            text: "포인트가 부족합니다.",
+            timer: 3000,
+          });
+          return;
         }
-      });
+
+        try {
+          const purchaseRes = await authClient({
+            method: "GET",
+            url: "/user/gacha/character-cloth",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+
+          const nextCharacter =
+            character - (character % 100) + purchaseRes.data.characterClothType;
+          setCharacter(nextCharacter);
+          setRarity(purchaseRes.data.rarity);
+          setExp(exp - 500);
+          openModal();
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "아이템 구매 실패",
+            text: "아이템 구매에 실패하였습니다. 다시 시도해주세요.",
+            timer: 3000,
+          });
+        }
+      }
     });
   };
 
