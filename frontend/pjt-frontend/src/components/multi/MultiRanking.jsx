@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import multiStore from '../../stores/multiStore.jsx';
 
-const MultiRanking = ({ getScore }) => {
-  const { gameRank, roundRank, playing } = multiStore((state) => ({
+const MultiRanking = () => {
+  const { gameRank, roundRank, playing, getScore } = multiStore((state) => ({
     gameRank: state.gameRank,
     roundRank: state.roundRank,
     playing: state.playing,

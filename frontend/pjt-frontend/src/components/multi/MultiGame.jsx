@@ -75,6 +75,8 @@ useEffect(() => {
     blankSolve,
     setBlankSolve,
     clearBlankSolve,
+    getScore,
+    setGetScore,
   } = multiStore((state) => ({
     roomId: state.roomId,
     playing: state.playing,
@@ -103,6 +105,8 @@ useEffect(() => {
     blankSolve: state.blankSolve,
     setBlankSolve: state.setBlankSolve,
     clearBlankSolve: state.clearBlankSolve,
+    getScore: state.getScore,
+    setGetScore: state.setGetScore,
   }));
 
   // 유저정보 받아오기
@@ -135,7 +139,6 @@ useEffect(() => {
   let cnt = 0;
   const [round, setRound] = useState(0);
   let problemLength = 0;
-  let getScore = 0;
 
   const [timerEnded, setTimerEnded] = useState(false);
   
@@ -206,7 +209,7 @@ useEffect(() => {
           console.log(data.payload);
           setHostId(data.payload);
         } else if (data.type === "attainScore") {
-          getScore = data.payload;
+          setGetScore(data.payload);
           console.log(`얻은 점수: ${data.payload}`);
         }else if (data.type === "player-list") {
           // 플레이어 리스트
@@ -659,8 +662,8 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal getScore = {getScore} />}
-      {resultModalOpen && <MultiResultModal getScore = {getScore} />}
+      {modalOpen && <MultiResultModal />}
+      {resultModalOpen && <MultiResultModal />}
     </>
   );
 }
