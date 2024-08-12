@@ -7,12 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -56,47 +54,23 @@ public class RankService {
         return valueOps.get(key);
     }
 
-    public void updateRank(UserExp userExp, String datePrefix) {
+    public void updateRank(UserExp userExp, String key) {
 
-        String key = datePrefix + userExp.getUserId();
-
-        // 플레이어가 이미 점수를 가지고 있는지 확인
-        Double currentScore = zSetOps().score(key, userExp);
-
-        // 플레이어가 존재하면 점수를 증가시키고, 그렇지 않으면 추가
-        if (currentScore != null) {
-            zSetOps().incrementScore(key, userExp, userExp.getExp());
-        } else {
-            zSetOps().add(key, userExp, userExp.getExp());
-        }
+        // 사용자 ID를 필드로 사용하여 점수 업데이트
+        redisTemplate.opsForHash().increment(key, userExp.getUserId(), userExp.getExp());
     }
 
-    public List<UserExp> getRankings(String datePrefix) {
+    public List<UserExp> getRankings(String key) {
+
+        Map<Object, Object> userScores = redisTemplate.opsForHash().entries(key);
+
         List<UserExp> userExps = new ArrayList<>();
+        for (Map.Entry<Object, Object> entry : userScores.entrySet()) {
+            UserExp userExp = (UserExp) entry.getValue();
 
-        RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
-        if (connectionFactory != null) {
-            try (RedisConnection connection = connectionFactory.getConnection()) {
-                // SCAN 명령어 사용하여 키 검색
-                Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match(datePrefix + "*").build());
-
-                while (cursor.hasNext()) {
-                    byte[] keyBytes = cursor.next();
-                    String key = new String(keyBytes);
-
-                    // 각 키의 값 가져오기
-                    UserExp userExp = redisTemplate.opsForValue().get(key);
-                    if (userExp != null) {
-                        userExps.add(userExp);
-                    }
-                }
-                cursor.close();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
+            userExps.add(userExp);
         }
 
-        // exp를 기준으로 내림차순 정렬
         return userExps.stream()
             .sorted((r1, r2) -> Integer.compare(r2.getExp(), r1.getExp()))
             .collect(Collectors.toList());
@@ -105,12 +79,12 @@ public class RankService {
     public String getWeeklyPrefix(LocalDate date) {
         // 주간 랭킹 키 생성 (예: "user:weekly:2024-W31")
         String weekOfYear = String.format("W%02d", date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR));
-        return RedisRankType.WEEKLY.key + date.getYear() + "-" + weekOfYear + ":";
+        return RedisRankType.WEEKLY.key + ":" + date.getYear() + "-" + weekOfYear;
     }
 
     public String getDailyPrefix(LocalDate date) {
         // 일간 랭킹 키 생성 (예: "user:daily:2024-07-31")
-        return RedisRankType.DAILY.key + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + ":";
+        return RedisRankType.DAILY.key + ":" + date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     // 일간 랭킹 초기화
