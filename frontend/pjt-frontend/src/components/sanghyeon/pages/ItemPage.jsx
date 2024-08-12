@@ -205,7 +205,7 @@ const ItemPage = () => {
     );
   };
 
-  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
