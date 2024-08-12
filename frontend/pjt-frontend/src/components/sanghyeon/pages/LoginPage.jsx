@@ -74,7 +74,7 @@ const LoginPage = () => {
         : null;
       const authClient = createAuthClient(
         baseURL,
-        () => {localStorage.getItem('accessToken')},
+        () => {accessToken},
         setAccessToken
       );
       setAuthClient(authClient);
