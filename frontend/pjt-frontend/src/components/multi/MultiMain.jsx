@@ -101,7 +101,7 @@ export default function MultiMain() {
                   { multiList.length > 0 ? (
                     multiList.map((room, i) => {
                       if (room.curPlayer === 0) {
-                        return null; // curPlayer가 0인 경우 아무것도 반환하지 않음
+                        return null;
                       }
                       
                       return (
@@ -143,7 +143,7 @@ export default function MultiMain() {
               </div>
               <div className="button-container">
                 <button onClick={refreshPage}>새로고침</button>
-                <button onClick={() => navigate("/multi-create")}>방 만들기</button>
+                <button onClick={() => navigate("/_multi-create")}>방 만들기</button>
               </div>
             </div>
           </div>

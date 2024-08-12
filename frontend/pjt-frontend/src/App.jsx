@@ -115,7 +115,7 @@ function App() {
             element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
           />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
-          <Route path="/_multi" element={<MultiMain />} />
+          <Route path="/multi" element={<MultiMain />} />
           <Route path="/multi-create" element={<MultiCreate />} />
           <Route
             path="/battle"

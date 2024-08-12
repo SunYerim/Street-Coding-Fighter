@@ -9,7 +9,7 @@ function MainSelectModeBox(props) {
     if (mode === "스토리모드") {
       navigate("/story-main");
     } else if (mode === "멀티 모드") {
-      navigate("/multi");
+      navigate("/_multi");
     } else if (mode === "배틀 모드") {
       navigate("/battle-list");
     } else if (mode === "랭킹") {

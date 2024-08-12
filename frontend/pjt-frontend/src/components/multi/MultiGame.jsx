@@ -8,7 +8,7 @@ import MessageContainer from "../game/MessageContainer.jsx";
 import MultiResultModal from "./MultiResultModal.jsx";
 import newSocket from "../game/server.js";
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import multiStore from "../../stores/multiStore.jsx";
 import store from "../../store/store.js";
 import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
@@ -41,7 +41,6 @@ useEffect(() => {
 }, []);
 
 // --------------------------페이지에서 나가면 다시 음악바뀝니다.-----------------------//
-  const navigate = useNavigate();
   const location = useLocation();
   const chatStompClient = useRef(null);
   const isSubmitRef = useRef(false);

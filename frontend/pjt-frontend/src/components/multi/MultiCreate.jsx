@@ -103,7 +103,7 @@ export default function MultiCreate() {
               </div>
               <div className="create-button-container">
                 <button className="create-button" type="submit">Create</button>
-                <button className="create-button" onClick={() => navigate("/multi")}>Cancle</button>
+                <button className="create-button" onClick={() => navigate("/_multi")}>Cancle</button>
               </div>
             </div>
           </form>

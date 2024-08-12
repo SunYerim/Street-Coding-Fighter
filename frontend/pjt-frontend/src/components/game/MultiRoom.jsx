@@ -81,7 +81,7 @@ function MultiRoom(props) {
         console.log('props.roomId', props.roomId);
         console.log('state.roomId', roomId);
         
-        navigate(`/multi-game/${props.roomId}`);
+        navigate(`/_multi-game/${props.roomId}`);
       } else {  
         alert('Enterance error');
       }
@@ -112,7 +112,7 @@ function MultiRoom(props) {
         console.log('props.roomId', props.roomId);
         console.log('state.roomId', roomId);
         
-        navigate(`/multi-game/${props.roomId}`);
+        navigate(`/_multi-game/${props.roomId}`);
       } else {  
         alert('Incorrect password');
       }

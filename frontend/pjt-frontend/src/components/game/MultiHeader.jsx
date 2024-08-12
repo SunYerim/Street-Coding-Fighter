@@ -27,7 +27,7 @@ const MultiHeader = () => {
         <div
           className="multi-header-title"
           onClick={() => {
-            navigate('/');
+            navigate('/_multi');
           }}
         >
           Street Coding Figther
