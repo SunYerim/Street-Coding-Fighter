@@ -113,8 +113,8 @@ function App() {
             element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
           />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
-          <Route path="/multi" element={<MultiMain />} />
-          <Route path="/multi-create" element={<MultiCreate />} />
+          <Route path="/_multi" element={<MultiMain />} />
+          <Route path="/_multi-create" element={<MultiCreate />} />
           <Route
             path="/battle-list"
             element={accessToken ? <BattleGameListPage /> : <LoginPage />}
@@ -122,8 +122,8 @@ function App() {
           />
           <Route path="/battle-game" element={<BattleGamePage />} />
           {/* <Route path="/multi-game" element={accessToken ? <MultiGame /> : <LoginPage />} /> */}
-          <Route path="/multi-game" element={<MultiGame />} />
-          <Route path="/multi-game/:room_id" element={<MultiGame />} />
+          <Route path="/_multi-game" element={<MultiGame />} />
+          <Route path="/_multi-game/:room_id" element={<MultiGame />} />
           {/* <Route path="/single-main" element={accessToken ? <SingleMain /> : <LoginPage />} /> */}
           <Route path="/story-main" element={<SingleMain />} />
           {/* <Route path="/single-play" element={accessToken ? <SinglePlay /> : <LoginPage />} /> */}
