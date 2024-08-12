@@ -12,15 +12,15 @@ import Header from '../sanghyeon/components/Header.jsx';
 export default function SingleMain() {
   const { setCompleted } = SingleInfoStore();
   const navigate = useNavigate();
+  // const tempToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMwMTMzOTksImV4cCI6MTcyMzAxNjk5OX0.39EpgNaDW4Pwp1taoqcsgB74ORG4ZbIfc7mG9ZWfj0s'
   useEffect(() => {
-    const { baseURL, accessToken } = store(); 
-    const tempToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNzUiLCJhdXRoIjoiVVNFUiIsIm1lbWJlcklkIjoxNzUsInVzZXJuYW1lIjoiRGFlZ2lCZXJuYXJkb1llbyIsImlhdCI6MTcyMzQ0NDAxNiwiZXhwIjoxNzIzNDQ3NjE2fQ.o0gqwFDuiPyaqPLBn_zpbGz-aXOCrOto3dm62-1HK4k'
+    const { baseURL, accessToken } = store();
     const getSingleInfo = () => {
       axios({
         method: 'get',
         url: `${baseURL}/single`,
         headers: {
-          Authorization: `Bearer ${tempToken}`,
+          Authorization: `Bearer ${accessToken}`,
           // Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MCIsImF1dGgiOiJVU0VSIiwibWVtYmVySWQiOjkwLCJ1c2VybmFtZSI6IuqwgOyghOyCrOyXheu2gC3quYDrr7zsmrEiLCJpYXQiOjE3MjMwOTczNjgsImV4cCI6MTcyMzEwMDk2OH0.4wZxyxS2RwHVFiZZWq7e3QIV54UZ1_XNdYb0x-92qAQ`,
         },
       })
