@@ -300,7 +300,7 @@ useEffect(() => {
       setRound(0);
     } else if (round > 0 && round < problemList.length) {
       console.log("Round가 업데이트됨:", round);
-      renderProblem(); // 다음 문제를 렌더링
+      renderProblem(round); // 다음 문제를 렌더링
     }
   }, [round]);
 
@@ -366,19 +366,19 @@ useEffect(() => {
   };
 
 
-  const renderProblem = () => {
-    console.log("현재 라운드에 대한 문제 렌더링:", round);
-    return problemList[round] ? (
+  const renderProblem = (cur) => {
+    console.log("현재 라운드에 대한 문제 렌더링:", cur);
+    return problemList[cur] ? (
       <>
-        {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
-          <FillInTheBlank problem={problemList[round]} onFillBlank={handleBlankAnswer} />
+        {problemList[cur].problemType === "FILL_IN_THE_BLANK" && (
+          <FillInTheBlank problem={problemList[cur]} onFillBlank={handleBlankAnswer} />
         )}
-        {problemList[round].problemType === "SHORT_ANSWER_QUESTION" && (
-          <ShortAnswer problem={problemList[round]} onShortAnswer={handleShortAnswer} />
+        {problemList[cur].problemType === "SHORT_ANSWER_QUESTION" && (
+          <ShortAnswer problem={problemList[cur]} onShortAnswer={handleShortAnswer} />
         )}
-        {problemList[round].problemType === "MULTIPLE_CHOICE" && (
+        {problemList[cur].problemType === "MULTIPLE_CHOICE" && (
           <MultipleChoice
-            problem={problemList[round]}
+            problem={problemList[cur]}
             onChoiceSelect={handleChoiceSelection}
           />
         )}
@@ -655,7 +655,7 @@ useEffect(() => {
                     <h2>Submitted!</h2>
                   </div>
                 ) : (
-                  <div>{problemList.length > 0 && renderProblem()}</div>
+                  <div>{problemList.length > 0 && renderProblem(round)}</div>
                 )}
               </div>
             )}
