@@ -298,9 +298,6 @@ useEffect(() => {
       clearRoundRank();
       clearType();
       setRound(0);
-    } else if (round > 0 && round < problemList.length) {
-      console.log("Round가 업데이트됨:", round);
-      renderProblem(round); // 다음 문제를 렌더링
     }
   }, [round]);
 
@@ -366,19 +363,19 @@ useEffect(() => {
   };
 
 
-  const renderProblem = (cur) => {
-    console.log("현재 라운드에 대한 문제 렌더링:", cur);
-    return problemList[cur] ? (
+  const renderProblem = () => {
+    console.log("현재 라운드에 대한 문제 렌더링:", round);
+    return problemList[round] ? (
       <>
-        {problemList[cur].problemType === "FILL_IN_THE_BLANK" && (
-          <FillInTheBlank problem={problemList[cur]} onFillBlank={handleBlankAnswer} />
+        {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
+          <FillInTheBlank problem={problemList[round]} onFillBlank={handleBlankAnswer} />
         )}
-        {problemList[cur].problemType === "SHORT_ANSWER_QUESTION" && (
-          <ShortAnswer problem={problemList[cur]} onShortAnswer={handleShortAnswer} />
+        {problemList[round].problemType === "SHORT_ANSWER_QUESTION" && (
+          <ShortAnswer problem={problemList[round]} onShortAnswer={handleShortAnswer} />
         )}
-        {problemList[cur].problemType === "MULTIPLE_CHOICE" && (
+        {problemList[round].problemType === "MULTIPLE_CHOICE" && (
           <MultipleChoice
-            problem={problemList[cur]}
+            problem={problemList[round]}
             onChoiceSelect={handleChoiceSelection}
           />
         )}
@@ -638,13 +635,19 @@ useEffect(() => {
             {!playing ? (
               <div className="before-start">
                 <h1>. . . Waiting for start . . .</h1>
-                {hostId == memberId && playerList.length >= 2 ? (
-                  <button className="game-start-button" onClick={handleStart}>
-                    Start
-                  </button>
+                {hostId == memberId ? (
+                  playerList.length >= 2 ? (
+                    <button className="game-start-button" onClick={handleStart}>
+                      Start
+                    </button>
+                  ) : (
+                    <div>
+                      <h2>2인 이상만 플레이할 수 있습니다!</h2>
+                    </div>
+                  )
                 ) : (
                   <div>
-                    <h2>방장만 시작가능!</h2>
+                    <h2>방장만 시작할 수 있습니다!</h2>
                   </div>
                 )}
               </div>
@@ -655,7 +658,7 @@ useEffect(() => {
                     <h2>Submitted!</h2>
                   </div>
                 ) : (
-                  <div>{problemList.length > 0 && renderProblem(round)}</div>
+                  <div>{problemList.length > 0 && renderProblem()}</div>
                 )}
               </div>
             )}
