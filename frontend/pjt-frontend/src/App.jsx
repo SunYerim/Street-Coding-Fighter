@@ -121,10 +121,6 @@ function App() {
             // element={<BattleGameListPage />}
           />
           <Route path="/battle-game" element={<BattleGamePage />} />
-          <Route
-            path="/battle-create"
-            element={accessToken ? <BattleCreate /> : <LoginPage />}
-          />
           {/* <Route path="/multi-game" element={accessToken ? <MultiGame /> : <LoginPage />} /> */}
           <Route path="/multi-game" element={<MultiGame />} />
           <Route path="/multi-game/:room_id" element={<MultiGame />} />
