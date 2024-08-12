@@ -320,6 +320,47 @@ public class MultiGameService {
         return room.getSubmits();
     }
 
+    public void resetSubmits(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
+    }
+
+    public void validateRoomIsStart(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+        if (!room.getIsStart()) {
+            throw new BusinessException(roomId, "roomId", ErrorCode.NOT_YET_START_GAME);
+        }
+    }
+
+    public void processRound(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.nextRound();
+        room.getCurSubmitCount().set(0);
+    }
+
+    public void saveSolved(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .forEach(player ->
+                Optional.ofNullable(player.getSolveds()).ifPresent(kafkaMessageProducer::sendSolved)
+            );
+    }
+
+    public void finishRound(String roomId) {
+
+        MultiGameRoom room = findOneById(roomId);
+
+        room.getPlayers().forEach(player -> player.setSolveds(null));
+    }
+
     private RoomResponse.ListDTO mapToRoomListDTO(MultiGameRoom room) {
         return RoomResponse.ListDTO.builder()
             .roomId(room.getRoomId())
@@ -465,46 +506,5 @@ public class MultiGameService {
         }
 
         return BASE_SCORE * (MAX_SUBMIT_TIME - submitTime) + (streakCount * STREAK_BONUS);
-    }
-
-    public void resetSubmits(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.getSubmits().forEach(submitItem -> submitItem.setIsSubmit(false));
-    }
-
-    public void validateRoomIsStart(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-        if (!room.getIsStart()) {
-            throw new BusinessException(roomId, "roomId", ErrorCode.NOT_YET_START_GAME);
-        }
-    }
-
-    public void processRound(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.nextRound();
-        room.getCurSubmitCount().set(0);
-    }
-
-    public void saveSolved(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.getPlayers().stream()
-            .filter(player -> player.getIsOnRoom().equals(true))
-            .forEach(player ->
-                Optional.ofNullable(player.getSolveds()).ifPresent(kafkaMessageProducer::sendSolved)
-            );
-    }
-
-    public void finishRound(String roomId) {
-
-        MultiGameRoom room = findOneById(roomId);
-
-        room.getPlayers().forEach(player -> player.setSolveds(null));
     }
 }
