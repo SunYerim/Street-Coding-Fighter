@@ -243,7 +243,7 @@ useEffect(() => {
         } else if (data.type === "roundRank") {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
-          isSubmitRef.current = false;
+          // isSubmitRef.current = false;
           // setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
           // setTimerEnded(false);
@@ -257,6 +257,7 @@ useEffect(() => {
               setCount(30);
               setTimerEnded(false);
               setModalOpen(false);
+              isSubmitRef.current = false;
             }, 4000);
           }
         }
