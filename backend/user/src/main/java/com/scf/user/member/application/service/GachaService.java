@@ -16,37 +16,37 @@ public class GachaService {
     private static final List<CharacterType> characterTypes = new ArrayList<>();
 
     static {
-        clothingTypes.add(new ClothingType(1, 0.078, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(2, 0.025, Rarity.LEGENDARY));
-        clothingTypes.add(new ClothingType(3, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(4, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(5, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(6, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(7, 0.07, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(8, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(9, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(10, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(11, 0.07, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(12, 0.07, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(13, 0.025, Rarity.LEGENDARY));
-        clothingTypes.add(new ClothingType(14, 0.074, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(15, 0.074, Rarity.COMMON));
+        clothingTypes.add(new ClothingType(1, 0.025, Rarity.EPIC));
+        clothingTypes.add(new ClothingType(2, 0.005, Rarity.LEGENDARY));
+        clothingTypes.add(new ClothingType(3, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(4, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(5, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(6, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(7, 0.025, Rarity.EPIC));
+        clothingTypes.add(new ClothingType(8, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(9, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(10, 0.098, Rarity.COMMON)); // 9.8%
+        clothingTypes.add(new ClothingType(11, 0.025, Rarity.EPIC));
+        clothingTypes.add(new ClothingType(12, 0.025, Rarity.EPIC));
+        clothingTypes.add(new ClothingType(13, 0.005, Rarity.LEGENDARY));
+        clothingTypes.add(new ClothingType(14, 0.102, Rarity.COMMON)); // 10.2%
+        clothingTypes.add(new ClothingType(15, 0.102, Rarity.COMMON)); // 10.2%
 
     }
 
     static {
-        characterTypes.add(new CharacterType(1, 0.1, Rarity.COMMON));
-        characterTypes.add(new CharacterType(2, 0.1, Rarity.COMMON));
-        characterTypes.add(new CharacterType(3, 0.1, Rarity.COMMON));
-        characterTypes.add(new CharacterType(4, 0.1, Rarity.COMMON));
-        characterTypes.add(new CharacterType(5, 0.1, Rarity.COMMON));
-        characterTypes.add(new CharacterType(6, 0.1, Rarity.COMMON));
-        characterTypes.add(new CharacterType(7, 0.09, Rarity.EPIC));
-        characterTypes.add(new CharacterType(8, 0.09, Rarity.EPIC));
-        characterTypes.add(new CharacterType(9, 0.09, Rarity.EPIC));
-        characterTypes.add(new CharacterType(10, 0.08, Rarity.EPIC));
-        characterTypes.add(new CharacterType(11, 0.025, Rarity.LEGENDARY));
-        characterTypes.add(new CharacterType(12, 0.025, Rarity.LEGENDARY));
+        characterTypes.add(new CharacterType(1, 0.078, Rarity.COMMON)); // 7.8%로 설정된 항목
+        characterTypes.add(new CharacterType(2, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(3, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(4, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(5, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(6, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(7, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
+        characterTypes.add(new CharacterType(8, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
+        characterTypes.add(new CharacterType(9, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
+        characterTypes.add(new CharacterType(10, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
+        characterTypes.add(new CharacterType(11, 0.005, Rarity.LEGENDARY)); // 0.5%로 설정된 항목
+        characterTypes.add(new CharacterType(12, 0.005, Rarity.LEGENDARY)); // 0.5%로 설정된 항목
     }
 
     public Integer drawClothingType() {
