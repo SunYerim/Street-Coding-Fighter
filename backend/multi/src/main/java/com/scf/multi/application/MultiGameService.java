@@ -257,13 +257,16 @@ public class MultiGameService {
 
         MultiGameRoom room = findOneById(roomId);
 
-        room.getPlayers().forEach(player ->
-            Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
-                solveds.forEach(kafkaMessageProducer::sendSolved)
-            )
-        );
+        room.getPlayers().stream()
+            .filter(player -> player.getIsOnRoom().equals(true))
+            .forEach(player ->
+                Optional.ofNullable(player.getSolveds()).ifPresent(solveds ->
+                    solveds.forEach(kafkaMessageProducer::sendSolved)
+                )
+            );
 
-        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(room.getGameRank()).build());
+        List<Rank> gameRank = room.getGameRank().stream().toList();
+        kafkaMessageProducer.sendResult(GameResult.builder().gameRank(gameRank).build());
 
         room.finishGame();
     }
