@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
         // Character 생성
         Character character = new Character();
         character.setCharacterType(registerRequestDto.getCharacterType());
-        character.setCharacterCloth(0); // defalut는 0
+        character.setCharacterCloth(1); // defalut는 0
         character.setMember(savedMember);
 
         // Member 엔티티에 Character 설정
