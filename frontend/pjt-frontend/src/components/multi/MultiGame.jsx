@@ -379,6 +379,23 @@ useEffect(() => {
   function Timer({ setTimerEnded }) {
     useEffect(() => {
       if (count <= 0) {
+        switch (problemList[round].problemType) {
+          case "FILL_IN_THE_BLANK":
+            setBlankSolve(null);
+            handleBlankAnswer();
+            isSubmitRef.current = true;
+            break;
+          case "SHORT_ANSWER_QUESTION":
+            handleShortAnswer(null);
+            isSubmitRef.current = true;
+            break;
+          case "MULTIPLE_CHOICE":
+            handleChoiceSelection(null);
+            isSubmitRef.current = true;
+            break;
+          default:
+            console.log("Unknown problem type: " + problemList[round].problemType);
+        }
         setTimerEnded(true);
         return;
       }
@@ -403,27 +420,27 @@ useEffect(() => {
     );
   }
 
-  useEffect(() => {
-    if (count === 0 && !isSubmitRef.current) {
-      switch (problemList[round].problemType) {
-        case "FILL_IN_THE_BLANK":
-          setBlankSolve(null);
-          handleBlankAnswer();
-          isSubmitRef.current = true;
-          break;
-        case "SHORT_ANSWER_QUESTION":
-          handleShortAnswer(null);
-          isSubmitRef.current = true;
-          break;
-        case "MULTIPLE_CHOICE":
-          handleChoiceSelection(null);
-          isSubmitRef.current = true;
-          break;
-        default:
-          console.log("Unknown problem type: " + problemList[round].problemType);
-      }
-    }
-  }, [count]);
+  // useEffect(() => {
+  //   if (count === 0 && !isSubmitRef.current) {
+  //     switch (problemList[round].problemType) {
+  //       case "FILL_IN_THE_BLANK":
+  //         setBlankSolve(null);
+  //         handleBlankAnswer();
+  //         isSubmitRef.current = true;
+  //         break;
+  //       case "SHORT_ANSWER_QUESTION":
+  //         handleShortAnswer(null);
+  //         isSubmitRef.current = true;
+  //         break;
+  //       case "MULTIPLE_CHOICE":
+  //         handleChoiceSelection(null);
+  //         isSubmitRef.current = true;
+  //         break;
+  //       default:
+  //         console.log("Unknown problem type: " + problemList[round].problemType);
+  //     }
+  //   }
+  // }, [count]);
 
 
 
