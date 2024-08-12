@@ -116,10 +116,6 @@ function App() {
           <Route path="/multi" element={<MultiMain />} />
           <Route path="/multi-create" element={<MultiCreate />} />
           <Route
-            path="/battle"
-            element={accessToken ? <BattleMain /> : <LoginPage />}
-          />
-          <Route
             path="/battle-list"
             element={accessToken ? <BattleGameListPage /> : <LoginPage />}
             // element={<BattleGameListPage />}
