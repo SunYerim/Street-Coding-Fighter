@@ -34,17 +34,25 @@ function App() {
   const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
-  const { accessToken } = store((state) => ({
+  const { accessToken, setAccessToken } = store((state) => ({
     accessToken: state.accessToken,
   }));
   
   useEffect(() => {
+    //초기 화면 렌더링 시 accessToken 불러오기
+    if(!accessToken){
+      setAccessToken(localStorage.getItem("accessToken"))
+    }
+
+
+
     // 배경음악 초기화 및 재생
     setTimeout(() => {
       setIsLoading(false);
       console.log("loading end");
       playBackgroundMusic();
     }, 2000);
+    
     // 시간에 따라 배경화면 변화    const updateBackgroundImage = () => {
     const now = new Date();
     const minutes = now.getMinutes();
