@@ -229,7 +229,7 @@ useEffect(() => {
           // setRound((prevVal) => prevVal + 1);
           // setTimerEnded(false);
 
-          if (cnt == problemLength - 1) {
+          if (round == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
@@ -244,11 +244,11 @@ useEffect(() => {
           setRoundRank(data.payload);
           console.log("라운드랭킹: ", data.payload);
           isSubmitRef.current = false;
-          // setTimerEnded(false);
-          setCurrentRound(cnt + 1);
+          // setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
+          // setTimerEnded(false);
 
-          if (cnt < problemLength - 1) {
+          if (round < problemLength - 1) {
             // 모달 열고 4초 대기
             setModalOpen(true);
             setTimeout(() => {
@@ -284,10 +284,10 @@ useEffect(() => {
     setProblemList(data);
   };
 
-  useEffect(() => {
-    cnt = currentRound;
-    console.log("cnt ", cnt);
-  }, [currentRound]);
+  // useEffect(() => {
+  //   cnt = currentRound;
+  //   console.log("cnt ", cnt);
+  // }, [currentRound]);
 
   
   useEffect(() => {
@@ -298,6 +298,9 @@ useEffect(() => {
       clearRoundRank();
       clearType();
       setRound(0);
+    } else if (round > 0 && round < problemList.length) {
+      console.log("Round가 업데이트됨:", round);
+      renderProblem(); // 다음 문제를 렌더링
     }
   }, [round]);
 
@@ -363,7 +366,8 @@ useEffect(() => {
   };
 
 
-  const renderProblem = (round) => {
+  const renderProblem = () => {
+    console.log("현재 라운드에 대한 문제 렌더링:", round);
     return problemList[round] ? (
       <>
         {problemList[round].problemType === "FILL_IN_THE_BLANK" && (
@@ -651,7 +655,7 @@ useEffect(() => {
                     <h2>Submitted!</h2>
                   </div>
                 ) : (
-                  <div>{problemList.length > 0 && renderProblem(cnt)}</div>
+                  <div>{problemList.length > 0 && renderProblem()}</div>
                 )}
               </div>
             )}
