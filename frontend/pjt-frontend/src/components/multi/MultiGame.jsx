@@ -579,7 +579,7 @@ useEffect(() => {
             </div>
             <div className="multi-rank-table">
             {round > 0 ? (
-              gameRank.map((user, i) => {
+              mergedList.map((user, i) => {
                 return (
                   <UserRank
                     rank={user.rank}
@@ -669,6 +669,12 @@ useEffect(() => {
 }
 
 function UserRank(props) {  
+  // 유저정보 받아오기
+  const { memberId } =
+  store((state) => ({
+    memberId: state.memberId,
+  }));
+
   const backgroundColor = props.isSubmit ? 'yellow' : '';
   const borderColor = props.userId === memberId ? 'pink' : '';
 
@@ -685,10 +691,17 @@ function UserRank(props) {
 }
 
 function CurrentPlayer(props) {  
+  // 유저정보 받아오기
+  const { memberId } =
+  store((state) => ({
+    memberId: state.memberId,
+  }));
+
+  const borderColor = props.userId === memberId ? 'pink' : '';
 
   return (
     <>
-      <div className="multi-current-player">
+      <div className="multi-current-player" style={{ border: borderColor ? `3px solid ${borderColor}` : '' }}>
         <h3>{props.username}</h3>
       </div>
     </>
