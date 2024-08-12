@@ -111,6 +111,10 @@ const multiStore = create((set) => ({
   blankSolve: null,
   setBlankSolve: (blankSolve) => set({ blankSolve }),
   clearBlankSolve: () => set({ blankSolve: null }),
+
+  // 얻은 점수
+  getScore: 0,
+  setGetScore: (getScore) => set({ getScore }),
 }));
 
 export default multiStore;

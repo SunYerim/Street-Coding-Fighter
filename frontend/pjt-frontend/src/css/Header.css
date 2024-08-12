@@ -1,16 +1,15 @@
 .header-container {
   position: relative;
   padding-top: 20px;
-  display : flex;
-  justify-content: center;
+  display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
 }
 
 .header-title {
   font-size: 2.2rem;
   font-weight: bold;
-  cursor: pointer;
   color : white;
   text-shadow: #1B1A55 1px 1px, #1B1A55 -1px 0px, #1B1A55 1px 0px,#1B1A55 0px 1px,#1B1A55 0px -1px,#1B1A55 -0px 0px, #1B1A55 -1px 1px, #1B1A55 -2px 2px, #1B1A55 -3px 3px, #1B1A55 -4px 4px, #1B1A55 -5px 5px, #1B1A55 -6px 6px, #1B1A55 -7px 7px, #1B1A55 -8px 8px, #1B1A55 -9px 9px;
 }
@@ -19,30 +18,28 @@
   display: flex;
 }
 
+.gift-icon,
 .user-icon,
 .setting-icon {
-  cursor: pointer;
   width: 40px;
   height: 40px;
   margin: 0 10px;
 }
 
 .header-back-button {
-  position:absolute;
-  left : 30px;
-  top : 30px;
+  position: absolute;
+  left: 30px;
+  top: 20px;
 
   /* background-color: rgba(255, 255, 255, 0.7); */
   font-size: 1rem;
   font-weight: bold;
-  cursor: pointer;
   /* border : 1px solid black; */
-  border-radius : 5px;
-  font-size : 2rem;
+  border-radius: 5px;
+  font-size: 2rem;
 }
-.header-right{
-  position:absolute;
-  right : 30px;
-  top : 30px;
-
+.header-right {
+  position: absolute;
+  right: 30px;
+  top: 20px;
 }

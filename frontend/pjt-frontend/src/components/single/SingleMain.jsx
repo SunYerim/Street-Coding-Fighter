@@ -52,4 +52,5 @@ const TitleDiv = styled.div`
   display: flex;
   justify-content: center;
   margin: 15px 0px;
+  margin-bottom : 50px;
 `;

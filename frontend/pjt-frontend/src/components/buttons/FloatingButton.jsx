@@ -12,7 +12,6 @@ const FloatingButton = styled.button`
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  cursor: pointer;
   position: relative;
   overflow: hidden;
   background-color: #1b1a55; /* 마우스를 올렸을 때 배경색 */
