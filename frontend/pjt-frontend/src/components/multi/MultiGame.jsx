@@ -684,7 +684,7 @@ function CurrentPlayer(props) {
   return (
     <>
       <div 
-        className="multi-rank-items" 
+        className="multi-current-player" 
         style={{ 
           backgroundColor: props.backgroundColor, 
           border: `3px solid ${props.borderColor}`, 
