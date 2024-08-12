@@ -862,8 +862,8 @@ const BattleGamePage = () => {
                     </div>
                     {hostId === memberId ? (
                       <button
-                        // onClick={handleStart}
-                        onClick={handleTemp}
+                        onClick={handleStart}
+                        // onClick={handleTemp}
                         className="battle-game-game-start-button"
                       >
                         게임 시작

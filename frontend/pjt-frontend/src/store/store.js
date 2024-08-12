@@ -123,7 +123,7 @@ const store = create(
       birth: "",
       setBirth: (birth) => set({ birth }),
 
-      accessToken: "ss",
+      accessToken: "",
       setAccessToken: (accessToken) => {
         set({ accessToken });
       },
@@ -148,7 +148,7 @@ const store = create(
       code: "",
       setCode: (code) => set({ code }),
 
-      character: "1203",
+      character: "",
       setCharacter: (character) => set({ character }),
 
       roomId: "",
@@ -166,7 +166,7 @@ const store = create(
       enemyName: "",
       setEnemyName: (enemyName) => set({ enemyName }),
 
-      enemyCharacterType: "101",
+      enemyCharacterType: "",
       setEnemyCharacterType: (enemyCharacterType) =>
         set({ enemyCharacterType }),
 
