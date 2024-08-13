@@ -101,7 +101,19 @@ const BattleGameListPage = () => {
     // 비밀번호가 없는 경우 초기화
 
     if (isLock === true) {
-      inputPassword = prompt("비밀번호를 입력하세요.");
+      Swal.fire({
+        text: "비밀번호를 입력하세요.",
+        input: "password",
+        inputPlaceholder: "비밀번호",
+        inputAttributes: {
+          autocapitalize: "off",
+          autocorrect: "off",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          inputPassword = result.value;
+        }
+      });
 
       if (inputPassword === null || inputPassword === "") {
         Swal.fire({

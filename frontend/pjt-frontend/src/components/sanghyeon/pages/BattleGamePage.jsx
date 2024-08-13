@@ -536,10 +536,10 @@ const BattleGamePage = () => {
         },
       });
     } catch (error) {
-      Swal.fire({
-        text: "게임 종료에 실패했습니다.",
-        icon: "error",
-      });
+      // Swal.fire({
+      //   text: "게임 종료에 실패했습니다.",
+      //   icon: "error",
+      // });
       console.log(error);
     }
   };

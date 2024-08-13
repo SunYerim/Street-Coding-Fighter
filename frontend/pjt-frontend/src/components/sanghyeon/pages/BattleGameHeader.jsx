@@ -51,7 +51,7 @@ const BattleGameHeader = () => {
             icon: "success",
             timer: 3000,
           });
-          navigate("/battle-list");
+          navigate("/_battle-list");
         } catch (error) {
           Swal.fire({
             text: "방 나가기에 실패했습니다.",
