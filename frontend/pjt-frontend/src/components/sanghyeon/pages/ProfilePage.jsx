@@ -102,7 +102,6 @@ function ProfilePage() {
                     <button onClick={() => navigate("/reset-password")}>
                       비밀번호 수정
                     </button>
-                    // <SignOutButton />
                   </div>
                 </div>
                 <div className="profile-character-img-container">
