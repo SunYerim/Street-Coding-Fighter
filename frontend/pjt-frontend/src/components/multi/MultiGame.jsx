@@ -8,7 +8,7 @@ import MessageContainer from '../game/MessageContainer.jsx';
 import MultiResultModal from './MultiResultModal.jsx';
 import newSocket from '../game/server.js';
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import multiStore from '../../stores/multiStore.jsx';
 import store from '../../store/store.js';
 import createAuthClient from '../sanghyeon/apis/createAuthClient.js';
@@ -28,6 +28,7 @@ import SoundStore from '../../stores/SoundStore.jsx';
 import CustomAlert from '../custom-alert/CustomAlert.jsx';
 
 export default function MultiGame() {
+  const navigate = useNavigate();
   //새로고침 막기
   const [isExitAlertOpen, setIsExitAlertOpen] = useState(false);
   useEffect(() => {
@@ -43,7 +44,11 @@ export default function MultiGame() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
-
+  const handleExitAlert = () => {
+    setIsExitAlertOpen(false);
+    disconnectSocket();
+    navigate('/_multi-game')
+  }
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   useEffect(() => {
