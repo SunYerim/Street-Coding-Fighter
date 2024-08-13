@@ -7,7 +7,7 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 // import store from "../../store/store.js";
 // import Swal from "sweetalert2";
 
-const MultiHeader = ({socket}) => {
+const MultiHeader = () => {
   const navigate = useNavigate();
   const userIcon = "/memberIcon.png";
   const settingIcon = "/settingIcon.png";
@@ -19,11 +19,6 @@ const MultiHeader = ({socket}) => {
 
   const closeModal = () => {
     setModalIsOpen(false);
-  };
-
-  const handleBackClick = () => {
-    socket.onClose();
-    navigate("/_multi");
   };
 
   return (
@@ -38,7 +33,10 @@ const MultiHeader = ({socket}) => {
           Street Coding Figther
         </div>
       </div>
-        <div className="multi-header-back-button"  onClick={handleBackClick}>
+        <div className="multi-header-back-button"  onClick={() => {
+            navigate("/_multi");
+          }}
+        >
           <MdOutlineKeyboardBackspace />
         </div>
         <div className='multi-header-right'>
