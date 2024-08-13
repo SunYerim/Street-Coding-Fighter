@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/multi")
 public class MultiGameController {
 
+    private static final Logger log = LoggerFactory.getLogger(MultiGameController.class);
     private final MultiGameService multiGameService;
     private final KafkaMessageProducer kafkaMessageProducer;
 
@@ -53,6 +56,7 @@ public class MultiGameController {
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
         @RequestBody @Valid RoomRequest.CreateRoomDTO createRoomDTO) {
+        log.debug("createRoom.username:{}", username);
         String roomId = multiGameService.createRoom(memberId, username, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
@@ -61,6 +65,7 @@ public class MultiGameController {
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
         @Valid @RequestBody String roomPassword, @RequestHeader Long memberId,
         @RequestHeader String username) {
+        log.debug("joinRoom.username:{}", username);
         multiGameService.joinRoom(roomId, roomPassword, memberId, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }

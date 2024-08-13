@@ -63,6 +63,9 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
             connectedPlayer.getUsername() + " 님이 게임에 참가 하였습니다.");
 
         List<PlayerListDTO> playerList = multiGameService.getPlayerList(roomId);
+        for(PlayerListDTO playerListDTO : playerList) {
+            log.debug("afterConnectionEstablished player name: {}", playerListDTO.getUsername());
+        }
         broadcastMessageToRoom(roomId, "player-list", playerList);
     }
 
