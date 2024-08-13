@@ -151,6 +151,31 @@ const BattleGameListPage = () => {
           console.log(error);
         }
       });
+    } else {
+      try {
+        const joinBattleRoomRes = await authClient({
+          method: "POST",
+          url: `${baseURL}/battle/room/${roomId}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setRoomId(roomId);
+        setRoomPassword(inputPassword);
+        setHostId(joinBattleRoomRes.data.memberId);
+        setEnemyId(joinBattleRoomRes.data.memberId);
+        setEnemyName(joinBattleRoomRes.data.username);
+        setEnemyCharacterType(joinBattleRoomRes.data.hostCharacterType);
+        navigate("/_battle-game");
+      } catch (error) {
+        Swal.fire({
+          text: "방 입장에 실패했습니다.",
+          icon: "error",
+          timer: 3000,
+        });
+        console.log(error);
+      }
     }
   };
 
