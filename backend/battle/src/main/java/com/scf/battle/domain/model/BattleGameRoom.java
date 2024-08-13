@@ -4,6 +4,7 @@ import com.scf.battle.domain.dto.Problem.ProblemResponseDTO;
 import com.scf.battle.domain.dto.User.FightDTO;
 import com.scf.battle.domain.dto.User.Player;
 import com.scf.battle.domain.dto.Problem.Problem;
+import com.scf.battle.domain.dto.User.UserCharaterTypeResponseDTO;
 import com.scf.battle.global.error.ErrorCode;
 import com.scf.battle.global.error.exception.BusinessException;
 import lombok.Builder;
@@ -34,7 +35,7 @@ public class BattleGameRoom {
     private Integer currentRound;
     private Boolean hasPlayerASubmitted;
     private Boolean hasPlayerBSubmitted;
-    private Integer hostCharacterType;
+    private UserCharaterTypeResponseDTO hostCharacter;
 
     // 각 유저가 풀어야 할 문제를 저장할 필드
     @Setter
