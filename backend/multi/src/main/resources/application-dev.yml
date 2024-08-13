@@ -1,6 +1,11 @@
 spring:
   application:
     name: scf-multi
+  web:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 logging:
   level:
@@ -16,9 +21,3 @@ user:
 
 server:
   port: 8082
-
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
