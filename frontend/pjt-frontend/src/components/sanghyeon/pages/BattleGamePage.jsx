@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import BattleGameHeader from "./BattleGameHeader.jsx";
 import "../../../css/BattleGamePage.css";
 import store from "../../../store/store.js";
 import { useEffect, useState, useRef } from "react";
@@ -438,7 +438,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsHealing(false);
-              }, 1000);
+              }, 2000);
             }
           } else {
             if (body.isAttack === true) {
@@ -460,7 +460,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsEnemyHealing(false);
-              }, 1000);
+              }, 2000);
             }
           }
         }
@@ -799,7 +799,7 @@ const BattleGamePage = () => {
             </>
           )}
         </Modal>
-        <Header type="BattleGame" />
+        <BattleGameHeader />
         <div className="battle-game-outer-outer-container">
           <div className="battle-game-outer-container">
             <div className="battle-game-title-container">
