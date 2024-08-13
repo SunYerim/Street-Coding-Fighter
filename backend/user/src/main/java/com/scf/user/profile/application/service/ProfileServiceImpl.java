@@ -316,7 +316,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public Integer calculateMultiExp(int partCnt, int score, int rank) {
         // 기본 경험치
-        int baseExp = 50 * partCnt;
+        int baseExp = 500 * partCnt;
 
         // 순위 보너스: 1등에게는 30%, 2등에게는 20%, 3등에게는 10% 보너스
         // 4등부터는 보너스 없음
@@ -332,7 +332,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         // 순위 보너스 계산
-        int rankBonus = (baseExp * rankBonusPercentage) / 10;
+        int rankBonus = (baseExp * rankBonusPercentage) / 200;
 
         int expGain = baseExp + rankBonus;
 
@@ -355,7 +355,7 @@ public class ProfileServiceImpl implements ProfileService {
         List<Integer> returnExp = new ArrayList<>();
 
         // 기본 경험치
-        int baseExp = 100; // 기본경험치
+        int baseExp = 1000; // 기본경험치
 
         // 순위 보너스: 1등에게는 50%, 2등에게는 10% 보너스
         int aRankBonusPercentage;
@@ -374,8 +374,8 @@ public class ProfileServiceImpl implements ProfileService {
         }
         // 무승부 (rank == 0)
         else {
-            aRankBonusPercentage = 5;
-            bRankBonusPercentage = 5;
+            aRankBonusPercentage = 20;
+            bRankBonusPercentage = 20;
         }
 
         // 순위 보너스 계산
@@ -393,14 +393,14 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     @Transactional
     public void addSingleExp(Long memberId) {
-        // 해당 요청이 들어오면 유저의 기존 경험치에서 100씩 더해줍니다.
+        // 해당 요청이 들어오면 유저의 기존 경험치에서 500씩 더해줍니다.
 
         // memberId로 Character 조회
         Character character = characterRepository.findByMemberId(memberId);
 
         if (character != null) {
             // 기존 경험치에 100을 더함
-            character.setExp(character.getExp() + 100);
+            character.setExp(character.getExp() + 500);
             // 변경된 값 저장
             characterRepository.save(character);
         } else {
