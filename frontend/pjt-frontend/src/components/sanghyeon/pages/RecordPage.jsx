@@ -85,8 +85,8 @@ const RecordPage = () => {
                 {currentItems && currentItems.length > 0 ? (
                   currentItems.map((data, index) => (
                     <div className="record" key={index}>
-                      <p>{data.gametype}</p>
-                      <p>{data.time}</p>
+                      <p>{data.gametype === 0 ? "Multi" : "Battle"}</p>
+                      <p>{new Date(data.time).toLocaleString()}</p>
                       <p>{data.rank}</p>
                       <p>{data.score}</p>
                     </div>
