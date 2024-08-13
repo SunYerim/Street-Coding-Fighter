@@ -438,7 +438,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsHealing(false);
-              }, 2000);
+              }, 1000);
             }
           } else {
             if (body.isAttack === true) {
@@ -460,7 +460,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsEnemyHealing(false);
-              }, 2000);
+              }, 1000);
             }
           }
         }
