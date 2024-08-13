@@ -53,11 +53,7 @@ const BattleGameHeader = () => {
           });
           navigate("/_battle-list");
         } catch (error) {
-          Swal.fire({
-            text: "방 나가기에 실패했습니다.",
-            icon: "error",
-            timer: 3000,
-          });
+          navigate("/_battle-list");
           console.log(error);
         }
       }
