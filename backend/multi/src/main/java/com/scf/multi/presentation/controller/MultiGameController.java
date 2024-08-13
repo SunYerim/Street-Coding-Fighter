@@ -10,6 +10,8 @@ import com.scf.multi.domain.dto.user.Solved;
 import com.scf.multi.domain.model.MultiGameRoom;
 import com.scf.multi.infrastructure.KafkaMessageProducer;
 import jakarta.validation.Valid;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +58,9 @@ public class MultiGameController {
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
         @RequestBody @Valid RoomRequest.CreateRoomDTO createRoomDTO) {
-        log.debug("createRoom.username:{}", username);
-        String roomId = multiGameService.createRoom(memberId, username, createRoomDTO);
+        String decodedUsername = decodeUsername(username);
+        log.debug("createRoom.username:{}", decodedUsername);
+        String roomId = multiGameService.createRoom(memberId, decodedUsername, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
@@ -65,8 +68,9 @@ public class MultiGameController {
     public ResponseEntity<?> joinRoom(@PathVariable String roomId,
         @Valid @RequestBody String roomPassword, @RequestHeader Long memberId,
         @RequestHeader String username) {
-        log.debug("joinRoom.username:{}", username);
-        multiGameService.joinRoom(roomId, roomPassword, memberId, username);
+        String decodedUsername = decodeUsername(username);
+        log.debug("joinRoom.username:{}", decodedUsername);
+        multiGameService.joinRoom(roomId, roomPassword, memberId, decodedUsername);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -142,5 +146,9 @@ public class MultiGameController {
         kafkaMessageProducer.sendSolved(jackSolved2);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private static String decodeUsername(String username) {
+        return URLDecoder.decode(username, StandardCharsets.UTF_8);
     }
 }
