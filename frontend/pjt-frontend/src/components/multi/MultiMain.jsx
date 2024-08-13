@@ -56,6 +56,7 @@ export default function MultiMain() {
       if (Array.isArray(response.data)) {
         setMultiList(response.data);
         setCurrentMultiList(response.data);
+        console.log(response.data);
       } else {
         console.error('배열을 기대했으나 다음과 같은 데이터를 받았습니다:', response.data);
         setMultiList([]);
