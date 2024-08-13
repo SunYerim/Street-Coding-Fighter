@@ -123,7 +123,8 @@ public class MultiGameService {
         connectedPlayer.setSessionId(sessionId);
         connectedPlayer.setIsOnRoom(true);
 
-        log.debug(connectedPlayer.getSessionId());
+        log.debug("userId: {}sessionId: {}isOnRoom: {}", connectedPlayer.getUserId(),
+            connectedPlayer.getSessionId(), connectedPlayer.getIsOnRoom());
 
         room.addSubmitItem(userId);
 
