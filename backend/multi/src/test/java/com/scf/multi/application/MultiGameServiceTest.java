@@ -170,7 +170,7 @@ class MultiGameServiceTest {
     @DisplayName("방에 참가할 수 있어야 한다.")
     void joinRoomTest() {
         // Given
-        room.add("1234", hostPlayer);
+        room.addPlayer("1234", hostPlayer);
 
         when(multiGameRepository.findOneById(anyString())).thenReturn(room);
 
@@ -186,8 +186,8 @@ class MultiGameServiceTest {
     void markFillInTheBlankSolutionTest() {
 
         // Given
-        room.add("1234", hostPlayer);
-        room.add("1234", otherPlayer);
+        room.addPlayer("1234", hostPlayer);
+        room.addPlayer("1234", otherPlayer);
         room.gameStart(problems, room.getHostId());
 
         when(multiGameRepository.findOneById(anyString())).thenReturn(room);
@@ -211,8 +211,8 @@ class MultiGameServiceTest {
     void markShortAnswerQuestionSolutionTest() {
 
         // Given
-        room.add("1234", hostPlayer);
-        room.add("1234", otherPlayer);
+        room.addPlayer("1234", hostPlayer);
+        room.addPlayer("1234", otherPlayer);
         room.gameStart(problems, room.getHostId());
         room.nextRound(); // 2번 문제가 주관식
 
@@ -237,8 +237,8 @@ class MultiGameServiceTest {
     void markMultipleChoiceSolutionTest() {
 
         // Given
-        room.add("1234", hostPlayer);
-        room.add("1234", otherPlayer);
+        room.addPlayer("1234", hostPlayer);
+        room.addPlayer("1234", otherPlayer);
         room.gameStart(problems, room.getHostId());
         room.nextRound();
         room.nextRound(); // 3번 문제가 객관식
@@ -264,8 +264,8 @@ class MultiGameServiceTest {
     void startGameTest() {
 
         // Given
-        room.add("1234", hostPlayer);
-        room.add("1234", otherPlayer);
+        room.addPlayer("1234", hostPlayer);
+        room.addPlayer("1234", otherPlayer);
         when(multiGameRepository.findOneById(anyString())).thenReturn(room);
         when(problemService.getProblems(anyInt())).thenReturn(problems);
 
