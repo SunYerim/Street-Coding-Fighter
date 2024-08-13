@@ -117,7 +117,7 @@ const BattleGamePage = () => {
   const [currentRound, setCurrentRound] = useState(0);
   const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(false); // 여기
+  const [gameStart, setGameStart] = useState(true); // 여기
   const [myProblem, setMyProblem] = useState({
     problemId: 2,
     title: "배열의 최대값 찾기",

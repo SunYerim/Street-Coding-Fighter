@@ -149,9 +149,13 @@ const Setting = ({ isOpen, onClose }) => {
             <p style={styles.setting} onClick={() => navigate("/")}>
               Back to Title
             </p>
-            <p style={styles.setting} onClick={logout}>
-              Logout
-            </p>
+            {accessToken ? (
+              <>
+                <p style={styles.setting} onClick={logout}>
+                  Logout
+                </p>
+              </>
+            ) : null}
           </div>
         </div>
       </Modal>
