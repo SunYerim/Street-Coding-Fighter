@@ -52,13 +52,13 @@ export default function MultiGame() {
   };
   //뒤로가기 막기
   useEffect(() => {
+    const handlePopState = () => {
+      setIsExitAlertOpen(true)
+    }
     history.pushState(null, '', window.location.href);
-    window.addEventListener('popstate', handleExitAlert);
+    window.addEventListener('popstate', handlePopState);
     return () => {
-      window.removeEventListener('popstate', () => {
-        disconnectSocket();
-        navigate('/_multi-game');
-      });
+      window.removeEventListener('popstate',handlePopState);
     };
   }, []);
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
@@ -712,7 +712,7 @@ export default function MultiGame() {
         closeModal={() => {
           setIsExitAlertOpen(false);
         }}
-        onRequestOkay={disconnectSocket}
+        onRequestOkay={handleExitAlert}
       ></CustomAlert>
     </>
   );
