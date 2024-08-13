@@ -50,6 +50,14 @@ export default function MultiGame() {
     disconnectSocket();
     navigate('/_multi-game')
   }
+  //뒤로가기 막기
+  useEffect(()=>{
+    history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handleExitAlert);
+    return () => {
+      window.removeEventListener("popstate", handleExitAlert);
+    };
+  }, [])
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   useEffect(() => {
