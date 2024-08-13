@@ -1,12 +1,15 @@
 package com.scf.user.member.application.service;
 
 
+import static com.scf.user.member.application.service.GachaService.characterTypes;
+import static com.scf.user.member.application.service.GachaService.clothingTypes;
+
 import com.scf.user.member.application.client.ContentClient;
 import com.scf.user.member.domain.dto.UserInfoListResponseDto;
 import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
 import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
-import com.scf.user.member.domain.dto.UserInfoListResponseDto;
-import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
+import com.scf.user.member.domain.dto.charater.CharacterType;
+import com.scf.user.member.domain.dto.charater.ClothingType;
 import com.scf.user.member.global.exception.NotEnoughExperienceException;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.dto.TokenDto;
@@ -42,18 +45,19 @@ public class UserServiceImpl implements UserService {
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ContentClient contentClient;
-
+    private final GachaService gachaService;
     @Autowired
     public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
         UserRepository userRepository, CharacterRepository characterRepository,
         @Lazy JwtTokenProvider jwtTokenProvider,
-        RedisService redisService, ContentClient contentClient) {
+        RedisService redisService, ContentClient contentClient, GachaService gachaService) {
         this.authenticationProviderService = authenticationProviderService;
         this.userRepository = userRepository;
         this.characterRepository = characterRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisService = redisService;
         this.contentClient = contentClient;
+        this.gachaService = gachaService;
     }
 
     @Override
@@ -212,12 +216,36 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-    public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
+@Override
+public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
         Member member = userRepository.getById(memberId);
-        int userCharater = member.getCharacter().getCharacterType()*100 + member.getCharacter().getCharacterCloth();
-        return new UserCharaterTypeResponseDTO(userCharater);
+        int characterType = member.getCharacter().getCharacterType();
+        int characterCloth = member.getCharacter().getCharacterCloth();
+
+        String CharacterRarity = determineRarity(characterType); // rarity를 결정
+        String ClothRarity = determineRarity(characterType);
+        return new UserCharaterTypeResponseDTO(characterType * 100 + characterCloth, CharacterRarity, ClothRarity);
     }
+
+    private String determineRarity(int characterType) {
+        // clothingTypes에서 rarity를 찾습니다.
+        for (ClothingType clothingType : clothingTypes) {
+            if (clothingType.getType() == characterType) {
+                return clothingType.getRarity().toString();
+            }
+        }
+
+        // characterTypes에서 rarity를 찾습니다.
+        for (CharacterType type : characterTypes) {
+            if (type.getType() == characterType) {
+                return type.getRarity().toString();
+            }
+        }
+
+        // 찾지 못한 경우
+        return "UNKNOWN";
+    }
+
 
     @Transactional
     @Override
