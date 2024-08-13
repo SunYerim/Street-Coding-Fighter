@@ -63,7 +63,7 @@ public class MultiGameRoom {
         return Collections.unmodifiableList(this.problems);
     }
 
-    public void add(String roomPassword, Player player) {
+    public void addPlayer(String roomPassword, Player player) {
 
         if (this.password != null && !this.password.equals(roomPassword)) {
             throw new BusinessException(this.password, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
