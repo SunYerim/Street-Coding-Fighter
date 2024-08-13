@@ -229,12 +229,13 @@ export default function SinglePlay() {
           Authorization: `Bearer ${accessToken}`,
         },
       })
-        .then(navigate('/story-main'))
         .catch(console.log('요청보내기 실패 ㅜㅜ'))
         .then(getSingleInfo())
         .then(navigate('/story-main'));
-    } else {
-      console.log('비정상적인 나가기 또는 이미 학습한 컨텐츠임');
+      } else {
+        getSingleInfo()
+        navigate('/story-main')
+        console.log('비정상적인 나가기 또는 이미 학습한 컨텐츠임');
     }
   };
 
