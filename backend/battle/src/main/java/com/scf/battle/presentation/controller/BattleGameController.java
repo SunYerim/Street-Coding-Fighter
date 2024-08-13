@@ -64,7 +64,7 @@ public class BattleGameController {
             String password = joinRoomRequestDTO.getPassword();
             roomService.joinRoom(roomId, memberId, decodedUsername, password);
             BattleGameRoom room = roomService.findById(roomId);
-            return new ResponseEntity<>(new JoinRoomResponseDTO(room.getPlayerA().getUsername(), room.getPlayerA().getUserId(), room.getHostCharacterType()), HttpStatus.OK);
+            return new ResponseEntity<>(new JoinRoomResponseDTO(room.getPlayerA().getUsername(), room.getPlayerA().getUserId(), room.getHostCharacter()), HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         }
