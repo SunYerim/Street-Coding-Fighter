@@ -199,16 +199,13 @@ useEffect(() => {
 
         // Multi socket 통신 타입별 정리
         if (data.type === "gameStart") {
-          // 게임목록 받기
+          clearSubmitList();
+          // 게임스타트
+          setPlaying(true);
           console.log(data.payload);
           handleSetProblemList(data.payload);
           problemLength = data.payload.length;
-
-          setTimeout(() => {
-            // 게임스타트
-            setPlaying(true);
-          }, 1000);
-
+          
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
@@ -283,6 +280,12 @@ useEffect(() => {
       if (chatStompClient.current) chatStompClient.current.disconnect();
     };
   }, []);
+
+  const disconnectSocket = () => {
+    if (socket) {
+        socket.close();
+    }
+  };
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   const handleSetProblemList = (data) => {
@@ -599,7 +602,7 @@ useEffect(() => {
 
   return (
     <>
-      <MultiHeader />
+      <MultiHeader onBackButtonClick={disconnectSocket} />
       {/* <div className="container"> */}
       <div id="container">
         <div className="multi-game-main">
