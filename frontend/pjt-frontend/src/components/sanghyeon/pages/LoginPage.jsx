@@ -49,7 +49,7 @@ const LoginPage = () => {
     setSchoolName: state.setSchoolName,
     setBirth: state.setBirth,
     setRefreshToken: state.setRefreshToken,
-    setAuthClient : state.setAuthClient
+    setAuthClient: state.setAuthClient,
   }));
   const userId = useRef(null);
   const password = useRef(null);
@@ -123,6 +123,7 @@ const LoginPage = () => {
           <Avatar
             sx={{
               m: 1,
+              mt: 7,
               width: 70,
               height: 56,
               p: 0, // Remove padding

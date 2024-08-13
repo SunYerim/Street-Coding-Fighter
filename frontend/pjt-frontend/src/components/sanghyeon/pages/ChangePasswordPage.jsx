@@ -99,6 +99,7 @@ const ChangePasswordPage = () => {
           <Avatar
             sx={{
               m: 1,
+              mt: 3,
               width: 70,
               height: 56,
               p: 0, // Remove padding

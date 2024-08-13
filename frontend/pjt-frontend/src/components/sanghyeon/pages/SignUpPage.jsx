@@ -211,6 +211,7 @@ const SignUpPage = () => {
           <Typography
             variant="h3"
             sx={{
+              mt: 4, // Add margin top for spacing
               mb: 4, // Add margin bottom for spacing
               fontWeight: "bold", // Make the text bold
               color: "#1b1a55", // Customize color

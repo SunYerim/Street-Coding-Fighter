@@ -37,9 +37,7 @@
   font-weight: bold;
   font-size: 1.5rem;
   margin-top: 20px;
-
 }
-
 
 @font-face {
   font-family: "Galmuri11-Bold";
@@ -65,7 +63,7 @@
 }
 
 .find-password::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;

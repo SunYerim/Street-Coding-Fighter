@@ -22,8 +22,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
 
-
-
 const FindPasswordPage = () => {
   const { userId, baseURL, code, setCode, setUserId } = store((state) => ({
     userId: state.userId,
@@ -129,6 +127,7 @@ const FindPasswordPage = () => {
           <Avatar
             sx={{
               m: 1,
+              mt: 3,
               width: 70,
               height: 56,
               p: 0, // Remove padding
