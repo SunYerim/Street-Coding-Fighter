@@ -216,16 +216,19 @@ public class UserServiceImpl implements UserService {
 
     }
 
-@Override
-public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
+    @Override
+    public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
         Member member = userRepository.getById(memberId);
         int characterType = member.getCharacter().getCharacterType();
         int characterCloth = member.getCharacter().getCharacterCloth();
 
-        String CharacterRarity = determineRarity(characterType); // rarity를 결정
-        String ClothRarity = determineRarity(characterType);
-        return new UserCharaterTypeResponseDTO(characterType * 100 + characterCloth, CharacterRarity, ClothRarity);
+        String characterRarity = determineRarity(characterType); // 캐릭터의 Rarity 결정
+        String clothRarity = determineRarity(characterCloth);    // 의상의 Rarity 결정
+
+        // UserCharaterTypeResponseDTO 생성시, 세 개의 파라미터를 전달
+        return new UserCharaterTypeResponseDTO(characterType, characterRarity, clothRarity);
     }
+
 
     private String determineRarity(int characterType) {
         // clothingTypes에서 rarity를 찾습니다.
