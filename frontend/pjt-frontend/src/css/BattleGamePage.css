@@ -173,7 +173,9 @@
   font-weight: bold;
   color: white;
   padding: 10px;
-  width: 100%;
+  min-width: 55%;
+  width: 55%;
+  max-width: 55%;
 }
 
 .battle-game-problem {

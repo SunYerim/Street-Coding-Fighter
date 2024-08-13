@@ -101,44 +101,84 @@ const BattleGameListPage = () => {
     // 비밀번호가 없는 경우 초기화
 
     if (isLock === true) {
-      inputPassword = prompt("비밀번호를 입력하세요.");
+      Swal.fire({
+        text: "비밀번호를 입력하세요.",
+        input: "password",
+        inputPlaceholder: "비밀번호",
+        inputAttributes: {
+          autocapitalize: "off",
+          autocorrect: "off",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          inputPassword = result.value;
+        }
 
-      if (inputPassword === null || inputPassword === "") {
+        if (inputPassword === null || inputPassword === "") {
+          Swal.fire({
+            text: "비밀번호를 입력해주세요.",
+            icon: "error",
+            timer: 3000,
+          });
+          return;
+        }
+
+        try {
+          const res = await authClient({
+            method: "POST",
+            url: `${baseURL}/battle/room/${roomId}`,
+            data: {
+              password: inputPassword,
+            },
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+
+          setRoomId(roomId);
+          setRoomPassword(inputPassword);
+          setHostId(res.data.memberId);
+          setEnemyId(res.data.memberId);
+          setEnemyName(res.data.username);
+          setEnemyCharacterType(res.data.hostCharacterType);
+          navigate("/_battle-game");
+        } catch (error) {
+          Swal.fire({
+            text: "방 입장에 실패했습니다.",
+            icon: "error",
+            timer: 3000,
+          });
+          console.log(error);
+        }
+      });
+    } else {
+      try {
+        const joinBattleRoomRes = await authClient({
+          method: "POST",
+          url: `${baseURL}/battle/room/${roomId}`,
+          data: {
+            password: "ssafy",
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setRoomId(roomId);
+        setRoomPassword(inputPassword);
+        setHostId(joinBattleRoomRes.data.memberId);
+        setEnemyId(joinBattleRoomRes.data.memberId);
+        setEnemyName(joinBattleRoomRes.data.username);
+        setEnemyCharacterType(joinBattleRoomRes.data.hostCharacterType);
+        navigate("/_battle-game");
+      } catch (error) {
         Swal.fire({
-          text: "비밀번호를 입력해주세요.",
+          text: "방 입장에 실패했습니다.",
           icon: "error",
           timer: 3000,
         });
-        return;
+        console.log(error);
       }
-    }
-
-    try {
-      const res = await authClient({
-        method: "POST",
-        url: `${baseURL}/battle/room/${roomId}`,
-        data: {
-          password: inputPassword,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      setRoomId(roomId);
-      setRoomPassword(inputPassword);
-      setHostId(res.data.memberId);
-      setEnemyId(res.data.memberId);
-      setEnemyName(res.data.username);
-      setEnemyCharacterType(res.data.hostCharacterType);
-      navigate("/_battle-game");
-    } catch (error) {
-      Swal.fire({
-        text: "방 입장에 실패했습니다.",
-        icon: "error",
-        timer: 3000,
-      });
-      console.log(error);
     }
   };
 
@@ -287,7 +327,7 @@ const BattleGameListPage = () => {
                     >
                       <p>{index + 1}</p>
                       <p>{data.title}</p>
-                      <p>{data.hostId}</p>
+                      <p>{data.hostUsername}</p>
                       <p>
                         {data.curPlayer} / {data.maxPlayer}
                       </p>

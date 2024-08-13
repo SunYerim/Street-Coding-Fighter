@@ -12,8 +12,6 @@ import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const ItemPage = () => {
-  const [rarity, setRarity] = useState("");
-
   const {
     baseURL,
     accessToken,
@@ -21,6 +19,8 @@ const ItemPage = () => {
     character,
     setCharacter,
     exp,
+    characterRarity,
+    setCharacterRarity,
     setExp,
     name,
   } = store((state) => ({
@@ -32,6 +32,8 @@ const ItemPage = () => {
     exp: state.exp,
     setExp: state.setExp,
     name: state.name,
+    characterRarity: state.characterRarity,
+    setCharacterRarity: state.setCharacterRarity,
   }));
 
   const authClient = createAuthClient(
@@ -52,6 +54,7 @@ const ItemPage = () => {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const rotateX = ((centerY - y) / centerY) * 45;
@@ -104,7 +107,7 @@ const ItemPage = () => {
           const nextCharacter =
             purchaseRes.data.characterType * 100 + (character % 100);
           setCharacter(nextCharacter);
-          setRarity(purchaseRes.data.rarity);
+          setCharacterRarity(purchaseRes.data.characterRarity);
           setExp(exp - 500);
           openModal();
         } catch (error) {
@@ -151,7 +154,7 @@ const ItemPage = () => {
           const nextCharacter =
             character - (character % 100) + purchaseRes.data.characterClothType;
           setCharacter(nextCharacter);
-          setRarity(purchaseRes.data.rarity);
+          setCharacterRarity(purchaseRes.data.rarity);
           setExp(exp - 500);
           openModal();
         } catch (error) {
@@ -239,7 +242,7 @@ const ItemPage = () => {
               <div className="item-modal-inner-container-back">
                 <div className="item-modal-inner-rank-container-back">
                   <div className="item-modal-inner-rank-back">
-                    {rarity ? rarity : null}
+                    {characterRarity ? characterRarity : null}
                   </div>
                 </div>
                 <div className="item-modal-inner-img-container-back">

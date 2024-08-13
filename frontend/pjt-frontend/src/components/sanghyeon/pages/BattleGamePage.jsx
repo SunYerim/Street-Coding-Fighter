@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import BattleGameHeader from "./BattleGameHeader.jsx";
 import "../../../css/BattleGamePage.css";
 import store from "../../../store/store.js";
 import { useEffect, useState, useRef } from "react";
@@ -438,7 +438,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsHealing(false);
-              }, 1000);
+              }, 2000);
             }
           } else {
             if (body.isAttack === true) {
@@ -460,7 +460,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsEnemyHealing(false);
-              }, 1000);
+              }, 2000);
             }
           }
         }
@@ -536,10 +536,10 @@ const BattleGamePage = () => {
         },
       });
     } catch (error) {
-      Swal.fire({
-        text: "게임 종료에 실패했습니다.",
-        icon: "error",
-      });
+      // Swal.fire({
+      //   text: "게임 종료에 실패했습니다.",
+      //   icon: "error",
+      // });
       console.log(error);
     }
   };
@@ -696,7 +696,7 @@ const BattleGamePage = () => {
   const renderProblemType = (problemType) => {
     switch (problemType) {
       case "FILL_IN_THE_BLANK":
-        return "주관식";
+        return "빈 칸 채우기";
       case "SHORT_ANSWER_QUESTION":
         return "단답형";
       case "MULTIPLE_CHOICE":
@@ -799,7 +799,7 @@ const BattleGamePage = () => {
             </>
           )}
         </Modal>
-        <Header type="BattleGame" />
+        <BattleGameHeader />
         <div className="battle-game-outer-outer-container">
           <div className="battle-game-outer-container">
             <div className="battle-game-title-container">
