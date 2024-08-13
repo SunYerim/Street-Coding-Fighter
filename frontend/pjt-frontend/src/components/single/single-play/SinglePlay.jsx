@@ -151,7 +151,7 @@ export default function SinglePlay() {
 
     //넘어가면 안될때 누르면 바로 return!
     // console.log(isClickable);
-    if(isTyping){
+    if (isTyping) {
       setIsTyping(false);
       return;
     }
@@ -229,12 +229,13 @@ export default function SinglePlay() {
           Authorization: `Bearer ${accessToken}`,
         },
       })
-        .then(console.log('요청 보내기 성공!'))
-        .catch(console.log('요청보내기 실패 ㅜㅜ')).then(getSingleInfo())
+        .then(navigate('/story-main'))
+        .catch(console.log('요청보내기 실패 ㅜㅜ'))
+        .then(getSingleInfo())
+        .then(navigate('/story-main'));
     } else {
       console.log('비정상적인 나가기 또는 이미 학습한 컨텐츠임');
     }
-    navigate('/story-main');
   };
 
   const currentDialogue = dialogueList[page] || {};
@@ -351,12 +352,15 @@ export default function SinglePlay() {
                         color: 'black',
                         whiteSpace: 'pre-line',
                       }}
-                      sequence={[currentDialogue.scriptContent, 500, ()=>{
-                        if(currentPageRef.current === page){
-
-                          setIsTyping(false);
-                        }
-                        }]}
+                      sequence={[
+                        currentDialogue.scriptContent,
+                        500,
+                        () => {
+                          if (currentPageRef.current === page) {
+                            setIsTyping(false);
+                          }
+                        },
+                      ]}
                       wrapper="p"
                       speed={50}
                     />
@@ -370,7 +374,6 @@ export default function SinglePlay() {
                       {currentDialogue.scriptContent}
                     </p>
                   )}
-                  
                 </S.DialogueContent>
               </S.DialogueBody>
               <S.DialogueBodyRight>
