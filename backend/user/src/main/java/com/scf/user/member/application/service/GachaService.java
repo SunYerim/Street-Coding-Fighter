@@ -35,12 +35,12 @@ public class GachaService {
     }
 
     static {
-        characterTypes.add(new CharacterType(1, 0.078, Rarity.COMMON)); // 7.8%로 설정된 항목
-        characterTypes.add(new CharacterType(2, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
-        characterTypes.add(new CharacterType(3, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
-        characterTypes.add(new CharacterType(4, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
-        characterTypes.add(new CharacterType(5, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
-        characterTypes.add(new CharacterType(6, 0.074, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(1, 0.148333, Rarity.COMMON)); // 7.8%로 설정된 항목
+        characterTypes.add(new CharacterType(2, 0.148333, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(3, 0.148333, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(4, 0.148333, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(5, 0.148333, Rarity.COMMON)); // 7.4%로 설정된 항목
+        characterTypes.add(new CharacterType(6, 0.148333, Rarity.COMMON)); // 7.4%로 설정된 항목
         characterTypes.add(new CharacterType(7, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
         characterTypes.add(new CharacterType(8, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
         characterTypes.add(new CharacterType(9, 0.025, Rarity.EPIC)); // 2.5%로 설정된 항목
@@ -49,7 +49,7 @@ public class GachaService {
         characterTypes.add(new CharacterType(12, 0.005, Rarity.LEGENDARY)); // 0.5%로 설정된 항목
     }
 
-    public Integer drawClothingType() {
+    public ClothingType drawClothingType() {
         Random random = new Random();
         double randomValue = random.nextDouble(); // 0.0 <= randomValue < 1.0
         double cumulativeProbability = 0.0;
@@ -57,13 +57,13 @@ public class GachaService {
         for (ClothingType clothingType : clothingTypes) {
             cumulativeProbability += clothingType.getProbability();
             if (randomValue <= cumulativeProbability) {
-                return clothingType.getType();
+                return clothingType;  // ClothingType 객체 자체를 반환
             }
         }
-        return 1; // 기본값 반환
+        return clothingTypes.get(0); // 기본값으로 첫 번째 항목을 반환
     }
 
-    public Integer drawCharacterType() {
+    public CharacterType drawCharacterType() {
         Random random = new Random();
         double randomValue = random.nextDouble(); // 0.0 <= randomValue < 1.0
         double cumulativeProbability = 0.0;
@@ -71,9 +71,10 @@ public class GachaService {
         for (CharacterType characterType : characterTypes) {
             cumulativeProbability += characterType.getProbability();
             if (randomValue <= cumulativeProbability) {
-                return characterType.getType();
+                return characterType;  // CharacterType 객체 자체를 반환
             }
         }
-        return 1; // 기본값 반환
+        return characterTypes.get(0); // 기본값으로 첫 번째 항목을 반환
     }
+
 }
