@@ -10,7 +10,7 @@ import multiStore from "../../../stores/multiStore.jsx";
 import "../../../css/MultiGame.css";
 import "../../../css/Fill.css";
 
-const FillInTheBlank = ({ problem }) => {
+const FillInTheBlank = ({ problem, onFillBlank }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
@@ -110,7 +110,7 @@ const FillInTheBlank = ({ problem }) => {
 
         </DndProvider>
         <div className="fill-submit">
-          <button className='fill-button'>답안 제출</button>
+          <button className='fill-button' onClick={handleSubmit}>답안 제출</button>
         </div>
       </div>
     </>
