@@ -391,7 +391,7 @@ export default function MultiGame() {
   };
 
   const renderProblem = () => {
-    console.log('현재 라운드에 대한 문제 렌더링:', round);
+    // console.log('현재 라운드에 대한 문제 렌더링:', round);
 
     return problemList[round] ? (
       <>
@@ -503,6 +503,9 @@ export default function MultiGame() {
     const chatSocket = new SockJS(`https://www.ssafy11s.com/ws-chat`);
     chatStompClient.current = Stomp.over(chatSocket);
 
+    // 디버그 로그를 비활성화
+    chatStompClient.current.debug = null;
+
     return new Promise((resolve, reject) => {
       chatStompClient.current.connect(
         {},
@@ -594,7 +597,7 @@ export default function MultiGame() {
 
     const allSubmitted = updatedMergedList.every((item) => item.isSubmit === true);
 
-    if (allSubmitted) {
+    if (allSubmitted || !playing) {
       // 모든 submitList 요소를 false로 설정
       const resetSubmitList = submitList.map((item) => ({
         ...item,
@@ -614,7 +617,7 @@ export default function MultiGame() {
     } else {
       setMergedList(updatedMergedList);
     }
-  }, [gameRank, playerList, submitList]);
+  }, [gameRank, playerList, submitList, playing]);
 
   return (
     <>
