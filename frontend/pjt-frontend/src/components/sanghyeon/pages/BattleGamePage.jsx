@@ -240,6 +240,7 @@ const BattleGamePage = () => {
         setItem2(true);
         setCount(40);
       } else if (body && body.item && body.item.name === "시간 단축") {
+        setItem3(true);
         setCount(20);
       } else {
         setCount(30);
@@ -301,7 +302,13 @@ const BattleGamePage = () => {
       });
 
       setTimeout(() => {
-        setCount(30);
+        if (item2) {
+          setCount(40);
+        } else if (item3) {
+          setCount(20);
+        } else {
+          setCount(30);
+        }
       }, 3000);
 
       const timer = setTimeout(async () => {
