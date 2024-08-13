@@ -584,35 +584,20 @@ const BattleGamePage = () => {
   };
 
   const quitBattleRoom = async () => {
-    Swal.fire({
-      text: "방을 나가시겠습니까?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "나가기",
-      cancelButtonText: "취소",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const quitRes = await axios({
-            method: "POST",
-            url: `${baseURL}/battle/room/${roomId}/leave`,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          setNormalQuit(true);
-          Swal.fire({
-            text: "방을 나갔습니다.",
-            icon: "success",
-            timer: 3000,
-          });
-          navigate("/_battle-list");
-        } catch (error) {
-          navigate("/_battle-list");
-          console.log(error);
-        }
-      }
-    });
+    try {
+      const quitRes = await axios({
+        method: "POST",
+        url: `${baseURL}/battle/room/${roomId}/leave`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setNormalQuit(true);
+      navigate("/_battle-list");
+    } catch (error) {
+      navigate("/_battle-list");
+      console.log(error);
+    }
   };
 
   const reconnectWebSocket = () => {
