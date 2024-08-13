@@ -156,6 +156,9 @@ const BattleGameListPage = () => {
         const joinBattleRoomRes = await authClient({
           method: "POST",
           url: `${baseURL}/battle/room/${roomId}`,
+          data: {
+            password: "ssafy",
+          },
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
