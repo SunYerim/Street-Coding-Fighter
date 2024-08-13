@@ -15,28 +15,28 @@ const multiStore = create((set) => ({
 
   // 문제 리스트
   problemList: [{
-    "problemId": 3,
-    "title": "조건문 문제",
-    "problemType": "SHORT_ANSWER_QUESTION",
-    "category": "조건문",
-    "difficulty": 1,
+    "problemId": null,
+    "title": "",
+    "problemType": "",
+    "category": "",
+    "difficulty": null,
     "problemContent": {
-        "problemId": 3,
-        "content": "다음 코드를 실행했을 때의 출력을 예상하시오.\\n\\n코드:\\n\\nif 10 % 3 == 1:\\n    print(\"True\")\\nelse:\\n    print(\"False\")",
-        "numberOfBlanks": 0
+        "problemId": null,
+        "content": "",
+        "numberOfBlanks": null
     },
     "problemChoices": [],
     "problemAnswers": [
         {
-            "answerId": 5,
-            "problemId": 3,
+            "answerId": null,
+            "problemId": null,
             "blankPosition": null,
             "correctChoice": {
                 "choiceId": null,
-                "problemId": 3,
-                "choiceText": "True"
+                "problemId": null,
+                "choiceText": ""
             },
-            "correctAnswerText": "True"
+            "correctAnswerText": ""
         }
     ]
   }], 
@@ -45,28 +45,28 @@ const multiStore = create((set) => ({
     set({
       problemList: [
         {
-          "problemId": 3,
-          "title": "조건문 문제",
-          "problemType": "SHORT_ANSWER_QUESTION",
-          "category": "조건문",
-          "difficulty": 1,
+          "problemId": null,
+          "title": "",
+          "problemType": "",
+          "category": "",
+          "difficulty": null,
           "problemContent": {
-              "problemId": 3,
-              "content": "다음 코드를 실행했을 때의 출력을 예상하시오.\\n\\n코드:\\n\\nif 10 % 3 == 1:\\n    print(\"True\")\\nelse:\\n    print(\"False\")",
-              "numberOfBlanks": 0
+              "problemId": null,
+              "content": "",
+              "numberOfBlanks": null
           },
           "problemChoices": [],
           "problemAnswers": [
               {
-                  "answerId": 5,
-                  "problemId": 3,
+                  "answerId": null,
+                  "problemId": null,
                   "blankPosition": null,
                   "correctChoice": {
                       "choiceId": null,
-                      "problemId": 3,
-                      "choiceText": "True"
+                      "problemId": null,
+                      "choiceText": ""
                   },
-                  "correctAnswerText": "True"
+                  "correctAnswerText": ""
               }
           ]
         }
