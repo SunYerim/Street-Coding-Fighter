@@ -51,8 +51,8 @@ public class GameResultConsumer {
         int newExpB = expB + players.get(1);
 
 
-        profileService.updateExpoint(playerA, newExpA);
-        profileService.updateExpoint(playerB, newExpB);
+        profileService.updateExpoint(playerA, players.get(0));
+        profileService.updateExpoint(playerB, players.get(1));
 
         // 처리된 데이터를 다시 전송
         // List형식이 아닌 RenewExp 객체로 보내도록 수정합니다.
