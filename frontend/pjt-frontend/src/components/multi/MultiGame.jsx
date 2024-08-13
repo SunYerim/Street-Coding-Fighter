@@ -48,7 +48,7 @@ export default function MultiGame() {
   const handleExitAlert = () => {
     setIsExitAlertOpen(false);
     disconnectSocket();
-    navigate('/_multi-game');
+    navigate('/_multi');
   };
   //뒤로가기 막기
   useEffect(() => {
