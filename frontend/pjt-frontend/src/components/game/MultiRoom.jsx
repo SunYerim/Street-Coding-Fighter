@@ -141,11 +141,11 @@ function MultiRoom(props) {
   return(
     <>
       <div className='room-items' onClick={handleRoomClick}>
-        <p>{props.roomNum}</p>
-        <p>{props.room}</p>
-        <p>{props.hostname}</p>
-        <p>{props.curPlayer} / {props.maxPlayer}</p>
-        <p>{props.gameRound}</p>
+        <h3>{props.roomNum}</h3>
+        <h3>{props.room}</h3>
+        <h4>{props.hostname}</h4>
+        <h4>{props.curPlayer} / {props.maxPlayer}</h4>
+        <h4>{props.gameRound}</h4>
         <img src={props.isLock ? lock : unlock} alt="lock" />
       </div>
         {isModalOpen && (

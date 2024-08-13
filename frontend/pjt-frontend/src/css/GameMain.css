@@ -136,7 +136,7 @@
 
 .room-items {
   display: grid;
-  grid-template-columns: 2fr 6fr 4fr 3fr 3fr 4fr;
+  grid-template-columns: 2fr 6fr 4fr 3fr 4fr 2fr;
   justify-items: center;
   align-items: center;
   width: 99%;
@@ -150,7 +150,7 @@
   font-size: 1.3rem;
 }
 
-.room-items h3, p {
+.room-items h3 {
   justify-self: start;
   padding-left: 25px;
   max-width: 80%;
@@ -162,7 +162,7 @@
 .room-items img {
   justify-self: start;
   padding-right: 25px;
-  max-width: 65%;
+  max-width: 55%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
