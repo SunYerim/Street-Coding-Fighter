@@ -56,6 +56,7 @@ public class MultiGameController {
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
         @RequestBody @Valid RoomRequest.CreateRoomDTO createRoomDTO) {
+        log.debug("createRoom.username:{}", username);
         String roomId = multiGameService.createRoom(memberId, username, createRoomDTO);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
