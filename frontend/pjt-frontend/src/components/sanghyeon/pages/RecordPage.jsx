@@ -77,14 +77,14 @@ const RecordPage = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = recordData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(recordData.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(sortedData.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
