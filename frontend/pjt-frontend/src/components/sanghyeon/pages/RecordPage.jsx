@@ -23,6 +23,7 @@ const RecordPage = () => {
   );
 
   const [recordData, setRecordData] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
@@ -72,41 +73,49 @@ const RecordPage = () => {
         <Header />
         <div className="record-outer-container">
           <div className="record-container">
-            <h2 className="record-title">Player Name : {name}</h2>
-            <hr />
-            <div className="record-inner-container">
-              <div className="record-inner-title">
-                <p>GameType</p>
-                <p>Time</p>
-                <p>Rank</p>
-                <p>Score</p>
-              </div>
-              <div className="record-inner">
-                {currentItems && currentItems.length > 0 ? (
-                  currentItems.map((data, index) => (
-                    <div className="record" key={index}>
-                      <p>{data.gametype === 0 ? "Multi" : "Battle"}</p>
-                      <p>{new Date(new Date(data.time).getTime() + 9 * 60 * 60 * 1000).toLocaleString('ko-KR')}</p>
-                      <p>{data.rank}</p>
-                      <p>{data.score}</p>
-                    </div>
-                  ))
-                ) : (
-                  <>
-                    <h1>최근 플레이한 게임이 없습니다.</h1>
-                  </>
-                )}
-              </div>
-              <div className="record-pagination">
-                {pageNumbers.map((number) => (
-                  <button
-                    key={number}
-                    onClick={() => handlePageChange(number)}
-                    className={number === currentPage ? "active" : ""}
-                  >
-                    {number}
-                  </button>
-                ))}
+            <div className="record-title-container">
+              <h2 className="record-title">{name}님의 최근 전적</h2>
+            </div>
+            <div className="record-inner-container-outer">
+              <div className="record-inner-container">
+                <div className="record-inner-title">
+                  <p>모드</p>
+                  <p>시간</p>
+                  <p>순위</p>
+                  <p>점수</p>
+                </div>
+                <hr />
+                <div className="record-inner">
+                  {currentItems && currentItems.length > 0 ? (
+                    currentItems.map((data, index) => (
+                      <div className="record" key={index}>
+                        <p>{data.gametype === 0 ? "멀티" : "배틀"}</p>
+                        <p>
+                          {new Date(
+                            new Date(data.time).getTime() + 9 * 60 * 60 * 1000
+                          ).toLocaleString("ko-KR")}
+                        </p>
+                        <p>{data.rank} 위</p>
+                        <p>{data.score} 점</p>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <h1>최근 플레이한 게임이 없습니다.</h1>
+                    </>
+                  )}
+                </div>
+                <div className="record-pagination">
+                  {pageNumbers.map((number) => (
+                    <button
+                      key={number}
+                      onClick={() => handlePageChange(number)}
+                      className={number === currentPage ? "active" : ""}
+                    >
+                      {number}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

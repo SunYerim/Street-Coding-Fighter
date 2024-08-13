@@ -95,7 +95,8 @@ function App() {
           />
           <Route
             path="/_record"
-            element={accessToken ? <RecordPage /> : <LoginPage />}
+            // element={accessToken ? <RecordPage /> : <LoginPage />}
+            element={<RecordPage />}
           />
           <Route
             path="/_report"
@@ -104,11 +105,13 @@ function App() {
           />
           <Route
             path="/_solved"
-            element={accessToken ? <SolvedPage /> : <LoginPage />}
+            // element={accessToken ? <SolvedPage /> : <LoginPage />}
+            element={<SolvedPage />}
           />
           <Route
             path="/_solved/:solvedId"
-            element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
+            // element={accessToken ? <SolvedDetailPage /> : <LoginPage />}
+            element={<SolvedDetailPage />}
           />
           {/* <Route path="/multi" element={accessToken ? <MultiMain /> : <LoginPage />} /> */}
           <Route path="/_multi" element={<MultiMain />} />

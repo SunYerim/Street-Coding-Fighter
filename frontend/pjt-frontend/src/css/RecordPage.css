@@ -12,47 +12,63 @@
 .record-container {
   display: flex;
   flex-direction: column;
-  background-color: rgba(27, 26, 85, 0.7);
+  background-color: rgba(27, 26, 85, 0.8);
   width: 80vw;
-  max-width: 1200px;
   border-radius: 20px;
-  height: 75vh;
+  height: 80vh;
   margin: 20px;
-  padding: 30px;
+  margin-top: 50px;
+}
+
+.record-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .record-title {
   margin: 0;
-  padding-left: 40px;
   color: white;
   letter-spacing: 2px;
+  font-size: 2rem;
+  margin-top: 20px;
 }
 
-.record-container hr {
-  width: 100%;
-  margin: 10px;
-  border: 1px solid white;
+.record-inner-container-outer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 83%;
 }
 
 .record-inner-container {
   display: flex;
   flex-direction: column;
-  background-color: rgba(27, 26, 85, 0.7);
-  width: 100%;
-  border-radius: 20px;
+  width: 95%;
+  border-radius: 5px;
   height: 100%;
+  min-height: 100%;
+  border: 3px solid #ccc;
+}
+
+.record-inner-container hr {
+  width: 98%;
+  height: 2px;
+  background-color: #ccc;
+  margin: 10px;
 }
 
 .record-inner-title {
   color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 40px;
-  margin: 0 50px;
-  font-size: 1.2rem;
+  margin: 5px 50px;
+  margin-top: 15px;
+  font-size: 2rem;
   letter-spacing: 2px;
   text-align: center;
+  display: grid;
+  grid-template-columns: 2fr 4fr 2fr 2fr;
+  align-items: center;
 }
 
 .record-inner-title p {
@@ -71,17 +87,18 @@
 
 .record {
   color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 40px;
-  margin: 15px 50px;
-  color: black;
-  background-color: white;
-  font-size: 1rem;
-  font-weight: bold;
+  margin: 10px 50px;
+  padding: 10px 0px;
+  color: white;
+  background-color: #1b1a55b3;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 1.5rem;
   letter-spacing: 1px;
   text-align: center;
+  display: grid;
+  grid-template-columns: 2fr 4fr 2fr 2fr;
+  align-items: center;
 }
 
 .record p {
@@ -92,7 +109,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .record-pagination button {
