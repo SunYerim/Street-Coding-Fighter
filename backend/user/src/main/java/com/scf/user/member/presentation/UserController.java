@@ -17,6 +17,8 @@ import com.scf.user.member.domain.dto.UserRegistEmailVerifyDto;
 import com.scf.user.member.domain.dto.UserRegisterRequestDto;
 import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import com.scf.user.member.domain.dto.VerifyCodeRequestDto;
+import com.scf.user.member.domain.dto.charater.CharacterType;
+import com.scf.user.member.domain.dto.charater.ClothingType;
 import com.scf.user.member.domain.enums.GachaType;
 import com.scf.user.member.infrastructure.security.JwtCookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -215,15 +217,14 @@ public class UserController {
 
     private ResponseEntity<?> handleGachaRequest(Long memberId, GachaType gachaType) {
         try {
-            int result;
             if (gachaType == GachaType.CLOTH) {
-                result = gachaService.drawClothingType();
-                userService.updateCharacterCloth(memberId, result);
-                return ResponseEntity.ok(new UserCharaterClothTypeResponseDTO(result));
+                ClothingType clothingType = gachaService.drawClothingType();
+                userService.updateCharacterCloth(memberId, clothingType.getType());
+                return ResponseEntity.ok(new UserCharaterClothTypeResponseDTO(clothingType.getType(), clothingType.getRarity().name()));
             } else if (gachaType == GachaType.TYPE) {
-                result = gachaService.drawCharacterType();
-                userService.updateCharacterType(memberId, result);
-                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(result));
+                CharacterType characterType = gachaService.drawCharacterType();
+                userService.updateCharacterType(memberId, characterType.getType());
+                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(characterType.getType(), characterType.getRarity().name()));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Gacha Type");
             }
@@ -235,5 +236,4 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
-
 }
