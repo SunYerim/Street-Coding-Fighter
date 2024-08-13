@@ -85,8 +85,12 @@ const RecordPage = () => {
                 {currentItems && currentItems.length > 0 ? (
                   currentItems.map((data, index) => (
                     <div className="record" key={index}>
-                      <p>{data.gametype === 0 ? "멀티 모드" : "배틀 모드"}</p>
-                      <p>{data.time}</p>
+                      <p>{data.gametype === 0 ? "Multi" : "Battle"}</p>
+                      <p>
+                        {new Date(data.time).toLocaleString("ko-KR", {
+                          timeZone: "Asia/Seoul",
+                        })}
+                      </p>
                       <p>{data.rank}</p>
                       <p>{data.score}</p>
                     </div>
