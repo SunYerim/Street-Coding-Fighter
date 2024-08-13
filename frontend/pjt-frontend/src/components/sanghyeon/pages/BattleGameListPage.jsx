@@ -327,7 +327,7 @@ const BattleGameListPage = () => {
                     >
                       <p>{index + 1}</p>
                       <p>{data.title}</p>
-                      <p>{data.hostId}</p>
+                      <p>{data.hostUsername}</p>
                       <p>
                         {data.curPlayer} / {data.maxPlayer}
                       </p>
