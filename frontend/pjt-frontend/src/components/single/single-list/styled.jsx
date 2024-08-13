@@ -78,6 +78,31 @@ const CharacterImage = styled.div`
   height: 100px;
   top: -120%
 `;
+const CompleteButton = styled.button`
+  margin-right: 1rem;
+  padding: 10px 20px;
+  background-color: #76dcfe;
+  color: #233551;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #466398;
+    color: #e4f0f6;
+  }
+`;
+const CancelButton = styled.button`
+  padding: 10px 20px;
+  background-color: #d1e7ef;
+  color: #233551;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #466398;
+    color: #e4f0f6;
+  }
+`;
 const S = {
   Row,
   CheckPoint,
@@ -85,6 +110,9 @@ const S = {
   RowBeetween,
   VerticalPath,
   CharacterImage,
+  CompleteButton,
+  CancelButton,
+ 
 };
 
 export default S;
