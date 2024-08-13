@@ -62,7 +62,7 @@ public class RoomService {
                 .hasPlayerBSubmitted(false)
                 .isAttack(false)
                 .currentRound(0)
-                .hostCharacterType(userService.getUserCharaterType(memberId).getCharacterType())
+                .hostCharacter(userService.getUserCharaterType(memberId))
                 .build();
         roomMap.put(roomId, room);
         battleGameRepository.addRoom(room);
