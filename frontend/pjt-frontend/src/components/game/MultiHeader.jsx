@@ -22,7 +22,9 @@ const MultiHeader = ({onBackButtonClick}) => {
   };
 
   const handleBackClick = () => {
-    onBackButtonClick();
+    if (onBackButtonClick) {
+      onBackButtonClick();
+    }
     navigate("/_multi");
   };
 
