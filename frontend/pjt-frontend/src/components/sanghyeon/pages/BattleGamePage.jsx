@@ -20,6 +20,8 @@ import SoundStore from "../../../stores/SoundStore.jsx";
 import { MdBloodtype } from "react-icons/md";
 
 const BattleGamePage = () => {
+  const healEffect = "/heal-effect.gif";
+
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
@@ -136,6 +138,9 @@ const BattleGamePage = () => {
 
   const [isLeftCamBlinking, setIsLeftCamBlinking] = useState(false);
   const [isRightCamBlinking, setIsRightCamBlinking] = useState(false);
+
+  const [isHealing, setIsHealing] = useState(false);
+  const [isEnemyHealing, setIsEnemyHealing] = useState(false);
 
   // ---------------------- WebSocket ----------------------
 
@@ -410,41 +415,53 @@ const BattleGamePage = () => {
           });
         }, 3000);
       } else {
-        if (body.userId === memberId) {
-          if (body.isAttack === true) {
-            setBlinkEnemy(true);
-            setIsRightCamBlinking(true);
-            setTimeout(() => {
-              setBlinkEnemy(false);
-              setIsRightCamBlinking(false);
-              setEnemyHealth((prevHealth) => prevHealth - body.power);
-              setBattleHistory((prevHistory) => [...prevHistory, body]);
-            }, 1000);
-          } else {
-            setTimeout(() => {
-              setMyHealth((prevHealth) =>
-                prevHealth + body.power > 100 ? 100 : prevHealth + body.power
-              );
-              setBattleHistory((prevHistory) => [...prevHistory, body]);
-            }, 1000);
-          }
+        if (body.power === 0) {
+          setBattleHistory((prevHistory) => [...prevHistory, body]);
         } else {
-          if (body.isAttack === true) {
-            setBlink(true);
-            setIsLeftCamBlinking(true);
-            setTimeout(() => {
-              setBlink(false);
-              setIsLeftCamBlinking(false);
-              setMyHealth((prevHealth) => prevHealth - body.power);
+          if (body.userId === memberId) {
+            if (body.isAttack === true) {
+              setBlinkEnemy(true);
+              setIsRightCamBlinking(true);
+              setTimeout(() => {
+                setBlinkEnemy(false);
+                setIsRightCamBlinking(false);
+                setEnemyHealth((prevHealth) => prevHealth - body.power);
+                setBattleHistory((prevHistory) => [...prevHistory, body]);
+              }, 1000);
+            } else {
+              setIsHealing(true);
               setBattleHistory((prevHistory) => [...prevHistory, body]);
-            }, 1000);
+              setTimeout(() => {
+                setMyHealth((prevHealth) =>
+                  prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+                );
+              }, 1000);
+              setTimeout(() => {
+                setIsHealing(false);
+              }, 2000);
+            }
           } else {
-            setTimeout(() => {
-              setEnemyHealth((prevHealth) =>
-                prevHealth + body.power > 100 ? 100 : prevHealth + body.power
-              );
+            if (body.isAttack === true) {
+              setBlink(true);
+              setIsLeftCamBlinking(true);
+              setTimeout(() => {
+                setBlink(false);
+                setIsLeftCamBlinking(false);
+                setMyHealth((prevHealth) => prevHealth - body.power);
+                setBattleHistory((prevHistory) => [...prevHistory, body]);
+              }, 1000);
+            } else {
+              setIsEnemyHealing(true);
               setBattleHistory((prevHistory) => [...prevHistory, body]);
-            }, 1000);
+              setTimeout(() => {
+                setEnemyHealth((prevHealth) =>
+                  prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+                );
+              }, 1000);
+              setTimeout(() => {
+                setIsEnemyHealing(false);
+              }, 2000);
+            }
           }
         }
       }
@@ -707,16 +724,6 @@ const BattleGamePage = () => {
     setAnswerSubmitted(false);
   };
 
-  const handleTemp = () => {
-    setBlinkEnemy(true);
-    setIsRightCamBlinking(true);
-    setTimeout(() => {
-      setBlinkEnemy(false);
-      setIsRightCamBlinking(false);
-      setEnemyHealth((prevHealth) => prevHealth - 20);
-    }, 1000);
-  };
-
   return (
     <>
       <div className="battle-game-entire-container">
@@ -828,6 +835,13 @@ const BattleGamePage = () => {
                       src={renderCharacter(character)}
                       alt="battle-game-my-character"
                     />
+                    {isHealing && (
+                      <img
+                        src={healEffect}
+                        alt="Healing Effect"
+                        className={`heal-effect ${isHealing ? "active" : ""}`}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="battle-game-history-container">
@@ -898,10 +912,21 @@ const BattleGamePage = () => {
                     enemyCharacterType === "" ? (
                       <></>
                     ) : (
+                      <>
+                        <img
+                          className={`${blinkEnemy ? "enemy-blink" : ""}`}
+                          src={renderCharacter(enemyCharacterType)}
+                          alt="battle-game-enemy-character"
+                        />
+                      </>
+                    )}
+                    {isEnemyHealing && (
                       <img
-                        className={`${blinkEnemy ? "enemy-blink" : ""}`}
-                        src={renderCharacter(enemyCharacterType)}
-                        alt="battle-game-enemy-character"
+                        src={healEffect}
+                        alt="Healing Effect"
+                        className={`enemy-heal-effect ${
+                          isEnemyHealing ? "active" : ""
+                        }`}
                       />
                     )}
                   </div>

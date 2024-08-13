@@ -228,6 +228,7 @@
   justify-content: center;
   align-items: center;
   border: 2px solid white;
+  position: relative;
 }
 
 .battle-game-right-cam {
@@ -547,4 +548,29 @@
   width: 120px;
   height: auto;
   border-radius: 5px;
+}
+
+.heal-effect {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 300px !important;
+  height: auto;
+  pointer-events: none;
+  display: none;
+}
+
+.heal-effect.active {
+  display: block;
+}
+
+.enemy-heal-effect {
+  position: absolute;
+  width: 300px !important;
+  height: auto;
+  pointer-events: none;
+  display: none;
+}
+
+.enemy-heal-effect.active {
+  display: block;
 }

@@ -92,6 +92,7 @@ const SignUpPage = () => {
         icon: "warning",
         timer: 3000,
       });
+      return;
     }
 
     if (userId.current.value.length < 3 || userId.current.value.length > 15) {
