@@ -19,8 +19,12 @@ const ItemPage = () => {
     character,
     setCharacter,
     exp,
+    rarity,
+    setRarity,
     characterRarity,
     setCharacterRarity,
+    characterClothRarity,
+    setCharacterClothRarity,
     setExp,
     name,
   } = store((state) => ({
@@ -32,8 +36,12 @@ const ItemPage = () => {
     exp: state.exp,
     setExp: state.setExp,
     name: state.name,
+    rarity: state.rarity,
+    setRarity: state.setRarity,
     characterRarity: state.characterRarity,
     setCharacterRarity: state.setCharacterRarity,
+    characterClothRarity: state.characterClothRarity,
+    setCharacterClothRarity: state.setCharacterClothRarity,
   }));
 
   const authClient = createAuthClient(
@@ -107,7 +115,7 @@ const ItemPage = () => {
           const nextCharacter =
             purchaseRes.data.characterType * 100 + (character % 100);
           setCharacter(nextCharacter);
-          setCharacterRarity(purchaseRes.data.characterRarity);
+          setRarity(purchaseRes.data.characterRarity);
           setExp(exp - 500);
           openModal();
         } catch (error) {
@@ -154,7 +162,7 @@ const ItemPage = () => {
           const nextCharacter =
             character - (character % 100) + purchaseRes.data.characterClothType;
           setCharacter(nextCharacter);
-          setCharacterRarity(purchaseRes.data.rarity);
+          setRarity(purchaseRes.data.characterClothRarity);
           setExp(exp - 500);
           openModal();
         } catch (error) {
@@ -242,7 +250,7 @@ const ItemPage = () => {
               <div className="item-modal-inner-container-back">
                 <div className="item-modal-inner-rank-container-back">
                   <div className="item-modal-inner-rank-back">
-                    {characterRarity ? characterRarity : null}
+                    {rarity ? rarity : null}
                   </div>
                 </div>
                 <div className="item-modal-inner-img-container-back">

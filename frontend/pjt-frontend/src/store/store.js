@@ -179,8 +179,8 @@ const store = create(
       characterRarity: "",
       setCharacterRarity: (characterRarity) => set({ characterRarity }),
 
-      clothRarity: "",
-      setClothRarity: (clothRarity) => set({ clothRarity }),
+      characterClothRarity: "",
+      setClothRarity: (characterClothRarity) => set({ characterClothRarity }),
 
       blankSolve: {},
       setBlankSolve: (blankSolve) => set({ blankSolve }),

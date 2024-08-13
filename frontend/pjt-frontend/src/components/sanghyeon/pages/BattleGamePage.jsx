@@ -24,20 +24,20 @@ const BattleGamePage = () => {
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   //새로고침 막기 ------------------//
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
-      quitBattleRoom();
-      return "";
-      // Custom logic to handle the refresh
-      // Display a confirmation message or perform necessary actions
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //     quitBattleRoom();
+  //     return "";
+  //     // Custom logic to handle the refresh
+  //     // Display a confirmation message or perform necessary actions
+  //   };
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
