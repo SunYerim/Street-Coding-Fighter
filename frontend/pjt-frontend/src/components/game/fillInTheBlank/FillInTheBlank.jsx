@@ -89,6 +89,10 @@ const FillInTheBlank = ({ problem, onFillBlank }) => {
     }));
   };
 
+  const handleSubmit = () => {
+    onFillBlank();
+  };
+
 
   return (
     <>
