@@ -3,6 +3,7 @@ package com.scf.user.member.application.service;
 import com.scf.user.member.domain.dto.charater.CharacterType;
 import com.scf.user.member.domain.dto.charater.ClothingType;
 import com.scf.user.member.domain.enums.Rarity;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,9 +12,10 @@ import java.util.Random;
 
 @Service
 public class GachaService {
-
-    private static final List<ClothingType> clothingTypes = new ArrayList<>();
-    private static final List<CharacterType> characterTypes = new ArrayList<>();
+    @Getter
+    static final List<ClothingType> clothingTypes = new ArrayList<>();
+    @Getter
+    static final List<CharacterType> characterTypes = new ArrayList<>();
 
     static {
         clothingTypes.add(new ClothingType(1, 0.025, Rarity.EPIC));
