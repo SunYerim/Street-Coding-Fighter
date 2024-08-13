@@ -109,48 +109,48 @@ const BattleGameListPage = () => {
           autocapitalize: "off",
           autocorrect: "off",
         },
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           inputPassword = result.value;
         }
-      });
 
-      if (inputPassword === null || inputPassword === "") {
-        Swal.fire({
-          text: "비밀번호를 입력해주세요.",
-          icon: "error",
-          timer: 3000,
-        });
-        return;
-      }
-    }
+        if (inputPassword === null || inputPassword === "") {
+          Swal.fire({
+            text: "비밀번호를 입력해주세요.",
+            icon: "error",
+            timer: 3000,
+          });
+          return;
+        }
 
-    try {
-      const res = await authClient({
-        method: "POST",
-        url: `${baseURL}/battle/room/${roomId}`,
-        data: {
-          password: inputPassword,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+        try {
+          const res = await authClient({
+            method: "POST",
+            url: `${baseURL}/battle/room/${roomId}`,
+            data: {
+              password: inputPassword,
+            },
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
-      setRoomId(roomId);
-      setRoomPassword(inputPassword);
-      setHostId(res.data.memberId);
-      setEnemyId(res.data.memberId);
-      setEnemyName(res.data.username);
-      setEnemyCharacterType(res.data.hostCharacterType);
-      navigate("/_battle-game");
-    } catch (error) {
-      Swal.fire({
-        text: "방 입장에 실패했습니다.",
-        icon: "error",
-        timer: 3000,
+          setRoomId(roomId);
+          setRoomPassword(inputPassword);
+          setHostId(res.data.memberId);
+          setEnemyId(res.data.memberId);
+          setEnemyName(res.data.username);
+          setEnemyCharacterType(res.data.hostCharacterType);
+          navigate("/_battle-game");
+        } catch (error) {
+          Swal.fire({
+            text: "방 입장에 실패했습니다.",
+            icon: "error",
+            timer: 3000,
+          });
+          console.log(error);
+        }
       });
-      console.log(error);
     }
   };
 

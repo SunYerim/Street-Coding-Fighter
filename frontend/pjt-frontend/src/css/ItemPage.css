@@ -295,6 +295,7 @@
   opacity: 1; /* 호버 시 화살표 보이기 */
 }
 
+/* 카드 뽑을 시 배경 설정 */
 .item-purchase-modal-overlay {
   position: fixed;
   top: 0;
