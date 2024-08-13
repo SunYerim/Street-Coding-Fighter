@@ -696,6 +696,7 @@ export default function MultiGame() {
         closeModal={() => {
           setIsExitAlertOpen(false);
         }}
+        onRequestOkay={disconnectSocket}
       ></CustomAlert>
     </>
   );
