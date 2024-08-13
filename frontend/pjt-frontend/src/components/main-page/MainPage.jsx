@@ -49,7 +49,7 @@ function MainPage() {
         setName(profileRes.data.name);
         setSchoolName(profileRes.data.school);
         setBirth(profileRes.data.birth);
-        setCharacter(profileRes.data.character);
+        setCharacter(profileRes.data.userCharacter.characterType);
         setExp(profileRes.data.exp);
       } catch (error) {
         Swal.fire({
