@@ -12,17 +12,18 @@ const Choice = ({ choice }) => {
   const styles = {
     choice: {
       display: 'inline-block',
-      minWidth: '80px',
-      minHeight: '2rem',
+      minWidth: '100px',
+      minHeight: '2.5rem',
       width: 'auto',
       height: 'auto',
       alignContent: 'center',
       textAlign: 'center',
-      margin: '0 5px',
+      margin: '5px 5px',
       backgroundColor: isDragging ? 'gray' : 'black',
       color: 'white',
       opacity: isDragging ? 0.5 : 1,
       transition: 'opacity 0.3s ease',
+      borderRadius: '5px',
     },
   };
 

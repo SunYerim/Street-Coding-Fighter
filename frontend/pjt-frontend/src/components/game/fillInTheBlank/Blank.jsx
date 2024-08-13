@@ -1,3 +1,4 @@
+import { borderRadius } from '@mui/system';
 import { useDrop } from 'react-dnd';
 
 const Blank = ({ id, onDrop, children }) => {
@@ -22,14 +23,14 @@ const Blank = ({ id, onDrop, children }) => {
   }
   let width, height;
   if (isOver) {
-    width = '60px';
-    height = '2em';
+    width = '100px';
+    height = '2.3em';
   } else if (children) {
-    width = '50px';
-    height = '1.5em';
+    width = '85px';
+    height = '2em';
   } else {
-    width = '50px';
-    height = '1.5em';
+    width = '85px';
+    height = '2em';
   }
   const styles = {
     blank: {
@@ -44,12 +45,13 @@ const Blank = ({ id, onDrop, children }) => {
       textAlign: 'center',
       alignContent : 'center',
       transition: 'all 0.3s ease',
+      borderRadius: '5px',
     },
   };
 
   return (
     <span ref={drop} style={styles.blank}>
-      {children || '_____'}
+      {children || '       '}
     </span>
   );
 };

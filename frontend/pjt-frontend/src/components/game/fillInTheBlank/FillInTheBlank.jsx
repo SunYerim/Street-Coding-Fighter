@@ -5,11 +5,12 @@ import Blank from "./Blank";
 import ChoiceContainer from "./ChoiceContainer";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
-import StyleToPythonCode from "../StyleToPythonCode.jsx";
+import StyleToPythonCode from "./StyleToFillCode.jsx";
 import multiStore from "../../../stores/multiStore.jsx";
 import "../../../css/MultiGame.css";
+import "../../../css/fill.css";
 
-const FillInTheBlank = ({ problem, onFillBlank }) => {
+const FillInTheBlank = ({ problem }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
@@ -21,10 +22,6 @@ const FillInTheBlank = ({ problem, onFillBlank }) => {
     setBlankSolve: state.setBlankSolve,
   }));
 
-  // useEffect(() => {
-  //   const problemData = problem;
-  //   setProblem(problemData);
-  // }, [myBlankProblem]);
 
   useEffect(() => {
     if (problemData && problemData.problemChoices) {
@@ -92,45 +89,30 @@ const FillInTheBlank = ({ problem, onFillBlank }) => {
     }));
   };
 
-  const styles = {
-    quizContainer: {
-      marginBottom: "20px",
-    },
-    submitButton: {
-      display: "inline-block",
-      padding: "10px 20px",
-      fontSize: "16px",
-      color: "#fff",
-      backgroundColor: "#007bff",
-      border: "none",
-      borderRadius: "5px",
-      marginTop: "20px",
-    },
-    submitButtonHover: {
-      backgroundColor: "#0056b3",
-    },
-  };
-
-  const handleSubmit = () => {
-    onFillBlank();
-  };
 
   return (
     <>
-      <DndProvider backend={HTML5Backend}>
-        <div>
-          {modifiedContent && (
-            <StyleToPythonCode codeString={modifiedContent} />
-          )}
-        </div>
+      <div className="fill-container">
+        <DndProvider backend={HTML5Backend}>
+          <div className="fill-problem">
+            {modifiedContent && (
+              <StyleToPythonCode codeString={modifiedContent} />
+            )}
+          </div>
 
-        <ChoiceContainer>
-          {choices.map((choice, idx) => {
-            return <Choice key={`choice-${idx}`} choice={choice} />;
-          })}
-        </ChoiceContainer>
-      </DndProvider>
-      <button className='multi-button' onClick={handleSubmit}>제출</button>
+          <div className="fill-choices">
+            <ChoiceContainer>
+              {choices.map((choice, idx) => {
+                return <Choice key={`choice-${idx}`} choice={choice} />;
+              })}
+            </ChoiceContainer>
+          </div>
+
+        </DndProvider>
+        <div className="fill-submit">
+          <button className='fill-button'>답안 제출</button>
+        </div>
+      </div>
     </>
   );
 };

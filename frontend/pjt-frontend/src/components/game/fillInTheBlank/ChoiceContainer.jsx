@@ -1,11 +1,14 @@
+import { border } from "@mui/system";
+
 const style = {
   display: 'flex',
   flexWrap: 'wrap',
-  marginTop: '20px',
   padding: '10px',
   height: 'auto',
-  maxWidth: '80%',
-  backgroundColor: '#007BFF',
+  maxWidth: '100%',
+  // backgroundColor: '#007BFF',
+  border: '2px solid #8216f5',
+  borderRadius: '5px',
 };
 
 const ChoiceContainer = ({ children }) => {
