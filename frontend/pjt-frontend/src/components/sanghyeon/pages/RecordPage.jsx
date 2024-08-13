@@ -86,11 +86,7 @@ const RecordPage = () => {
                   currentItems.map((data, index) => (
                     <div className="record" key={index}>
                       <p>{data.gametype === 0 ? "Multi" : "Battle"}</p>
-                      <p>
-                        {new Date(data.time).toLocaleString("ko-KR", {
-                          timeZone: "Asia/Seoul",
-                        })}
-                      </p>
+                      <p>{new Date(new Date(data.time).getTime() + 9 * 60 * 60 * 1000).toLocaleString('ko-KR')}</p>
                       <p>{data.rank}</p>
                       <p>{data.score}</p>
                     </div>
