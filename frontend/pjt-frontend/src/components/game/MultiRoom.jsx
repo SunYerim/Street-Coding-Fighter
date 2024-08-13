@@ -137,10 +137,14 @@ function MultiRoom(props) {
     }
   };
 
+  const roomStyle = {
+    border: `3px solid ${borderColor === 'neon-red' ? '#ff073a' : '#39ff14'}` // 형광 빨간색 또는 형광 초록색
+  };
+
   const warningSign = "/warningSign.png"
   return(
     <>
-      <div className='room-items' onClick={handleRoomClick}>
+      <div style={roomStyle} className='room-items' onClick={handleRoomClick}>
         <h3>{props.roomNum}</h3>
         <h3>{props.room}</h3>
         <h4>{props.hostname}</h4>

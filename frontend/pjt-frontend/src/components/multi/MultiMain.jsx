@@ -100,9 +100,11 @@ export default function MultiMain() {
                 <div>
                   { multiList.length > 0 ? (
                     multiList.map((room, i) => {
-                      if (room.curPlayer === 0 || room.isStart === true) {
+                      if (room.curPlayer === 0) {
                         return null;
                       }
+                      
+                      const borderColor = room.isStart || room.curPlayer === room.maxPlayer ? 'neon-red' : 'neon-green';
                       
                       return (
                         <MultiRoom 
@@ -114,9 +116,11 @@ export default function MultiMain() {
                           gameRound={room.gameRound} 
                           isLock={room.isLock} 
                           roomId={room.roomId} 
-                          key={i} 
+                          key={i}
+                          borderColor={borderColor} // 테두리 색상을 prop으로 전달
                         />
                       );
+                      
                     })                    
                     // multiList.map((room, i) => {
                     //   return <MultiRoom roomNum={i+1} room={room.title} hostname={room.hostname} maxPlayer={room.maxPlayer} curPlayer={room.curPlayer} gameRound={room.gameRound} isLock={room.isLock} roomId={room.roomId} key={i} />
