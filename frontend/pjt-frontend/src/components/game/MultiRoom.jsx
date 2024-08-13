@@ -132,7 +132,7 @@ function MultiRoom(props) {
       alert('This room cannot be joined.');
       return;
     }
-    
+
     if (props.isLock) {
       setRoomId(props.roomId);
       handleOpenModal();
@@ -144,7 +144,7 @@ function MultiRoom(props) {
   };
 
   const roomStyle = {
-    border: `5px solid ${props.borderColor === 'neon-red' ? '#ff073a' : '#39ff14'}` // 형광 빨간색 또는 형광 초록색
+    border: `4px solid ${props.borderColor === 'neon-red' ? '#ff073a' : '#39ff14'}` // 형광 빨간색 또는 형광 초록색
   };
 
   const warningSign = "/warningSign.png"
