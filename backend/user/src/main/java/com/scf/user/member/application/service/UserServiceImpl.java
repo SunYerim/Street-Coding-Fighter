@@ -5,17 +5,11 @@ import static com.scf.user.member.application.service.GachaService.characterType
 import static com.scf.user.member.application.service.GachaService.clothingTypes;
 
 import com.scf.user.member.application.client.ContentClient;
-import com.scf.user.member.domain.dto.UserInfoListResponseDto;
-import com.scf.user.member.domain.dto.UserInfotoSingleResponseDto;
-import com.scf.user.member.domain.dto.UserCharaterTypeResponseDTO;
+import com.scf.user.member.domain.dto.*;
 import com.scf.user.member.domain.dto.charater.CharacterType;
 import com.scf.user.member.domain.dto.charater.ClothingType;
 import com.scf.user.member.global.exception.NotEnoughExperienceException;
 import com.scf.user.profile.domain.repository.CharacterRepository;
-import com.scf.user.member.domain.dto.TokenDto;
-import com.scf.user.member.domain.dto.UserInfoResponseDto;
-import com.scf.user.member.domain.dto.UserRegisterRequestDto;
-import com.scf.user.member.domain.dto.UserRegisterResponseDto;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.profile.domain.entity.Character;
 import com.scf.user.member.domain.repository.UserRepository;
@@ -217,7 +211,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
+    public UserCharacterResponseDTO getUserCharaterType(Long memberId) {
         Member member = userRepository.getById(memberId);
         int characterType = member.getCharacter().getCharacterType();
         int characterCloth = member.getCharacter().getCharacterCloth();
@@ -226,7 +220,7 @@ public class UserServiceImpl implements UserService {
         String clothRarity = determineRarity(characterCloth);    // 의상의 Rarity 결정
 
         // UserCharaterTypeResponseDTO 생성시, 세 개의 파라미터를 전달
-        return new UserCharaterTypeResponseDTO(characterType, characterRarity, clothRarity);
+        return new UserCharacterResponseDTO(characterType*100 + characterCloth, characterRarity, clothRarity);
     }
 
 
