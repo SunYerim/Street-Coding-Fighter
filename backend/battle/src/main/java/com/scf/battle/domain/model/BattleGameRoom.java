@@ -21,6 +21,7 @@ public class BattleGameRoom {
     private Long hostId;
     private String title;
     private String password;
+    private String hostUsername;
 
     private final List<List<Problem>> roundProblems = new ArrayList<>(); // 라운드 마다 3문제로 나누기 위함
     @Setter

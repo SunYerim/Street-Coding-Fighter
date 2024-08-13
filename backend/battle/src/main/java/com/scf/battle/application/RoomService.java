@@ -52,6 +52,7 @@ public class RoomService {
         BattleGameRoom room = BattleGameRoom.builder()
                 .roomId(roomId)
                 .hostId(memberId)
+                .hostUsername(username)
                 .isStart(false)
                 .finalRound(createRoomDTO.getRound())
                 .title(createRoomDTO.getTitle())

@@ -11,6 +11,9 @@ import com.scf.battle.domain.model.BattleGameRoom;
 import com.scf.battle.global.error.exception.BusinessException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/battle")
@@ -31,6 +35,7 @@ public class BattleGameController {
     private final RoomService roomService;
     private final GameService gameService;
     private final BattleSocketService battleSocketService;
+    private static final Logger logger = LoggerFactory.getLogger(BattleGameController.class);
 
     @GetMapping("/room")
     public ResponseEntity<List<RoomResponseDTO>> roomList() {
@@ -41,8 +46,6 @@ public class BattleGameController {
         List<RoomResponseDTO> roomResponseDTOS = roomService.convertToRoomResponseDTOs(rooms);
         return ResponseEntity.ok(roomResponseDTOS); // 200 OK
     }
-
-
 
     @GetMapping("/room/{roomId}")
     public ResponseEntity<?> findRoom(@PathVariable String roomId) { // room 하나만 return
@@ -67,6 +70,7 @@ public class BattleGameController {
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestHeader Long memberId, @RequestHeader String username,
                                         @Valid @RequestBody CreateRoomDTO createRoomDto) {
+        logger.info("Received request from user: {}", username); // 로그 사용
         try {
             String roomId = roomService.createRoom(memberId, username, createRoomDto);
             return new ResponseEntity<>(roomId, HttpStatus.OK);
