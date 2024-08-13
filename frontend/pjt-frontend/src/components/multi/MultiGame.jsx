@@ -213,15 +213,15 @@ useEffect(() => {
           console.log(`얻은 점수: ${data.payload}`);
         }else if (data.type === "player-list") {
           // 플레이어 리스트
-          setPlayerList(JSON.stringify(data.payload));
+          setPlayerList(data.payload);
           console.log(`플레이어 리스트: ${JSON.stringify(data.payload)}`);
         } else if (data.type === "submit-list") {
           // 제출자 리스트
           setSubmitList(data.payload);
-          console.log(`제출자 리스트: ${data.payload}`);
+          console.log(`제출자 리스트: ${JSON.stringify(data.payload)}`);
         } else if (data.type === "gameRank") {
-          setGameRank(JSON.stringify(data.payload));
-          console.log("전체랭킹: ", JSON.stringify(data.payload));
+          setGameRank(data.payload);
+          console.log("전체랭킹: ", data.payload);
           // isSubmitRef.current = false;
           // setCount(30);
           // setCurrentRound(cnt + 1);
@@ -240,8 +240,8 @@ useEffect(() => {
           }
 
         } else if (data.type === "roundRank") {
-          setRoundRank(JSON.stringify(data.payload));
-          console.log("라운드랭킹: ", JSON.stringify(data.payload));
+          setRoundRank(data.payload);
+          console.log("라운드랭킹: ", data.payload);
           // isSubmitRef.current = false;
           // setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
