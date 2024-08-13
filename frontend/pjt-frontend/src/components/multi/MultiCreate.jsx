@@ -67,7 +67,7 @@ export default function MultiCreate() {
 
   return (
     <>
-      <MultiHeader />
+      <MultiHeader onBackButtonClick={null} />
       {/* <div className="container"> */}
       <div id="container">
         <div className="create-container">

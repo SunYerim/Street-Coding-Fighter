@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import BattleGameHeader from "./BattleGameHeader.jsx";
 import "../../../css/BattleGamePage.css";
 import store from "../../../store/store.js";
 import { useEffect, useState, useRef } from "react";
@@ -117,8 +117,46 @@ const BattleGamePage = () => {
   const [currentRound, setCurrentRound] = useState(0);
   const [EnemyProblems, setEnemyProblems] = useState([]);
   const [count, setCount] = useState(30);
-  const [gameStart, setGameStart] = useState(false);
-  const [myProblem, setMyProblem] = useState({});
+  const [gameStart, setGameStart] = useState(true); // 여기
+  const [myProblem, setMyProblem] = useState({
+    problemId: 2,
+    title: "배열의 최대값 찾기",
+    problemType: "MULTIPLE_CHOICE",
+    category: "알고리즘",
+    difficulty: 2,
+    problemContent: {
+      problemId: 2,
+      content:
+        "배열이 주어질 때, 배열의 요소 중 가장 큰 값을 찾아서 반환하는 프로그램을 작성하세요. 배열은 정수로만 구성되어 있으며, 배열의 크기는 1 이상 100 이하입니다.",
+      numberOfBlanks: 0,
+    },
+    problemChoices: [
+      {
+        choiceId: 4,
+        problemId: 2,
+        choiceText:
+          "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+      },
+      {
+        choiceId: 1,
+        problemId: 2,
+        choiceText:
+          "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+      },
+      {
+        choiceId: 2,
+        problemId: 2,
+        choiceText:
+          "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+      },
+      {
+        choiceId: 3,
+        problemId: 2,
+        choiceText:
+          "배열의 중앙 요소와 비교하여 찾고자 하는 값이 중앙값보다 크면 오른쪽 절반을, 작으면 왼쪽 절반을 탐색한다.",
+      },
+    ],
+  }); // 여기
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
   const [gameEnded, setGameEnded] = useState(false);
@@ -438,7 +476,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsHealing(false);
-              }, 1000);
+              }, 2000);
             }
           } else {
             if (body.isAttack === true) {
@@ -460,7 +498,7 @@ const BattleGamePage = () => {
               }, 1000);
               setTimeout(() => {
                 setIsEnemyHealing(false);
-              }, 1000);
+              }, 2000);
             }
           }
         }
@@ -536,10 +574,10 @@ const BattleGamePage = () => {
         },
       });
     } catch (error) {
-      Swal.fire({
-        text: "게임 종료에 실패했습니다.",
-        icon: "error",
-      });
+      // Swal.fire({
+      //   text: "게임 종료에 실패했습니다.",
+      //   icon: "error",
+      // });
       console.log(error);
     }
   };
@@ -696,7 +734,7 @@ const BattleGamePage = () => {
   const renderProblemType = (problemType) => {
     switch (problemType) {
       case "FILL_IN_THE_BLANK":
-        return "주관식";
+        return "빈 칸 채우기";
       case "SHORT_ANSWER_QUESTION":
         return "단답형";
       case "MULTIPLE_CHOICE":
@@ -799,7 +837,7 @@ const BattleGamePage = () => {
             </>
           )}
         </Modal>
-        <Header type="BattleGame" />
+        <BattleGameHeader />
         <div className="battle-game-outer-outer-container">
           <div className="battle-game-outer-container">
             <div className="battle-game-title-container">

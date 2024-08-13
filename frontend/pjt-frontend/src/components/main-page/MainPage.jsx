@@ -5,6 +5,7 @@ import createAuthClient from "../sanghyeon/apis/createAuthClient.js";
 import store from "../../store/store.js";
 import SoundStore from "../../stores/SoundStore.jsx";
 import Swal from "sweetalert2";
+import BasicModal from "../tutorial/BasicModal.jsx";
 
 function MainPage() {
   const {
@@ -74,11 +75,11 @@ function MainPage() {
       description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
       imageUrl: "/characters/movingGreenSlime.gif",
     },
-    "스토리모드": {
+    스토리모드: {
       description: "혼자서 학습할 수 있는 스토리모드 입니다.",
       imageUrl: "/characters/movingIceSlime.gif",
     },
-    "랭킹": {
+    랭킹: {
       description:
         "순위를 겨루는 랭킹 모드입니다. \n 높은 점수를 기록해보세요.",
       imageUrl: "/characters/movingThunderSlime.gif",
@@ -86,7 +87,7 @@ function MainPage() {
   };
 
   const defaultMode = {
-    description: "모드를 선택해주세요.",
+    description: "튜토리얼을 읽어보세요.",
     imageUrl: "/characters/movingNyanSlime.gif",
   };
 
@@ -125,6 +126,13 @@ function MainPage() {
             {hoveredMode
               ? modeDetails[hoveredMode].description
               : defaultMode.description}
+            {/* hoveredMode가 null일 때만 BasicModal을 보여줌 */}
+            {!hoveredMode && (
+              <BasicModal
+                title="기본 모드"
+                description={defaultMode.description}
+              />
+            )}
           </p>
         </div>
       </div>
@@ -170,9 +178,8 @@ const styles = {
     fontSize: "1.7rem",
     whiteSpace: "pre-wrap",
     textAlign: "center",
-    borderTopRightRadius: '30px',
-    borderBottomRightRadius: '30px',
-
+    borderTopRightRadius: "30px",
+    borderBottomRightRadius: "30px",
   },
   image: {
     marginTop: "10px",

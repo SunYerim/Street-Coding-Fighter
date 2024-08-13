@@ -51,30 +51,33 @@ const testMultipleChoiceProblem = {
   problemContent: {
     problemId: 2,
     content:
-      "배열이 주어질 때, 배열의 요소 중 가장 큰 값을 찾아서 반환하는 프로그램을 작성하세요. 배열은 정수로만 구성되어 있으며, 배열의 크기는 1 이상 100 이하입니다.",
+      "배열이 주어질 때, 배열의 요소 중 가장 큰 값을 찾아서 반환하는 프로그램을 작성하세요. 배열의 중앙 요소와 비교하여 찾고자 하는 값이 중앙값보다 크면 오른쪽 절반을, 작으면 왼쪽 절반을 탐색한다. 배열은 정수로만 구성되어 있으며, 배열의 크기는 1 이상 100 이하입니다.",
     numberOfBlanks: 0,
   },
   problemChoices: [
     {
       choiceId: 4,
       problemId: 2,
-      choiceText: "배열의 요소를 모두 더한 값을 반환한다.",
+      choiceText:
+        "배열의 중앙 요소와 비교하여 찾고자 하는 값이 중앙값보다 크면 오른쪽 절반을, 작으면 왼쪽 절반을 탐색한다.",
     },
     {
       choiceId: 1,
       problemId: 2,
-      choiceText: "배열을 정렬한 후 마지막 요소를 반환한다.",
+      choiceText:
+        "배열의 중앙 요소와 비교하여 찾고자 하는 값이 중앙값보다 크면 오른쪽 절반을, 작으면 왼쪽 절반을 탐색한다.",
     },
     {
       choiceId: 2,
       problemId: 2,
-      choiceText: "배열의 각 요소를 반복하며 가장 큰 값을 추적하여 반환한다.",
+      choiceText:
+        "배열의 중앙 요소와 비교하여 찾고자 하는 값이 중앙값보다 크면 오른쪽 절반을, 작으면 왼쪽 절반을 탐색한다.",
     },
     {
       choiceId: 3,
       problemId: 2,
       choiceText:
-        "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+        "배열의 중앙 요소와 비교하여 찾고자 하는 값이 중앙값보다 크면 오른쪽 절반을, 작으면 왼쪽 절반을 탐색한다.",
     },
   ],
 };
@@ -148,7 +151,7 @@ const store = create(
       code: "",
       setCode: (code) => set({ code }),
 
-      character: "602",
+      character: "",
       setCharacter: (character) => set({ character }),
 
       roomId: "",
@@ -166,7 +169,7 @@ const store = create(
       enemyName: "",
       setEnemyName: (enemyName) => set({ enemyName }),
 
-      enemyCharacterType: "1202",
+      enemyCharacterType: "",
       setEnemyCharacterType: (enemyCharacterType) =>
         set({ enemyCharacterType }),
 
