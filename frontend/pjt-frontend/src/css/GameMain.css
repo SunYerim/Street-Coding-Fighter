@@ -136,7 +136,7 @@
 
 .room-items {
   display: grid;
-  grid-template-columns: 2fr 7fr 3fr 3fr 3fr 2fr;
+  grid-template-columns: 6fr 17fr 14fr 12fr 13fr 13fr;
   justify-items: center;
   align-items: center;
   width: 99%;

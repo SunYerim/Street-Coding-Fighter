@@ -115,7 +115,8 @@ export default function MultiMain() {
                           curPlayer={room.curPlayer} 
                           gameRound={room.gameRound} 
                           isLock={room.isLock} 
-                          roomId={room.roomId} 
+                          roomId={room.roomId}
+                          isStart={room.isStart}
                           key={i}
                           borderColor={borderColor} // 테두리 색상을 prop으로 전달
                         />

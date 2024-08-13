@@ -127,6 +127,12 @@ function MultiRoom(props) {
   };
 
   const handleRoomClick = () => {
+    if (props.isStart || props.curPlayer === props.maxPlayer) {
+      // 방이 이미 시작되었거나, 현재 플레이어 수가 최대 플레이어 수와 같으면 방 입장을 막음
+      alert('This room cannot be joined.');
+      return;
+    }
+    
     if (props.isLock) {
       setRoomId(props.roomId);
       handleOpenModal();
@@ -138,7 +144,7 @@ function MultiRoom(props) {
   };
 
   const roomStyle = {
-    border: `3px solid ${props.borderColor === 'neon-red' ? '#ff073a' : '#39ff14'}` // 형광 빨간색 또는 형광 초록색
+    border: `5px solid ${props.borderColor === 'neon-red' ? '#ff073a' : '#39ff14'}` // 형광 빨간색 또는 형광 초록색
   };
 
   const warningSign = "/warningSign.png"
