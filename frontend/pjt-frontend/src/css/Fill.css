@@ -1,14 +1,13 @@
 .fill-container {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
+  align-items: center;
   width: 100%;
   height: 100%;
 }
 
 .fill-problem {
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
   width: 100%;
   height: 50%;
@@ -16,7 +15,6 @@
 
 .fill-choices {
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
   width: 100%;
   height: 30%;
