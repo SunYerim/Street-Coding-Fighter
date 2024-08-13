@@ -149,13 +149,11 @@ const Setting = ({ isOpen, onClose }) => {
             <p style={styles.setting} onClick={() => navigate("/")}>
               Back to Title
             </p>
-            {accessToken !== "" && accessToken !== null ? (
-              <>
-                <p style={styles.setting} onClick={logout}>
-                  Logout
-                </p>
-              </>
-            ) : null}
+            {accessToken && (
+              <p style={styles.setting} onClick={logout}>
+                Logout
+              </p>
+            )}
           </div>
         </div>
       </Modal>
