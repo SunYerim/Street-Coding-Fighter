@@ -48,16 +48,19 @@ export default function MultiGame() {
   const handleExitAlert = () => {
     setIsExitAlertOpen(false);
     disconnectSocket();
-    navigate('/_multi-game')
-  }
+    navigate('/_multi-game');
+  };
   //뒤로가기 막기
-  useEffect(()=>{
-    history.pushState(null, "", window.location.href);
-    window.addEventListener("popstate", handleExitAlert);
+  useEffect(() => {
+    history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', handleExitAlert);
     return () => {
-      window.removeEventListener("popstate", handleExitAlert);
+      window.removeEventListener('popstate', () => {
+        disconnectSocket();
+        navigate('/_multi-game');
+      });
     };
-  }, [])
+  }, []);
   //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } = SoundStore();
   useEffect(() => {
@@ -219,15 +222,14 @@ export default function MultiGame() {
         const data = JSON.parse(messageData);
 
         // Multi socket 통신 타입별 정리
-        if (data.type === "gameStart") {
+        if (data.type === 'gameStart') {
           clearSubmitList();
           // 게임스타트
           setPlaying(true);
           console.log(data.payload);
           handleSetProblemList(data.payload);
           problemLength = data.payload.length;
-          
-        } else if (data.type === "newHost") {
+        } else if (data.type === 'newHost') {
           // 방장바뀌는 타입
           console.log(data.payload);
           setHostId(data.payload);
@@ -303,7 +305,7 @@ export default function MultiGame() {
 
   const disconnectSocket = () => {
     if (socket) {
-        socket.close();
+      socket.close();
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////////////////
