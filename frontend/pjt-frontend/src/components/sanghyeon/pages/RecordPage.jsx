@@ -23,7 +23,8 @@ const RecordPage = () => {
   );
 
   const [recordData, setRecordData] = useState([]);
-
+  const [sortedData, setSortedData] = useState([]);
+  const [sortOption, setSortOption] = useState("recent");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
@@ -54,6 +55,26 @@ const RecordPage = () => {
     getRecord();
   }, []);
 
+  useEffect(() => {
+    if (sortOption && recordData.length > 0) {
+      const sorted = [...recordData];
+      if (sortOption === "recent") {
+        sorted.sort((a, b) => new Date(b.time) - new Date(a.time)); // 최신순 정렬
+      } else if (sortOption === "rank") {
+        sorted.sort((a, b) => a.rank - b.rank); // 순위순 정렬
+      } else if (sortOption === "mode") {
+        sorted.sort((a, b) => a.gametype - b.gametype); // 모드순 정렬
+      } else if (sortOption === "score") {
+        sorted.sort((a, b) => b.score - a.score); // 점수순 정렬
+      }
+      setSortedData(sorted);
+    }
+  }, [sortOption, recordData]);
+
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = recordData.slice(indexOfFirstItem, indexOfLastItem);
@@ -74,7 +95,16 @@ const RecordPage = () => {
         <div className="record-outer-container">
           <div className="record-container">
             <div className="record-title-container">
+              <div></div>
               <h2 className="record-title">{name}님의 최근 전적</h2>
+              <div className="record-title-select-container">
+                <select name="" id="" className="" onChange={handleSortChange}>
+                  <option value="recent">최신순</option>
+                  <option value="rank">순위순</option>
+                  <option value="mode">모드순</option>
+                  <option value="score">점수순</option>
+                </select>
+              </div>
             </div>
             <div className="record-inner-container-outer">
               <div className="record-inner-container">

@@ -21,10 +21,20 @@
 }
 
 .record-title-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 3fr 6fr 3fr;
   margin-bottom: 20px;
+}
+
+.record-title-container select {
+  width: 100px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  background-color: white;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .record-title {
@@ -33,6 +43,14 @@
   letter-spacing: 2px;
   font-size: 2rem;
   margin-top: 20px;
+  text-align: center;
+}
+
+.record-title-select-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .record-inner-container-outer {

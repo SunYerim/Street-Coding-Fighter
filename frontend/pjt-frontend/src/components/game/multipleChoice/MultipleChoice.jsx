@@ -3,32 +3,45 @@ import reactStringReplace from "react-string-replace";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
 import store from "../../../store/store.js";
-import { maxHeight } from "@mui/system";
+import {
+  bgcolor,
+  color,
+  fontSize,
+  fontWeight,
+  height,
+  letterSpacing,
+  maxHeight,
+  textAlign,
+} from "@mui/system";
 
 const styles = {
   codeContainer: {
     width: "43vw",
-    maxHeight: "60%",
+    minHeight: "65%",
+    height: "65%",
+    maxHeight: "65%",
     margin: "0 auto",
-    padding: "1rem",
+    padding: "0",
   },
   choiceContainer: {
     width: "43vw",
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "10px",
-    justifyContent: "center",
     margin: "0 auto",
   },
   choiceButton: {
     display: "inline-block",
-    padding: "10px 20px",
-    fontSize: "16px",
-    color: "#fff",
-    backgroundColor: "#007bff",
-    border: "none",
-    borderRadius: "5px",
+    padding: "10px 10px",
+    fontFamily: "'Fira Code', Consolas, 'Courier New', Courier, monospace",
+    fontSize: "1.2rem",
     margin: "5px 0",
+    fontWeight: "bold",
+    color: "white",
+    border: "1px solid white",
+    borderRadius: "5px",
+    letterSpacing: "1px",
+    textAlign: "center",
   },
   submitButton: {
     display: "inline-block",
@@ -108,11 +121,13 @@ const MultipleChoice = () => {
                 style={{
                   ...styles.choiceButton,
                   backgroundColor:
-                    selectedChoice === choice.choiceId ? "#0056b3" : "#007bff",
+                    selectedChoice === choice.choiceId
+                      ? "#0056b3"
+                      : "#1b1a55b3",
                 }}
                 onClick={() => handleChoiceSelect(choice.choiceId)}
               >
-                {index + 1}. {choice.choiceText}
+                {choice.choiceText}
               </button>
             ))}
         </div>

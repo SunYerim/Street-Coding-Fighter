@@ -25,6 +25,8 @@ import Loading from "./components/loading/Loading.jsx";
 
 import ItemPage from "./components/sanghyeon/pages/ItemPage.jsx";
 
+import TempPage1 from "./components/sanghyeon/pages/TempPage1.jsx";
+
 import { useEffect, useState } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
@@ -131,6 +133,8 @@ function App() {
           <Route path="/story-play/:content_id" element={<SinglePlay />} />
           <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
+
+          <Route path="/temp1" element={<TempPage1 />} />
         </Routes>
       </Router>
     </div>

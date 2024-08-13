@@ -10,20 +10,36 @@ import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 import Swal from "sweetalert2";
 
-import DragNDropQuiz from "../../../components/game/quiz_with_blank/DragNDropQuiz.jsx";
-import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
-import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoice.jsx";
+import DragNDropQuiz from "../../game/quiz_with_blank/DragNDropQuiz.jsx";
+import ShortAnswer from "../../game/short_answer/ShortAnswer.jsx";
+import MultipleChoice from "../../game/multipleChoice/MultipleChoice.jsx";
 
 import Modal from "react-modal";
 
 import SoundStore from "../../../stores/SoundStore.jsx";
 import { MdBloodtype } from "react-icons/md";
 
-const MultipleChoicePage = () => {
+const TempPage1 = () => {
   const healEffect = "/heal-effect.gif";
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  //새로고침 막기 ------------------//
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //     quitBattleRoom();
+  //     return "";
+  //     // Custom logic to handle the refresh
+  //     // Display a confirmation message or perform necessary actions
+  //   };
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
+  //-------------------게임페이지 들어왔을 때 음악변경-------------//
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
     SoundStore();
   useEffect(() => {
@@ -116,9 +132,44 @@ const MultipleChoicePage = () => {
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
-  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
-  const [gameStart, setGameStart] = useState(false); // 여기
-  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
+  const [EnemyProblems, setEnemyProblems] = useState([
+    {
+      problemId: 258,
+      title: "배열의 최대값 찾기",
+      problemType: "MULTIPLE_CHOICE",
+      category: "1차원 리스트",
+      difficulty: 2,
+      item: null,
+    },
+    {
+      problemId: 178,
+      title: "탐색 문제 2",
+      problemType: "FILL_IN_THE_BLANK",
+      category: "탐색",
+      difficulty: 2,
+      item: {
+        name: "시간 연장",
+        type: "BUFF",
+        probabilities: [0.35, 0.3, 0.2, 0.1, 0.05],
+        rarity: "LEGENDARY",
+      },
+    },
+    {
+      problemId: 277,
+      title: "리스트의 요소를 역순으로 출력하는 코드의 결과 예측",
+      problemType: "MULTIPLE_CHOICE",
+      category: "1차원 리스트",
+      difficulty: 2,
+      item: {
+        name: "시간 연장",
+        type: "BUFF",
+        probabilities: [0.35, 0.3, 0.2, 0.1, 0.05],
+        rarity: "LEGENDARY",
+      },
+    },
+  ]); // 여기
+  const [gameStart, setGameStart] = useState(true); // 여기
+  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
@@ -874,9 +925,7 @@ const MultipleChoicePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
-                    <div className="battle-game-problem-outer-container">
-                      {renderQuestion(myProblem)}
-                    </div>
+                    {renderQuestion(myProblem)}
                     <div className="battle-game-submit-answer-container">
                       <button
                         onClick={handleSubmit}
@@ -979,4 +1028,4 @@ const MultipleChoicePage = () => {
   );
 };
 
-export default MultipleChoicePage;
+export default TempPage1;
