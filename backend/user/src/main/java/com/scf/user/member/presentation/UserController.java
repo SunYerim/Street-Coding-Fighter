@@ -224,7 +224,7 @@ public class UserController {
             } else if (gachaType == GachaType.TYPE) {
                 CharacterType characterType = gachaService.drawCharacterType();
                 userService.updateCharacterType(memberId, characterType.getType());
-                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(characterType.getType(), characterType.getRarity().name()));
+                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(characterType.getType(), characterType.getRarity().name(), characterType.getRarity().name()));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Gacha Type");
             }
