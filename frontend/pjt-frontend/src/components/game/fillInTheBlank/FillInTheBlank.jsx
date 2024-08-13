@@ -8,7 +8,7 @@ import { DndProvider } from "react-dnd";
 import StyleToPythonCode from "./StyleToFillCode.jsx";
 import multiStore from "../../../stores/multiStore.jsx";
 import "../../../css/MultiGame.css";
-import "../../../css/fill.css";
+import "../../../css/Fill.css";
 
 const FillInTheBlank = ({ problem }) => {
   const [blanks, setBlanks] = useState({});
