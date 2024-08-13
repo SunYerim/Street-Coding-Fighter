@@ -100,7 +100,7 @@ export default function MultiMain() {
                 <div>
                   { multiList.length > 0 ? (
                     multiList.map((room, i) => {
-                      if (room.curPlayer === 0) {
+                      if (room.curPlayer === 0 || room.isStart === true) {
                         return null;
                       }
                       
