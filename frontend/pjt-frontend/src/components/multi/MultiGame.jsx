@@ -199,11 +199,16 @@ useEffect(() => {
 
         // Multi socket 통신 타입별 정리
         if (data.type === "gameStart") {
-          // 게임스타트
-          setPlaying(true);
+          // 게임목록 받기
           console.log(data.payload);
           handleSetProblemList(data.payload);
           problemLength = data.payload.length;
+
+          setTimeout(() => {
+            // 게임스타트
+            setPlaying(true);
+          }, 1000);
+
         } else if (data.type === "newHost") {
           // 방장바뀌는 타입
           console.log(data.payload);
