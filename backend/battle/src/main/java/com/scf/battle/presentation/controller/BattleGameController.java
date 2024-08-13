@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
@@ -58,8 +60,9 @@ public class BattleGameController {
                                       @RequestHeader Long memberId, @RequestHeader String username,
                                       @RequestBody JoinRoomRequestDTO joinRoomRequestDTO) {
         try {
+            String decodedUsername = decodeUsername(username);
             String password = joinRoomRequestDTO.getPassword();
-            roomService.joinRoom(roomId, memberId, username, password);
+            roomService.joinRoom(roomId, memberId, decodedUsername, password);
             BattleGameRoom room = roomService.findById(roomId);
             return new ResponseEntity<>(new JoinRoomResponseDTO(room.getPlayerA().getUsername(), room.getPlayerA().getUserId(), room.getHostCharacterType()), HttpStatus.OK);
         } catch (BusinessException e) {
@@ -72,7 +75,8 @@ public class BattleGameController {
                                         @Valid @RequestBody CreateRoomDTO createRoomDto) {
         logger.info("Received request from user: {}", username); // 로그 사용
         try {
-            String roomId = roomService.createRoom(memberId, username, createRoomDto);
+            String decodedUsername = decodeUsername(username);
+            String roomId = roomService.createRoom(memberId, decodedUsername, createRoomDto);
             return new ResponseEntity<>(roomId, HttpStatus.OK);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
@@ -99,4 +103,9 @@ public class BattleGameController {
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         }
     }
+
+    private static String decodeUsername(String username) {
+        return URLDecoder.decode(username, StandardCharsets.UTF_8);
+    }
+
 }
