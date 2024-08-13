@@ -3,18 +3,17 @@ import reactStringReplace from "react-string-replace";
 import StyleToPythonCode from "../StyleToPythonCode";
 import "../../../css/MultiGame.css";
 import store from "../../../store/store.js";
+import { maxHeight } from "@mui/system";
 
 const styles = {
   codeContainer: {
-    width: "40vw",
-    height: "60%",
+    width: "43vw",
+    maxHeight: "60%",
     margin: "0 auto",
     padding: "1rem",
-    borderRadius: "5px",
-    boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
   },
   choiceContainer: {
-    width: "40vw",
+    width: "43vw",
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "10px",

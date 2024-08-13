@@ -53,7 +53,7 @@ function ChildModal() {
                 }}
               >
                 <img
-                  src="../../../public/selectnumber.PNG" // 객관식 문제에 대한 이미지 경로
+                  src="/selectnumber.PNG" // 객관식 문제에 대한 이미지 경로
                   alt="객관식 문제 이미지"
                   style={{ width: "60%", height: "auto" }} // 이미지 스타일
                 />
@@ -77,7 +77,7 @@ function ChildModal() {
                 }}
               >
                 <img
-                  src="../../../public/shortanswer.PNG" // 단답식 문제에 대한 이미지 경로
+                  src="/shortanswer.PNG" // 단답식 문제에 대한 이미지 경로
                   alt="단답식 문제 이미지"
                   style={{ width: "70%", height: "auto" }} // 이미지 스타일
                 />
@@ -101,7 +101,7 @@ function ChildModal() {
                 }}
               >
                 <img
-                  src="../../../public/draganddrop.PNG" // 드래그 앤 드랍 문제에 대한 이미지 경로
+                  src="/draganddrop.PNG" // 드래그 앤 드랍 문제에 대한 이미지 경로
                   alt="드래그 앤 드랍 이미지"
                   style={{ width: "70%", height: "auto" }} // 이미지 스타일
                 />
@@ -128,7 +128,7 @@ export default function BasicModal() {
     <div style={{ display: "inline-block" }}>
       <Button onClick={handleOpen}>
         <img
-          src="../../../public/info3.png"
+          src="/info3.png"
           alt="정보 아이콘"
           style={{ width: "40px", height: "40px" }} // 이미지 크기를 조절
         />
