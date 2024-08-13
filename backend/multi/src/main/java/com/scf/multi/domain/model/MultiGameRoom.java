@@ -63,7 +63,7 @@ public class MultiGameRoom {
         return Collections.unmodifiableList(this.problems);
     }
 
-    public void add(String roomPassword, Player player) {
+    public void addPlayer(String roomPassword, Player player) {
 
         if (this.password != null && !this.password.equals(roomPassword)) {
             throw new BusinessException(this.password, "roomPassword", ErrorCode.PASSWORD_MISMATCH);
@@ -78,7 +78,14 @@ public class MultiGameRoom {
                 ErrorCode.MAX_PLAYERS_EXCEEDED);
         }
 
-        this.players.add(player);
+        for (Player p : players) { // 한 번 들어온적 있는 유저인지 확인
+            if (p.getUserId().equals(player.getUserId())) {
+                p.setIsOnRoom(true);
+                return;
+            }
+        }
+
+        this.players.add(player); // 처음 들어온 유저이면 player 목록에 추가
     }
 
     public void remove(Long userId) {

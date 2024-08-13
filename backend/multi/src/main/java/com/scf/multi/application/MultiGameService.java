@@ -68,7 +68,7 @@ public class MultiGameService {
 
         // 게임을 생성하면 방장을 방에 참가 시킴
         Player hostPlayer = createHostPlayer(userId, username);
-        room.add(createRoomDTO.getPassword(), hostPlayer);
+        room.addPlayer(createRoomDTO.getPassword(), hostPlayer);
 
         multiGameRepository.addRoom(room);
 
@@ -97,7 +97,7 @@ public class MultiGameService {
         boolean isHost = players.isEmpty(); // 빈 방에 입장할 경우, 방장 위임
 
         Player player = createPlayer(userId, username, isHost);
-        room.add(roomPassword, player);
+        room.addPlayer(roomPassword, player);
     }
 
     public void validatePlayerToRoom(String roomId, Long userId) {
