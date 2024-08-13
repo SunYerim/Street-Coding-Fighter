@@ -1,6 +1,12 @@
 spring:
   application:
     name: scf-multi
+    
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 logging:
   level:
