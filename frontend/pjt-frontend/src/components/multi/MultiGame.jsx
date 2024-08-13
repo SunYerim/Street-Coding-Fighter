@@ -33,7 +33,8 @@ export default function MultiGame() {
   const [isExitAlertOpen, setIsExitAlertOpen] = useState(false);
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-
+      event.preventDefault();
+      event.returnValue = '';
       setIsExitAlertOpen(true);
       return '';
       // Custom logic to handle the refresh
