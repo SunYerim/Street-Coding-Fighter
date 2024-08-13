@@ -31,7 +31,7 @@ export default function EpisodeList({ rownum }) {
   ];
   const handleClick = (id) => () => {
     playEffectSound('clickSound');
-    if (id > 1) {
+    if (id > 3) {
       setIsModalOpen(true);
       // console.log(isModalOpen)
       return;
