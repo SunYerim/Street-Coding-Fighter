@@ -25,7 +25,11 @@ const Header = ({ type = "default" }) => {
   //뒤로가기 기능
   const currentPath = useLocation().pathname;
   const backToPrevPage = () => {
-    console.log("currentPath", currentPath);
+    if (type === "BattleGame") {
+      quitBattleRoom();
+      return;
+    }
+
     if (currentPath in backPaths) {
       navigate(backPaths[currentPath]);
     } else {

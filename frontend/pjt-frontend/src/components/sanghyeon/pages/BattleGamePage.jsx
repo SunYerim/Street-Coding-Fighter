@@ -792,7 +792,7 @@ const BattleGamePage = () => {
             </>
           )}
         </Modal>
-        <Header type="Game" />
+        <Header type="BattleGame" />
         <div className="battle-game-outer-outer-container">
           <div className="battle-game-outer-container">
             <div className="battle-game-title-container">
