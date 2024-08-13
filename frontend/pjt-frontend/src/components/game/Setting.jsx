@@ -149,7 +149,7 @@ const Setting = ({ isOpen, onClose }) => {
             <p style={styles.setting} onClick={() => navigate("/")}>
               Back to Title
             </p>
-            {accessToken ? (
+            {accessToken !== "" ? (
               <>
                 <p style={styles.setting} onClick={logout}>
                   Logout
