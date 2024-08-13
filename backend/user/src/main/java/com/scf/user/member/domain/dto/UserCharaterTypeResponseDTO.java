@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserCharaterTypeResponseDTO {
     private int characterType;
-    private String rarity;
+    private String CharacterRarity;
+    private String clothRarity;
 }
