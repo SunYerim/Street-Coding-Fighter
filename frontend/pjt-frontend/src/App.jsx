@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
 function App() {
+  
   const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
@@ -36,7 +37,8 @@ function App() {
     accessToken: state.accessToken,
     setAccessToken: state.setAccessToken,
   }));
-
+  
+  
   useEffect(() => {
     //초기 화면 렌더링 시 accessToken 불러오기
     if (!accessToken) {
