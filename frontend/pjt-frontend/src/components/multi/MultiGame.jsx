@@ -171,8 +171,7 @@ export default function MultiGame() {
 
   const [count, setCount] = useState(30);
 
-  // const [mergedList, setMergedList] = useState([]);
-  let mergedList = [];
+  const [mergedList, setMergedList] = useState([]);
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -232,7 +231,7 @@ export default function MultiGame() {
           problemLength = data.payload.length;
         } else if (data.type === 'newHost') {
           // 방장바뀌는 타입
-          console.log(data.payload);
+          console.log("방장: ", data.payload);
           setHostId(data.payload);
         } else if (data.type === 'attainScore') {
           setGetScore(data.payload);
@@ -248,12 +247,17 @@ export default function MultiGame() {
         } else if (data.type === 'gameRank') {
           setGameRank(data.payload);
           console.log('전체랭킹: ', data.payload);
+          // isSubmitRef.current = false;
+          // setCount(30);
+          // setCurrentRound(cnt + 1);
+          // setRound((prevVal) => prevVal + 1);
+          // setTimerEnded(false);
 
           if (round == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
-              setPlaying(false);
+              setPlaying(false); ///////////////////////////////////////////////////////////////
               clearGameRank();
               clearRoundRank();
               clearProblemList();
@@ -262,12 +266,17 @@ export default function MultiGame() {
         } else if (data.type === 'roundRank') {
           setRoundRank(data.payload);
           console.log('라운드랭킹: ', data.payload);
+          // isSubmitRef.current = false;
+          // setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
+          // setTimerEnded(false);
 
           if (round < problemLength - 1) {
             // 모달 열고 4초 대기
             setModalOpen(true);
             setTimeout(() => {
+              // setCurrentRound(cnt + 1);
+              // setRound((prevVal) => prevVal + 1);
               setCount(30);
               setTimerEnded(false);
               setModalOpen(false);
@@ -443,6 +452,50 @@ export default function MultiGame() {
     );
   }
 
+  // function Timer({ setTimerEnded }) {
+  //   useEffect(() => {
+  //     if (count <= 0) {
+  //       switch (problemList[round].problemType) {
+  //         case "FILL_IN_THE_BLANK":
+  //           setBlankSolve(null);
+  //           handleBlankAnswer();
+  //           isSubmitRef.current = true;
+  //           break;
+  //         case "SHORT_ANSWER_QUESTION":
+  //           handleShortAnswer(null);
+  //           isSubmitRef.current = true;
+  //           break;
+  //         case "MULTIPLE_CHOICE":
+  //           handleChoiceSelection(null);
+  //           isSubmitRef.current = true;
+  //           break;
+  //         default:
+  //           console.log("Unknown problem type: " + problemList[round].problemType);
+  //       }
+  //       setTimerEnded(true);
+  //       return;
+  //     }
+
+  //     const id = setInterval(() => {
+  //       setCount((prevCount) => {
+  //         if (prevCount < 0) {
+  //           clearInterval(id);
+  //           return 0;
+  //         }
+  //         return prevCount - 1;
+  //       });
+  //     }, 1000);
+
+  //     return () => clearInterval(id);
+  //   }, [count]);
+
+  //   return (
+  //     <div>
+  //       <span>{count}</span>
+  //     </div>
+  //   );
+  // }
+
   // ---------------------- 채팅 WebSocket ----------------------
 
   // 채팅 WebSocket 연결 및 초기화 함수
@@ -560,11 +613,11 @@ export default function MultiGame() {
         };
       });
 
-      mergedList = resetMergedList;
+      setMergedList(resetMergedList);
     } else {
-      mergedList = updatedMergedList;
+      setMergedList(updatedMergedList);
     }
-  }, [gameRank, playerList, submitList, playing]);
+  }, [gameRank, playerList, submitList]);
 
   return (
     <>
@@ -609,7 +662,7 @@ export default function MultiGame() {
                 {hostId == memberId ? (
                   playerList.length >= 2 ? (
                     <button className="game-start-button" onClick={handleStart}>
-                      게임 시작
+                      게임시작
                     </button>
                   ) : (
                     <div>
