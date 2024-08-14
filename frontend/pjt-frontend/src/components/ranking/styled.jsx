@@ -4,7 +4,7 @@ const PageBody = styled.div`
   display: flex;
   margin-top: 15px;
   justify-content: center;
-  height: 90vh;
+  height: 100vh;
 `;
 
 
