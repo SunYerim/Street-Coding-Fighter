@@ -307,6 +307,7 @@ const TempPage1 = () => {
 
   useEffect(() => {
     if (selectOpponentProblem && selectMyProblem) {
+      closeModal();
       Swal.fire({
         text: "3초 후 라운드가 시작됩니다!",
         icon: "warning",
@@ -623,17 +624,23 @@ const TempPage1 = () => {
   };
 
   const handleStart = async () => {
-    try {
-      const handleStartRes = await authClient({
-        method: "POST",
-        url: `${baseURL}/battle/room/${roomId}/start`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    Swal.fire({
+      text: "3초 후 게임을 시작합니다.",
+      icon: "info",
+      timer: 3000,
+    }).then(async (result) => {
+      try {
+        const handleStartRes = await authClient({
+          method: "POST",
+          url: `${baseURL}/battle/room/${roomId}/start`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
   };
 
   const handleSubmit = () => {
