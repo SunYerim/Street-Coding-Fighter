@@ -244,13 +244,15 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/RoundChoiceProblem`;
     battleStompClient.current.subscribe(endpoint, async (message) => {
       const body = JSON.parse(message.body);
-      Swal.fire({
-        text: "3초 후 게임이 시작됩니다.",
-        icon: "info",
-        showConfirmButton: false,
-        timer: 3000,
-      });
-      delay(3000);
+      if (currentRound === 0) {
+        Swal.fire({
+          text: "3초 후 게임이 시작됩니다.",
+          icon: "info",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        delay(3000);
+      }
       setItem1(false);
       setItem2(false);
       setItem3(false);
