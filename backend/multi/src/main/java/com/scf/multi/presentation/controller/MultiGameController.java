@@ -86,7 +86,7 @@ public class MultiGameController {
     public ResponseEntity<Void> test() {
 
         Rank hermesRank = Rank.builder()
-            .userId(1L)
+            .userId(85L)
             .username("Hermes")
             .score(150)
             .rank(1)
@@ -102,7 +102,7 @@ public class MultiGameController {
         Solved hermesSolved1 = Solved.builder() // 주관식
             .solveText("hermes test answer")
             .problemId(1L)
-            .userId(1L)
+            .userId(85L)
             .solve(null)
             .submitTime(10)
             .isCorrect(true)
@@ -111,7 +111,7 @@ public class MultiGameController {
         Solved hermesSolved2 = Solved.builder() // 빈칸
             .solveText(null)
             .problemId(2L)
-            .userId(1L)
+            .userId(85L)
             .solve(Map.of(1, 1, 2, 2))
             .submitTime(10)
             .isCorrect(false)

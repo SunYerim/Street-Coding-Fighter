@@ -145,6 +145,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void handleTransportError(WebSocketSession session, Throwable exception)
         throws Exception {
         // 예외 처리 로직
+        log.error("Transport error for session {}: {}", session.getId(), exception.getMessage());
         if (exception instanceof BusinessException e) {
             session.sendMessage(new TextMessage(
                 "[Error]: " + e.getMessage() + " " + e.getFieldName() + " : "
