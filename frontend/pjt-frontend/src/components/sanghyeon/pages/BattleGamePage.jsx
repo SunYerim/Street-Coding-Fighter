@@ -116,7 +116,7 @@ const TempPage1 = () => {
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
-  const [gameStart, setGameStart] = useState(true); // 여기
+  const [gameStart, setGameStart] = useState(false); // 여기
   const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
