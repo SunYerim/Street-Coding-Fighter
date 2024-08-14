@@ -20,6 +20,7 @@ const Header = ({ type = "default" }) => {
     "/find-password": "/login",
     "/signup": "/login",
     "/reset-password": "/account",
+    "/login": "/",
     "/main": "/",
   };
   //뒤로가기 기능
@@ -89,7 +90,7 @@ const Header = ({ type = "default" }) => {
             navigate("/");
           }}
         >
-          Street Coding Figther
+          Street Coding Fighter
         </div>
         <div className="header-back-button" onClick={backToPrevPage}>
           <MdOutlineKeyboardBackspace />
