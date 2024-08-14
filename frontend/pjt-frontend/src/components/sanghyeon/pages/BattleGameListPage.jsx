@@ -350,7 +350,12 @@ const BattleGameListPage = () => {
                       e.key === "Enter" && battleListSearch(searchKeyword)
                     }
                   />
-                  <button onClick={battleListSearch}>검색</button>
+                  <button
+                    className="battle-list-search-button"
+                    onClick={battleListSearch}
+                  >
+                    검색
+                  </button>
                 </div>
                 <div className="battle-list-refresh-container">
                   <button onClick={battleListRefresh}>새로고침</button>
