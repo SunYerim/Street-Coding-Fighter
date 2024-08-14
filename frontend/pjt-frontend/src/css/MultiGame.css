@@ -35,11 +35,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
-  min-height: 90%;
-  height: 90%;
-  max-height: 90%;
+  min-height: 100%;
+  height: 100%;
+  max-height: 100%;
   margin: 10px;
+  overflow: visible;
 }
 
 .multi-game-choice-temp-problem-container {
@@ -48,7 +48,13 @@
   max-width: 95%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin: 10px;
+  margin-left: 15px;
+  margin-top: 20px;
+  transition: transform 0.3s ease;
+}
+
+/* 호버 시 확대 효과 */
+.multi-game-choice-temp-problem-container:hover {
 }
 
 .multi-game-choice-button-new {
@@ -296,4 +302,43 @@ h4 {
   border: 3px solid rgba(255, 255, 255, 0);
   border-radius: 10px;
   color: black;
+}
+
+.multi-game-choice-button {
+  width: 150px;
+  height: 50px;
+  background-color: #1b1a55b3; /* 어두운 파란색 배경 */
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+
+  font-family: "Fira Code", Consolas, "Courier New", Courier, monospace;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.5s ease, transform 0.5s ease;
+  margin-top: 10px;
+}
+
+.multi-game-choice-button-new.selected {
+  background-color: #3d3ca3; /* 선택된 버튼의 배경색 */
+  transform: translateY(-2px); /* 살짝 위로 올라가는 효과 */
+}
+
+.multi-game-choice-button-new.selected:active {
+  background-color: #0e0d3b; /* 클릭 시 더 어두운 색 */
+  transform: translateY(0); /* 클릭 시 원래 위치로 돌아옴 */
+}
+
+/* 호버 시 효과 */
+.multi-game-choice-button:hover {
+  background-color: #3d3ca3; /* 더 밝은 파란색 배경 */
+}
+
+/* 클릭 시 효과 */
+.multi-game-choice-button:active {
+  background-color: #0e0d3b; /* 더 어두운 색 배경 */
+  transform: scale(0.95); /* 살짝 축소 */
 }

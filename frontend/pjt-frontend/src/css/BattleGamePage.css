@@ -178,7 +178,7 @@
   min-width: 50%;
   width: 52%;
   max-width: 52%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .battle-game-problem {
@@ -475,7 +475,7 @@
   background-color: #e0f7fa;
   border-color: #007bff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
+
 }
 
 .battle-game-select-problem-sub-title {

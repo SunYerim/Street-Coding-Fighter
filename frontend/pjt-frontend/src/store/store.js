@@ -10,7 +10,7 @@ const testBlankProblem = {
   problemContent: {
     problemId: 5,
     content:
-      "다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요.",
+      "다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요.",
     numberOfBlanks: 2,
   },
   problemChoices: [
@@ -51,7 +51,7 @@ const testMultipleChoiceProblem = {
   problemContent: {
     problemId: 2,
     content:
-      "다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요.",
+      "다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요.",
     numberOfBlanks: 0,
   },
   problemChoices: [

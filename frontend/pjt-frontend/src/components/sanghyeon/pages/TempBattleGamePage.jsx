@@ -116,14 +116,49 @@ const TempBattleGamePagePage = () => {
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
-  const [gameStart, setGameStart] = useState(false); // 여기
+  const [gameStart, setGameStart] = useState(true); // 여기
   const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [currentRound, setCurrentRound] = useState(0);
   const [count, setCount] = useState(30);
-  const [myProblem, setMyProblem] = useState({});
+  const [myProblem, setMyProblem] = useState({
+    problemId: 2,
+    title: "배열의 최대값 찾기",
+    problemType: "FILL_IN_THE_BLANK",
+    category: "알고리즘",
+    difficulty: 2,
+    problemContent: {
+      problemId: 2,
+      content:
+        "다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요.",
+      numberOfBlanks: 0,
+    },
+    problemChoices: [
+      {
+        choiceId: 4,
+        problemId: 2,
+        choiceText: "배열의 요소를 모두 더한 값을 반환한다.",
+      },
+      {
+        choiceId: 1,
+        problemId: 2,
+        choiceText: "배열을 정렬한 후 마지막 요소를 반환한다.",
+      },
+      {
+        choiceId: 2,
+        problemId: 2,
+        choiceText: "배열의 각 요소를 반복하며 가장 큰 값을 추적하여 반환한다.",
+      },
+      {
+        choiceId: 3,
+        problemId: 2,
+        choiceText:
+          "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+      },
+    ],
+  }); // 여기
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
   const [gameEnded, setGameEnded] = useState(false);
@@ -682,11 +717,11 @@ const TempBattleGamePagePage = () => {
   const renderQuestion = (problem) => {
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
-        return <DragNDropQuiz />;
+        return <DragNDropQuiz propSubmit={submitAnswer} />;
       case "SHORT_ANSWER_QUESTION":
-        return <ShortAnswer />;
+        return <ShortAnswer propSubmit={submitAnswer} />;
       case "MULTIPLE_CHOICE":
-        return <MultipleChoice />;
+        return <MultipleChoice propSubmit={submitAnswer} />;
       default:
         return <div>Unknown problem type</div>;
     }
@@ -858,17 +893,7 @@ const TempBattleGamePagePage = () => {
               </div>
               <div className="battle-game-inner-container">
                 {gameStart ? (
-                  <>
-                    {renderQuestion(myProblem)}
-                    <div className="battle-game-submit-answer-container">
-                      <button
-                        onClick={handleSubmit}
-                        className="battle-game-submit-answer"
-                      >
-                        답안 제출
-                      </button>
-                    </div>
-                  </>
+                  <>{renderQuestion(myProblem)}</>
                 ) : (
                   <div className="battle-game-game-start-container">
                     <h2 className="battle-game-game-start-title">

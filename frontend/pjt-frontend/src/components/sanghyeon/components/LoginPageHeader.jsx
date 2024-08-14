@@ -90,7 +90,7 @@ const Header = ({ type = "default" }) => {
             navigate("/");
           }}
         >
-          Street Coding Figther
+          Street Coding Fighter
         </div>
         {/* <div className="header-back-button" onClick={backToPrevPage}>
           <MdOutlineKeyboardBackspace />

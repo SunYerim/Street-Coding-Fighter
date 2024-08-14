@@ -13,65 +13,61 @@ import {
   letterSpacing,
   maxHeight,
   maxWidth,
+  positions,
   textAlign,
 } from "@mui/system";
 
-const styles = {
-  codeContainer: {
-    width: "43vw",
-    minHeight: "16%",
-    height: "16%",
-    maxHeight: "16%",
-    margin: "0 auto",
-    padding: "0",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  choiceContainer: {
-    width: "43vw",
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gap: "10px",
-    margin: "0 auto",
-    mt: "20px",
-    whiteSpace: "normal",
-    wordWrap: "break-word",
-    minHeight: "10%",
-    height: "10%",
-    maxHeight: "10%",
-  },
-  choiceButton: {
-    display: "inline-block",
-    padding: "10px 10px",
-    fontFamily: "'Fira Code', Consolas, 'Courier New', Courier, monospace",
-    fontSize: "1.2rem",
-    margin: "5px 0",
-    fontWeight: "bold",
-    color: "white",
-    border: "1px solid white",
-    borderRadius: "5px",
-    letterSpacing: "1px",
-    textAlign: "center",
-    maxWidth: "95%",
-    wordWrap: "break-word",
-  },
-  submitButton: {
-    display: "inline-block",
-    padding: "10px 20px",
-    fontSize: "16px",
-    color: "#fff",
-    backgroundColor: "#007bff",
-    border: "none",
-    borderRadius: "5px",
-    marginTop: "20px",
-  },
-};
-
-const MultipleChoice = () => {
+const MultipleChoice = ({ propSubmit }) => {
+  const [hovered, setHovered] = useState(false);
   const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
   const [selectedChoice, setSelectedChoice] = useState(null); // 선택된 choiceId를 저장할 상태 추가
+
+  const styles = {
+    codeContainer: {
+      width: "43vw",
+      minHeight: "50%",
+      height: "50%",
+      maxHeight: "50%",
+      margin: "0 auto",
+      padding: "0",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      transition: "transform 0.3s ease",
+      zIndex: hovered ? 10000 : 1,
+      transform: hovered ? "scale(1.1)" : "scale(1)",
+      position: "relative",
+    },
+    choiceContainer: {
+      width: "43vw",
+      display: "grid",
+      gridTemplateColumns: "1fr",
+      gap: "10px",
+      margin: "0 auto",
+      mt: "20px",
+      whiteSpace: "normal",
+      wordWrap: "break-word",
+      minHeight: "10%",
+      height: "10%",
+      maxHeight: "10%",
+    },
+    choiceButton: {
+      display: "inline-block",
+      padding: "10px 10px",
+      fontFamily: "'Fira Code', Consolas, 'Courier New', Courier, monospace",
+      fontSize: "1.2rem",
+      margin: "5px 0",
+      fontWeight: "bold",
+      color: "white",
+      border: "1px solid white",
+      borderRadius: "5px",
+      letterSpacing: "1px",
+      textAlign: "center",
+      maxWidth: "95%",
+      wordWrap: "break-word",
+    },
+  };
 
   const {
     multipleChoiceSolve,
@@ -120,7 +116,11 @@ const MultipleChoice = () => {
   return (
     <>
       <div className="multi-game-choice-problem-outer-container">
-        <div style={styles.codeContainer}>
+        <div
+          style={styles.codeContainer}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
           {modifiedContent && (
             <StyleToPythonCode codeString={modifiedContent} />
           )}
@@ -130,13 +130,23 @@ const MultipleChoice = () => {
             problem.problemChoices &&
             problem.problemChoices.map((choice, index) => (
               <button
-                className="multi-game-choice-button-new"
+                className={`multi-game-choice-button-new ${
+                  selectedChoice === choice.choiceId ? "selected" : ""
+                }`}
                 key={choice.choiceId}
                 onClick={() => handleChoiceSelect(choice.choiceId)}
               >
                 {choice.choiceText}
               </button>
             ))}
+        </div>
+        <div className="multi-game-choice-button-container">
+          <button
+            className="multi-game-choice-button"
+            onClick={() => propSubmit()}
+          >
+            제출
+          </button>
         </div>
       </div>
     </>

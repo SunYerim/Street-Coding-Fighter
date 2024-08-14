@@ -9,7 +9,7 @@ import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import store from "../../../store/store.js";
 import "../../../css/BattleFill.css";
 
-const DragNDropQuiz = () => {
+const DragNDropQuiz = ({ propSubmit }) => {
   const [blanks, setBlanks] = useState({});
   const [choices, setChoices] = useState([]);
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
@@ -129,8 +129,15 @@ const DragNDropQuiz = () => {
               })}
             </ChoiceContainer>
           </div>
-
         </DndProvider>
+        <div className="dragndrop-game-choice-button-container">
+          <button
+            className="dragndrop-game-choice-button"
+            onClick={() => propSubmit()}
+          >
+            제출
+          </button>
+        </div>
       </div>
     </>
   );
