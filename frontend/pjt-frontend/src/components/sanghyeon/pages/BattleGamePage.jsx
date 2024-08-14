@@ -19,7 +19,7 @@ import Modal from "react-modal";
 import SoundStore from "../../../stores/SoundStore.jsx";
 import { MdBloodtype } from "react-icons/md";
 
-const BattleGamePage = () => {
+const TempBattleGamePagePage = () => {
   const healEffect = "/heal-effect.gif";
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -123,7 +123,7 @@ const BattleGamePage = () => {
 
   const [currentRound, setCurrentRound] = useState(0);
   const [count, setCount] = useState(30);
-  const [myProblem, setMyProblem] = useState({});
+  const [myProblem, setMyProblem] = useState({}); // 여기
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
   const [gameEnded, setGameEnded] = useState(false);
@@ -682,11 +682,11 @@ const BattleGamePage = () => {
   const renderQuestion = (problem) => {
     switch (problem.problemType) {
       case "FILL_IN_THE_BLANK":
-        return <DragNDropQuiz />;
+        return <DragNDropQuiz propSubmit={submitAnswer} />;
       case "SHORT_ANSWER_QUESTION":
-        return <ShortAnswer />;
+        return <ShortAnswer propSubmit={submitAnswer} />;
       case "MULTIPLE_CHOICE":
-        return <MultipleChoice />;
+        return <MultipleChoice propSubmit={submitAnswer} />;
       default:
         return <div>Unknown problem type</div>;
     }
@@ -858,17 +858,7 @@ const BattleGamePage = () => {
               </div>
               <div className="battle-game-inner-container">
                 {gameStart ? (
-                  <>
-                    {renderQuestion(myProblem)}
-                    <div className="battle-game-submit-answer-container">
-                      <button
-                        onClick={handleSubmit}
-                        className="battle-game-submit-answer"
-                      >
-                        답안 제출
-                      </button>
-                    </div>
-                  </>
+                  <>{renderQuestion(myProblem)}</>
                 ) : (
                   <div className="battle-game-game-start-container">
                     <h2 className="battle-game-game-start-title">
@@ -962,4 +952,4 @@ const BattleGamePage = () => {
   );
 };
 
-export default BattleGamePage;
+export default TempBattleGamePagePage;
