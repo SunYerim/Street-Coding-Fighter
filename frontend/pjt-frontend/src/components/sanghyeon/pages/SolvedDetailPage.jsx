@@ -58,12 +58,12 @@ const SolvedDetailPage = () => {
 
   return (
     <>
-      <div className="solved-entire-container">
+      <div className="solved-detail-entire-container">
         <Header />
-        <div className="solved-outer-outer-container">
-          <div className="solved-outer-container">
-            <div className="solved-inner-container">
-              <div className="solved-content">
+        <div className="solved-detail-outer-outer-container">
+          <div className="solved-detail-outer-container">
+            <div className="solved-detail-inner-container">
+              <div className="solved-detail-content">
                 {currentProblem && renderQuestion(currentProblem)}
               </div>
             </div>

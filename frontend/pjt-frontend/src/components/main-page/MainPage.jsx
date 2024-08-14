@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import BasicModal from "../tutorial/BasicModal.jsx";
 import Lottie from "lottie-react";
 import rankingAnimation from "../../../public/lottie/ranking.json";
+import Toast from "../Toast.jsx";
+import { textAlign } from "@mui/system";
 
 function MainPage() {
   const {
@@ -31,7 +33,7 @@ function MainPage() {
     setExp: state.setExp,
     name: state.name,
   }));
-
+  const [toast, setToast] = useState(true);
   const authClient = createAuthClient(
     baseURL,
     () => accessToken,
@@ -47,18 +49,17 @@ function MainPage() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
         setName(profileRes.data.name);
         setSchoolName(profileRes.data.school);
         setBirth(profileRes.data.birth);
         setCharacter(profileRes.data.userCharacter.characterType);
         setExp(profileRes.data.exp);
       } catch (error) {
-        Swal.fire({
-          text: "프로필을 불러오는데 실패했습니다.",
-          icon: "error",
-          timer: 3000,
-        });
+        // Swal.fire({
+        //   text: "프로필을 불러오는데 실패했습니다.",
+        //   icon: "error",
+        //   timer: 3000,
+        // });
         console.log(error);
       }
     };
@@ -69,7 +70,7 @@ function MainPage() {
   const { playEffectSound } = SoundStore();
 
   const modeDetails = {
-    스토리모드: {
+    "스토리모드": {
       description: "혼자서 학습할 수 있는 스토리모드 입니다.",
       imageUrl: "/characters/movingIceSlime.gif",
     },
@@ -81,7 +82,7 @@ function MainPage() {
       description: "여러 명이 동시에 참여할 수 있는 \n 멀티플레이 모드입니다.",
       imageUrl: "/characters/movingGreenSlime.gif",
     },
-    랭킹: {
+    "랭킹": {
       description:
         "순위를 겨루는 랭킹 모드입니다. \n 높은 점수를 기록해보세요.",
     },
@@ -97,6 +98,15 @@ function MainPage() {
   return (
     <>
       <Header />
+      {toast && (
+        <Toast
+          style={styles.toast}
+          setToast={setToast}
+          text={
+            "Street Coding Fighter는 전체화면에 최적화 되어있습니다. \n F11을 눌러 전체화면을 활성화 해 주세요."
+          }
+        />
+      )}
       <div style={styles.container}>
         <div style={styles.modes}>
           {Object.keys(modeDetails).map((mode) => (
@@ -210,6 +220,23 @@ const styles = {
     height: "auto",
     display: "flex",
     justifyContent: "center",
+  },
+  toast: {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    width: "100%",
+    textAlign: "center",
+    transform: "translate(-50%, -50%)",
+    zIndex: 1000,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    color: "white",
+    padding: "10px 20px",
+    borderRadius: "10px",
+    whiteSpace: "pre-wrap",
+    fontSize: "1.5rem",
+    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.15)",
+    transition: "opacity 0.3s ease-in-out",
   },
 };
 

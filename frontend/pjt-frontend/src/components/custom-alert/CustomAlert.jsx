@@ -63,7 +63,7 @@ const styles = {
 
 const ModalHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   height: 30px;
   margin: 0px;
@@ -71,6 +71,9 @@ const ModalHeader = styled.div`
 
 const CloseButton = styled.div`
   cursor: pointer;
+  position : absolute;
+  right : 3px;
+  top : 3px;
 `;
 
 const ModalContent = styled.div`

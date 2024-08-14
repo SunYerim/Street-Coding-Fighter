@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const styles = {
   codeContainer: {
-    width: '40vw',
+    width: '35vw',
     height: '60%',
     margin: '0 auto',
     padding: '1rem',
@@ -59,7 +59,6 @@ const MultiShortAnswer = ({ problem, onShortAnswer }) => {
   };
   return (
     <>
-      <h2>Short Answer</h2>
       <div className='multi-game-playing'>
         <div style={styles.codeContainer}>
           <StyleToPythonCode codeString={problem.problemContent.content} />

@@ -132,6 +132,8 @@
   display: flex;
   flex-direction: row;
   height: 90%;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .battle-game-left-container {
@@ -144,8 +146,8 @@
   font-weight: bold;
   color: white;
   padding: 5px;
-  width: 250px;
-  min-width: 250px;
+  width: 25%;
+  min-width: 25%;
   height: auto;
 }
 
@@ -159,8 +161,8 @@
   font-weight: bold;
   color: white;
   padding: 5px;
-  width: 250px;
-  min-width: 250px;
+  width: 25%;
+  min-width: 25%;
 }
 
 .battle-game-inner-container {
@@ -176,6 +178,8 @@
   min-width: 55%;
   width: 55%;
   max-width: 55%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .battle-game-problem {
@@ -458,44 +462,44 @@
   justify-content: center;
   align-items: center;
   border: 2px solid #ddd;
-  border-radius: 8px; 
+  border-radius: 8px;
   width: 25%;
   margin: 20px;
-  font-size: 1.2rem; 
-  padding: 15px; 
-  background-color: #f9f9f9; 
-  transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1.2rem;
+  padding: 15px;
+  background-color: #f9f9f9;
+  transition: transform 0.2s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 }
 
 .battle-game-select-problem:hover {
-  background-color: #e0f7fa; 
+  background-color: #e0f7fa;
   border-color: #007bff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05); 
+  transform: scale(1.05);
 }
 
 .battle-game-select-problem-sub-title {
   font-weight: bold;
-  font-size: 1.5rem; 
+  font-size: 1.5rem;
   margin-bottom: 10px;
-  text-align: center; 
+  text-align: center;
 }
-
 
 .battle-game-select-problem-type,
 .battle-game-select-problem-category,
 .battle-game-select-problem-difficulty {
-  font-size: 1.1rem; 
+  font-size: 1.1rem;
   margin-bottom: 8px;
-  text-align: center; 
+  text-align: center;
 }
 
 .battle-game-select-problem hr {
-  width: 100%; 
-  margin: 12px 0; 
+  width: 100%;
+  margin: 12px 0;
   border: 0;
-  border-top: 1px solid #ccc; 
+  border-top: 1px solid #ccc;
 }
 
 .battle-game-result-container {

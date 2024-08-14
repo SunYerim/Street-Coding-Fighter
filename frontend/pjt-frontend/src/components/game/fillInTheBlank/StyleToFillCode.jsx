@@ -5,17 +5,19 @@ const styles = {
   codeWithBlanks: {
     whiteSpace: "pre-wrap",
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "1.1rem",
+    fontSize: "1rem",
     // backgroundColor: '#2e3440',
     backgroundColor: "black",
     color: "#d8dee9",
     padding: "20px",
     borderRadius: "5px",
     // position: 'relative',
-    lineHeight: "2", // 줄 간격 조정
+    lineHeight: "1.3", // 줄 간격 조정
     letterSpacing: "normal", // 자간 조정
     width: "100%",
-    height : 'auto',
+    height: "auto",
+    overflow: "hidden",
+    maxHeight : '90%',
   },
 };
 let seq = 0;

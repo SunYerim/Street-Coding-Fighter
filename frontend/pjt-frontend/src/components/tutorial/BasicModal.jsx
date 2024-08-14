@@ -140,10 +140,14 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            StreetCodingFighter 튜토리얼
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 2,
+              fontSize: "1rem",
+              lineHeight: "1.7rem",
+            }}
+          >
             <strong>게임 모드</strong>
             <ul>
               <li>

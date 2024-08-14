@@ -231,7 +231,7 @@ export default function MultiGame() {
           problemLength = data.payload.length;
         } else if (data.type === 'newHost') {
           // 방장바뀌는 타입
-          console.log(data.payload);
+          console.log("방장: ", data.payload);
           setHostId(data.payload);
         } else if (data.type === 'attainScore') {
           setGetScore(data.payload);
@@ -617,7 +617,7 @@ export default function MultiGame() {
     } else {
       setMergedList(updatedMergedList);
     }
-  }, [gameRank, playerList, submitList, playing]);
+  }, [gameRank, playerList, submitList]);
 
   return (
     <>
@@ -662,7 +662,7 @@ export default function MultiGame() {
                 {hostId == memberId ? (
                   playerList.length >= 2 ? (
                     <button className="game-start-button" onClick={handleStart}>
-                      Start
+                      게임시작
                     </button>
                   ) : (
                     <div>
@@ -679,7 +679,7 @@ export default function MultiGame() {
               <div className="after-start">
                 {isSubmitRef.current ? (
                   <div>
-                    <h2>Submitted!</h2>
+                    <h2>다른 유저들 기다리는중...</h2>
                   </div>
                 ) : (
                   <div>{problemList.length > 0 && renderProblem()}</div>

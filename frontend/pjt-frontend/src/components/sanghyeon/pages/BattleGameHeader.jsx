@@ -46,11 +46,11 @@ const BattleGameHeader = () => {
             },
           });
           setNormalQuit(true);
-          Swal.fire({
-            text: "방을 나갔습니다.",
-            icon: "success",
-            timer: 3000,
-          });
+          // Swal.fire({
+          //   text: "방을 나갔습니다.",
+          //   icon: "success",
+          //   timer: 3000,
+          // });
           navigate("/_battle-list");
         } catch (error) {
           navigate("/_battle-list");
