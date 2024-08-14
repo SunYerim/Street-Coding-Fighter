@@ -871,7 +871,9 @@ const TempBattleGamePage = () => {
               </div>
               <div className="battle-game-inner-container">
                 {gameStart ? (
-                  <>{renderQuestion(myProblem)}</>
+                  roundStart ? (
+                    <>{renderQuestion(myProblem)}</>
+                  ) : null
                 ) : (
                   <div className="battle-game-game-start-container">
                     <h2 className="battle-game-game-start-title">
