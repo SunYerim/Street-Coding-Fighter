@@ -113,7 +113,7 @@ export default function MultiCreate() {
                     name="gameRound"
                     className="create-problems"
                     type="number"
-                    min="2"
+                    min="5"
                     max="20"
                     placeholder="5"
                     defaultValue={5}
