@@ -314,9 +314,11 @@ const TempBattleGamePage = () => {
         icon: "warning",
         showConfirmButton: false,
         timer: 3000,
-      }).then(() => {
-        setRoundStart(true);
       });
+
+      setTimeout(() => {
+        setRoundStart(true);
+      }, 3000);
 
       setTimeout(() => {
         if (item2) {
