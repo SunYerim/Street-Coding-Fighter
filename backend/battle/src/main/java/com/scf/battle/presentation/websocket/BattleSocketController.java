@@ -12,6 +12,7 @@ import com.scf.battle.domain.dto.User.FightDTO;
 import com.scf.battle.domain.dto.Room.JoinRoomSocketRequestDTO;
 import com.scf.battle.domain.dto.User.Player;
 import com.scf.battle.domain.dto.User.Solved;
+import com.scf.battle.domain.dto.User.UserCharaterTypeResponseDTO;
 import com.scf.battle.domain.model.BattleGameRoom;
 
 import java.util.List;
@@ -41,9 +42,9 @@ public class BattleSocketController {
         headerAccessor.getSessionAttributes().put("roomId", roomId);
         headerAccessor.getSessionAttributes().put("userId", joinRoomSocketRequestDTO.getUserId());
 
-        Integer guestCharacterType = userService.getCharacterType(joinRoomSocketRequestDTO.getUserId()).getCharacterType();
+        UserCharaterTypeResponseDTO guestCharacter = userService.getUserCharaterType(joinRoomSocketRequestDTO.getUserId());
         messagingTemplate.convertAndSend("/room/" + roomId, new JoinRoomSocketResponseDTO(
-            joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), guestCharacterType)); // 입장한 사람의 정보를 방에 있는 사람한테 줌
+            joinRoomSocketRequestDTO.getUserId(), joinRoomSocketRequestDTO.getUsername(), guestCharacter)); // 입장한 사람의 정보를 방에 있는 사람한테 줌
     }
 
     @MessageMapping("/game/{roomId}/answer")

@@ -62,7 +62,7 @@ public class RoomService {
                 .hasPlayerBSubmitted(false)
                 .isAttack(false)
                 .currentRound(0)
-                .hostCharacterType(userService.getCharacterType(memberId).getCharacterType())
+                .hostCharacter(userService.getUserCharaterType(memberId))
                 .build();
         roomMap.put(roomId, room);
         battleGameRepository.addRoom(room);
@@ -83,6 +83,7 @@ public class RoomService {
         return RoomResponseDTO.builder()
                 .roomId(room.getRoomId())
                 .hostId(room.getHostId())
+                .hostUsername(room.getHostUsername())
                 .title(room.getTitle())
                 .maxPlayer(2)
                 .curPlayer(determineCurrentPlayers(room))

@@ -13,9 +13,9 @@ import java.util.Random;
 @Service
 public class GachaService {
     @Getter
-    static final List<ClothingType> clothingTypes = new ArrayList<>();
+    public static final List<ClothingType> clothingTypes = new ArrayList<>();
     @Getter
-    static final List<CharacterType> characterTypes = new ArrayList<>();
+    public static final List<CharacterType> characterTypes = new ArrayList<>();
 
     static {
         clothingTypes.add(new ClothingType(1, 0.025, Rarity.EPIC));

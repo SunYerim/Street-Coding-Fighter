@@ -1,4 +1,4 @@
-package com.scf.battle.domain.dto.User;
+package com.scf.user.member.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Getter
 @AllArgsConstructor
-public class UserCharaterTypeResponseDTO {
+public class UserCharacterResponseDTO {
     private int characterType;
     private String characterRarity;
     private String clothRarity;

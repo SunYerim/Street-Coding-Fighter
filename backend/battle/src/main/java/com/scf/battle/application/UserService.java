@@ -16,7 +16,7 @@ public class UserService {
         this.webClient = webClientBuilder.baseUrl(userServerUrl).build();
     }
 
-    public UserCharaterTypeResponseDTO getCharacterType(Long memberId) {
+    public UserCharaterTypeResponseDTO getUserCharaterType(Long memberId) {
         return webClient.get()
             .uri("http://www.ssafy11s.com/user/public/charaterType")  // 정확한 경로 설정
             .header("memberId", String.valueOf(memberId))  // 헤더에 memberId 추가

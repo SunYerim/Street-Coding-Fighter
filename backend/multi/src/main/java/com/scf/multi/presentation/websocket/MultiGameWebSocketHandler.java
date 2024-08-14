@@ -120,7 +120,6 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
         hostRotateIfNecessary(roomId, exitPlayer);
 
         log.debug("roomId: {}", rooms.get(session.getId()));
-        log.debug("sessionRooms.get(roomId = {}).size() = {}", roomId, !sessionRooms.isEmpty() ? sessionRooms.get(roomId).size() : "empty");
 
         // 마지막 유저가 방을 나간 후 3초 후에 방을 삭제하는 작업을 스케줄링
         Set<WebSocketSession> roomSessions = sessionRooms.get(roomId);
@@ -140,6 +139,7 @@ public class MultiGameWebSocketHandler extends TextWebSocketHandler {
     public void handleTransportError(WebSocketSession session, Throwable exception)
         throws Exception {
         // 예외 처리 로직
+        log.error("Transport error for session {}: {}", session.getId(), exception.getMessage());
         if (exception instanceof BusinessException e) {
             session.sendMessage(new TextMessage(
                 "[Error]: " + e.getMessage() + " " + e.getFieldName() + " : "

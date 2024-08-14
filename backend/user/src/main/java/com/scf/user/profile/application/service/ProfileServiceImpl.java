@@ -1,5 +1,6 @@
 package com.scf.user.profile.application.service;
 
+import com.scf.user.member.domain.dto.UserCharacterResponseDTO;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
 import com.scf.user.profile.application.client.ProblemClient;
@@ -31,6 +32,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.scf.user.member.application.service.GachaService.characterTypes;
+import static com.scf.user.member.application.service.GachaService.clothingTypes;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
@@ -57,15 +61,34 @@ public class ProfileServiceImpl implements ProfileService {
 
         // characterType * 100 + characterCloth 값을 계산
         int characterValue = character.getCharacterType() * 100 + character.getCharacterCloth();
+        String characterType = getRarityFromCharacterType(character.getCharacterType());
+        String characterClothType = getRarityFromClothType(character.getCharacterCloth());
 
         // 프로필 DTO 생성
         return ProfileResponseDto.builder()
             .name(member.getName())
             .birth(member.getBirth())
             .exp(character.getExp())
-            .character(characterValue) // 계산된 값 설정
+            .UserCharacter(new UserCharacterResponseDTO(characterValue, characterType, characterClothType)) // 계산된 값 설정 및
             .school(member.getSchoolName())
             .build();
+    }
+
+    // Rarity를 가져오는 헬퍼 메소드들 추가
+    private String getRarityFromCharacterType(int type) {
+        return characterTypes.stream()
+                .filter(ct -> ct.getType() == type)
+                .map(ct -> ct.getRarity().name())
+                .findFirst()
+                .orElse("UNKNOWN");
+    }
+
+    private String getRarityFromClothType(int type) {
+        return clothingTypes.stream()
+                .filter(ct -> ct.getType() == type)
+                .map(ct -> ct.getRarity().name())
+                .findFirst()
+                .orElse("UNKNOWN");
     }
 
     // 전체 전적 조회
