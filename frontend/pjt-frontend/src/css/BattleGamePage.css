@@ -146,8 +146,8 @@
   font-weight: bold;
   color: white;
   padding: 5px;
-  width: 250px;
-  min-width: 250px;
+  width: 25%;
+  min-width: 25%;
   height: auto;
 }
 
@@ -161,14 +161,13 @@
   font-weight: bold;
   color: white;
   padding: 5px;
-  width: 250px;
-  min-width: 250px;
+  width: 25%;
+  min-width: 25%;
 }
 
 .battle-game-inner-container {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   align-items: center;
   border: 3px solid white;
   border-radius: 5px;
