@@ -837,7 +837,7 @@ const TempPage1 = () => {
                         난이도: {data.difficulty}
                       </div>
                       <hr />
-                      <div className="">
+                      {/* <div className="">
                         {data && data.item && data.item.name ? (
                           <>아이템: {data.item.name}</>
                         ) : null}
@@ -846,7 +846,7 @@ const TempPage1 = () => {
                         {data && data.item && data.item.rarity ? (
                           <>등급: {data.item.rarity}</>
                         ) : null}
-                      </div>
+                      </div> */}
                     </div>
                   ))}
               </div>
