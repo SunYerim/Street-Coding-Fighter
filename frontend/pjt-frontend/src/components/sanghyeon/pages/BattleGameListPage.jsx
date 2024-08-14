@@ -169,7 +169,9 @@ const BattleGameListPage = () => {
         setHostId(joinBattleRoomRes.data.memberId);
         setEnemyId(joinBattleRoomRes.data.memberId);
         setEnemyName(joinBattleRoomRes.data.username);
-        setEnemyCharacterType(joinBattleRoomRes.data.hostCharacterType);
+        setEnemyCharacterType(
+          joinBattleRoomRes.data.hostCharacter.characterType
+        );
         navigate("/_battle-game");
       } catch (error) {
         Swal.fire({
