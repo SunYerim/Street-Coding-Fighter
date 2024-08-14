@@ -411,18 +411,10 @@ const TempPage1 = () => {
         setGameEnded(true);
         setGameStart(false);
         openModal();
-        setTimeout(() => {
-          Swal.fire({
-            text: "게임이 종료되었습니다.",
-            icon: "success",
-            timer: 3000,
-          }).then(() => {
-            setTimeout(async () => {
-              await initBattleGame();
-              setSelectOpponentProblem(false);
-            }, 3000);
-          });
-        }, 3000);
+        setTimeout(async () => {
+          await initBattleGame();
+          setSelectOpponentProblem(false);
+        }, 5000);
       } else {
         if (body.power === 0) {
           setBattleHistory((prevHistory) => [...prevHistory, body]);
@@ -752,8 +744,8 @@ const TempPage1 = () => {
                 {winner === -1
                   ? "무승부입니다."
                   : winner === memberId
-                  ? "승리하셨습니다."
-                  : "패배하셨습니다."}
+                  ? "승리하셨습니다. \n 5초 후 대기방으로 이동합니다."
+                  : "패배하셨습니다. \n 5초 후 대기방으로 이동합니다."}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 대기방으로 이동합니다.
