@@ -6,6 +6,7 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
 import store from "../../../store/store.js";
 import Swal from "sweetalert2";
+import LoginPageHeader from "./LoginPageHeader";
 
 const Header = ({ type = "default" }) => {
   const navigate = useNavigate();

@@ -17,6 +17,7 @@ import MultiMain from "./components/multi/MultiMain.jsx";
 import MultiCreate from "./components/multi/MultiCreate.jsx";
 import MultiGame from "./components/multi/MultiGame.jsx";
 import BattleGameListPage from "./components/sanghyeon/pages/BattleGameListPage.jsx";
+import TempBattleGamePagePage from "./components/sanghyeon/pages/TempBattleGamePage.jsx"; // 여기
 import BattleGamePage from "./components/sanghyeon/pages/BattleGamePage.jsx";
 import Ranking from "./components/ranking/Ranking.jsx";
 import CharacterSelection from "./components/sanghyeon/pages/CharacterSelection.jsx";
@@ -29,7 +30,6 @@ import { useEffect, useState } from "react";
 import SoundStore from "./stores/SoundStore.jsx";
 import SolvedDetailPage from "./components/sanghyeon/pages/SolvedDetailPage.jsx";
 function App() {
-  
   const { playBackgroundMusic } = SoundStore();
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
@@ -37,8 +37,7 @@ function App() {
     accessToken: state.accessToken,
     setAccessToken: state.setAccessToken,
   }));
-  
-  
+
   useEffect(() => {
     //초기 화면 렌더링 시 accessToken 불러오기
     if (!accessToken) {
@@ -133,6 +132,7 @@ function App() {
           <Route path="/story-play/:content_id" element={<SinglePlay />} />
           <Route path="/gacha" element={<ItemPage />} />
           <Route path="*" element={<TitlePage />} />
+          <Route path="/temp" element={<TempBattleGamePagePage />} />
         </Routes>
       </Router>
     </div>
