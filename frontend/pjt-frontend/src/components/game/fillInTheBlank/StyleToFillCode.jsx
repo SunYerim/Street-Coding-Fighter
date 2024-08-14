@@ -12,7 +12,7 @@ const styles = {
     padding: "20px",
     borderRadius: "5px",
     // position: 'relative',
-    lineHeight: "2", // 줄 간격 조정
+    lineHeight: "1.7", // 줄 간격 조정
     letterSpacing: "normal", // 자간 조정
     width: "100%",
     height : 'auto',
