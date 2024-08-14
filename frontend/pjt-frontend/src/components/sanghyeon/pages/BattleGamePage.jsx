@@ -770,9 +770,9 @@ const BattleGamePage = () => {
                   <>
                     승리하셨습니다!
                     <br />
-                    승리: ${name}
+                    승리: {name}
                     <br />
-                    패배: ${enemyName}
+                    패배: {enemyName}
                     <br /> 5초 후 대기방으로 이동합니다.
                   </>
                 ) : (
