@@ -12,6 +12,21 @@ import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const ItemPage = () => {
+  const rarityStyles = {
+    common: {
+      color: "gray",
+      borderColor: "gray",
+    },
+    epic: {
+      color: "purple",
+      borderColor: "purple",
+    },
+    legendary: {
+      color: "gold",
+      borderColor: "gold",
+    },
+  };
+
   const {
     baseURL,
     accessToken,
@@ -248,7 +263,10 @@ const ItemPage = () => {
             </div>
             <div className={`item-modal-inner-container back`}>
               <div className="item-modal-inner-container-back">
-                <div className="item-modal-inner-rank-container-back">
+                <div
+                  className="item-modal-inner-rank-container-back"
+                  style={rarityStyles[rarity]}
+                >
                   <div className="item-modal-inner-rank-back">
                     {rarity ? rarity : null}
                   </div>
