@@ -7,7 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import store from "../../../store/store.js";
-import "../../../css/Fill.css";
+import "../../../css/BattleFill.css";
 
 const DragNDropQuiz = () => {
   const [blanks, setBlanks] = useState({});
