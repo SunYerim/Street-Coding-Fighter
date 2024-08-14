@@ -1,16 +1,14 @@
+import { border } from "@mui/system";
+
 const style = {
-  gap: "10px",
-  margin: "0 auto",
-  display: "inline-block",
-  padding: "10px 10px",
-  fontFamily: "'Fira Code', Consolas, 'Courier New', Courier, monospace",
-  fontSize: "1.2rem",
-  fontWeight: "bold",
-  color: "white",
-  border: "1px solid white",
-  borderRadius: "5px",
-  letterSpacing: "1px",
-  textAlign: "center",
+  display: 'flex',
+  flexWrap: 'wrap',
+  padding: '10px',
+  height: 'auto',
+  maxWidth: '100%',
+  // backgroundColor: '#007BFF',
+  border: '2px solid #8216f5',
+  borderRadius: '5px',
 };
 
 const ChoiceContainer = ({ children }) => {
