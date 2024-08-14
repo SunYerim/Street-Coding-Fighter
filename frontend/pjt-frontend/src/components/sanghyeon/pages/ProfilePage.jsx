@@ -45,18 +45,13 @@ function ProfilePage() {
 
   const authClient = createAuthClient(
     baseURL,
-    () => {
-      localStorage.getItem("accessToken");
-    },
+    () => accessToken,
     setAccessToken
   );
-  const getAccessToken = () => {
-    return accessToken;
-  };
+
   useEffect(() => {
     const getProfile = async () => {
       try {
-        await getAccessToken();
         const profileRes = await authClient({
           method: "GET",
           url: `${baseURL}/profile`,
@@ -99,7 +94,10 @@ function ProfilePage() {
                   <h3>Exp: {exp ? exp.toLocaleString() : 0} exp</h3>
                   <h3>School : {schoolName}</h3>
                   <div className="profile-status-button">
-                    <button className="custom-button" onClick={() => navigate("/reset-password")}>
+                    <button
+                      className="custom-button"
+                      onClick={() => navigate("/reset-password")}
+                    >
                       비밀번호 수정
                     </button>
                   </div>
@@ -113,9 +111,24 @@ function ProfilePage() {
                 </div>
               </div>
               <div className="profile-button-container">
-                <button className="custom-button" onClick={() => navigate("/_record")}>RECORD</button>
-                <button className="custom-button" onClick={() => navigate("/_report")}>REPORT</button>
-                <button className="custom-button" onClick={() => navigate("/_solved")}>SOLVED</button>
+                <button
+                  className="custom-button"
+                  onClick={() => navigate("/_record")}
+                >
+                  RECORD
+                </button>
+                <button
+                  className="custom-button"
+                  onClick={() => navigate("/_report")}
+                >
+                  REPORT
+                </button>
+                <button
+                  className="custom-button"
+                  onClick={() => navigate("/_solved")}
+                >
+                  SOLVED
+                </button>
               </div>
             </div>
           </div>
