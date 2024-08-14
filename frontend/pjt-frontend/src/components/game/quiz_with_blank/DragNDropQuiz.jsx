@@ -93,24 +93,24 @@ const DragNDropQuiz = () => {
     }));
   };
 
-  // const styles = {
-  //   quizContainer: {
-  //     marginBottom: "20px",
-  //   },
-  //   submitButton: {
-  //     display: "inline-block",
-  //     padding: "10px 20px",
-  //     fontSize: "16px",
-  //     color: "#fff",
-  //     backgroundColor: "#007bff",
-  //     border: "none",
-  //     borderRadius: "5px",
-  //     marginTop: "20px",
-  //   },
-  //   submitButtonHover: {
-  //     backgroundColor: "#0056b3",
-  //   },
-  // };
+  const styles = {
+    quizContainer: {
+      marginBottom: "20px",
+    },
+    submitButton: {
+      display: "inline-block",
+      padding: "10px 20px",
+      fontSize: "16px",
+      color: "#fff",
+      backgroundColor: "#007bff",
+      border: "none",
+      borderRadius: "5px",
+      marginTop: "20px",
+    },
+    submitButtonHover: {
+      backgroundColor: "#0056b3",
+    },
+  };
 
   return (
     <>
@@ -131,9 +131,6 @@ const DragNDropQuiz = () => {
           </div>
 
         </DndProvider>
-        <div className="fill-submit">
-          <button className='fill-button' onClick={handleSubmit}>답안 제출</button>
-        </div>
       </div>
     </>
   );
