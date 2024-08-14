@@ -837,19 +837,28 @@ const TempBattleGamePagePage = () => {
                     <div className="battle-game-history-title">전투 기록</div>
                     {battleHistory.map((data, index) => (
                       <div className="battle-game-history-message" key={index}>
-                        {data.power === 0
-                          ? data.userId === memberId
-                            ? `${name}님이 문제를 틀리셨습니다.`
-                            : `${enemyName}님이 문제를 틀리셨습니다.`
-                          : data.isAttack === true
-                          ? `${
-                              data.userId === memberId ? name : enemyName
-                            }님이 ${
-                              data.userId === memberId ? enemyName : name
-                            }님에게 ${data.power}만큼 데미지를 주었습니다.`
-                          : `${
-                              data.userId === memberId ? name : enemyName
-                            }님이 ${data.power}만큼 체력을 회복하였습니다.`}
+                        {data.power === 0 ? (
+                          data.userId === memberId ? (
+                            `${name}님이 문제를 틀리셨습니다.`
+                          ) : (
+                            `${enemyName}님이 문제를 틀리셨습니다.`
+                          )
+                        ) : data.isAttack === true ? (
+                          <>
+                            {data.userId === memberId ? name : enemyName}님이{" "}
+                            {data.userId === memberId ? enemyName : name}님에게{" "}
+                            <span className="battle-game-damage-color">
+                              {data.power}만큼 데미지를 주었습니다.
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {data.userId === memberId ? name : enemyName}님이{" "}
+                            <span className="heal">
+                              {data.power}만큼 체력을 회복하였습니다.
+                            </span>
+                          </>
+                        )}
                       </div>
                     ))}
                     <div ref={battleHistoryEndRef} />

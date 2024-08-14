@@ -248,3 +248,11 @@
   margin: 10px;
   background-color: white;
 }
+
+.battle-game-damage-color {
+  color: orangered;
+}
+
+.battle-game-heal-color {
+  color: greenyellow;
+}
