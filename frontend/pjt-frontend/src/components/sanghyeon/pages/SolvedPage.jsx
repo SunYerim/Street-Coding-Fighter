@@ -128,14 +128,7 @@ function SolvedPage() {
                     currentItems.map((data, index) => (
                       <div
                         className="solved"
-                        // onClick={() => navigate("/solved/" + data.solvedId)}
-                        onClick={() =>
-                          Swal.fire({
-                            text: "준비 중입니다.",
-                            icon: "warning",
-                            timer: 3000,
-                          })
-                        }
+                        onClick={() => navigate("/solved/" + data.solvedId)}
                         key={index}
                       >
                         <p>{data.title}</p>
