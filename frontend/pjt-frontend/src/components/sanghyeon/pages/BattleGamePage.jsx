@@ -444,6 +444,7 @@ const BattleGamePage = () => {
           if (body.userId === memberId) {
             if (body.isAttack === true) {
               setBlinkEnemy(true);
+              playEffectSound('attackSound');
               setIsRightCamBlinking(true);
               setTimeout(() => {
                 setBlinkEnemy(false);
@@ -453,6 +454,7 @@ const BattleGamePage = () => {
               }, 1000);
             } else {
               setIsHealing(true);
+              playEffectSound('healSound');
               setBattleHistory((prevHistory) => [...prevHistory, body]);
               setTimeout(() => {
                 setMyHealth((prevHealth) =>
