@@ -357,6 +357,15 @@ const BattleGamePage = () => {
   }, [selectOpponentProblem, selectMyProblem]);
 
   const submitAnswer = () => {
+    if (isSubmit === true) {
+      Swal.fire({
+        text: "이미 답안을 제출하셨습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
+
     const endpoint = `/send/game/${roomId}/answer`;
     let solveData = null;
     let solveText = null;

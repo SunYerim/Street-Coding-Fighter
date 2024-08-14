@@ -25,6 +25,7 @@ const BattleGameListPage = () => {
     setEnemyId,
     setEnemyName,
     setEnemyCharacterType,
+    setIsSubmit,
   } = store((state) => ({
     baseURL: state.baseURL,
     accessToken: state.accessToken,
@@ -38,6 +39,7 @@ const BattleGameListPage = () => {
     setEnemyId: state.setEnemyId,
     setEnemyName: state.setEnemyName,
     setEnemyCharacterType: state.setEnemyCharacterType,
+    setIsSubmit: state.setIsSubmit,
   }));
 
   const authClient = createAuthClient(
@@ -135,6 +137,7 @@ const BattleGameListPage = () => {
             },
           });
 
+          setIsSubmit(false);
           setRoomId(roomId);
           setRoomPassword(inputPassword);
           setHostId(res.data.memberId);
@@ -217,6 +220,7 @@ const BattleGameListPage = () => {
       setHostId(memberId);
       setRoomPassword(battleRoomPassword.current.value);
       setNormalQuit(false);
+      setIsSubmit(false);
       navigate("/_battle-game");
     } catch (error) {
       Swal.fire({
