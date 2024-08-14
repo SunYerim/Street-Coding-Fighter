@@ -6,7 +6,8 @@ import store from '../../store/store.js';
 import SoundStore from '../../stores/SoundStore.jsx';
 import Swal from 'sweetalert2';
 import BasicModal from '../tutorial/BasicModal.jsx';
-
+import Toast from '../Toast.jsx';
+import { textAlign } from '@mui/system';
 function MainPage() {
   const { baseURL, accessToken, setAccessToken, setName, setSchoolName, setBirth, setCharacter, setExp, name } = store(
     (state) => ({
@@ -21,7 +22,7 @@ function MainPage() {
       name: state.name,
     })
   );
-
+  const [toast, setToast] = useState(true);
   const authClient = createAuthClient(baseURL, () => accessToken, setAccessToken);
   useEffect(() => {
     const getProfile = async () => {
@@ -32,13 +33,15 @@ function MainPage() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }).then(() => {
-          setName(profileRes.data.name);
-          setSchoolName(profileRes.data.school);
-          setBirth(profileRes.data.birth);
-          setCharacter(profileRes.data.userCharacter.characterType);
-          setExp(profileRes.data.exp);
-        }).catch(err=>console.log(err));
+        })
+          .then(() => {
+            setName(profileRes.data.name);
+            setSchoolName(profileRes.data.school);
+            setBirth(profileRes.data.birth);
+            setCharacter(profileRes.data.userCharacter.characterType);
+            setExp(profileRes.data.exp);
+          })
+          .catch((err) => console.log(err));
       } catch (error) {
         // Swal.fire({
         //   text: "프로필을 불러오는데 실패했습니다.",
@@ -83,6 +86,7 @@ function MainPage() {
   return (
     <>
       <Header />
+      {toast && <Toast style={styles.toast} setToast={setToast} text={"Street Coding Fighter는 전체화면에 최적화 되어있습니다. \n F11을 눌러 전체화면을 활성화 해 주세요."} />}
       <div style={styles.container}>
         <div style={styles.modes}>
           {Object.keys(modeDetails).map((mode) => (
@@ -170,6 +174,24 @@ const styles = {
     fontWeight: 'bold',
     color: 'rgba(0, 0, 0, 0.7)',
   },
+  toast: {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    width : '100%',
+    textAlign: 'center',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 1000,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    color: 'white',
+    padding: '10px 20px',
+    borderRadius: '10px',
+    whiteSpace: 'pre-wrap',
+    fontSize: '1.5rem',
+    boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+    transition: 'opacity 0.3s ease-in-out',
+  },
+
 };
 
 export default MainPage;
