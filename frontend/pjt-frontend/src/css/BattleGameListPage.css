@@ -60,22 +60,6 @@
   border-radius: 5px;
 }
 
-.battle-room {
-  color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 5px 50px;
-  background-color: rgba(27, 26, 85, 0.7);
-  font-size: 1rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-align: center;
-  border: 1px solid white;
-  border-radius: 5px;
-}
-
 .battle-room-none {
   color: white;
   text-align: center;
@@ -152,6 +136,22 @@
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 1px;
+}
+
+.battle-room {
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr 4fr 2fr 2fr 3fr;
+  justify-items: center;
+  align-items: center;
+  margin: 15px 50px;
+  background-color: rgba(27, 26, 85, 0.7);
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-align: center;
+  border: 1px solid white;
+  border-radius: 5px;
 }
 
 .battle-list-inner-title {
