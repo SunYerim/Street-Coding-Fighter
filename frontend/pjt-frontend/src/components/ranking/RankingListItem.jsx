@@ -7,7 +7,7 @@ export default function RankingListItem({ rank, player }) {
       <Rank>{rank}</Rank>
       <ProfileImageContainer />
       <InfoContainer>
-        <Name>{player?.name}</Name>
+        <Name title={player?.name}>{player?.name}</Name>
         <Exp>{player?.exp}</Exp>
       </InfoContainer>
     </RankingItemContainer>
@@ -60,7 +60,7 @@ const Name = styled.div`
   color: #343a40;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; 
 `;
 
 const Exp = styled.div`
