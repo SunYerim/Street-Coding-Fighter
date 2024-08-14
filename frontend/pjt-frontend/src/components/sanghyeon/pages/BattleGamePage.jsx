@@ -468,6 +468,8 @@ const BattleGamePage = () => {
           } else {
             if (body.isAttack === true) {
               setBlink(true);
+              playEffectSound('attackSound');
+
               setIsLeftCamBlinking(true);
               setTimeout(() => {
                 setBlink(false);
@@ -477,6 +479,8 @@ const BattleGamePage = () => {
               }, 1000);
             } else {
               setIsEnemyHealing(true);
+              playEffectSound('healSound');
+
               setBattleHistory((prevHistory) => [...prevHistory, body]);
               setTimeout(() => {
                 setEnemyHealth((prevHealth) =>
