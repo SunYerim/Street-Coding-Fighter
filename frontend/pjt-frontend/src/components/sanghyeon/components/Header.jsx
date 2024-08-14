@@ -14,9 +14,9 @@ const Header = ({ type = "default" }) => {
   const giftIcon = "/giftIcon.png";
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const backPaths = {
-    "/record": "/account",
-    "/report": "/account",
-    "/solved": "/account",
+    "/_record": "/account",
+    "/_report": "/account",
+    "/_solved": "/account",
     "/find-password": "/login",
     "/signup": "/login",
     "/reset-password": "/account",
