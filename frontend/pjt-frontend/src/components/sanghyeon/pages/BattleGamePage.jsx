@@ -116,14 +116,49 @@ const TempPage1 = () => {
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
-  const [gameStart, setGameStart] = useState(false); // 여기
+  const [gameStart, setGameStart] = useState(true); // 여기
   const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [currentRound, setCurrentRound] = useState(0);
   const [count, setCount] = useState(30);
-  const [myProblem, setMyProblem] = useState({});
+  const [myProblem, setMyProblem] = useState({
+    problemId: 2,
+    title: "배열의 최대값 찾기",
+    problemType: "MULTIPLE_CHOICE",
+    category: "알고리즘",
+    difficulty: 2,
+    problemContent: {
+      problemId: 2,
+      content:
+        "배열이 주어질 때, 배열의 요소 중 가장 큰 값을 찾아서 반환하는 프로그램을 작성하세요. 배열은 정수로만 구성되어 있으며, 배열의 크기는 1 이상 100 이하입니다.",
+      numberOfBlanks: 0,
+    },
+    problemChoices: [
+      {
+        choiceId: 4,
+        problemId: 2,
+        choiceText: "배열의 요소를 모두 더한 값을 반환한다.",
+      },
+      {
+        choiceId: 1,
+        problemId: 2,
+        choiceText: "배열을 정렬한 후 마지막 요소를 반환한다.",
+      },
+      {
+        choiceId: 2,
+        problemId: 2,
+        choiceText: "배열의 각 요소를 반복하며 가장 큰 값을 추적하여 반환한다.",
+      },
+      {
+        choiceId: 3,
+        problemId: 2,
+        choiceText:
+          "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
+      },
+    ],
+  });
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
   const [gameEnded, setGameEnded] = useState(false);

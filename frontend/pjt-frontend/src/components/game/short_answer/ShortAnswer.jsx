@@ -78,7 +78,6 @@ const ShortAnswer = () => {
 
   return (
     <>
-      <h2>주관식 문제</h2>
       <div className="multi-game-playing">
         <div style={styles.codeContainer}>
           {modifiedContent && (

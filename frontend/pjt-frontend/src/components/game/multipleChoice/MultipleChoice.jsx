@@ -6,22 +6,27 @@ import store from "../../../store/store.js";
 import {
   bgcolor,
   color,
+  display,
   fontSize,
   fontWeight,
   height,
   letterSpacing,
   maxHeight,
+  maxWidth,
   textAlign,
 } from "@mui/system";
 
 const styles = {
   codeContainer: {
     width: "43vw",
-    minHeight: "65%",
-    height: "65%",
-    maxHeight: "65%",
+    minHeight: "16%",
+    height: "16%",
+    maxHeight: "16%",
     margin: "0 auto",
     padding: "0",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   choiceContainer: {
     width: "43vw",
@@ -29,6 +34,12 @@ const styles = {
     gridTemplateColumns: "1fr 1fr",
     gap: "10px",
     margin: "0 auto",
+    mt: "20px",
+    whiteSpace: "normal",
+    wordWrap: "break-word",
+    minHeight: "10%",
+    height: "10%",
+    maxHeight: "10%",
   },
   choiceButton: {
     display: "inline-block",
@@ -42,6 +53,8 @@ const styles = {
     borderRadius: "5px",
     letterSpacing: "1px",
     textAlign: "center",
+    maxWidth: "95%",
+    wordWrap: "break-word",
   },
   submitButton: {
     display: "inline-block",
@@ -106,25 +119,19 @@ const MultipleChoice = () => {
 
   return (
     <>
-      <div className="multi-game-playing">
+      <div className="multi-game-choice-problem-outer-container">
         <div style={styles.codeContainer}>
           {modifiedContent && (
             <StyleToPythonCode codeString={modifiedContent} />
           )}
         </div>
-        <div style={styles.choiceContainer}>
+        <div className="multi-game-choice-temp-problem-container">
           {problem &&
             problem.problemChoices &&
             problem.problemChoices.map((choice, index) => (
               <button
+                className="multi-game-choice-button-new"
                 key={choice.choiceId}
-                style={{
-                  ...styles.choiceButton,
-                  backgroundColor:
-                    selectedChoice === choice.choiceId
-                      ? "#0056b3"
-                      : "#1b1a55b3",
-                }}
                 onClick={() => handleChoiceSelect(choice.choiceId)}
               >
                 {choice.choiceText}
