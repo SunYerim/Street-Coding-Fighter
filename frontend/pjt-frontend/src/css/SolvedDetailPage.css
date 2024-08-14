@@ -1,14 +1,14 @@
-.solved-entire-container {
+.solved-detail-entire-container {
   height: 100vh;
 }
 
-.solved-outer-outer-container {
+.solved-detail-outer-outer-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.solved-outer-container {
+.solved-detail-outer-container {
   display: flex;
   flex-direction: column;
   justify-content: center;

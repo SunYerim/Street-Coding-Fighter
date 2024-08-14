@@ -10,7 +10,7 @@ const styles = {
     color: "#abb2bf", // 대비가 좋은 중간 밝기의 텍스트 색상
     padding: "20px",
     borderRadius: "8px", // 더 부드러운 모서리
-    lineHeight: "1.7", // 조금 더 넓은 줄 간격으로 가독성 향상
+    lineHeight: "1.6", // 조금 더 넓은 줄 간격으로 가독성 향상
     letterSpacing: "0.02em", // 약간의 자간 추가로 가독성 개선
     margin: "0",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)", // 약간의 그림자로 텍스트를 돋보이게

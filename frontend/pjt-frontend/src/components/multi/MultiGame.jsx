@@ -171,7 +171,8 @@ export default function MultiGame() {
 
   const [count, setCount] = useState(30);
 
-  const [mergedList, setMergedList] = useState([]);
+  // const [mergedList, setMergedList] = useState([]);
+  let mergedList = [];
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -247,17 +248,12 @@ export default function MultiGame() {
         } else if (data.type === 'gameRank') {
           setGameRank(data.payload);
           console.log('전체랭킹: ', data.payload);
-          // isSubmitRef.current = false;
-          // setCount(30);
-          // setCurrentRound(cnt + 1);
-          // setRound((prevVal) => prevVal + 1);
-          // setTimerEnded(false);
 
           if (round == problemLength - 1) {
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
-              setPlaying(false); ///////////////////////////////////////////////////////////////
+              setPlaying(false);
               clearGameRank();
               clearRoundRank();
               clearProblemList();
@@ -266,17 +262,12 @@ export default function MultiGame() {
         } else if (data.type === 'roundRank') {
           setRoundRank(data.payload);
           console.log('라운드랭킹: ', data.payload);
-          // isSubmitRef.current = false;
-          // setCurrentRound(cnt + 1);
           setRound((prevVal) => prevVal + 1);
-          // setTimerEnded(false);
 
           if (round < problemLength - 1) {
             // 모달 열고 4초 대기
             setModalOpen(true);
             setTimeout(() => {
-              // setCurrentRound(cnt + 1);
-              // setRound((prevVal) => prevVal + 1);
               setCount(30);
               setTimerEnded(false);
               setModalOpen(false);
@@ -452,50 +443,6 @@ export default function MultiGame() {
     );
   }
 
-  // function Timer({ setTimerEnded }) {
-  //   useEffect(() => {
-  //     if (count <= 0) {
-  //       switch (problemList[round].problemType) {
-  //         case "FILL_IN_THE_BLANK":
-  //           setBlankSolve(null);
-  //           handleBlankAnswer();
-  //           isSubmitRef.current = true;
-  //           break;
-  //         case "SHORT_ANSWER_QUESTION":
-  //           handleShortAnswer(null);
-  //           isSubmitRef.current = true;
-  //           break;
-  //         case "MULTIPLE_CHOICE":
-  //           handleChoiceSelection(null);
-  //           isSubmitRef.current = true;
-  //           break;
-  //         default:
-  //           console.log("Unknown problem type: " + problemList[round].problemType);
-  //       }
-  //       setTimerEnded(true);
-  //       return;
-  //     }
-
-  //     const id = setInterval(() => {
-  //       setCount((prevCount) => {
-  //         if (prevCount < 0) {
-  //           clearInterval(id);
-  //           return 0;
-  //         }
-  //         return prevCount - 1;
-  //       });
-  //     }, 1000);
-
-  //     return () => clearInterval(id);
-  //   }, [count]);
-
-  //   return (
-  //     <div>
-  //       <span>{count}</span>
-  //     </div>
-  //   );
-  // }
-
   // ---------------------- 채팅 WebSocket ----------------------
 
   // 채팅 WebSocket 연결 및 초기화 함수
@@ -613,9 +560,9 @@ export default function MultiGame() {
         };
       });
 
-      setMergedList(resetMergedList);
+      mergedList = resetMergedList;
     } else {
-      setMergedList(updatedMergedList);
+      mergedList = updatedMergedList;
     }
   }, [gameRank, playerList, submitList, playing]);
 
@@ -662,7 +609,7 @@ export default function MultiGame() {
                 {hostId == memberId ? (
                   playerList.length >= 2 ? (
                     <button className="game-start-button" onClick={handleStart}>
-                      Start
+                      게임 시작
                     </button>
                   ) : (
                     <div>
@@ -679,7 +626,7 @@ export default function MultiGame() {
               <div className="after-start">
                 {isSubmitRef.current ? (
                   <div>
-                    <h2>Submitted!</h2>
+                    <h2>다른 유저들 기다리는중...</h2>
                   </div>
                 ) : (
                   <div>{problemList.length > 0 && renderProblem()}</div>

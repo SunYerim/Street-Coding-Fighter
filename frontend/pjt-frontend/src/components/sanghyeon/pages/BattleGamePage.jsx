@@ -10,20 +10,19 @@ import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 import Swal from "sweetalert2";
 
-import DragNDropQuiz from "../../../components/game/quiz_with_blank/DragNDropQuiz.jsx";
-import ShortAnswer from "../../../components/game/short_answer/ShortAnswer";
-import MultipleChoice from "../../../components/game/multipleChoice/MultipleChoice.jsx";
+import DragNDropQuiz from "../../game/quiz_with_blank/DragNDropQuiz.jsx";
+import ShortAnswer from "../../game/short_answer/ShortAnswer.jsx";
+import MultipleChoice from "../../game/multipleChoice/MultipleChoice.jsx";
 
 import Modal from "react-modal";
 
 import SoundStore from "../../../stores/SoundStore.jsx";
 import { MdBloodtype } from "react-icons/md";
 
-const MultipleChoicePage = () => {
+const TempPage1 = () => {
   const healEffect = "/heal-effect.gif";
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
   const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
     SoundStore();
   useEffect(() => {
@@ -534,7 +533,7 @@ const MultipleChoicePage = () => {
 
   const quitBattleRoom = async () => {
     try {
-      const quitRes = await axios({
+      const quitRes = await authClient({
         method: "POST",
         url: `${baseURL}/battle/room/${roomId}/leave`,
         headers: {
@@ -630,11 +629,6 @@ const MultipleChoicePage = () => {
         },
       });
     } catch (error) {
-      Swal.fire({
-        text: "게임 시작에 실패했습니다.",
-        icon: "error",
-        timer: 3000,
-      });
       console.log(error);
     }
   };
@@ -785,17 +779,6 @@ const MultipleChoicePage = () => {
                       <div className="battle-game-select-problem-difficulty">
                         난이도: {data.difficulty}
                       </div>
-                      <hr />
-                      <div className="">
-                        {data && data.item && data.item.name ? (
-                          <>아이템: {data.item.name}</>
-                        ) : null}
-                      </div>
-                      <div>
-                        {data && data.item && data.item.rarity ? (
-                          <>등급: {data.item.rarity}</>
-                        ) : null}
-                      </div>
                     </div>
                   ))}
               </div>
@@ -874,9 +857,7 @@ const MultipleChoicePage = () => {
               <div className="battle-game-inner-container">
                 {gameStart ? (
                   <>
-                    <div className="battle-game-problem-outer-container">
-                      {renderQuestion(myProblem)}
-                    </div>
+                    {renderQuestion(myProblem)}
                     <div className="battle-game-submit-answer-container">
                       <button
                         onClick={handleSubmit}
@@ -979,4 +960,4 @@ const MultipleChoicePage = () => {
   );
 };
 
-export default MultipleChoicePage;
+export default TempPage1;

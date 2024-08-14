@@ -169,7 +169,9 @@ const BattleGameListPage = () => {
         setHostId(joinBattleRoomRes.data.memberId);
         setEnemyId(joinBattleRoomRes.data.memberId);
         setEnemyName(joinBattleRoomRes.data.username);
-        setEnemyCharacterType(joinBattleRoomRes.data.hostCharacterType);
+        setEnemyCharacterType(
+          joinBattleRoomRes.data.hostCharacter.characterType
+        );
         navigate("/_battle-game");
       } catch (error) {
         Swal.fire({
@@ -348,7 +350,12 @@ const BattleGameListPage = () => {
                       e.key === "Enter" && battleListSearch(searchKeyword)
                     }
                   />
-                  <button onClick={battleListSearch}>검색</button>
+                  <button
+                    className="battle-list-search-button"
+                    onClick={battleListSearch}
+                  >
+                    검색
+                  </button>
                 </div>
                 <div className="battle-list-refresh-container">
                   <button onClick={battleListRefresh}>새로고침</button>
