@@ -468,3 +468,19 @@
   font-weight: bold;
   letter-spacing: 5px;
 }
+
+/* ItemPage.css */
+.rarity-common {
+  color: gray;
+  border-color: gray;
+}
+
+.rarity-epic {
+  color: purple;
+  border-color: purple;
+}
+
+.rarity-legendary {
+  color: gold;
+  border-color: gold;
+}
