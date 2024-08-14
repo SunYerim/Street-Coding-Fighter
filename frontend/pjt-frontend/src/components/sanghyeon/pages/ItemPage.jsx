@@ -254,10 +254,10 @@ const ItemPage = () => {
             </div>
             <div className={`item-modal-inner-container back`}>
               <div className="item-modal-inner-container-back">
-                <div
-                  className={`item-modal-inner-rank-container-back  ${rarityClass[rarity]}`}
-                >
-                  <div className="item-modal-inner-rank-back">
+                <div className="item-modal-inner-rank-container-back">
+                  <div
+                    className={`item-modal-inner-rank-back ${rarityClass[rarity]}`}
+                  >
                     {rarity ? rarity : null}
                   </div>
                 </div>
