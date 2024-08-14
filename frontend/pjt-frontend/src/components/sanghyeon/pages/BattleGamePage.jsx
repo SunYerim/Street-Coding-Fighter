@@ -244,7 +244,7 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/RoundChoiceProblem`;
     battleStompClient.current.subscribe(endpoint, async (message) => {
       const body = JSON.parse(message.body);
-      await delay(3000);
+      await delay(500);
       setItem1(false);
       setItem2(false);
       setItem3(false);
@@ -644,7 +644,7 @@ const BattleGamePage = () => {
   };
 
   const handleStart = async () => {
-    if (enemyName === "" || enemyName === null) {
+    if (enemyName === "" && enemyName === null) {
       Swal.fire({
         text: "상대방이 입장하지 않았습니다.",
         icon: "warning",
@@ -928,7 +928,7 @@ const BattleGamePage = () => {
                     <h2 className="battle-game-game-start-title">
                       게임 시작 전입니다.
                     </h2>
-                    {hostId === memberId ? (
+                    {hostId === memberId && enemyName !== null ? (
                       <button
                         onClick={handleStart}
                         className="battle-game-game-start-button"
