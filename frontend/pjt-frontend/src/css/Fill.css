@@ -3,7 +3,6 @@
   flex-direction: column;
   width: 100%;
   max-height: 95%;
-  overflow: hidden;
 }
 
 .fill-problem {
@@ -11,8 +10,6 @@
   align-items: center;
   width: 95%;
   max-height: 50%;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .fill-choices {
@@ -22,8 +19,6 @@
   max-height: 35%;
   font-size: 1.2rem;
   margin-top: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .fill-submit {
@@ -44,8 +39,6 @@
   cursor: pointer;
   border-radius: 5px;
   white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .fill-button:hover {
