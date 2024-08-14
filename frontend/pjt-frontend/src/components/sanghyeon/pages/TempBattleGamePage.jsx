@@ -1,53 +1,106 @@
-import Header from "../components/Header";
-import "../../../css/ItemPage.css";
-import { useRef, useState } from "react";
-import createAuthClient from "../apis/createAuthClient";
-import Swal from "sweetalert2";
+import BattleGameHeader from "./BattleGameHeader.jsx";
+import "../../../css/BattleGamePage.css";
 import store from "../../../store/store.js";
-import pixelTicket from "/pixel-ticket.jpg";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router";
+import createAuthClient from "../apis/createAuthClient.js";
 import renderCharacter from "../apis/renderCharacter.js";
+
+import SockJS from "sockjs-client/dist/sockjs";
+import Stomp from "stompjs";
+import Swal from "sweetalert2";
+
+import DragNDropQuiz from "../../game/quiz_with_blank/DragNDropQuiz.jsx";
+import ShortAnswer from "../../game/short_answer/ShortAnswer.jsx";
+import MultipleChoice from "../../game/multipleChoice/MultipleChoice.jsx";
 
 import Modal from "react-modal";
 
-Modal.setAppElement("#root");
+import SoundStore from "../../../stores/SoundStore.jsx";
+import { MdBloodtype } from "react-icons/md";
 
-const ItemPage = () => {
-  const rarityClass = {
-    COMMON: "rarity-common",
-    EPIC: "rarity-epic",
-    LEGENDARY: "rarity-legendary",
-  };
+const BattleGamePage = () => {
+  const healEffect = "/heal-effect.gif";
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const { switchBackgroundMusic, playBackgroundMusic, playEffectSound } =
+    SoundStore();
+  useEffect(() => {
+    switchBackgroundMusic("multi", (newBackgroundMusic) => {
+      newBackgroundMusic.play();
+    });
+    return () => {
+      switchBackgroundMusic("main", (newBackgroundMusic) => {
+        newBackgroundMusic.play();
+      });
+    };
+  }, []);
+
+  // --------------------------페이지에서 나가면 다시 음악바뀝니다.-----------------------//
+  const battleStompClient = useRef(null);
+  const chatStompClient = useRef(null);
+  const navigate = useNavigate();
 
   const {
-    baseURL,
+    memberId,
     accessToken,
     setAccessToken,
-    character,
-    setCharacter,
-    exp,
-    rarity,
-    setRarity,
-    characterRarity,
-    setCharacterRarity,
-    characterClothRarity,
-    setCharacterClothRarity,
-    setExp,
+    hostId,
+    userId,
     name,
+    roomId,
+    roomPassword,
+    baseURL,
+    wsBattle,
+    wsChat,
+    enemyId,
+    setEnemyId,
+    enemyName,
+    setEnemyName,
+    enemyCharacterType,
+    setEnemyCharacterType,
+    normalQuit,
+    setNormalQuit,
+    blankSolve,
+    setMyBlankProblem,
+    shortAnswerSolve,
+    setMyShortAnswerProblem,
+    multipleChoiceSolve,
+    setMyMultipleChoiceProblem,
+    setRoomId,
+    character,
+    isSubmit,
+    setIsSubmit,
   } = store((state) => ({
-    baseURL: state.baseURL,
+    memberId: state.memberId,
     accessToken: state.accessToken,
     setAccessToken: state.setAccessToken,
-    character: state.character,
-    setCharacter: state.setCharacter,
-    exp: state.exp,
-    setExp: state.setExp,
+    hostId: state.hostId,
+    userId: state.userId,
     name: state.name,
-    rarity: state.rarity,
-    setRarity: state.setRarity,
-    characterRarity: state.characterRarity,
-    setCharacterRarity: state.setCharacterRarity,
-    characterClothRarity: state.characterClothRarity,
-    setCharacterClothRarity: state.setCharacterClothRarity,
+    character: state.character,
+    roomId: state.roomId,
+    setRoomId: state.setRoomId,
+    roomPassword: state.roomPassword,
+    baseURL: state.baseURL,
+    wsBattle: state.wsBattle,
+    wsChat: state.wsChat,
+    enemyId: state.enemyId,
+    setEnemyId: state.setEnemyId,
+    enemyName: state.enemyName,
+    setEnemyName: state.setEnemyName,
+    enemyCharacterType: state.enemyCharacterType,
+    setEnemyCharacterType: state.setEnemyCharacterType,
+    normalQuit: state.normalQuit,
+    setNormalQuit: state.setNormalQuit,
+    blankSolve: state.blankSolve,
+    setMyBlankProblem: state.setMyBlankProblem,
+    shortAnswerSolve: state.shortAnswerSolve,
+    setMyShortAnswerProblem: state.setMyShortAnswerProblem,
+    multipleChoiceSolve: state.multipleChoiceSolve,
+    setMyMultipleChoiceProblem: state.setMyMultipleChoiceProblem,
+    isSubmit: state.isSubmit,
+    setIsSubmit: state.setIsSubmit,
   }));
 
   const authClient = createAuthClient(
@@ -56,299 +109,943 @@ const ItemPage = () => {
     setAccessToken
   );
 
-  const cardRef = useRef(null);
-  const overlayRef = useRef(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [battleHistory, setBattleHistory] = useState([]);
+  const [message, setMessage] = useState("");
+  const chatEndRef = useRef(null);
+  const battleHistoryEndRef = useRef(null);
+  const [myHealth, setMyHealth] = useState(100);
+  const [enemyHealth, setEnemyHealth] = useState(100);
 
-  const handleMouseMove = (e) => {
-    const card = cardRef.current;
-    const overlay = overlayRef.current;
+  // ---------------------- 배틀 문제 선택 모달 ----------------------
 
-    if (!card || !overlay) return;
+  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
+  const [gameStart, setGameStart] = useState(false); // 여기 종료
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기 종료
 
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  // ---------------------- 배틀 문제 선택 모달 ----------------------
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((centerY - y) / centerY) * 45;
-    const rotateY = ((x - centerX) / centerX) * 45;
+  const [currentRound, setCurrentRound] = useState(0);
+  const [count, setCount] = useState(30);
+  const [myProblem, setMyProblem] = useState({}); // 여기
+  const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
+  const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
+  const [gameEnded, setGameEnded] = useState(false); // 여기 종료
+  const [winner, setWinner] = useState("");
+  const [loser, setLoser] = useState("");
+  const [count2, setCount2] = useState(5);
+  const [answerSubmitted, setAnswerSubmitted] = useState(false);
+  const timerRef = useRef(null);
+  const [roundStart, setRoundStart] = useState(false); // 여기
 
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  const [item1, setItem1] = useState(false); // 온전한 공격: 100% 데미지
+  const [item2, setItem2] = useState(false); // 시간 연장: +10초
+  const [item3, setItem3] = useState(false); // 시간 단축: -10초
+  const [item4, setItem4] = useState(false); // 답안 제출 방지: submitAnswer 버튼 비활성화
 
-    overlay.style = `background-position: ${
-      (centerX - x) / 5 + (centerY - y) / 5
-    }%`;
-  };
+  const [blink, setBlink] = useState(false);
+  const [blinkEnemy, setBlinkEnemy] = useState(false);
 
-  const handleMouseLeave = () => {
-    const card = cardRef.current;
-    const overlay = overlayRef.current;
-    if (!card || !overlay) return;
-    card.style.transform = `rotateX(0) rotateY(0)`; // 원상 복귀
-    overlay.style.backgroundPosition = `100% 100%`; // 애니메이션과 함께 되돌리기
-  };
+  const [isLeftCamBlinking, setIsLeftCamBlinking] = useState(false);
+  const [isRightCamBlinking, setIsRightCamBlinking] = useState(false);
 
-  const purchaseCharacterTicket = () => {
-    Swal.fire({
-      icon: "info",
-      title: "알쏭달쏭 캐릭터 티켓 구매",
-      text: "알쏭달쏭 캐릭터 티켓을 구매하시겠습니까?",
-      showCancelButton: true,
-      confirmButtonText: "구매",
-      cancelButtonText: "취소",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        if (exp < 500) {
-          Swal.fire({
-            icon: "error",
-            title: "포인트 부족",
-            text: "포인트가 부족합니다.",
-            timer: 3000,
-          });
-          return;
+  const [isHealing, setIsHealing] = useState(false);
+  const [isEnemyHealing, setIsEnemyHealing] = useState(false);
+
+  // ---------------------- WebSocket ----------------------
+
+  // WebSocket 연결 및 초기화 함수
+
+  const connect = () => {
+    return new Promise((resolve, reject) => {
+      const battleSocket = new SockJS(`${baseURL}/ws-battle`);
+      const chatSocket = new SockJS(`${baseURL}/ws-chat`);
+      battleStompClient.current = Stomp.over(battleSocket);
+      chatStompClient.current = Stomp.over(chatSocket);
+
+      battleStompClient.current.debug = null;
+      chatStompClient.current.debug = null;
+
+      let battleConnected = false;
+      let chatConnected = false;
+
+      // 배틀 서버 연결
+      battleStompClient.current.connect(
+        {},
+        (frame) => {
+          subscribeEnterRoom();
+          subscribeEnemyProblem();
+          subscribeMyProblem();
+          subscribeResult();
+
+          battleConnected = true;
+          if (battleConnected && chatConnected) {
+            resolve(); // 두 서버가 모두 연결되면 Promise를 해결합니다.
+          }
+        },
+        (error) => {
+          console.log("Battle server connection error:", error);
+          reject(error); // 연결 실패 시 Promise 거부
         }
+      );
 
-        try {
-          const purchaseRes = await authClient({
-            method: "GET",
-            url: "/user/gacha/character-type",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
+      // 채팅 서버 연결
+      chatStompClient.current.connect(
+        {},
+        (frame) => {
+          subscribeMessage();
 
-          const nextCharacter =
-            purchaseRes.data.characterType * 100 + (character % 100);
-          setCharacter(nextCharacter);
-          setRarity(purchaseRes.data.characterRarity);
-          setExp(exp - 500);
-          openModal();
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "아이템 구매 실패",
-            text: "아이템 구매에 실패하였습니다. 다시 시도해주세요.",
-            timer: 3000,
-          });
+          chatConnected = true;
+          if (battleConnected && chatConnected) {
+            resolve(); // 두 서버가 모두 연결되면 Promise를 해결합니다.
+          }
+        },
+        (error) => {
+          console.log("Chat server connection error:", error);
+          reject(error); // 연결 실패 시 Promise 거부
         }
-      }
+      );
     });
   };
 
-  const purchaseClothesTicket = () => {
-    Swal.fire({
-      icon: "info",
-      title: "알쏭달쏭 의상 티켓 구매",
-      text: "알쏭달쏭 의상 티켓을 구매하시겠습니까?",
-      showCancelButton: true,
-      confirmButtonText: "구매",
-      cancelButtonText: "취소",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        if (exp < 500) {
-          Swal.fire({
-            icon: "error",
-            title: "포인트 부족",
-            text: "포인트가 부족합니다.",
-            timer: 3000,
-          });
-          return;
-        }
-
-        try {
-          const purchaseRes = await authClient({
-            method: "GET",
-            url: "/user/gacha/character-cloth",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          const nextCharacter =
-            character - (character % 100) + purchaseRes.data.characterClothType;
-          setCharacter(nextCharacter);
-          setRarity(purchaseRes.data.characterClothRarity);
-          setExp(exp - 500);
-          openModal();
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "아이템 구매 실패",
-            text: "아이템 구매에 실패하였습니다. 다시 시도해주세요.",
-            timer: 3000,
-          });
-        }
-      }
-    });
-  };
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const slides = [
-    {
-      title: "알쏭달쏭 캐릭터 티켓",
-      description:
-        "사용하면 프로필의 캐릭터를 10가지 캐릭터와 일부 특별한 캐릭터 중 임의로 바꿔 주는 아이템입니다. 아이템을 사용하는 순간 프로필의 캐릭터가 바뀌며 영구적으로 적용되고, 현재 캐릭터는 사라집니다.",
-      imgSrc: pixelTicket,
-      buttonText: "구매 (500 P)",
-      onClick: () => {
-        // purchaseCharacterTicket(); // 여기
-        openModal();
-      },
-    },
-    {
-      title: "알쏭달쏭 의상 티켓",
-      description:
-        "사용하면 프로필의 캐릭터의 의상을 10가지 의상과 일부 특별한 의상 중 임의로 바꿔 주는 아이템입니다. 아이템을 사용하는 순간 프로필의 캐릭터의 의상이 바뀌며 영구적으로 적용되고, 현재 의상은 사라집니다.",
-      imgSrc: pixelTicket,
-      buttonText: "구매 (500 P)",
-      onClick: () => {
-        // purchaseClothesTicket(); // 여기
-        openModal();
-      },
-    },
-  ];
-
-  const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide(
-      (prevSlide) => (prevSlide - 1 + slides.length) % slides.length
+  const enterRoom = () => {
+    const joinRoomDTO = {
+      userId: memberId,
+      username: name,
+      roomPassword: roomPassword,
+      guestCharacterType: character,
+    };
+    battleStompClient.current.send(
+      `/room/${roomId}/join`,
+      {},
+      JSON.stringify(joinRoomDTO)
     );
   };
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const subscribeEnterRoom = () => {
+    const endpoint = `/room/${roomId}/join`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
+      const body = JSON.parse(message.body);
+
+      console.log(message);
+
+      if (body.userId !== memberId && body.guestCharacterType) {
+        setEnemyCharacterType(body.guestCharacterType);
+      }
+
+      // setChatMessages((prevMessages) => [
+      //   ...prevMessages,
+      //   `${body.username}님이 입장하셨습니다.`,
+      // ]);
+    });
+  };
+
+  const subscribeEnemyProblem = () => {
+    const endpoint = `/room/${roomId}/RoundChoiceProblem`;
+    battleStompClient.current.subscribe(endpoint, async (message) => {
+      const body = JSON.parse(message.body);
+      await delay(500);
+      setItem1(false);
+      setItem2(false);
+      setItem3(false);
+      setItem4(false);
+      setEnemyProblems(body);
+      setIsSubmit(false);
+      setAnswerSubmitted(false); // 여기 답변
+      openModal();
+      setRoundStart(false);
+      setCurrentRound((prevRound) => prevRound + 1);
+
+      if (body && body.item && body.item.name === "시간 연장") {
+        setItem2(true);
+        setCount(40);
+      } else if (body && body.item && body.item.name === "시간 단축") {
+        setItem3(true);
+        setCount(20);
+      } else {
+        setCount(30);
+      }
+
+      if (body && body.item && body.item.name === "온전한 공격") {
+        setItem1(true);
+      }
+    });
+  };
+
+  const selectEnemyProblem = (problemId) => {
+    const endpoint = `/send/game/${roomId}/selectProblem`;
+    const payload = {
+      problemId: problemId,
+      memberId: memberId, // payload에 memberId 추가
+    };
+
+    battleStompClient.current.send(endpoint, {}, JSON.stringify(payload));
+    setSelectOpponentProblem(true);
+  };
+
+  const subscribeMyProblem = () => {
+    const endpoint = `/room/${roomId}/${memberId}`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
+      setMyProblem(JSON.parse(message.body));
+
+      const responseProblem = JSON.parse(message.body);
+
+      switch (responseProblem.problemType) {
+        case "FILL_IN_THE_BLANK":
+          setMyBlankProblem(responseProblem);
+          break;
+        case "SHORT_ANSWER_QUESTION":
+          setMyShortAnswerProblem(responseProblem);
+          break;
+        case "MULTIPLE_CHOICE":
+          setMyMultipleChoiceProblem(responseProblem);
+          break;
+        default:
+          Swal.fire({
+            text: "문제 타입을 알 수 없습니다.",
+            icon: "error",
+            timer: 3000,
+          });
+          console.log("Unknown problem type");
+      }
+      setSelectMyProblem(true);
+    });
+  };
+
+  useEffect(() => {
+    if (selectOpponentProblem && selectMyProblem) {
+      closeModal();
+      Swal.fire({
+        text: "3초 후 라운드가 시작됩니다!",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+
+      setTimeout(() => {
+        setRoundStart(true);
+      }, 3000);
+
+      setTimeout(() => {
+        if (item2) {
+          setCount(40);
+        } else if (item3) {
+          setCount(20);
+        } else {
+          setCount(30);
+        }
+      }, 3000);
+
+      const timer = setTimeout(async () => {
+        await closeModal();
+        await stopTimer();
+        await setSelectMyProblem(false);
+        await setSelectOpponentProblem(false);
+        await setGameStart(true);
+        await setIsSubmit(false);
+        await setAnswerSubmitted(false); // 여기 답변
+
+        if (item2) {
+          await setCount(40);
+        } else if (item3) {
+          await setCount(20);
+        }
+
+        await startTimer();
+      }, 1000);
+    }
+  }, [selectOpponentProblem, selectMyProblem]);
+
+  const submitAnswer = () => {
+    if (isSubmit === true) {
+      Swal.fire({
+        text: "이미 답안을 제출하셨습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
+
+    const endpoint = `/send/game/${roomId}/answer`;
+    let solveData = null;
+    let solveText = null;
+
+    switch (myProblem.problemType) {
+      case "FILL_IN_THE_BLANK":
+        solveData = blankSolve;
+        solveText = null;
+        break;
+      case "SHORT_ANSWER_QUESTION":
+        solveData = null;
+        solveText = shortAnswerSolve === "" ? "ssafy" : shortAnswerSolve;
+        break;
+      case "MULTIPLE_CHOICE":
+        solveData = multipleChoiceSolve ? { 1: multipleChoiceSolve } : { 1: 0 };
+        solveText = null;
+        break;
+      default:
+        Swal.fire({
+          text: "문제 타입을 알 수 없습니다.",
+          icon: "error",
+          timer: 3000,
+        });
+        console.log("Unknown problem type");
+        break;
+    }
+
+    const submitAnswerDTO = {
+      problemType: myProblem.problemType,
+      problemId: myProblem.problemId,
+      userId: memberId,
+      solve: solveData,
+      submitTime: item1
+        ? 30
+        : item2
+        ? 40 - count > 30
+          ? 30
+          : 40 - count
+        : 30 - count,
+      solveText: solveText,
+      round: currentRound - 1,
+    };
+    battleStompClient.current.send(
+      endpoint,
+      {},
+      JSON.stringify(submitAnswerDTO)
+    );
+    setIsSubmit(true);
+    setAnswerSubmitted(true); // 여기 답변
+    Swal.fire({
+      text: "답안을 제출하셨습니다.",
+      icon: "success",
+      timer: 3000,
+    });
+  };
+
+  const subscribeResult = () => {
+    const endpoint = `/room/${roomId}`;
+    battleStompClient.current.subscribe(endpoint, (message) => {
+      const body = JSON.parse(message.body);
+
+      if (body.result && typeof body.result === "object") {
+        setWinner(body.result.winner);
+        setLoser(body.result.loser);
+        setGameEnded(true);
+        setGameStart(false);
+        openModal();
+        setTimeout(async () => {
+          await initBattleGame();
+          await setSelectOpponentProblem(false);
+        }, 5000);
+      } else {
+        if (body.power === 0) {
+          setBattleHistory((prevHistory) => [...prevHistory, body]);
+        } else {
+          if (body.userId === memberId) {
+            if (body.isAttack === true) {
+              setBlinkEnemy(true);
+              playEffectSound("attackSound");
+              setIsRightCamBlinking(true);
+              setTimeout(() => {
+                setBlinkEnemy(false);
+                setIsRightCamBlinking(false);
+                setEnemyHealth((prevHealth) => prevHealth - body.power);
+                setBattleHistory((prevHistory) => [...prevHistory, body]);
+              }, 1000);
+            } else {
+              setIsHealing(true);
+              playEffectSound("healSound");
+              setBattleHistory((prevHistory) => [...prevHistory, body]);
+              setTimeout(() => {
+                setMyHealth((prevHealth) =>
+                  prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+                );
+              }, 1000);
+              setTimeout(() => {
+                setIsHealing(false);
+              }, 2000);
+            }
+          } else {
+            if (body.isAttack === true) {
+              setBlink(true);
+              playEffectSound("attackSound");
+
+              setIsLeftCamBlinking(true);
+              setTimeout(() => {
+                setBlink(false);
+                setIsLeftCamBlinking(false);
+                setMyHealth((prevHealth) => prevHealth - body.power);
+                setBattleHistory((prevHistory) => [...prevHistory, body]);
+              }, 1000);
+            } else {
+              setIsEnemyHealing(true);
+              playEffectSound("healSound");
+
+              setBattleHistory((prevHistory) => [...prevHistory, body]);
+              setTimeout(() => {
+                setEnemyHealth((prevHealth) =>
+                  prevHealth + body.power > 100 ? 100 : prevHealth + body.power
+                );
+              }, 1000);
+              setTimeout(() => {
+                setIsEnemyHealing(false);
+              }, 2000);
+            }
+          }
+        }
+      }
+    });
+  };
+
+  const enterChat = () => {
+    const endpoint = `/send/chat/${roomId}/enter`;
+    const enterDTO = {
+      sender: name,
+      content: `${name}님이 입장하셨습니다.`,
+      type: "JOIN",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(enterDTO));
+  };
+
+  const sendMessage = async () => {
+    if (message.trim() === "") return;
+    const endpoint = `/send/chat/${roomId}`;
+    const chatMessage = {
+      sender: name,
+      content: message,
+      type: "CHAT",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+    setMessage("");
+  };
+
+  const subscribeMessage = () => {
+    const endpoint = `/room/${roomId}`;
+    chatStompClient.current.subscribe(endpoint, (message) => {
+      const body = JSON.parse(message.body);
+
+      if (body.type === "JOIN" && body.sender !== name) {
+        setEnemyName(body.sender);
+      }
+
+      if (body.type === "LEAVE") {
+        setEnemyName("");
+        setEnemyCharacterType("");
+      }
+
+      setChatMessages((prevMessages) => [
+        ...prevMessages,
+        body.type === "CHAT"
+          ? `${body.sender}: ${body.content}`
+          : `${body.content}`,
+      ]);
+    });
+  };
+
+  const sendQuitMessage = () => {
+    const endpoint = `/send/chat/${roomId}/leave`;
+    const chatMessage = {
+      sender: name,
+      content: `${name}님이 퇴장하셨습니다.`,
+      type: "LEAVE",
+      roomId: roomId,
+    };
+    chatStompClient.current.send(endpoint, {}, JSON.stringify(chatMessage));
+  };
+
+  const quitBattleRoom = async () => {
+    try {
+      const quitRes = await authClient({
+        method: "POST",
+        url: `${baseURL}/battle/room/${roomId}/leave`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setNormalQuit(true);
+      navigate("/_battle-list");
+    } catch (error) {
+      navigate("/_battle-list");
+      console.log(error);
+    }
+  };
+
+  const reconnectWebSocket = () => {
+    setTimeout(async () => {
+      try {
+        await connect();
+        await enterRoom();
+        await enterChat();
+      } catch (error) {
+        console.log("Reconnection failed: ", error);
+        reconnectWebSocket(); // 재연결 시도
+      }
+    }, 2000); // 2초 후 재연결 시도
+  };
+
+  useEffect(() => {
+    const initializeConnections = async () => {
+      try {
+        await connect();
+        await enterRoom();
+        await enterChat();
+      } catch (error) {
+        console.log("Connection error:", error);
+        reconnectWebSocket();
+      }
+    };
+
+    initializeConnections();
+
+    // 클린업 함수는 비동기 함수로 직접 정의할 수 없으므로
+    // 비동기 작업을 수행할 내부 함수를 정의하고 호출합니다.
+    const cleanup = async () => {
+      await delay(5000);
+
+      sendQuitMessage();
+      // quitBattleRoom();
+      if (battleStompClient.current) battleStompClient.current.disconnect();
+      if (chatStompClient.current) chatStompClient.current.disconnect();
+    };
+
+    // return 내부에서 cleanup 함수를 호출
+    return () => {
+      cleanup();
+    };
+  }, []);
+
+  // ---------------------- WebSocket ----------------------
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
+
+  useEffect(() => {
+    battleHistoryEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [battleHistory]);
+
+  useEffect(() => {
+    if (count === 0 && isSubmit === false) {
+      submitAnswer();
+    }
+  }, [count]);
 
   const openModal = () => {
     setModalIsOpen(true);
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setModalIsFlipped(false); // 모달 닫을 때 원래 상태로 되돌리기
+  const closeModal = (type = "default") => {
+    if (selectOpponentProblem === true || type === "clear") {
+      setModalIsOpen(false);
+    }
+    return;
   };
 
-  const [modalIsFlipped, setModalIsFlipped] = useState(false);
+  const handleStart = async () => {
+    if (enemyName === "" && enemyName === null) {
+      Swal.fire({
+        text: "상대방이 입장하지 않았습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
+    Swal.fire({
+      text: "3초 후 게임을 시작합니다.",
+      icon: "info",
+      timer: 3000,
+    }).then(async (result) => {
+      try {
+        const handleStartRes = await authClient({
+          method: "POST",
+          url: `${baseURL}/battle/room/${roomId}/start`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
-  const flipModal = () => {
-    setModalIsFlipped(!modalIsFlipped);
+  const handleSubmit = () => {
+    if (item4) {
+      Swal.fire({
+        text: "답안 제출 방지 아이템으로 인해 답안 제출이 불가능합니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
+
+    if (isSubmit === true) {
+      Swal.fire({
+        text: "이미 답안을 제출하셨습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+    } else {
+      submitAnswer();
+    }
+  };
+
+  const startTimer = async () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
+      setCount((prevCount) => {
+        if (prevCount <= 1) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return prevCount - 1;
+      });
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const renderQuestion = (problem) => {
+    switch (problem.problemType) {
+      case "FILL_IN_THE_BLANK":
+        return <DragNDropQuiz propSubmit={submitAnswer} />;
+      case "SHORT_ANSWER_QUESTION":
+        return <ShortAnswer propSubmit={submitAnswer} />;
+      case "MULTIPLE_CHOICE":
+        return <MultipleChoice propSubmit={submitAnswer} />;
+      default:
+        return <div>Unknown problem type</div>;
+    }
+  };
+
+  const renderProblemType = (problemType) => {
+    switch (problemType) {
+      case "FILL_IN_THE_BLANK":
+        return "빈 칸 채우기";
+      case "SHORT_ANSWER_QUESTION":
+        return "단답형";
+      case "MULTIPLE_CHOICE":
+        return "객관식";
+    }
+  };
+
+  const initBattleGame = () => {
+    closeModal("clear");
+    stopTimer();
+    setCount(30);
+    setSelectMyProblem(false);
+    setSelectOpponentProblem(false);
+    setNormalQuit(false);
+    setBattleHistory([]);
+    setEnemyProblems([]);
+    setMyHealth(100);
+    setEnemyHealth(100);
+    setCurrentRound(0);
+    setMyProblem({});
+    setGameEnded(false);
+    setWinner("");
+    setLoser("");
+    setCount2(5);
+    setIsSubmit(false);
+    setAnswerSubmitted(false); // 여기 답변
   };
 
   return (
     <>
-      <div className="item-outer-outer-container">
-        <Header />
+      <div className="battle-game-entire-container">
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
-          contentLabel="Item Purchase Modal"
-          className={`item-purchase-modal ${modalIsFlipped ? "flipped" : ""}`}
-          overlayClassName="item-purchase-modal-overlay"
+          contentLabel="Example Modal"
+          className="battle-game-select-problem-modal"
+          overlayClassName="overlay"
         >
-          <div className="item-modal-container" onClick={flipModal}>
-            <div className={`item-modal-inner-container front`}>
-              <div className="item-modal-inner-container-front">
-                <p>?</p>
-              </div>
-            </div>
-            <div className={`item-modal-inner-container back`}>
-              <div className="item-modal-inner-container-back">
-                <div className="item-modal-inner-rank-container-back">
-                  <div
-                    className={`item-modal-inner-rank-back ${rarityClass[rarity]}`}
-                  >
-                    {rarity ? rarity : null}
-                  </div>
-                </div>
-                <div className="item-modal-inner-img-container-back">
-                  <img src={renderCharacter(character)} alt="character-image" />
-                </div>
-                <div className="item-modal-inner-name-container-back">
-                  <div className="item-modal-inner-name-back">The Slime.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
-        <div className="item-outer-container">
-          <div className="item-container">
-            <div className="item-inner-container">
-              <div className="item-left-container">
-                <div className="item-title-con tainer">
-                  <div className="item-title">아이템 샵</div>
-                </div>
-                <div className="item-point-container">
-                  <div className="item-point">
-                    포인트: {exp !== "" ? exp.toLocaleString() : 0} P
-                  </div>
-                </div>
-                <div className="item-info-container">
-                  <div className="carousel">
-                    <div
-                      className="carousel-inner"
-                      style={{
-                        transform: `translateX(-${currentSlide * 100}%)`,
-                      }}
-                    >
-                      {slides.map((slide, index) => (
-                        <div className="carousel-item" key={index}>
-                          <div className="item-info-upper-container">
-                            <div className="item-info-img-container">
-                              <img src={slide.imgSrc} alt="item" />
-                            </div>
-                            <div className="item-info-title-container">
-                              {slide.title}
-                            </div>
-                          </div>
-                          <div className="item-info">{slide.description}</div>
-                          <div className="item-info-button-container">
-                            <button onClick={slide.onClick}>
-                              {slide.buttonText}
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <button
-                      className="carousel-control prev"
-                      onClick={prevSlide}
-                    >
-                      &#10094;
-                    </button>
-                    <button
-                      className="carousel-control next"
-                      onClick={nextSlide}
-                    >
-                      &#10095;
-                    </button>
+          {gameEnded ? (
+            <div className="battle-game-result-container">
+              <div className="battle-game-result-title">
+                {/* <div className="battle-game-result-title-container">
+                  게임 결과
+                </div> */}
+                <div className="battle-game-result-title-inner-container">
+                  <div className="battle-game-result-inner-title">
+                    {winner === -1
+                      ? "무승부입니다."
+                      : winner === memberId
+                      ? "승리하셨습니다 !!"
+                      : "패배하셨습니다..."}
                   </div>
                 </div>
               </div>
-              <div
-                className="item-right-container"
-                ref={cardRef}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="item-character-overlay" ref={overlayRef}></div>
-                <div className="item-character-outer-container">
-                  <div className="item-character-inner-container">
-                    <div className="item-character-rank-container">
-                      <div className="item-character-rank"></div>
-                    </div>
-                    <div className="item-character-img-container">
+              <div className="battle-game-result-content">
+                {winner === -1 ? (
+                  <div className="battle-game-result-character-outer-container">
+                    <div className="battle-game-result-character-container">
                       <img
                         src={renderCharacter(character)}
-                        alt="my-character"
+                        alt="winner-character"
+                        className="battle-game-result-loser-character battle-game-result-my-character"
                       />
                     </div>
-                    <div className="item-character-name-container">
-                      <div className="item-character-name">The Slime.</div>
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="loser-character"
+                        className="battle-game-result-loser-character"
+                      />
                     </div>
                   </div>
+                ) : winner === memberId ? (
+                  <div className="battle-game-result-character-outer-container">
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(character)}
+                        alt="winner-character"
+                        className="battle-game-result-winner-character battle-game-result-my-character"
+                      />
+                    </div>
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="loser-character"
+                        className="battle-game-result-loser-character"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="battle-game-result-character-outer-container">
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(character)}
+                        alt="winner-character"
+                        className="battle-game-result-loser-character battle-game-result-my-character"
+                      />
+                    </div>
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="loser-character"
+                        className="battle-game-result-winner-character"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="battle-game-result-footer">
+                <h2>{count2}초 후 대기방으로 이동합니다.</h2>
+              </div>
+            </div>
+          ) : selectOpponentProblem ? (
+            <div className="battle-game-select-problem-title">
+              상대방이 문제를 선택하는 중입니다.
+            </div>
+          ) : (
+            <>
+              <div className="battle-game-select-problem-title">
+                상대방이 풀 문제를 선택 해주세요.
+              </div>
+              <div className="battle-game-select-problem-container">
+                {Array.isArray(EnemyProblems) &&
+                  EnemyProblems.map((data, index) => (
+                    <div
+                      className="battle-game-select-problem"
+                      onClick={() => selectEnemyProblem(data.problemId)}
+                      key={index}
+                    >
+                      <div className="battle-game-select-problem-sub-title">
+                        {data.title}
+                      </div>
+                      <hr />
+                      <div className="battle-game-select-problem-type">
+                        문제 유형: {renderProblemType(data.problemType)}
+                      </div>
+                      <div className="battle-game-select-problem-category">
+                        카테고리: {data.category}
+                      </div>
+                      <div className="battle-game-select-problem-difficulty">
+                        난이도: {data.difficulty}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </>
+          )}
+        </Modal>
+        <BattleGameHeader />
+        <div className="battle-game-outer-outer-container">
+          <div className="battle-game-outer-container">
+            <div className="battle-game-title-container">
+              <div className="health-bar">
+                <div
+                  className="health-bar-inner"
+                  style={{ width: `${myHealth}%` }}
+                ></div>
+              </div>
+              <h2 className="battle-game-title">Round {currentRound}</h2>
+              <div className="health-bar">
+                <div
+                  className="health-bar-inner"
+                  style={{ width: `${enemyHealth}%` }}
+                ></div>
+              </div>
+            </div>
+            <div className="battle-game-sub-title-container">
+              <div className="battle-game-sub-title-player">{name}</div>
+              <div className="battle-game-sub-title-timer">{count}</div>
+              <div className="battle-game-sub-title-player">{enemyName}</div>
+            </div>
+            <div className="battle-game-container">
+              <div className="battle-game-left-container">
+                <div
+                  className={`battle-game-left-cam ${
+                    isLeftCamBlinking ? "left-cam-blink" : ""
+                  }`}
+                >
+                  <div className="battle-game-my-character-container">
+                    <img
+                      className={`${blink ? "blink" : ""}`}
+                      src={renderCharacter(character)}
+                      alt="battle-game-my-character"
+                    />
+                    {isHealing && (
+                      <img
+                        src={healEffect}
+                        alt="Healing Effect"
+                        className={`heal-effect ${isHealing ? "active" : ""}`}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="battle-game-history-container">
+                  <div className="battle-game-history">
+                    <div className="battle-game-history-title">전투 기록</div>
+                    {battleHistory.map((data, index) => (
+                      <div className="battle-game-history-message" key={index}>
+                        {data.power === 0 ? (
+                          data.userId === memberId ? (
+                            `${name}님이 문제를 틀리셨습니다.`
+                          ) : (
+                            `${enemyName}님이 문제를 틀리셨습니다.`
+                          )
+                        ) : data.isAttack === true ? (
+                          <>
+                            {data.userId === memberId ? name : enemyName}님이{" "}
+                            {data.userId === memberId ? enemyName : name}님에게{" "}
+                            <span className="battle-game-damage-color">
+                              {data.power} 만큼 데미지를 주었습니다.
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {data.userId === memberId ? name : enemyName}님이{" "}
+                            <span className="battle-game-heal-color">
+                              {data.power} 만큼 체력을 회복하였습니다.
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                    <div ref={battleHistoryEndRef} />
+                  </div>
+                </div>
+              </div>
+              <div className="battle-game-inner-container">
+                {gameStart ? (
+                  roundStart ? (
+                    <>{renderQuestion(myProblem)}</>
+                  ) : null
+                ) : (
+                  <div className="battle-game-game-start-container">
+                    <h2 className="battle-game-game-start-title">
+                      게임 시작 전입니다.
+                    </h2>
+                    {hostId === memberId && enemyName !== null ? (
+                      <button
+                        onClick={handleStart}
+                        className="battle-game-game-start-button"
+                      >
+                        게임 시작
+                      </button>
+                    ) : (
+                      <div className="battle-game-game-start-waiting">
+                        대기 중...
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="battle-game-right-container">
+                <div
+                  className={`battle-game-right-cam ${
+                    isRightCamBlinking ? "right-cam-blink" : ""
+                  }`}
+                >
+                  <div className="battle-game-enemy-character-container">
+                    {enemyCharacterType === null ||
+                    enemyCharacterType === "" ? (
+                      <></>
+                    ) : (
+                      <>
+                        <img
+                          className={`${blinkEnemy ? "enemy-blink" : ""}`}
+                          src={renderCharacter(enemyCharacterType)}
+                          alt="battle-game-enemy-character"
+                        />
+                      </>
+                    )}
+                    {isEnemyHealing && (
+                      <img
+                        src={healEffect}
+                        alt="Healing Effect"
+                        className={`enemy-heal-effect ${
+                          isEnemyHealing ? "active" : ""
+                        }`}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="battle-game-chatting-container">
+                  <div className="battle-game-chatting">
+                    {chatMessages.map((msg, index) => (
+                      <div className="battle-game-chatting-message" key={index}>
+                        {msg}
+                      </div>
+                    ))}
+                    <div ref={chatEndRef} />
+                  </div>
+                </div>
+                <div className="battle-game-chat-input">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="메시지를 입력하세요"
+                    onKeyUp={(e) => {
+                      if (e.key === "Enter" && message.trim() !== "") {
+                        e.preventDefault();
+                        sendMessage();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (message.trim() !== "") {
+                        sendMessage();
+                      }
+                    }}
+                  >
+                    전송
+                  </button>
                 </div>
               </div>
             </div>
@@ -359,4 +1056,4 @@ const ItemPage = () => {
   );
 };
 
-export default ItemPage;
+export default BattleGamePage;
