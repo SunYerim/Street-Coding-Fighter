@@ -764,11 +764,27 @@ const BattleGamePage = () => {
                 </div>
               </div>
               <div className="battle-game-result-content">
-                {winner === -1
-                  ? "무승부입니다."
-                  : winner === memberId
-                  ? `승리하셨습니다!\n승리: ${name}\n${enemyName}\n 5초 후 대기방으로 이동합니다.`
-                  : `승리하셨습니다!\n승리: ${enemyName}\n${name}\n 5초 후 대기방으로 이동합니다.`}
+                {winner === -1 ? (
+                  "무승부입니다."
+                ) : winner === memberId ? (
+                  <>
+                    승리하셨습니다!
+                    <br />
+                    승리: ${name}
+                    <br />
+                    패배: ${enemyName}
+                    <br /> 5초 후 대기방으로 이동합니다.
+                  </>
+                ) : (
+                  <>
+                    패배하셨습니다...
+                    <br />
+                    승리: ${enemyName}
+                    <br />
+                    패배: ${name}
+                    <br /> 5초 후 대기방으로 이동합니다.
+                  </>
+                )}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 대기방으로 이동합니다.
