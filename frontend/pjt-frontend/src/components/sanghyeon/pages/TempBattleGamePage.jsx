@@ -248,6 +248,7 @@ const TempBattleGamePage = () => {
       setEnemyProblems(body);
       setAnswerSubmitted(false);
       openModal();
+      setRoundStart(false);
       setCurrentRound((prevRound) => prevRound + 1);
 
       if (body && body.item && body.item.name === "시간 연장") {
@@ -345,7 +346,7 @@ const TempBattleGamePage = () => {
         }
 
         await startTimer();
-      }, 3000);
+      }, 1000);
     }
   }, [selectOpponentProblem, selectMyProblem]);
 
@@ -418,8 +419,7 @@ const TempBattleGamePage = () => {
         openModal();
         setTimeout(async () => {
           await initBattleGame();
-          setRoundStart(false);
-          setSelectOpponentProblem(false);
+          await setSelectOpponentProblem(false);
         }, 5000);
       } else {
         if (body.power === 0) {
