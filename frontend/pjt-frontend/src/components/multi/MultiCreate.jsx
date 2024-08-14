@@ -122,13 +122,13 @@ export default function MultiCreate() {
               </div>
               <div className="create-button-container">
                 <button className="create-button" type="submit">
-                  Create
+                  생성
                 </button>
                 <button
                   className="create-button"
                   onClick={() => navigate("/_multi")}
                 >
-                  Cancel
+                  취소
                 </button>
               </div>
             </div>
