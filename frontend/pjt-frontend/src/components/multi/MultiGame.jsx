@@ -671,7 +671,7 @@ export default function MultiGame() {
                         key={i}
                         backgroundColor={user.isSubmit ? "orange" : ""}
                         borderColor={
-                          user.userId === memberId ? "pink" : "white"
+                          user.userId === memberId ? "#f540bb" : "white"
                         }
                       />
                     );
@@ -683,7 +683,7 @@ export default function MultiGame() {
                         key={i}
                         backgroundColor={user.isSubmit ? "orange" : ""}
                         borderColor={
-                          user.userId === memberId ? "pink" : "white"
+                          user.userId === memberId ? "#f540bb" : "white"
                         }
                       />
                     );
