@@ -115,44 +115,9 @@ const TempPage1 = () => {
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
-  const [EnemyProblems, setEnemyProblems] = useState([
-    {
-      problemId: 258,
-      title: "배열의 최대값 찾기",
-      problemType: "MULTIPLE_CHOICE",
-      category: "1차원 리스트",
-      difficulty: 2,
-      item: null,
-    },
-    {
-      problemId: 178,
-      title: "탐색 문제 2",
-      problemType: "FILL_IN_THE_BLANK",
-      category: "탐색",
-      difficulty: 2,
-      item: {
-        name: "시간 연장",
-        type: "BUFF",
-        probabilities: [0.35, 0.3, 0.2, 0.1, 0.05],
-        rarity: "LEGENDARY",
-      },
-    },
-    {
-      problemId: 277,
-      title: "리스트의 요소를 역순으로 출력하는 코드의 결과 예측",
-      problemType: "MULTIPLE_CHOICE",
-      category: "1차원 리스트",
-      difficulty: 2,
-      item: {
-        name: "시간 연장",
-        type: "BUFF",
-        probabilities: [0.35, 0.3, 0.2, 0.1, 0.05],
-        rarity: "LEGENDARY",
-      },
-    },
-  ]); // 여기
-  const [gameStart, setGameStart] = useState(true); // 여기
-  const [modalIsOpen, setModalIsOpen] = useState(true); // 여기
+  const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
+  const [gameStart, setGameStart] = useState(false); // 여기
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
