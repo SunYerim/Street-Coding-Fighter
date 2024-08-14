@@ -132,6 +132,7 @@ const BattleGamePage = () => {
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
   const timerRef = useRef(null);
+  const [roundStart, setRoundStart] = useState(false); // 여기
 
   const [item1, setItem1] = useState(false); // 온전한 공격: 100% 데미지
   const [item2, setItem2] = useState(false); // 시간 연장: +10초
@@ -247,6 +248,7 @@ const BattleGamePage = () => {
       setEnemyProblems(body);
       setAnswerSubmitted(false);
       openModal();
+      setRoundStart(false);
       setCurrentRound((prevRound) => prevRound + 1);
 
       if (body && body.item && body.item.name === "시간 연장") {
@@ -316,6 +318,10 @@ const BattleGamePage = () => {
       });
 
       setTimeout(() => {
+        setRoundStart(true);
+      }, 3000);
+
+      setTimeout(() => {
         if (item2) {
           setCount(40);
         } else if (item3) {
@@ -340,7 +346,7 @@ const BattleGamePage = () => {
         }
 
         await startTimer();
-      }, 3000);
+      }, 1000);
     }
   }, [selectOpponentProblem, selectMyProblem]);
 
@@ -413,7 +419,7 @@ const BattleGamePage = () => {
         openModal();
         setTimeout(async () => {
           await initBattleGame();
-          setSelectOpponentProblem(false);
+          await setSelectOpponentProblem(false);
         }, 5000);
       } else {
         if (body.power === 0) {
@@ -867,7 +873,9 @@ const BattleGamePage = () => {
               </div>
               <div className="battle-game-inner-container">
                 {gameStart ? (
-                  <>{renderQuestion(myProblem)}</>
+                  roundStart ? (
+                    <>{renderQuestion(myProblem)}</>
+                  ) : null
                 ) : (
                   <div className="battle-game-game-start-container">
                     <h2 className="battle-game-game-start-title">
