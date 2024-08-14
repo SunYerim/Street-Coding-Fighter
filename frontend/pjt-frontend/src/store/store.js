@@ -200,6 +200,9 @@ const store = create(
       setMyMultipleChoiceProblem: (myMultipleChoiceProblem) =>
         set({ myMultipleChoiceProblem }),
 
+      isSubmit: false,
+      setIsSubmit: (isSubmit) => set({ isSubmit }),
+
       clearLocalStorage: () => {
         localStorage.clear();
       },

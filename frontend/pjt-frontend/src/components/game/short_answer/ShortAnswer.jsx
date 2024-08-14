@@ -7,13 +7,19 @@ import store from "../../../store/store.js";
 const ShortAnswer = ({ propSubmit }) => {
   const [hovered, setHovered] = useState(false);
   const [answer, setAnswer] = useState(""); // 입력값을 저장할 상태 추가
-  const { shortAnswerSolve, setShortAnswerSolve, myShortAnswerProblem } = store(
-    (state) => ({
-      shortAnswerSolve: state.shortAnswerSolve,
-      setShortAnswerSolve: state.setShortAnswerSolve,
-      myShortAnswerProblem: state.myShortAnswerProblem,
-    })
-  );
+  const {
+    shortAnswerSolve,
+    setShortAnswerSolve,
+    myShortAnswerProblem,
+    isSubmit,
+    setIsSubmit,
+  } = store((state) => ({
+    isSubmit: state.isSubmit,
+    setIsSubmit: state.setIsSubmit,
+    shortAnswerSolve: state.shortAnswerSolve,
+    setShortAnswerSolve: state.setShortAnswerSolve,
+    myShortAnswerProblem: state.myShortAnswerProblem,
+  }));
   const currentAnswer = useRef("");
 
   const styles = {
@@ -107,6 +113,7 @@ const ShortAnswer = ({ propSubmit }) => {
                 e.preventDefault();
                 propSubmit();
                 setAnswer("");
+                setIsSubmit(true);
               }
             }}
           />

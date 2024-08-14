@@ -69,6 +69,8 @@ const BattleGamePage = () => {
     setMyMultipleChoiceProblem,
     setRoomId,
     character,
+    isSubmit,
+    setIsSubmit,
   } = store((state) => ({
     memberId: state.memberId,
     accessToken: state.accessToken,
@@ -97,6 +99,8 @@ const BattleGamePage = () => {
     setMyShortAnswerProblem: state.setMyShortAnswerProblem,
     multipleChoiceSolve: state.multipleChoiceSolve,
     setMyMultipleChoiceProblem: state.setMyMultipleChoiceProblem,
+    isSubmit: state.isSubmit,
+    setIsSubmit: state.setIsSubmit,
   }));
 
   const authClient = createAuthClient(
@@ -246,7 +250,8 @@ const BattleGamePage = () => {
       setItem3(false);
       setItem4(false);
       setEnemyProblems(body);
-      setAnswerSubmitted(false);
+      setIsSubmit(false);
+      setAnswerSubmitted(false); // 여기 답변
       openModal();
       setRoundStart(false);
       setCurrentRound((prevRound) => prevRound + 1);
@@ -337,7 +342,8 @@ const BattleGamePage = () => {
         await setSelectMyProblem(false);
         await setSelectOpponentProblem(false);
         await setGameStart(true);
-        await setAnswerSubmitted(false);
+        await setIsSubmit(false);
+        await setAnswerSubmitted(false); // 여기 답변
 
         if (item2) {
           await setCount(40);
@@ -398,7 +404,8 @@ const BattleGamePage = () => {
       {},
       JSON.stringify(submitAnswerDTO)
     );
-    setAnswerSubmitted(true);
+    setIsSubmit(true);
+    setAnswerSubmitted(true); // 여기 답변
     Swal.fire({
       text: "답안을 제출하셨습니다.",
       icon: "success",
@@ -605,7 +612,7 @@ const BattleGamePage = () => {
   }, [battleHistory]);
 
   useEffect(() => {
-    if (count === 0 && answerSubmitted === false) {
+    if (count === 0 && isSubmit === false) {
       submitAnswer();
     }
   }, [count]);
@@ -651,7 +658,7 @@ const BattleGamePage = () => {
       return;
     }
 
-    if (answerSubmitted === true) {
+    if (isSubmit === true) {
       Swal.fire({
         text: "이미 답안을 제출하셨습니다.",
         icon: "warning",
@@ -726,7 +733,8 @@ const BattleGamePage = () => {
     setWinner("");
     setLoser("");
     setCount2(5);
-    setAnswerSubmitted(false);
+    setIsSubmit(false);
+    setAnswerSubmitted(false); // 여기 답변
   };
 
   return (

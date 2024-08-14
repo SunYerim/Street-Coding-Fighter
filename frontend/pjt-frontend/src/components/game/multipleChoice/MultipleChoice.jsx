@@ -73,10 +73,12 @@ const MultipleChoice = ({ propSubmit }) => {
     multipleChoiceSolve,
     setMultipleChoiceSolve,
     myMultipleChoiceProblem,
+    setIsSubmit,
   } = store((state) => ({
     multipleChoiceSolve: state.multipleChoiceSolve,
     setMultipleChoiceSolve: state.setMultipleChoiceSolve,
     myMultipleChoiceProblem: state.myMultipleChoiceProblem,
+    setIsSubmit: state.setIsSubmit,
   }));
 
   useEffect(() => {
@@ -143,7 +145,10 @@ const MultipleChoice = ({ propSubmit }) => {
         <div className="multi-game-choice-button-container">
           <button
             className="multi-game-choice-button"
-            onClick={() => propSubmit()}
+            onClick={() => {
+              propSubmit();
+              setIsSubmit(true);
+            }}
           >
             제출
           </button>

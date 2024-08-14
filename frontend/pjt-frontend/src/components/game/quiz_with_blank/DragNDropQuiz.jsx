@@ -16,11 +16,14 @@ const DragNDropQuiz = ({ propSubmit }) => {
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
   const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
 
-  const { blankSolve, setBlankSolve, myBlankProblem } = store((state) => ({
-    blankSolve: state.blankSolve,
-    setBlankSolve: state.setBlankSolve,
-    myBlankProblem: state.myBlankProblem,
-  }));
+  const { blankSolve, setBlankSolve, myBlankProblem, isSubmit, setIsSubmit } =
+    store((state) => ({
+      blankSolve: state.blankSolve,
+      setBlankSolve: state.setBlankSolve,
+      myBlankProblem: state.myBlankProblem,
+      isSubmit: state.isSubmit,
+      setIsSubmit: state.setIsSubmit,
+    }));
 
   useEffect(() => {
     const problemData = myBlankProblem; // 또는 store.getState().problem과 같은 방식으로 직접 접근할 수 있음
@@ -133,7 +136,10 @@ const DragNDropQuiz = ({ propSubmit }) => {
         <div className="dragndrop-game-choice-button-container">
           <button
             className="dragndrop-game-choice-button"
-            onClick={() => propSubmit()}
+            onClick={() => {
+              propSubmit();
+              setIsSubmit(true);
+            }}
           >
             제출
           </button>
