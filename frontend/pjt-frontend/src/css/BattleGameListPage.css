@@ -152,9 +152,9 @@
   text-align: center;
   border: 1px solid white;
   border-radius: 5px;
-  min-height: 200px;
-  height: 200px;
-  max-height: 200px;
+  min-height: 80px;
+  height: 80px;
+  max-height: 80px;
 }
 
 .battle-list-inner-title {
