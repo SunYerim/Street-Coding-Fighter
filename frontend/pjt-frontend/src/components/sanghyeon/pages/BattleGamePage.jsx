@@ -444,7 +444,7 @@ const BattleGamePage = () => {
           if (body.userId === memberId) {
             if (body.isAttack === true) {
               setBlinkEnemy(true);
-              playEffectSound('attackSound');
+              playEffectSound("attackSound");
               setIsRightCamBlinking(true);
               setTimeout(() => {
                 setBlinkEnemy(false);
@@ -454,7 +454,7 @@ const BattleGamePage = () => {
               }, 1000);
             } else {
               setIsHealing(true);
-              playEffectSound('healSound');
+              playEffectSound("healSound");
               setBattleHistory((prevHistory) => [...prevHistory, body]);
               setTimeout(() => {
                 setMyHealth((prevHealth) =>
@@ -468,7 +468,7 @@ const BattleGamePage = () => {
           } else {
             if (body.isAttack === true) {
               setBlink(true);
-              playEffectSound('attackSound');
+              playEffectSound("attackSound");
 
               setIsLeftCamBlinking(true);
               setTimeout(() => {
@@ -479,7 +479,7 @@ const BattleGamePage = () => {
               }, 1000);
             } else {
               setIsEnemyHealing(true);
-              playEffectSound('healSound');
+              playEffectSound("healSound");
 
               setBattleHistory((prevHistory) => [...prevHistory, body]);
               setTimeout(() => {
@@ -644,6 +644,14 @@ const BattleGamePage = () => {
   };
 
   const handleStart = async () => {
+    if (enemyName === "" || enemyName === null) {
+      Swal.fire({
+        text: "상대방이 입장하지 않았습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
     Swal.fire({
       text: "3초 후 게임을 시작합니다.",
       icon: "info",
