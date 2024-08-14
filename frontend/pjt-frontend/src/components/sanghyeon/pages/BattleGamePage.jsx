@@ -848,14 +848,14 @@ const TempBattleGamePagePage = () => {
                             {data.userId === memberId ? name : enemyName}님이{" "}
                             {data.userId === memberId ? enemyName : name}님에게{" "}
                             <span className="battle-game-damage-color">
-                              {data.power}만큼 데미지를 주었습니다.
+                              {data.power} 만큼 데미지를 주었습니다.
                             </span>
                           </>
                         ) : (
                           <>
                             {data.userId === memberId ? name : enemyName}님이{" "}
-                            <span className="heal">
-                              {data.power}만큼 체력을 회복하였습니다.
+                            <span className="battle-game-heal-color">
+                              {data.power} 만큼 체력을 회복하였습니다.
                             </span>
                           </>
                         )}
