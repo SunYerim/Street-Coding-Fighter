@@ -1,6 +1,6 @@
 import "../../css/MultiHeader.css";
 import Setting from "./Setting";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 // import axios from "axios";
@@ -12,6 +12,8 @@ const MultiHeader = ({onBackButtonClick}) => {
   const userIcon = "/memberIcon.png";
   const settingIcon = "/settingIcon.png";
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const currentPath = useLocation().pathname;
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -45,14 +47,6 @@ const MultiHeader = ({onBackButtonClick}) => {
         </div>
         <div className='multi-header-right'>
           <div className="multi-header-icon">
-            <img
-              onClick={() => {
-                navigate('/profile');
-              }}
-              className="user-icon"
-              src={userIcon}
-              alt="memberIcon"
-            />
             <img onClick={openModal} className="setting-icon" src={settingIcon} alt="settingIcon" />
           </div>
         </div>
