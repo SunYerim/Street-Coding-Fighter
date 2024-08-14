@@ -1,5 +1,5 @@
 import "../../css/MultiHeader.css";
-import Setting from "./Setting";
+import Setting from "../sanghyeon/components/Setting";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
