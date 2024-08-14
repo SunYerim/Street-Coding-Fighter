@@ -6,14 +6,6 @@ const RankingGraph = () => {
   const { rankingList, setRankingList, boardPeriod, setBoardPeriod } = useLeaderboardStore();
 
 
-  // 예시 데이터
-  const exampleData = [
-    { name: 'Player 1', exp: 1000 },
-    { name: 'Player 2', exp: 900 },
-    { name: 'Player 3', exp: 800 },
-  ];
-
-
   const PodiumPlayer = ({ rank }) => {
     const player = rankingList[boardPeriod]?.[rank];
     if (!player) {
