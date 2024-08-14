@@ -23,7 +23,7 @@ const newSocket = (roomId, memberId, name) => {
     socket.onclose = (event) => {
       console.log('WebSocket connection closed');
       console.log(`Close code: ${event.code}, reason: ${event.reason}, wasClean: ${event.wasClean}`);
-      if (!event.wasClean && reconnectAttempts < maxReconnectAttempts) {
+      if (event.code != 1000 && reconnectAttempts < maxReconnectAttempts) {
         console.log('Reconnecting...');
         reconnectAttempts += 1; // 재연결 시도 횟수 증가
         setTimeout(connect, reconnectInterval); // 재연결 시도
@@ -43,3 +43,4 @@ const newSocket = (roomId, memberId, name) => {
 };
 
 export default newSocket;
+    
