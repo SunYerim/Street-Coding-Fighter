@@ -124,6 +124,7 @@ public class SingleServiceImpl implements SingleService {
             newRecord.setComplete(1);  // 수강 완료 상태를 나타내는 값
             newRecord.setContent(content);
 
+            profileClient.addExp(memberId); // 경험치 누적
             contentCheckUserRepository.save(newRecord);
         }
     }
