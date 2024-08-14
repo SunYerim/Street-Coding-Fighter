@@ -19,7 +19,7 @@ import Stomp from "stompjs";
 
 import FillInTheBlank from "../game/fillInTheBlank/FillInTheBlank";
 import ShortAnswer from "../game/short_answer/MultiShortAnswer";
-import MultipleChoice from "../game/multipleChoice/MultipleChoice.jsx";
+import MultipleChoice from "../game/MultipleChoice.jsx";
 
 //음악 변경부분입니다. 아래 SoundStore import 해야됨
 import SoundStore from "../../stores/SoundStore.jsx";
