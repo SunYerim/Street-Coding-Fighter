@@ -13,9 +13,9 @@ Modal.setAppElement("#root");
 
 const ItemPage = () => {
   const rarityClass = {
-    common: "rarity-common",
-    epic: "rarity-epic",
-    legendary: "rarity-legendary",
+    COMMON: "rarity-common",
+    EPIC: "rarity-epic",
+    LEGENDARY: "rarity-legendary",
   };
 
   const {
