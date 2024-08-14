@@ -767,8 +767,8 @@ const BattleGamePage = () => {
                 {winner === -1
                   ? "무승부입니다."
                   : winner === memberId
-                  ? "승리하셨습니다. \n 5초 후 대기방으로 이동합니다."
-                  : "패배하셨습니다. \n 5초 후 대기방으로 이동합니다."}
+                  ? `승리하셨습니다!\n승리: ${name}\n${enemyName}\n 5초 후 대기방으로 이동합니다.`
+                  : `승리하셨습니다!\n승리: ${enemyName}\n${name}\n 5초 후 대기방으로 이동합니다.`}
               </div>
               <div className="battle-game-result-footer">
                 {count2}초 후 대기방으로 이동합니다.
