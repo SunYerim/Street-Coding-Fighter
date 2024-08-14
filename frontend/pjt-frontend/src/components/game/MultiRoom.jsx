@@ -129,9 +129,11 @@ function MultiRoom(props) {
   const handleRoomClick = () => {
     if (props.isStart || props.curPlayer === props.maxPlayer) {
       // 방이 이미 시작되었거나, 현재 플레이어 수가 최대 플레이어 수와 같으면 방 입장을 막음
-      alert('This room cannot be joined.');
+      setErrorMessage("입장할 수 없습니다!"); 
+      openModal();
       return;
     }
+    handleCloseModal();
 
     if (props.isLock) {
       setRoomId(props.roomId);
@@ -139,7 +141,6 @@ function MultiRoom(props) {
     } else {
       setRoomId(props.roomId);
       handleOpenSubmit();
-      // navigate(`/multi-game/${props.roomId}`);
     }
   };
 
