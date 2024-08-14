@@ -19,7 +19,7 @@ import Modal from "react-modal";
 import SoundStore from "../../../stores/SoundStore.jsx";
 import { MdBloodtype } from "react-icons/md";
 
-const TempBattleGamePagePage = () => {
+const TempBattleGamePage = () => {
   const healEffect = "/heal-effect.gif";
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -116,49 +116,14 @@ const TempBattleGamePagePage = () => {
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
-  const [gameStart, setGameStart] = useState(true); // 여기
+  const [gameStart, setGameStart] = useState(false); // 여기
   const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [currentRound, setCurrentRound] = useState(0);
   const [count, setCount] = useState(30);
-  const [myProblem, setMyProblem] = useState({
-    problemId: 2,
-    title: "배열의 최대값 찾기",
-    problemType: "FILL_IN_THE_BLANK",
-    category: "알고리즘",
-    difficulty: 2,
-    problemContent: {
-      problemId: 2,
-      content:
-        "다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요. 다음 파이썬 코드를 완성하세요.\n# 리스트의 요소를 출력하는 반복문\nnumbers = [1, 2, 3, 4, 5]\nfor _____ in _____:\n    print(num)\n빈칸에 알맞은 내용을 채우세요.",
-      numberOfBlanks: 0,
-    },
-    problemChoices: [
-      {
-        choiceId: 4,
-        problemId: 2,
-        choiceText: "배열의 요소를 모두 더한 값을 반환한다.",
-      },
-      {
-        choiceId: 1,
-        problemId: 2,
-        choiceText: "배열을 정렬한 후 마지막 요소를 반환한다.",
-      },
-      {
-        choiceId: 2,
-        problemId: 2,
-        choiceText: "배열의 각 요소를 반복하며 가장 큰 값을 추적하여 반환한다.",
-      },
-      {
-        choiceId: 3,
-        problemId: 2,
-        choiceText:
-          "배열의 첫 번째 요소를 최대값으로 설정하고, 배열을 순회하며 최대값을 갱신한다.",
-      },
-    ],
-  }); // 여기
+  const [myProblem, setMyProblem] = useState({}); // 여기
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
   const [gameEnded, setGameEnded] = useState(false);
@@ -167,6 +132,7 @@ const TempBattleGamePagePage = () => {
   const [count2, setCount2] = useState(5);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
   const timerRef = useRef(null);
+  const [roundStart, setRoundStart] = useState(false); // 여기
 
   const [item1, setItem1] = useState(false); // 온전한 공격: 100% 데미지
   const [item2, setItem2] = useState(false); // 시간 연장: +10초
@@ -348,6 +314,8 @@ const TempBattleGamePagePage = () => {
         icon: "warning",
         showConfirmButton: false,
         timer: 3000,
+      }).then(() => {
+        setRoundStart(true);
       });
 
       setTimeout(() => {
@@ -448,6 +416,7 @@ const TempBattleGamePagePage = () => {
         openModal();
         setTimeout(async () => {
           await initBattleGame();
+          setRoundStart(false);
           setSelectOpponentProblem(false);
         }, 5000);
       } else {
@@ -872,19 +841,28 @@ const TempBattleGamePagePage = () => {
                     <div className="battle-game-history-title">전투 기록</div>
                     {battleHistory.map((data, index) => (
                       <div className="battle-game-history-message" key={index}>
-                        {data.power === 0
-                          ? data.userId === memberId
-                            ? `${name}님이 문제를 틀리셨습니다.`
-                            : `${enemyName}님이 문제를 틀리셨습니다.`
-                          : data.isAttack === true
-                          ? `${
-                              data.userId === memberId ? name : enemyName
-                            }님이 ${
-                              data.userId === memberId ? enemyName : name
-                            }님에게 ${data.power}만큼 데미지를 주었습니다.`
-                          : `${
-                              data.userId === memberId ? name : enemyName
-                            }님이 ${data.power}만큼 체력을 회복하였습니다.`}
+                        {data.power === 0 ? (
+                          data.userId === memberId ? (
+                            `${name}님이 문제를 틀리셨습니다.`
+                          ) : (
+                            `${enemyName}님이 문제를 틀리셨습니다.`
+                          )
+                        ) : data.isAttack === true ? (
+                          <>
+                            {data.userId === memberId ? name : enemyName}님이{" "}
+                            {data.userId === memberId ? enemyName : name}님에게{" "}
+                            <span className="battle-game-damage-color">
+                              {data.power} 만큼 데미지를 주었습니다.
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {data.userId === memberId ? name : enemyName}님이{" "}
+                            <span className="battle-game-heal-color">
+                              {data.power} 만큼 체력을 회복하였습니다.
+                            </span>
+                          </>
+                        )}
                       </div>
                     ))}
                     <div ref={battleHistoryEndRef} />
@@ -987,4 +965,4 @@ const TempBattleGamePagePage = () => {
   );
 };
 
-export default TempBattleGamePagePage;
+export default TempBattleGamePage;

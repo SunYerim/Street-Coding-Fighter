@@ -19,7 +19,7 @@ import Modal from "react-modal";
 import SoundStore from "../../../stores/SoundStore.jsx";
 import { MdBloodtype } from "react-icons/md";
 
-const TempBattleGamePagePage = () => {
+const BattleGamePage = () => {
   const healEffect = "/heal-effect.gif";
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -961,4 +961,4 @@ const TempBattleGamePagePage = () => {
   );
 };
 
-export default TempBattleGamePagePage;
+export default BattleGamePage;
