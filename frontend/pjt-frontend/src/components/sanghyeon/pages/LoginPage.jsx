@@ -10,6 +10,7 @@ import createAuthClient from "../apis/createAuthClient.js";
 import Swal from "sweetalert2";
 import LoginPageButton from "../../buttons/LoginPageButton.jsx";
 import Header from "../components/Header";
+import LoginPageHeader from "../components/LoginPageHeader";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -95,7 +96,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
+      <LoginPageHeader />
       {/* <Header /> */}
       <div className="login-outer-container">
         {/* <div className="login-title">Login Page</div> */}
