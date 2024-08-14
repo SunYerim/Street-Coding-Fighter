@@ -86,14 +86,14 @@ const SignUpPage = () => {
   const signUp = async (event) => {
     event.preventDefault();
 
-    if (!nameRegex.test(name.current.value)) {
-      Swal.fire({
-        text: "닉네임은 영문자와 숫자만 입력 가능합니다.",
-        icon: "warning",
-        timer: 3000,
-      });
-      return;
-    }
+    // if (!nameRegex.test(name.current.value)) {
+    //   Swal.fire({
+    //     text: "닉네임은 영문자와 숫자만 입력 가능합니다.",
+    //     icon: "warning",
+    //     timer: 3000,
+    //   });
+    //   return;
+    // }
 
     if (userId.current.value.length < 3 || userId.current.value.length > 15) {
       Swal.fire({
