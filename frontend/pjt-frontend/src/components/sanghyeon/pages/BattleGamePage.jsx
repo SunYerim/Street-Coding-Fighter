@@ -616,7 +616,7 @@ const TempPage1 = () => {
       await delay(5000);
 
       sendQuitMessage();
-      quitBattleRoom();
+      // quitBattleRoom();
       if (battleStompClient.current) battleStompClient.current.disconnect();
       if (chatStompClient.current) chatStompClient.current.disconnect();
     };
