@@ -7,6 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import store from "../../../store/store.js";
+import "../../../css/Fill.css";
 
 const DragNDropQuiz = () => {
   const [blanks, setBlanks] = useState({});
@@ -113,19 +114,24 @@ const DragNDropQuiz = () => {
 
   return (
     <>
-      <DndProvider backend={HTML5Backend}>
-        <div>
-          {modifiedContent && (
-            <StyleToPythonCode codeString={modifiedContent} />
-          )}
-        </div>
+      <div className="fill-container">
+        <DndProvider backend={HTML5Backend}>
+          <div className="fill-problem">
+            {modifiedContent && (
+              <StyleToPythonCode codeString={modifiedContent} />
+            )}
+          </div>
 
-        <ChoiceContainer>
-          {choices.map((choice, idx) => {
-            return <Choice key={`choice-${idx}`} choice={choice} />;
-          })}
-        </ChoiceContainer>
-      </DndProvider>
+          <div className="fill-choices">
+            <ChoiceContainer>
+              {choices.map((choice, idx) => {
+                return <Choice key={`choice-${idx}`} choice={choice} />;
+              })}
+            </ChoiceContainer>
+          </div>
+
+        </DndProvider>
+      </div>
     </>
   );
 };

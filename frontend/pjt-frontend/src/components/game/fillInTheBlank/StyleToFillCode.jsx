@@ -12,12 +12,12 @@ const styles = {
     padding: "20px",
     borderRadius: "5px",
     // position: 'relative',
-    lineHeight: "1.5", // 줄 간격 조정
+    lineHeight: "1.3", // 줄 간격 조정
     letterSpacing: "normal", // 자간 조정
     width: "100%",
     height: "auto",
     overflow: "hidden",
-    maxHeight : '100%',
+    maxHeight : '90%',
   },
 };
 let seq = 0;

@@ -31,7 +31,7 @@ const styles = {
   choiceContainer: {
     width: "43vw",
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "1fr",
     gap: "10px",
     margin: "0 auto",
     mt: "20px",
