@@ -608,6 +608,7 @@ export default function MultiGame() {
   useEffect(() => {
     if (playing && mergedList.length <= 1) {
       socket.close();
+      navigate("/_multi");
     }
   }, [mergedList, playing])
 
