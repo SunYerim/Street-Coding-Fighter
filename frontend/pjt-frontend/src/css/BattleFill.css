@@ -22,6 +22,7 @@
 .fill-problem:hover {
   z-index: 10000;
   transform: scale(1.1);
+  transform-origin: center center;
 }
 
 .fill-choices {
