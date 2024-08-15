@@ -640,9 +640,9 @@ export default function MultiGame() {
             {playing ? (
                 !modalOpen && !timerEnded && <Timer setTimerEnded={setTimerEnded} />
               ) : (
-                <div>
-                  <h1>인원:{mergedList.length} / {maxPlayer}</h1>
-                </div>
+                <p style={{ fontSize: '1.5rem', color: 'white' }}>
+                  인원: {mergedList.length} / {maxPlayer}
+                </p>
               )}
             </div>
             <div className="multi-rank-table">
