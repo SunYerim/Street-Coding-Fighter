@@ -641,7 +641,7 @@ export default function MultiGame() {
                 !modalOpen && !timerEnded && <Timer setTimerEnded={setTimerEnded} />
               ) : (
                 <div>
-                  <p>{mergedList.length} / {maxPlayer}</p>
+                  <h1>인원:{mergedList.length} / {maxPlayer}</h1>
                 </div>
               )}
             </div>
