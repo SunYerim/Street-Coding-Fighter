@@ -631,7 +631,11 @@ export default function MultiGame() {
 
   return (
     <>
-      <MultiHeader onBackButtonClick={disconnectSocket} />
+      {socket ? (
+        <MultiHeader onBackButtonClick={disconnectSocket} />
+      ) : (
+        <MultiHeader />
+      )}
       {/* <div className="container"> */}
       <div id="container">
         <div className="multi-game-main">
