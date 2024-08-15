@@ -43,7 +43,7 @@ const RankingListSection = styled.div`
   flex-direction: column;
   justify-content: space-around;
   overflow-y: auto;
-  height: 400px;
+  height: 500px;
   /* 스크롤바의 폭 너비 */
   &::-webkit-scrollbar {
     width: 10px;
