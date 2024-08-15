@@ -390,12 +390,19 @@
 
 .item-modal-inner-container.back {
   background-color: rgba(255, 255, 255);
-  transform: rotateY(180deg);
+  transform: translateY(20px) rotateX(-8deg) rotateY(190deg);
+  animation: movementBack 5s infinite;
 }
 
 @keyframes movement {
   50% {
     transform: translateY(-20px) rotateX(8deg) rotateY(-10deg);
+  }
+}
+
+@keyframes movementBack {
+  50% {
+    transform: translateY(-20px) rotateX(-8deg) rotateY(170deg);
   }
 }
 

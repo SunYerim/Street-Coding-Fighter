@@ -432,11 +432,13 @@ const BattleGamePage = () => {
         setLoser(body.result.loser);
         setGameEnded(true);
         setGameStart(false);
-        openModal();
+        setTimeout(() => {
+          openModal();
+        }, 3000);
         setTimeout(async () => {
           await initBattleGame();
           await setSelectOpponentProblem(false);
-        }, 5000);
+        }, 8000);
       } else {
         if (body.power === 0) {
           setBattleHistory((prevHistory) => [...prevHistory, body]);
