@@ -10,7 +10,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 800,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -31,14 +31,17 @@ function ChildModal() {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={{ ...style, width: 300 }}>
-          <Typography id="child-modal-title" variant="h6" component="h2">
+        <Box sx={{ ...style, width: 600 }}>
+          <Typography id="child-modal-title" variant="h5" component="h2">
             게임 방법 설명
           </Typography>
-          <Typography id="child-modal-description" sx={{ mt: 2 }}>
-            <Box sx={{ mb: 2 }}>
+          <Typography
+            id="child-modal-description"
+            sx={{ mt: 2, fontSize: "1.1rem", lineHeight: "1.8rem" }}
+          >
+            <Box sx={{ mb: 3 }}>
               <Typography
-                variant="body1"
+                variant="h6"
                 component="div"
                 sx={{ display: "block", mb: 1 }}
               >
@@ -55,14 +58,14 @@ function ChildModal() {
                 <img
                   src="/selectnumber.PNG" // 객관식 문제에 대한 이미지 경로
                   alt="객관식 문제 이미지"
-                  style={{ width: "60%", height: "auto" }} // 이미지 스타일
+                  style={{ width: "50%", height: "auto" }} // 이미지 스타일
                 />
               </Box>
             </Box>
 
             <Box sx={{ mb: 2 }}>
               <Typography
-                variant="body1"
+                variant="h6"
                 component="div"
                 sx={{ display: "block", mb: 1 }}
               >
@@ -79,14 +82,14 @@ function ChildModal() {
                 <img
                   src="/shortanswer.PNG" // 단답식 문제에 대한 이미지 경로
                   alt="단답식 문제 이미지"
-                  style={{ width: "70%", height: "auto" }} // 이미지 스타일
+                  style={{ width: "50%", height: "auto" }} // 이미지 스타일
                 />
               </Box>
             </Box>
 
             <Box sx={{ mb: 2 }}>
               <Typography
-                variant="body1"
+                variant="h6"
                 component="div"
                 sx={{ display: "block", mb: 1 }}
               >
@@ -103,7 +106,7 @@ function ChildModal() {
                 <img
                   src="/draganddrop.PNG" // 드래그 앤 드랍 문제에 대한 이미지 경로
                   alt="드래그 앤 드랍 이미지"
-                  style={{ width: "70%", height: "auto" }} // 이미지 스타일
+                  style={{ width: "50%", height: "auto" }} // 이미지 스타일
                 />
               </Box>
             </Box>
@@ -144,11 +147,18 @@ export default function BasicModal() {
             id="modal-modal-description"
             sx={{
               mt: 2,
-              fontSize: "1rem",
-              lineHeight: "1.7rem",
+              fontSize: "1.2rem", // 전반적인 텍스트 크기 증가
+              lineHeight: "2.0rem", // 줄 간격 증가
+              fontWeight: "medium", // 글씨 굵게
             }}
           >
-            <strong>게임 모드</strong>
+            <Typography
+              variant="h5" // 소제목 크기 설정
+              component="div"
+              sx={{ mb: 2, fontWeight: "bold" }} // 아래 여백 추가 및 글씨 굵게 설정
+            >
+              게임 모드
+            </Typography>
             <ul>
               <li>
                 <strong>스토리모드:</strong> 혼자서 학습할 수 있는
@@ -166,7 +176,14 @@ export default function BasicModal() {
                 학습의 재미를 더하고, 다양한 학습 스타일에 맞출 수 있습니다.
               </li>
             </ul>
-            <strong>추가 기능</strong>
+            <hr />
+            <Typography
+              variant="h5" // 소제목 크기 설정
+              component="div"
+              sx={{ mt: 3, mb: 2, fontWeight: "bold" }} // 위, 아래 여백 추가 및 글씨 굵게 설정
+            >
+              추가 기능
+            </Typography>
             <ul>
               <li>
                 <strong>상점:</strong> 캐릭터 뽑기와 옷입히기를 할 수 있습니다.
@@ -182,6 +199,10 @@ export default function BasicModal() {
                 유발하고 재미있는 학습 환경을 제공합니다.
               </li>
             </ul>
+            <hr />
+            <strong>
+              아래 버튼을 클릭하여 문제를 어떻게 풀면 될지 정보를 얻어보세요!
+            </strong>
           </Typography>
           <ChildModal />
         </Box>

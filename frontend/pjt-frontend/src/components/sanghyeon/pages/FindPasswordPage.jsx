@@ -148,13 +148,23 @@ const FindPasswordPage = () => {
           <Typography
             variant="h6"
             sx={{
-              mb: 4, // Add margin bottom for spacing
-              fontWeight: "bold", // Make the text bold
-              color: "#1b1a55", // Customize color
+              mb: 3, 
+              fontWeight: "bold", 
+              color: "#1b1a55",
               fontFamily: "Galmuri11-Bold",
             }}
           >
             비밀번호를 찾을 아이디를 입력해주세요.
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              mb: 4,
+              fontWeight: "bold",
+              fontFamily: "Galmuri11-Bold",
+            }}
+          >
+            회원가입시 기재하셨던 이메일로 인증번호가 발송됩니다.
           </Typography>
           <Box
             sx={{
