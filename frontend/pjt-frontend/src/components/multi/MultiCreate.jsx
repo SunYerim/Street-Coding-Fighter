@@ -59,7 +59,14 @@ export default function MultiCreate() {
 
       const roomId = response.data;
       setRoomId(roomId);
-      navigate(`/_multi-game/${roomId}`, { state: { hostId: memberId } });
+      navigate(`/_multi-game/${roomId}`, {
+        state: {
+          hostId: memberId,
+          maxPlayer: maxPlayer,
+          gameRound: gameRound,
+          roomTitle: title,
+        }
+      });
     } catch (error) {
       console.error("Error creating room:", error);
     }

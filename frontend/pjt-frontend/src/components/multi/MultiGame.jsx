@@ -80,6 +80,21 @@ export default function MultiGame() {
   const chatStompClient = useRef(null);
   const isSubmitRef = useRef(false);
 
+
+  const [hostId, setHostId] = useState(null);
+  const [maxPlayer, setMaxPlayer] = useState(null);
+  const [gameRound, setGameRound] = useState(null);
+  const [roomTitle, setRoomTitle] = useState(null);
+
+  useEffect(() => {
+    // 다양한 상태를 location.state에서 설정
+    setHostId(location.state?.hostId || null);
+    setMaxPlayer(location.state?.maxPlayer || null);
+    setGameRound(location.state?.gameRound || null);
+    setRoomTitle(location.state?.roomTitle || null);
+  }, [location.state])
+
+  
   // 게임정보 불러오기
   const {
     roomId,
@@ -161,7 +176,6 @@ export default function MultiGame() {
   );
 
   const [socket, setSocket] = useState(null);
-  const [hostId, setHostId] = useState(null);
 
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
@@ -608,6 +622,7 @@ export default function MultiGame() {
   useEffect(() => {
     if (playing && mergedList.length <= 1) {
       socket.close();
+      alert("게임이 비정상적으로 종료되었습니다.")
       navigate("/_multi");
     }
   }, [mergedList, playing])
@@ -622,8 +637,12 @@ export default function MultiGame() {
         <div className="multi-game-main">
           <div className="multi-game-left">
             <div className="multi-timer">
-              {playing && !modalOpen && !timerEnded && (
-                <Timer setTimerEnded={setTimerEnded} />
+            {playing ? (
+                !modalOpen && !timerEnded && <Timer setTimerEnded={setTimerEnded} />
+              ) : (
+                <div>
+                  <p>{mergedList.length} / {maxPlayer}</p>
+                </div>
               )}
             </div>
             <div className="multi-rank-table">
@@ -659,7 +678,7 @@ export default function MultiGame() {
           <div className="multi-game-center">
             {!playing ? (
               <div className="before-start">
-                <h1>. . . Waiting for start . . .</h1>
+                <h1>현재 입장한 방: {roomTitle}</h1>
                 {hostId == memberId ? (
                   playerList.length >= 2 ? (
                     <button className="game-start-button" onClick={handleStart}>
@@ -696,7 +715,7 @@ export default function MultiGame() {
                 </h1>
               ) : (
                 <>
-                  <p>Round</p>
+                  <p>{gameRound} Round</p>
                 </>
               )}
             </div>
