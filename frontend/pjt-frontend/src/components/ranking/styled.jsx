@@ -4,7 +4,7 @@ const PageBody = styled.div`
   display: flex;
   margin-top: 15px;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
 `;
 
 
@@ -13,7 +13,7 @@ const Container = styled.div`
   text-align: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.5);
-  width: 80vw;
+  width: 75vw;
   margin: 20px;
   margin-top: 30px;
   padding: 20px;
