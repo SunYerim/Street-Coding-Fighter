@@ -80,6 +80,21 @@ export default function MultiGame() {
   const chatStompClient = useRef(null);
   const isSubmitRef = useRef(false);
 
+
+  const [hostId, setHostId] = useState(null);
+  const [maxPlayer, setMaxPlayer] = useState(null);
+  const [gameRound, setGameRound] = useState(null);
+  const [roomTitle, setRoomTitle] = useState(null);
+
+  useEffect(() => {
+    // 다양한 상태를 location.state에서 설정
+    setHostId(location.state?.hostId || null);
+    setMaxPlayer(location.state?.maxPlayer || null);
+    setGameRound(location.state?.gameRound || null);
+    setRoomTitle(location.state?.roomTitle || null);
+  }, [location.state])
+
+  
   // 게임정보 불러오기
   const {
     roomId,
@@ -161,7 +176,6 @@ export default function MultiGame() {
   );
 
   const [socket, setSocket] = useState(null);
-  const [hostId, setHostId] = useState(null);
 
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
@@ -473,50 +487,6 @@ export default function MultiGame() {
     );
   }
 
-  // function Timer({ setTimerEnded }) {
-  //   useEffect(() => {
-  //     if (count <= 0) {
-  //       switch (problemList[round].problemType) {
-  //         case "FILL_IN_THE_BLANK":
-  //           setBlankSolve(null);
-  //           handleBlankAnswer();
-  //           isSubmitRef.current = true;
-  //           break;
-  //         case "SHORT_ANSWER_QUESTION":
-  //           handleShortAnswer(null);
-  //           isSubmitRef.current = true;
-  //           break;
-  //         case "MULTIPLE_CHOICE":
-  //           handleChoiceSelection(null);
-  //           isSubmitRef.current = true;
-  //           break;
-  //         default:
-  //           console.log("Unknown problem type: " + problemList[round].problemType);
-  //       }
-  //       setTimerEnded(true);
-  //       return;
-  //     }
-
-  //     const id = setInterval(() => {
-  //       setCount((prevCount) => {
-  //         if (prevCount < 0) {
-  //           clearInterval(id);
-  //           return 0;
-  //         }
-  //         return prevCount - 1;
-  //       });
-  //     }, 1000);
-
-  //     return () => clearInterval(id);
-  //   }, [count]);
-
-  //   return (
-  //     <div>
-  //       <span>{count}</span>
-  //     </div>
-  //   );
-  // }
-
   // ---------------------- 채팅 WebSocket ----------------------
 
   // 채팅 WebSocket 연결 및 초기화 함수
@@ -648,6 +618,17 @@ export default function MultiGame() {
     }
   }, [gameRank, playerList, submitList]);
 
+
+  useEffect(() => {
+    if (playing && mergedList.length <= 1) {
+      socket.close();
+      alert("게임이 비정상적으로 종료되었습니다.")
+      navigate("/_multi");
+    }
+  }, [mergedList, playing])
+
+
+
   return (
     <>
       <MultiHeader onBackButtonClick={disconnectSocket} />
@@ -656,8 +637,12 @@ export default function MultiGame() {
         <div className="multi-game-main">
           <div className="multi-game-left">
             <div className="multi-timer">
-              {playing && !modalOpen && !timerEnded && (
-                <Timer setTimerEnded={setTimerEnded} />
+            {playing ? (
+                !modalOpen && !timerEnded && <Timer setTimerEnded={setTimerEnded} />
+              ) : (
+                <p style={{ fontSize: '1.5rem', color: 'white' }}>
+                  인원: {mergedList.length} / {maxPlayer}
+                </p>
               )}
             </div>
             <div className="multi-rank-table">
@@ -693,7 +678,7 @@ export default function MultiGame() {
           <div className="multi-game-center">
             {!playing ? (
               <div className="before-start">
-                <h1>. . . Waiting for start . . .</h1>
+                <h1>현재 입장한 방: {roomTitle}</h1>
                 {hostId == memberId ? (
                   playerList.length >= 2 ? (
                     <button className="game-start-button" onClick={handleStart}>
@@ -730,7 +715,7 @@ export default function MultiGame() {
                 </h1>
               ) : (
                 <>
-                  <p>Round</p>
+                  <p>{gameRound} Round</p>
                 </>
               )}
             </div>

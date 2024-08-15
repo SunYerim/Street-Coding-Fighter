@@ -31,6 +31,14 @@ const SoundStore = create((set) => ({
       src : ['/sounds/hover-sound.mp3'],
       volume : 0.5,
     }), 
+    attackSound : new Howl({
+      src : ['/sounds/battle-attack.mp3'],
+      volume : 0.5,
+    }), 
+    healSound : new Howl({
+      src : ['/sounds/battle-heal.mp3'],
+      volume : 0.5,
+    }), 
   },
   playBackgroundMusic: () => {
     set((state) => {

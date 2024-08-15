@@ -8,6 +8,7 @@ import { DndProvider } from "react-dnd";
 import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import store from "../../../store/store.js";
 import "../../../css/BattleFill.css";
+import Toast from '../../Toast.jsx'
 
 const DragNDropQuiz = ({ propSubmit }) => {
   const [blanks, setBlanks] = useState({});
@@ -15,6 +16,8 @@ const DragNDropQuiz = ({ propSubmit }) => {
   const [choiceMap, setChoiceMap] = useState({}); // choiceId와 choiceText의 매핑
   const [modifiedContent, setModifiedContent] = useState(""); // modifiedContent 상태를 추가
   const [problem, setProblem] = useState(null); // 문제 데이터를 저장할 상태 추가
+  // DnD 문제 렌더링 시, 알림창
+  const [isToastOpen, setIsToast] = useState(true);
 
   const { blankSolve, setBlankSolve, myBlankProblem, isSubmit, setIsSubmit } =
     store((state) => ({
@@ -118,6 +121,8 @@ const DragNDropQuiz = ({ propSubmit }) => {
   return (
     <>
       <div className="fill-container">
+      {isToastOpen && <Toast text="보기를 드래그하여 빈칸을 채워주세요" setToast={setIsToast} style={styles.toast} />}
+
         <DndProvider backend={HTML5Backend}>
           <div className="fill-problem">
             {modifiedContent && (

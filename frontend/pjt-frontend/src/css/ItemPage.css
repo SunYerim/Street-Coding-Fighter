@@ -54,7 +54,7 @@
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   transition: transform 0.6s ease-out, box-shadow 0.6s ease-out;
-  perspective: 1000px; /* 3D 효과를 위한 원근감 */
+  perspective: 1600px; /* 3D 효과를 위한 원근감 */
 }
 
 .item-character-outer-container {
@@ -317,7 +317,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  perspective: 1000px; /* 3D 효과를 위해 */
+  perspective: 1600px; /* 3D 효과를 위해 */
   width: 320px;
   height: 550px;
   border: none;
@@ -367,7 +367,7 @@
 
 .item-purchase-modal {
   position: relative;
-  perspective: 1000px;
+  perspective: 1600px;
 }
 
 .item-purchase-modal.flipped .item-modal-container {
@@ -384,11 +384,19 @@
 
 .item-modal-inner-container.front {
   background-color: rgba(255, 255, 255);
+  transform: translateY(20px) rotateX(-8deg) rotateY(10deg);
+  animation: movement 5s infinite;
 }
 
 .item-modal-inner-container.back {
   background-color: rgba(255, 255, 255);
   transform: rotateY(180deg);
+}
+
+@keyframes movement {
+  50% {
+    transform: translateY(-20px) rotateX(8deg) rotateY(-10deg);
+  }
 }
 
 .flip-modal-button {

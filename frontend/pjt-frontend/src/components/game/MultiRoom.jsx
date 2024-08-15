@@ -112,7 +112,13 @@ function MultiRoom(props) {
         console.log('props.roomId', props.roomId);
         console.log('state.roomId', roomId);
         
-        navigate(`/_multi-game/${props.roomId}`);
+        navigate(`/_multi-game/${props.roomId}`, {
+          state: {
+            maxPlayer: props.maxPlayer,
+            gameRound: props.gameRound,
+            roomTitle: props.room,
+          },
+        });
       } else {  
         alert('Incorrect password');
       }

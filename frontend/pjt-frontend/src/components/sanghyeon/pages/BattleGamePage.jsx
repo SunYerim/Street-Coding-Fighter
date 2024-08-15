@@ -120,8 +120,8 @@ const BattleGamePage = () => {
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
   const [EnemyProblems, setEnemyProblems] = useState([]); // 여기
-  const [gameStart, setGameStart] = useState(false); // 여기
-  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기
+  const [gameStart, setGameStart] = useState(false); // 여기 종료
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 여기 종료
 
   // ---------------------- 배틀 문제 선택 모달 ----------------------
 
@@ -130,7 +130,7 @@ const BattleGamePage = () => {
   const [myProblem, setMyProblem] = useState({}); // 여기
   const [selectMyProblem, setSelectMyProblem] = useState(false); // 상대가 내 문제를 선택했는지
   const [selectOpponentProblem, setSelectOpponentProblem] = useState(false); // 내가 상대방의 문제를 선택했는지
-  const [gameEnded, setGameEnded] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false); // 여기 종료
   const [winner, setWinner] = useState("");
   const [loser, setLoser] = useState("");
   const [count2, setCount2] = useState(5);
@@ -244,7 +244,7 @@ const BattleGamePage = () => {
     const endpoint = `/room/${roomId}/RoundChoiceProblem`;
     battleStompClient.current.subscribe(endpoint, async (message) => {
       const body = JSON.parse(message.body);
-      await delay(3000);
+      await delay(500);
       setItem1(false);
       setItem2(false);
       setItem3(false);
@@ -444,6 +444,7 @@ const BattleGamePage = () => {
           if (body.userId === memberId) {
             if (body.isAttack === true) {
               setBlinkEnemy(true);
+              playEffectSound("attackSound");
               setIsRightCamBlinking(true);
               setTimeout(() => {
                 setBlinkEnemy(false);
@@ -453,6 +454,7 @@ const BattleGamePage = () => {
               }, 1000);
             } else {
               setIsHealing(true);
+              playEffectSound("healSound");
               setBattleHistory((prevHistory) => [...prevHistory, body]);
               setTimeout(() => {
                 setMyHealth((prevHealth) =>
@@ -466,6 +468,8 @@ const BattleGamePage = () => {
           } else {
             if (body.isAttack === true) {
               setBlink(true);
+              playEffectSound("attackSound");
+
               setIsLeftCamBlinking(true);
               setTimeout(() => {
                 setBlink(false);
@@ -475,6 +479,8 @@ const BattleGamePage = () => {
               }, 1000);
             } else {
               setIsEnemyHealing(true);
+              playEffectSound("healSound");
+
               setBattleHistory((prevHistory) => [...prevHistory, body]);
               setTimeout(() => {
                 setEnemyHealth((prevHealth) =>
@@ -638,6 +644,14 @@ const BattleGamePage = () => {
   };
 
   const handleStart = async () => {
+    if (enemyName === "" && enemyName === null) {
+      Swal.fire({
+        text: "상대방이 입장하지 않았습니다.",
+        icon: "warning",
+        timer: 3000,
+      });
+      return;
+    }
     Swal.fire({
       text: "3초 후 게임을 시작합니다.",
       icon: "info",
@@ -759,35 +773,75 @@ const BattleGamePage = () => {
           {gameEnded ? (
             <div className="battle-game-result-container">
               <div className="battle-game-result-title">
-                <div className="battle-game-result-title-container">
+                {/* <div className="battle-game-result-title-container">
                   게임 결과
+                </div> */}
+                <div className="battle-game-result-title-inner-container">
+                  <div className="battle-game-result-inner-title">
+                    {winner === -1
+                      ? "무승부입니다."
+                      : winner === memberId
+                      ? "승리하셨습니다 !!"
+                      : "패배하셨습니다..."}
+                  </div>
                 </div>
               </div>
               <div className="battle-game-result-content">
                 {winner === -1 ? (
-                  "무승부입니다."
+                  <div className="battle-game-result-character-outer-container">
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(character)}
+                        alt="winner-character"
+                        className="battle-game-result-loser-character battle-game-result-my-character"
+                      />
+                    </div>
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="loser-character"
+                        className="battle-game-result-loser-character"
+                      />
+                    </div>
+                  </div>
                 ) : winner === memberId ? (
-                  <>
-                    승리하셨습니다!
-                    <br />
-                    승리: {name}
-                    <br />
-                    패배: {enemyName}
-                    <br /> 5초 후 대기방으로 이동합니다.
-                  </>
+                  <div className="battle-game-result-character-outer-container">
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(character)}
+                        alt="winner-character"
+                        className="battle-game-result-winner-character battle-game-result-my-character"
+                      />
+                    </div>
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="loser-character"
+                        className="battle-game-result-loser-character"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <>
-                    패배하셨습니다...
-                    <br />
-                    승리: ${enemyName}
-                    <br />
-                    패배: ${name}
-                    <br /> 5초 후 대기방으로 이동합니다.
-                  </>
+                  <div className="battle-game-result-character-outer-container">
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(character)}
+                        alt="winner-character"
+                        className="battle-game-result-loser-character battle-game-result-my-character"
+                      />
+                    </div>
+                    <div className="battle-game-result-character-container">
+                      <img
+                        src={renderCharacter(enemyCharacterType)}
+                        alt="loser-character"
+                        className="battle-game-result-winner-character"
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
               <div className="battle-game-result-footer">
-                {count2}초 후 대기방으로 이동합니다.
+                <h2>{count2}초 후 대기방으로 이동합니다.</h2>
               </div>
             </div>
           ) : selectOpponentProblem ? (
@@ -914,7 +968,7 @@ const BattleGamePage = () => {
                     <h2 className="battle-game-game-start-title">
                       게임 시작 전입니다.
                     </h2>
-                    {hostId === memberId ? (
+                    {hostId === memberId && enemyName !== null ? (
                       <button
                         onClick={handleStart}
                         className="battle-game-game-start-button"
