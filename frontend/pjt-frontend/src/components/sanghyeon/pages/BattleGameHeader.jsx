@@ -76,7 +76,7 @@ const BattleGameHeader = () => {
         </div>
         <div className="header-right">
           <div className="header-icon">
-            {accessToken ? (
+            {/* {accessToken ? (
               <img
                 onClick={() => navigate("/gacha")}
                 className="gift-icon"
@@ -93,7 +93,7 @@ const BattleGameHeader = () => {
                 src={userIcon}
                 alt="memberIcon"
               />
-            ) : null}
+            ) : null} */}
             <img
               onClick={openModal}
               className="setting-icon"
