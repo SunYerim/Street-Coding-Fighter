@@ -473,50 +473,6 @@ export default function MultiGame() {
     );
   }
 
-  // function Timer({ setTimerEnded }) {
-  //   useEffect(() => {
-  //     if (count <= 0) {
-  //       switch (problemList[round].problemType) {
-  //         case "FILL_IN_THE_BLANK":
-  //           setBlankSolve(null);
-  //           handleBlankAnswer();
-  //           isSubmitRef.current = true;
-  //           break;
-  //         case "SHORT_ANSWER_QUESTION":
-  //           handleShortAnswer(null);
-  //           isSubmitRef.current = true;
-  //           break;
-  //         case "MULTIPLE_CHOICE":
-  //           handleChoiceSelection(null);
-  //           isSubmitRef.current = true;
-  //           break;
-  //         default:
-  //           console.log("Unknown problem type: " + problemList[round].problemType);
-  //       }
-  //       setTimerEnded(true);
-  //       return;
-  //     }
-
-  //     const id = setInterval(() => {
-  //       setCount((prevCount) => {
-  //         if (prevCount < 0) {
-  //           clearInterval(id);
-  //           return 0;
-  //         }
-  //         return prevCount - 1;
-  //       });
-  //     }, 1000);
-
-  //     return () => clearInterval(id);
-  //   }, [count]);
-
-  //   return (
-  //     <div>
-  //       <span>{count}</span>
-  //     </div>
-  //   );
-  // }
-
   // ---------------------- 채팅 WebSocket ----------------------
 
   // 채팅 WebSocket 연결 및 초기화 함수
@@ -647,6 +603,15 @@ export default function MultiGame() {
       setMergedList(updatedMergedList);
     }
   }, [gameRank, playerList, submitList]);
+
+
+  useEffect(() => {
+    if (playing && mergedList.length <= 1) {
+      socket.close();
+    }
+  }, [mergedList, playing])
+
+
 
   return (
     <>
