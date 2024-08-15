@@ -338,6 +338,17 @@ const SignUpPage = () => {
                     marginBottom: "1rem",
                   }}
                 />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mt: -1,
+                    ml: 1,
+                    color: "inherit", // 비밀번호 유효성 오류가 있을 경우 빨간색으로 표시
+                    fontWeight: 500,
+                  }}
+                >
+                  * 3글자 이상 18글자 이하로 작성해주세요. 영문자와 한글만 허용됩니다.
+                </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField

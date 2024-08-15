@@ -35,7 +35,10 @@ function ChildModal() {
           <Typography id="child-modal-title" variant="h5" component="h2">
             게임 방법 설명
           </Typography>
-          <Typography id="child-modal-description" sx={{ mt: 2, fontSize: "1.1rem", lineHeight: "1.8rem" }}>
+          <Typography
+            id="child-modal-description"
+            sx={{ mt: 2, fontSize: "1.1rem", lineHeight: "1.8rem" }}
+          >
             <Box sx={{ mb: 3 }}>
               <Typography
                 variant="h6"
@@ -149,13 +152,13 @@ export default function BasicModal() {
               fontWeight: "medium", // 글씨 굵게
             }}
           >
-          <Typography
-          variant="h5" // 소제목 크기 설정
-          component="div"
-          sx={{ mb: 2, fontWeight: "bold" }} // 아래 여백 추가 및 글씨 굵게 설정
-        >
-          게임 모드
-        </Typography>
+            <Typography
+              variant="h5" // 소제목 크기 설정
+              component="div"
+              sx={{ mb: 2, fontWeight: "bold" }} // 아래 여백 추가 및 글씨 굵게 설정
+            >
+              게임 모드
+            </Typography>
             <ul>
               <li>
                 <strong>스토리모드:</strong> 혼자서 학습할 수 있는
@@ -175,12 +178,12 @@ export default function BasicModal() {
             </ul>
             <hr />
             <Typography
-      variant="h5" // 소제목 크기 설정
-      component="div"
-      sx={{ mt: 3, mb: 2, fontWeight: "bold" }} // 위, 아래 여백 추가 및 글씨 굵게 설정
-    >
-      추가 기능
-    </Typography>
+              variant="h5" // 소제목 크기 설정
+              component="div"
+              sx={{ mt: 3, mb: 2, fontWeight: "bold" }} // 위, 아래 여백 추가 및 글씨 굵게 설정
+            >
+              추가 기능
+            </Typography>
             <ul>
               <li>
                 <strong>상점:</strong> 캐릭터 뽑기와 옷입히기를 할 수 있습니다.
@@ -197,7 +200,9 @@ export default function BasicModal() {
               </li>
             </ul>
             <hr />
-            <strong>아래 버튼을 클릭하여 문제를 어떻게 풀면 될지 정보를 얻어보세요!</strong>
+            <strong>
+              아래 버튼을 클릭하여 문제를 어떻게 풀면 될지 정보를 얻어보세요!
+            </strong>
           </Typography>
           <ChildModal />
         </Box>
