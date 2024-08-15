@@ -8,7 +8,7 @@ import { DndProvider } from "react-dnd";
 import StyleToPythonCode from "../StyleToPythonCode.jsx";
 import store from "../../../store/store.js";
 import "../../../css/BattleFill.css";
-import Toast from '../../Toast.jsx'
+import Toast from "../../Toast.jsx";
 
 const DragNDropQuiz = ({ propSubmit }) => {
   const [blanks, setBlanks] = useState({});
@@ -121,7 +121,7 @@ const DragNDropQuiz = ({ propSubmit }) => {
   return (
     <>
       <div className="fill-container">
-      {isToastOpen && <Toast text="보기를 드래그하여 빈칸을 채워주세요" setToast={setIsToast} style={styles.toast} />}
+        {/* {isToastOpen && <Toast text="보기를 드래그하여 빈칸을 채워주세요" setToast={setIsToast} style={styles.toast} />} */}
 
         <DndProvider backend={HTML5Backend}>
           <div className="fill-problem">
