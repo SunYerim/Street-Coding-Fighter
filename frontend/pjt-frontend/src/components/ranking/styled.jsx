@@ -4,7 +4,7 @@ const PageBody = styled.div`
   display: flex;
   margin-top: 15px;
   justify-content: center;
-  height: 100vh;
+  height: 95vh;
 `;
 
 
@@ -13,12 +13,13 @@ const Container = styled.div`
   text-align: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.5);
-  width: 80vw;
+  width: 75vw;
   margin: 20px;
   margin-top: 30px;
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 `;
 const FlexContainer = styled.div`
   display: flex;
@@ -42,7 +43,7 @@ const RankingListSection = styled.div`
   flex-direction: column;
   justify-content: space-around;
   overflow-y: auto;
-  height: 500px;
+  height: 400px;
   /* 스크롤바의 폭 너비 */
   &::-webkit-scrollbar {
     width: 10px;
