@@ -148,7 +148,7 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
   - 상대방보다 빠르게 문제를 풀어 공격하고, 늦게 풀면 회복하는 시스템으로, 게임의 긴장감과 재미를 극대화했습니다.
 
 - **개인 분석 리포트** <br>
-  <img src="image/AI_Report_GIF.gif.gif" alt="multi"/> <br><br>
+  <img src="image/AI_Report_GIF.gif" alt="multi"/> <br><br>
   - 게임을 즐기면서 학습자의 강점과 약점을 분석하고, 맞춤형 피드백을 제공하여 지속적인 실력 향상을 도와줍니다.
 
 <div id="6"></div>
