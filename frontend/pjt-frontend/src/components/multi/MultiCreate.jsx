@@ -65,7 +65,7 @@ export default function MultiCreate() {
           maxPlayer: maxPlayer,
           gameRound: gameRound,
           roomTitle: title,
-        }
+        },
       });
     } catch (error) {
       console.error("Error creating room:", error);
@@ -120,10 +120,10 @@ export default function MultiCreate() {
                     name="gameRound"
                     className="create-problems"
                     type="number"
-                    min="5"
+                    min="3"
                     max="20"
-                    placeholder="5"
-                    defaultValue={5}
+                    placeholder="3"
+                    defaultValue={3}
                   />
                 </div>
               </div>
