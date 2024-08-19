@@ -272,9 +272,9 @@ export default function MultiGame() {
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           console.log("전체랭킹: ", data.payload);
-
-
+          
           if (round == problemLength - 1) {
+            setRound(0);
             setResultModalOpen(true);
             setTimeout(() => {
               setResultModalOpen(false);
@@ -282,7 +282,6 @@ export default function MultiGame() {
               clearGameRank();
               clearRoundRank();
               clearProblemList();
-              setRound(0);
             }, 4000);
           }
         } else if (data.type === "roundRank") {
