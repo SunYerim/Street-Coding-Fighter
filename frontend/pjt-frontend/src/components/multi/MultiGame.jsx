@@ -272,11 +272,7 @@ export default function MultiGame() {
         } else if (data.type === "gameRank") {
           setGameRank(data.payload);
           console.log("전체랭킹: ", data.payload);
-          // isSubmitRef.current = false;
-          // setCount(30);
-          // setCurrentRound(cnt + 1);
-          // setRound((prevVal) => prevVal + 1);
-          // setTimerEnded(false);
+
 
           if (round == problemLength - 1) {
             setResultModalOpen(true);
@@ -286,6 +282,7 @@ export default function MultiGame() {
               clearGameRank();
               clearRoundRank();
               clearProblemList();
+              setRound(0);
             }, 4000);
           }
         } else if (data.type === "roundRank") {
