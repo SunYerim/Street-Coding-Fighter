@@ -5,10 +5,10 @@ const SoundStore = create((set) => ({
   backgroundMusic: new Howl({
     src: ["/sounds/main-bgm.mp3"],
     loop: true,
-    volume: 0.5,
+    volume: 0,
   }),
   isPlayingBgm: false,
-  bgmVolume: 0.2,
+  bgmVolume: 0,
   effectVolume: 0.15,
   effectSounds: {
     clickSound: new Howl({
