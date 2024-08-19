@@ -192,7 +192,6 @@ export default function MultiGame() {
   const [count, setCount] = useState(30);
 
   const [mergedList, setMergedList] = useState([]);
-  const updateMergedListRef = useRef(false);
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -650,26 +649,11 @@ export default function MultiGame() {
         };
       });
 
-      setMergedList(resetMergedList);
-      updateMergedListRef.current = true;
+      setMergedList([...resetMergedList]); // 새로운 배열로 상태 업데이트
     } else {
-      setMergedList(updatedMergedList);
-      updateMergedListRef.current = true;
+        setMergedList([...updatedMergedList]);
     }
   }, [gameRank, playerList, submitList, roundRank]);
-
-
-  useEffect(() => {
-    if (updateMergedListRef.current) {
-      updateMergedListRef.current = false;
-      forceRender();
-    }
-  }, [mergedList]);
-
-
-  const forceRender = () => {
-    setMergedList((prev) => [...prev]);
-  };
   
 
   useEffect(() => {
