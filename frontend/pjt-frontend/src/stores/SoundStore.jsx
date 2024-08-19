@@ -9,7 +9,7 @@ const SoundStore = create((set) => ({
   }),
   isPlayingBgm: false,
   bgmVolume: 0,
-  effectVolume: 0.15,
+  effectVolume: 0.05,
   effectSounds: {
     clickSound: new Howl({
       src: ["/sounds/btn-click.mp3"], // 효과음 파일 경로
