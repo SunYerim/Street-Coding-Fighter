@@ -10,6 +10,7 @@ import com.scf.problem.domain.model.ProblemChoice;
 import com.scf.problem.domain.model.ProblemContent;
 import com.scf.problem.domain.model.ProblemInfo;
 import com.scf.problem.domain.repository.ProblemInfoRepository;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +35,37 @@ public class ProblemService {
 
     public List<ProblemResponse.ProblemInfoDTO> getRandomProblems(int limit) {
         List<ProblemInfo> problems = problemInfoRepository.findAll();
-        Collections.shuffle(problems);
 
-        return problems.stream()
-            .limit(limit)
+        // 시연용 문제 고정으로 반환하도록 수정
+//        Collections.shuffle(problems);
+
+        List<ProblemInfo> selectedProblems = new ArrayList<>();
+        if (limit == 3) { // 멀티 문제
+            for (ProblemInfo problemInfo : problems) {
+                if (problemInfo.getProblemId().equals(774L) || problemInfo.getProblemId().equals(724L)
+                    || problemInfo.getProblemId().equals(745L)) {
+                    selectedProblems.add(problemInfo);
+                }
+            }
+        } else if (limit == 6) {
+            for (ProblemInfo problemInfo : problems) {
+                if (problemInfo.getProblemId().equals(721L) || problemInfo.getProblemId().equals(734L)
+                    || problemInfo.getProblemId().equals(784L) || problemInfo.getProblemId()
+                    .equals(777L) || problemInfo.getProblemId().equals(711L)
+                    || problemInfo.getProblemId().equals(715L)) {
+                    selectedProblems.add(problemInfo);
+                }
+            }
+        }
+
+        return selectedProblems.stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
+
+//        return problems.stream()
+//            .limit(limit)
+//            .map(this::convertToDTO)
+//            .collect(Collectors.toList());
     }
 
     @Transactional
