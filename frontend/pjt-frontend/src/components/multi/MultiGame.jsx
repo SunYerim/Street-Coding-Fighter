@@ -192,6 +192,7 @@ export default function MultiGame() {
   const [count, setCount] = useState(30);
 
   const [mergedList, setMergedList] = useState([]);
+  const updateMergedListRef = useRef(false);
 
   // 방생성할때 방장의 memberId 가져오기
   useEffect(() => {
@@ -620,54 +621,68 @@ export default function MultiGame() {
 
   useEffect(() => {
     const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(
-        (rankItem) => {
-            const submitItem = submitList.find(
-                (submitItem) => submitItem.userId === rankItem.userId
-            );
-            return {
-                ...rankItem,
-                isSubmit: submitItem ? submitItem.isSubmit : null,
-            };
-        }
+      (rankItem) => {
+        const submitItem = submitList.find(
+          (submitItem) => submitItem.userId === rankItem.userId
+        );
+        return {
+          ...rankItem,
+          isSubmit: submitItem ? submitItem.isSubmit : null,
+        };
+      }
     );
 
     const allSubmitted = updatedMergedList.every(
-        (item) => item.isSubmit === true
+      (item) => item.isSubmit === true
     );
 
     if (allSubmitted || !playing) {
-        // 모든 submitList 요소를 false로 설정
-        const resetSubmitList = submitList.map((item) => ({
-            ...item,
-            isSubmit: false,
-        }));
+      // 모든 submitList 요소를 false로 설정
+      const resetSubmitList = submitList.map((item) => ({
+        ...item,
+        isSubmit: false,
+      }));
 
-        // mergedList를 다시 업데이트
-        const resetMergedList = updatedMergedList.map((rankItem) => {
-            const submitItem = resetSubmitList.find(
-                (submitItem) => submitItem.userId === rankItem.userId
-            );
-            return {
-                ...rankItem,
-                isSubmit: submitItem ? submitItem.isSubmit : null,
-            };
-        });
+      // mergedList를 다시 업데이트
+      const resetMergedList = updatedMergedList.map((rankItem) => {
+        const submitItem = resetSubmitList.find(
+          (submitItem) => submitItem.userId === rankItem.userId
+        );
+        return {
+          ...rankItem,
+          isSubmit: submitItem ? submitItem.isSubmit : null,
+        };
+      });
 
-        setMergedList(resetMergedList);
+      setMergedList(resetMergedList);
+      updateMergedListRef.current = true;
     } else {
-        setMergedList(updatedMergedList);
+      setMergedList(updatedMergedList);
+      updateMergedListRef.current = true;
     }
-}, [gameRank, playerList, submitList, roundRank]);
+  }, [gameRank, playerList, submitList, roundRank]);
 
 
+  useEffect(() => {
+    if (updateMergedListRef.current) {
+      updateMergedListRef.current = false;
+      forceRender();
+    }
+  }, [mergedList]);
+
+
+  const forceRender = () => {
+    setMergedList((prev) => [...prev]);
+  };
+  
 
   useEffect(() => {
     if (playing && mergedList.length <= 1) {
       socket.close();
-      alert("게임이 비정상적으로 종료되었습니다.")
+      alert("게임이 비정상적으로 종료되었습니다.");
       navigate("/_multi");
     }
-  }, [mergedList, playing])
+  }, [mergedList, playing]);
 
 
 
@@ -687,7 +702,7 @@ export default function MultiGame() {
                 !modalOpen && !timerEnded && <Timer setTimerEnded={setTimerEnded} />
               ) : (
                 <p style={{ fontSize: '1.5rem', color: 'white' }}>
-                  인원: {mergedList.length} / {maxPlayer}
+                  인원: {playerList.length} / {maxPlayer}
                 </p>
               )}
             </div>
