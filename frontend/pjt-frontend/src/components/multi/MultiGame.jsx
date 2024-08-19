@@ -577,46 +577,88 @@ export default function MultiGame() {
 
   // ---------------------- 채팅 WebSocket ----------------------
 
+  // useEffect(() => {
+  //   const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(
+  //     (rankItem) => {
+  //       const submitItem = submitList.find(
+  //         (submitItem) => submitItem.userId === rankItem.userId
+  //       );
+  //       return {
+  //         ...rankItem,
+  //         isSubmit: submitItem ? submitItem.isSubmit : null,
+  //       };
+  //     }
+  //   );
+
+  //   const allSubmitted = updatedMergedList.every(
+  //     (item) => item.isSubmit === true
+  //   );
+
+  //   if (allSubmitted || !playing) {
+  //     // 모든 submitList 요소를 false로 설정
+  //     const resetSubmitList = submitList.map((item) => ({
+  //       ...item,
+  //       isSubmit: false,
+  //     }));
+
+  //     // mergedList를 다시 업데이트
+  //     const resetMergedList = updatedMergedList.map((rankItem) => {
+  //       const submitItem = resetSubmitList.find(
+  //         (submitItem) => submitItem.userId === rankItem.userId
+  //       );
+  //       return {
+  //         ...rankItem,
+  //         isSubmit: submitItem ? submitItem.isSubmit : null,
+  //       };
+  //     });
+
+  //     setMergedList(resetMergedList);
+  //   } else {
+  //     setMergedList(updatedMergedList);
+  //   }
+  // }, [gameRank, playerList, submitList]);
+
   useEffect(() => {
     const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(
-      (rankItem) => {
-        const submitItem = submitList.find(
-          (submitItem) => submitItem.userId === rankItem.userId
-        );
-        return {
-          ...rankItem,
-          isSubmit: submitItem ? submitItem.isSubmit : null,
-        };
-      }
+        (rankItem) => {
+            const submitItem = submitList.find(
+                (submitItem) => submitItem.userId === rankItem.userId
+            );
+            return {
+                ...rankItem,
+                isSubmit: submitItem ? submitItem.isSubmit : null,
+            };
+        }
     );
 
     const allSubmitted = updatedMergedList.every(
-      (item) => item.isSubmit === true
+        (item) => item.isSubmit === true
     );
 
     if (allSubmitted || !playing) {
-      // 모든 submitList 요소를 false로 설정
-      const resetSubmitList = submitList.map((item) => ({
-        ...item,
-        isSubmit: false,
-      }));
+        // 모든 submitList 요소를 false로 설정
+        const resetSubmitList = submitList.map((item) => ({
+            ...item,
+            isSubmit: false,
+        }));
 
-      // mergedList를 다시 업데이트
-      const resetMergedList = updatedMergedList.map((rankItem) => {
-        const submitItem = resetSubmitList.find(
-          (submitItem) => submitItem.userId === rankItem.userId
-        );
-        return {
-          ...rankItem,
-          isSubmit: submitItem ? submitItem.isSubmit : null,
-        };
-      });
+        // mergedList를 다시 업데이트
+        const resetMergedList = updatedMergedList.map((rankItem) => {
+            const submitItem = resetSubmitList.find(
+                (submitItem) => submitItem.userId === rankItem.userId
+            );
+            return {
+                ...rankItem,
+                isSubmit: submitItem ? submitItem.isSubmit : null,
+            };
+        });
 
-      setMergedList(resetMergedList);
+        setMergedList(resetMergedList);
     } else {
-      setMergedList(updatedMergedList);
+        setMergedList(updatedMergedList);
     }
-  }, [gameRank, playerList, submitList]);
+}, [gameRank, playerList, submitList, roundRank]);
+
 
 
   useEffect(() => {
