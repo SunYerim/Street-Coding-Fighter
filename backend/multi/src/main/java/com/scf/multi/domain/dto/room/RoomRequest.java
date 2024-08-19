@@ -28,7 +28,7 @@ public class RoomRequest {
         private Integer maxPlayer;
 
         @NotNull(message = "게임을 진행할 라운드를 입력해주세요.")
-        @Min(value = 5, message = "최소 5라운드 이상을 선택해야 합니다.")
+        @Min(value = 2, message = "최소 2라운드 이상을 선택해야 합니다.")
         @Max(value = 20, message = "최대 20라운드까지 가능합니다.")
         private Integer gameRound;
 
