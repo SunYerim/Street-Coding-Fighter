@@ -11,7 +11,7 @@ const MultiResultModal = ({ isFinalResult }) => {
   useEffect(() => {
     const confettiInstance = new JSConfetti();
 
-    if (isFinalResult) { // resultModalOpen일 때만 confetti를 터트림
+    if (isFinalResult == true) { // resultModalOpen일 때만 confetti를 터트림
       confettiInstance.addConfetti({
         confettiColors: [
           "#CAB0FF"
