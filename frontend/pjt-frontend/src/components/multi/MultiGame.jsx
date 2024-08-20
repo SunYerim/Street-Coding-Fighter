@@ -787,8 +787,8 @@ export default function MultiGame() {
           </div>
         </div>
       </div>
-      {modalOpen && <MultiResultModal isFinalResult={false} />}
-      {resultModalOpen && <MultiResultModal isFinalResult={true} />}
+      {modalOpen && <MultiResultModal isFinalResult={true} />}
+      {resultModalOpen && <MultiResultModal isFinalResult={false} />}
       <CustomAlert
         isModalOpen={isExitAlertOpen}
         title="방 나가기"
