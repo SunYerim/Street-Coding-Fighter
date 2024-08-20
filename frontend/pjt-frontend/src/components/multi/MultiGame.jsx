@@ -615,8 +615,6 @@ export default function MultiGame() {
   //   }
   // }, [gameRank, playerList, submitList]);
 
-  let mList = playerList;
-
   useEffect(() => {
     const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(
       (rankItem) => {
@@ -652,13 +650,11 @@ export default function MultiGame() {
         };
       });
 
-      setMergedList([...resetMergedList]);
-      updateMergedListRef.current = true;
-      mList = [...resetMergedList];
+        setMergedList([...resetMergedList]);
+        updateMergedListRef.current = true;
     } else {
-      setMergedList([...updatedMergedList]);
-      updateMergedListRef.current = true;
-      mList = [...updatedMergedList];
+        setMergedList([...updatedMergedList]);
+        updateMergedListRef.current = true;
     }
   }, [gameRank, playerList, submitList, roundRank]);
 
@@ -708,7 +704,7 @@ export default function MultiGame() {
             </div>
             <div className="multi-rank-table">
               {round > 0
-                ? mList.map((user, i) => {
+                ? mergedList.map((user, i) => {
                     return (
                       <UserRank
                         rank={user.rank}
@@ -722,7 +718,7 @@ export default function MultiGame() {
                       />
                     );
                   })
-                : mList.map((user, i) => {
+                : mergedList.map((user, i) => {
                     return (
                       <CurrentPlayer
                         username={user.username}
