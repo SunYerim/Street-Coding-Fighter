@@ -32,7 +32,6 @@ const RankingItemContainer = styled.div`
 
 const Rank = styled.h4`
   margin: 0px 0px 0 0;
-  width: 30px;
   font-size: 1.3em;
   color: #495057;
   paddingleft: 10px;
