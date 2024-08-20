@@ -3,32 +3,28 @@ import MultiRanking from "./MultiRanking.jsx";
 import JSConfetti from 'js-confetti';
 
 
-const MultiResultModal = () => {
+const MultiResultModal = ({ isFinalResult }) => {
   
   const [modalOpen, setModalOpen] = useState(true);
   const modalOutside = useRef();
-  const [jsConfetti, setJsConfetti] = useState(null);
-
+  
   useEffect(() => {
-      setJsConfetti(new JSConfetti());
-  }, []);
+    const confettiInstance = new JSConfetti();
 
-  const handleClick = () => {
-    if (jsConfetti) {
-      jsConfetti.addConfetti({
+    if (isFinalResult) { // resultModalOpen일 때만 confetti를 터트림
+      confettiInstance.addConfetti({
         confettiColors: [
           "#CAB0FF"
         ],
         confettiNumber: 500,
       });
     }
-  };
+  }, [isFinalResult]);
 
   const handleModalClick = (e) => {
     if (e.target === modalOutside.current) {
       setModalOpen(false);
     }
-    handleClick(); // Trigger confetti when the modal is clicked
   };
 
   return (
