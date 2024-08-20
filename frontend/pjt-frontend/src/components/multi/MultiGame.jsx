@@ -615,7 +615,7 @@ export default function MultiGame() {
   //   }
   // }, [gameRank, playerList, submitList]);
 
-  let mList;
+  let mList = playerList;
 
   useEffect(() => {
     const updatedMergedList = (gameRank.length > 1 ? gameRank : playerList).map(
