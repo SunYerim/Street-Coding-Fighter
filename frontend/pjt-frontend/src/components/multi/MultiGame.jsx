@@ -652,13 +652,13 @@ export default function MultiGame() {
         };
       });
 
-        setMergedList([...resetMergedList]);
-        updateMergedListRef.current = true;
-        mList = [...resetMergedList];
+      setMergedList([...resetMergedList]);
+      updateMergedListRef.current = true;
+      mList = [...resetMergedList];
     } else {
-        setMergedList([...updatedMergedList]);
-        updateMergedListRef.current = true;
-        mList = [...resetMergedList];
+      setMergedList([...updatedMergedList]);
+      updateMergedListRef.current = true;
+      mList = [...updatedMergedList];
     }
   }, [gameRank, playerList, submitList, roundRank]);
 
