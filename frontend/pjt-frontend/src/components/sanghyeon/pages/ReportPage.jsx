@@ -47,6 +47,13 @@ const ReportPage = () => {
 
   const getReport = async () => {
     try {
+      // setTimeout(() => {
+      //   Swal.fire({
+      //     text: "리포트 다운로드가 완료되었습니다.",
+      //     icon: "success",
+      //     timer: 3000,
+      //   });
+      // }, 3000)
       Swal.fire({
         text: "리포트 다운로드 중...",
         icon: "info",
