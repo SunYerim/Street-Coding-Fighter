@@ -85,28 +85,28 @@ function MainPage() {
     },
     "랭킹": {
       description:
-        "실력을 증명하고 최고 순위에 도전하세요!"
+      "실력을 증명하고 최고 순위에 도전하세요!"
     },
   };
-
+  
   const defaultMode = {
     description: "시작하기 전에 필수 가이드를 확인하세요! \n 튜토리얼이 당신을 도와줄 거예요.",
   };
-
+  
   const [hoveredMode, setHoveredMode] = useState(null);
-
+  // 전체화면 알림창
+  // {toast && (
+  //   <Toast
+  //     style={styles.toast}
+  //     setToast={setToast}
+  //     text={
+  //       "Street Coding Fighter는 전체화면에 최적화 되어있습니다. \n F11을 눌러 전체화면을 활성화 해 주세요."
+  //     }
+  //   />
+  // )}
   return (
     <>
       <Header />
-      {toast && (
-        <Toast
-          style={styles.toast}
-          setToast={setToast}
-          text={
-            "Street Coding Fighter는 전체화면에 최적화 되어있습니다. \n F11을 눌러 전체화면을 활성화 해 주세요."
-          }
-        />
-      )}
       <div style={styles.container}>
         <div style={styles.modes}>
           {Object.keys(modeDetails).map((mode) => (
@@ -115,11 +115,11 @@ function MainPage() {
               key={mode}
               onMouseEnter={() => setHoveredMode(mode)}
               onMouseLeave={() => setHoveredMode(null)}
-            >
+              >
               <MainSelectModeBox
                 mode={mode}
                 playEffectSound={playEffectSound} // playEffectSound 전달
-              />
+                />
             </div>
           ))}
         </div>
@@ -131,14 +131,14 @@ function MainPage() {
               <Lottie animationData={helloAnimation} style={styles.lottie} />
             ) : (
               <img
-                src={
+              src={
                   hoveredMode
                     ? modeDetails[hoveredMode].imageUrl
                     : defaultMode.imageUrl
-                }
+                  }
                 alt={hoveredMode ? hoveredMode : "기본 이미지"}
                 style={styles.image}
-              />
+                />
             )}
           </div>
           <p>
@@ -147,8 +147,8 @@ function MainPage() {
               : defaultMode.description}
             {!hoveredMode && (
               <BasicModal
-                title="기본 모드"
-                description={defaultMode.description}
+              title="기본 모드"
+              description={defaultMode.description}
               />
             )}
           </p>
