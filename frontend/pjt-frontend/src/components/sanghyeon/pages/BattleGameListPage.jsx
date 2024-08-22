@@ -294,7 +294,7 @@ const BattleGameListPage = () => {
             />
             <input
               ref={battleRoomPassword}
-              type="text"
+              type="password"
               placeholder="방 비밀번호"
             />
             <input
