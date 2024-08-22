@@ -18,16 +18,8 @@ public class GachaService {
     public static final List<CharacterType> characterTypes = new ArrayList<>();
 
     static {
-        clothingTypes.add(new ClothingType(1, 0.025, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(2, 0.005, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(3, 0.392, Rarity.LEGENDARY)); // 9.8%
-        clothingTypes.add(new ClothingType(7, 0.025, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(10, 0.098, Rarity.COMMON)); // 9.8%
-        clothingTypes.add(new ClothingType(11, 0.025, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(12, 0.025, Rarity.EPIC));
-        clothingTypes.add(new ClothingType(13, 0.005, Rarity.COMMON));
-        clothingTypes.add(new ClothingType(14, 0.298, Rarity.LEGENDARY)); // 10.2%
-        clothingTypes.add(new ClothingType(15, 0.100, Rarity.COMMON)); // 10.2%
+        clothingTypes.add(new ClothingType(3, 0.5, Rarity.LEGENDARY)); // 9.8%
+        clothingTypes.add(new ClothingType(14, 0.5, Rarity.LEGENDARY)); // 10.2%
     }
 
     static {
