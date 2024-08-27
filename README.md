@@ -1,14 +1,27 @@
-# Street Coding Fighter
+# 🎮 Street Coding Fighter
 
 <div align="center">
-  <!-- <img src="image/icon.png"/ width="50%"> -->
-  아이콘 들어갈자리
-  <br />
-  <h3> 프로그래밍을 게임처럼 즐기는, 실시간 참여형 학습 플랫폼</h3>
-    <div>
-     ✨ <a href="https://www.notion.so/SSAFY-df70a221ba984927b8fed0d68d34dd92">팀 노션</a>
+  
+  <h3>프로그래밍을 게임처럼 즐기는, 실시간 참여형 학습 플랫폼</h3>
+  
+  <div>
+    ✨ <a href="https://www.notion.so/SSAFY-df70a221ba984927b8fed0d68d34dd92">가화만사성 팀 노션</a>
   </div>
+  
   <br />
+  
+  <img src="image/gahwa.jpg" width="200px" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" alt="Gahwa Image"/>
+  
+  <br />
+  <br />
+  
+  <h3>🏆 수상 내역</h3>
+  <div align="center">
+    <p>🥈 SSAFY 11기 공통 프로젝트 우수상 - 삼성전자 주식회사 (2024년 8월 16일)</p>
+  </div>
+  
+  <br />
+  
 </div>
 
 ### 📜 목차
@@ -65,7 +78,7 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
 
 ---
 
-- **프론트엔드**
+- **Frontend**
 
     ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
     ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
@@ -77,30 +90,33 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
     ![Styled Components](https://img.shields.io/badge/styled_components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
     ![Howler.js](https://img.shields.io/badge/howler.js-4FC08D?style=for-the-badge&logo=howler.js&logoColor=white)
 
-- **백엔드**
+- **Backend**
 
     ![Java](https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white)
     ![Spring](https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
     ![Spring Security](https://img.shields.io/badge/spring_security-6DB33F?style=for-the-badge&logo=spring_security&logoColor=white)
     ![Django](https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white)
 
-- **인프라**
+- **Infra**
 
     ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
     ![Amazon EC2](https://img.shields.io/badge/amazon_ec2-FF9900?style=for-the-badge&logo=Amazon-ec2&logoColor=white)
+    ![Jenkins](https://img.shields.io/badge/jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)
+    ![Nginx](https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 
-- **데이터베이스**
+- **Database**
 
     ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
     ![Redis](https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white)
+    ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-- **기타**
+- **Etc**
 
-    ![Kafka](https://img.shields.io/badge/kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)
+    ![Kafka](https://img.shields.io/badge/Apache_kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)
     ![GitLab](https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)
     ![Jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
     ![Notion](https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white)
-    ![Web Socket](https://img.shields.io/badge/Web%20Socket-010101?style=flat-square&logo=socketdotio&logoColor=white)
+    ![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
 
 
 <br>
@@ -123,7 +139,8 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
 
 ---
 
-- **타이틀 화면** <br>
+- **타이틀 화면** 
+<br/>
   <img src="image/Title_GIF.gif" alt="title"/> <br><br>
   
 - **메인 화면** <br>
@@ -150,12 +167,40 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
 
 <div id="6"></div>
 
-### 👥팀원 소개
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-|  **Name**  |여대기 | 정범수 | 이상현 |김민욱 | 박지훈 | 선예림 |
-| :-----------: | :-----: | :-------: | :------: | :-----: | :------: | :------: |
-|  **역할**   | 프론트엔드 | 프론트엔드 | 프론트엔드 | 백엔드 | 백엔드 | 백엔드 |
-| **profile** |<img src="./image/Bernie.jpg"  width="150" height="180"/>  | <img src="./image/Ethan.png"  width="150" height="180"/> | <img src="./image/Falcon.jpg"  width="150" height="180"/> | | <img src="./image/Jack.png"  width="150" height="180"/> | |
+--- 
+### 👥 팀원 소개
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+<table>
+  <tr>
+    <td align="center">
+      <img src="./image/Bernie.jpg" width="100px" height="100px" style="border-radius:50%;" alt="여대기"/><br />
+      <b>여대기 (Bernie)</b><br />
+      <i>Frontend</i>
+    </td>
+    <td align="center">
+      <img src="./image/Ethan.png" width="100px" height="100px" style="border-radius:50%;" alt="정범수"/><br />
+      <b>정범수 (Ethan)</b><br />
+      <i>Frontend</i>
+    </td>
+    <td align="center">
+      <img src="./image/Falcon.jpg" width="100px" height="100px" style="border-radius:50%;" alt="이상현"/><br />
+      <b>이상현 (Falcon)</b><br />
+      <i>Frontend, AI</i>
+    </td>
+    <td align="center">
+      <img src="./image/Hermes.jpg" width="100px" height="100px" style="border-radius:50%;" alt="김민욱"/><br />
+      <b>김민욱 (Hermes)</b><br />
+      <i>Backend</i>
+    </td>
+    <td align="center">
+      <img src="./image/Sophia.jpg" width="100px" height="100px" style="border-radius:50%;" alt="선예림"/><br />
+      <b>선예림 (Sophia)</b><br />
+      <i>Backend</i>
+    </td>
+    <td align="center">
+      <img src="./image/Jack.png" width="100px" height="100px" style="border-radius:50%;" alt="박지훈"/><br />
+      <b>박지훈 (Jack)</b><br />
+      <i>Backend, Infra</i>
+    </td>
+  </tr>
+</table>
