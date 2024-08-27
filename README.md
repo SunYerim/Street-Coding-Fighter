@@ -156,6 +156,6 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
 |  **Name**  |여대기 | 정범수 | 이상현 |김민욱 | 박지훈 | 선예림 |
 | :-----------: | :-----: | :-------: | :------: | :-----: | :------: | :------: |
 |  **역할**   | 프론트엔드 | 프론트엔드 | 프론트엔드 | 백엔드 | 백엔드 | 백엔드 |
-| **profile** |<img src="./image/Bernie.jpg"  width="150" height="180"/>  | <img src="./image/Ethan.png"  width="150" height="180"/> | <img src="./image/Falcon"  width="150" height="180"/> | <img src=""  width="150" height="180"/> | <img src="./image/Jack.png"  width="150" height="180"/> | <img src=""  width="150" height="180"/>|
+| **profile** |<img src="./image/Bernie.jpg"  width="150" height="180"/>  | <img src="./image/Ethan.png"  width="150" height="180"/> | <img src="./image/Falcon.jpg"  width="150" height="180"/> | <img src=""  width="150" height="180"/> | <img src="./image/Jack.png"  width="150" height="180"/> | <img src=""  width="150" height="180"/>|
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
