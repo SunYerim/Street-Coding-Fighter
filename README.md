@@ -91,10 +91,8 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
 
 - **데이터베이스**
 
-    ![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-    ![Amazon RDS](https://img.shields.io/badge/amazon_rds-527FFF?style=for-the-badge&logo=Amazon-RDS&logoColor=white)
+    ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
     ![Redis](https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white)
-    ![MariaDB](https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white)
 
 - **기타**
 
@@ -102,8 +100,7 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
     ![GitLab](https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)
     ![Jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
     ![Notion](https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white)
-    ![Scikit-learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
-
+    ![Web Socket](https://img.shields.io/badge/Web%20Socket-010101?style=flat-square&logo=socketdotio&logoColor=white)
 
 
 <br>
