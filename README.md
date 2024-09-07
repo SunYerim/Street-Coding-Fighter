@@ -180,32 +180,32 @@ Street Coding Fighter는 프로그래밍을 게임처럼 배우는 실시간 참
 <table>
   <tr>
     <td align="center">
-      <img src="./image/Bernie.jpg" width="150px" height="200px" style="border-radius:50%;" alt="여대기"/><br />
+      <img src="./image/Bernie.jpg" width="200px" height="200px" style="border-radius:50%;" alt="여대기"/><br />
       <b>여대기 (Bernie)</b><br />
       <i>Frontend</i>
     </td>
     <td align="center">
-      <img src="./image/Ethan.png" width="150px" height="200px" style="border-radius:50%;" alt="정범수"/><br />
+      <img src="./image/Ethan.png" width="200px" height="200px" style="border-radius:50%;" alt="정범수"/><br />
       <b>정범수 (Ethan)</b><br />
       <i>Frontend</i>
     </td>
     <td align="center">
-      <img src="./image/Falcon.jpg" width="150px" height="200px" style="border-radius:50%;" alt="이상현"/><br />
+      <img src="./image/Falcon.jpg" width="200px" height="200px" style="border-radius:50%;" alt="이상현"/><br />
       <b>이상현 (Falcon)</b><br />
       <i>Frontend, AI</i>
     </td>
     <td align="center">
-      <img src="./image/Hermes.jpg" width="150px" height="200px" style="border-radius:50%;" alt="김민욱"/><br />
+      <img src="./image/Hermes.jpg" width="200px" height="200px" style="border-radius:50%;" alt="김민욱"/><br />
       <b>김민욱 (Hermes)</b><br />
       <i>Backend</i>
     </td>
     <td align="center">
-      <img src="./image/Sophia.jpg" width="150px" height="200px" style="border-radius:50%;" alt="선예림"/><br />
+      <img src="./image/Sophia.jpg" width="200px" height="200px" style="border-radius:50%;" alt="선예림"/><br />
       <b>선예림 (Sophia)</b><br />
       <i>Backend</i>
     </td>
     <td align="center">
-      <img src="./image/Jack.png" width="150px" height="200px" style="border-radius:50%;" alt="박지훈"/><br />
+      <img src="./image/Jack.png" width="200px" height="200px" style="border-radius:50%;" alt="박지훈"/><br />
       <b>박지훈 (Jack)</b><br />
       <i>Backend, Infra</i>
     </td>
