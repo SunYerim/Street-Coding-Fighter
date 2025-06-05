@@ -90,10 +90,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(String memberId) {
-        Member member = userRepository.findById(Long.parseLong(memberId))
+    public UserInfoResponseDto getUserInfo(Long memberId) {
+        Member member = userRepository.findById(memberId)
             .orElseThrow(
-                () -> new BusinessException(memberId, "memberId", ErrorCode.USER_NOT_FOUND));
+                () -> new BusinessException(String.valueOf(memberId), "memberId", ErrorCode.USER_NOT_FOUND));
 
         // User 엔티티를 UserInfoResponseDto로 변환
         return new UserInfoResponseDto(
@@ -106,11 +106,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean quitMember(String memberId) {
+    public boolean quitMember(Long memberId) {
         // 사용자 확인
-        Member member = userRepository.findById(Long.parseLong(memberId))
+        Member member = userRepository.findById(memberId)
             .orElseThrow(
-                () -> new BusinessException(memberId, "memberId", ErrorCode.USER_NOT_FOUND));
+                () -> new BusinessException(String.valueOf(memberId), "memberId", ErrorCode.USER_NOT_FOUND));
 
         // 사용자 삭제
         userRepository.delete(member);
