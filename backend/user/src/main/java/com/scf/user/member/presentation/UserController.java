@@ -62,7 +62,7 @@ public class UserController {
     // 유저 정보 조회
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponseDto> userinfo(
-        @RequestHeader("memberId") String memberId) {
+        @RequestHeader("memberId") Long memberId) {
         UserInfoResponseDto userInfo = userService.getUserInfo(memberId);
 
         return ResponseEntity.ok(userInfo);
@@ -71,7 +71,7 @@ public class UserController {
 
     // 회원 탈퇴
     @DeleteMapping("/quit")
-    public ResponseEntity<?> quitUser(@RequestHeader("memberId") String memberId) {
+    public ResponseEntity<?> quitUser(@RequestHeader("memberId") Long memberId) {
         boolean flag = userService.quitMember(memberId);
 
         if (flag) {
@@ -194,13 +194,11 @@ public class UserController {
     }
 
     @GetMapping("/public/charaterType")
-    public ResponseEntity<?> getCharater(@RequestHeader("memberId") Long memberId){
-        String memberIdString = String.valueOf(memberId);
-        Object userInfo = userService.getUserInfo(memberIdString);
+    public ResponseEntity<?> getCharater(@RequestHeader("memberId") Long memberId) {
+        Object userInfo = userService.getUserInfo(memberId);
         if (userInfo != null) {
-            return new ResponseEntity<>(userService.getUserCharaterType(memberId),HttpStatus.OK);
-        }
-        else{
+            return new ResponseEntity<>(userService.getUserCharaterType(memberId), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -220,20 +218,26 @@ public class UserController {
             if (gachaType == GachaType.CLOTH) {
                 ClothingType clothingType = gachaService.drawClothingType();
                 userService.updateCharacterCloth(memberId, clothingType.getType());
-                return ResponseEntity.ok(new UserCharaterClothTypeResponseDTO(clothingType.getType(), clothingType.getRarity().name()));
+                return ResponseEntity.ok(
+                    new UserCharaterClothTypeResponseDTO(clothingType.getType(),
+                        clothingType.getRarity().name()));
             } else if (gachaType == GachaType.TYPE) {
                 CharacterType characterType = gachaService.drawCharacterType();
                 userService.updateCharacterType(memberId, characterType.getType());
-                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(characterType.getType(), characterType.getRarity().name()));
+                return ResponseEntity.ok(new UserCharaterTypeResponseDTO(characterType.getType(),
+                    characterType.getRarity().name()));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Gacha Type");
             }
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Member not found: " + e.getMessage());
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operation: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid operation: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An unexpected error occurred: " + e.getMessage());
         }
     }
 }

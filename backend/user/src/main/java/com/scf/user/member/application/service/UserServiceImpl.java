@@ -8,14 +8,14 @@ import com.scf.user.member.application.client.ContentClient;
 import com.scf.user.member.domain.dto.*;
 import com.scf.user.member.domain.dto.charater.CharacterType;
 import com.scf.user.member.domain.dto.charater.ClothingType;
-import com.scf.user.member.global.exception.NotEnoughExperienceException;
+import com.scf.user.member.global.error.ErrorCode;
+import com.scf.user.member.global.error.exception.BusinessException;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.profile.domain.entity.Character;
 import com.scf.user.member.domain.repository.UserRepository;
 import com.scf.user.member.infrastructure.security.AuthenticationProviderService;
 import com.scf.user.member.infrastructure.security.JwtTokenProvider;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ContentClient contentClient;
     private final GachaService gachaService;
+
     @Autowired
     public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
         UserRepository userRepository, CharacterRepository characterRepository,
@@ -89,9 +90,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(String memberId) {
-        Member member = userRepository.findById(Long.parseLong(memberId))
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public UserInfoResponseDto getUserInfo(Long memberId) {
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(
+                () -> new BusinessException(String.valueOf(memberId), "memberId", ErrorCode.USER_NOT_FOUND));
 
         // User 엔티티를 UserInfoResponseDto로 변환
         return new UserInfoResponseDto(
@@ -104,10 +106,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean quitMember(String memberId) {
+    public boolean quitMember(Long memberId) {
         // 사용자 확인
-        Member member = userRepository.findById(Long.parseLong(memberId))
-            .orElseThrow(() -> new EntityNotFoundException("유저를 찾지 못하였습니다."));
+        Member member = userRepository.findById(memberId)
+            .orElseThrow(
+                () -> new BusinessException(String.valueOf(memberId), "memberId", ErrorCode.USER_NOT_FOUND));
 
         // 사용자 삭제
         userRepository.delete(member);
@@ -129,7 +132,7 @@ public class UserServiceImpl implements UserService {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("refresh")) {
                     refreshToken = cookie.getValue();
-                    log.info("쿠키다 !!!!!" + refreshToken);
+//                    log.info("쿠키 " + refreshToken);
                 }
             }
         }
@@ -142,14 +145,12 @@ public class UserServiceImpl implements UserService {
     public TokenDto refreshToken(String refresh) {
         // Redis에서 refresh token 조회
         String memberId = jwtTokenProvider.extractMemberId(refresh);
-        log.info("memberId-------- " + memberId);
         String storedRefreshToken = redisService.getValue(memberId);
-        log.info("Stored Refresh Token-------- " + storedRefreshToken);
 
         // 리프레시 토큰이 유효한지 확인
         if (storedRefreshToken == null || !storedRefreshToken.equals(refresh)) {
-            log.debug("Invalid refresh token: " + storedRefreshToken);
-            throw new RuntimeException("Invalid refresh token.");
+//            log.debug("Invalid refresh token: " + storedRefreshToken);
+            throw new BusinessException(refresh, "refreshToken", ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // 토큰 유효성 검사
@@ -204,8 +205,8 @@ public class UserServiceImpl implements UserService {
             // Member 객체에서 이름을 가져와 반환
             return member.getUsername();
         } else {
-            // Optional이 비어있다면 (즉, memberId에 해당하는 사용자가 없다면) 예외 처리 또는 기본값 반환
-            throw new IllegalArgumentException("해당 memberId를 가진 유저가 존재하지 않습니다.");
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ErrorCode.USER_NOT_FOUND);
         }
 
     }
@@ -213,14 +214,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserCharacterResponseDTO getUserCharaterType(Long memberId) {
         Member member = userRepository.getById(memberId);
-        int characterType = member.getCharacter().getCharacterType();
-        int characterCloth = member.getCharacter().getCharacterCloth();
+        Character character = member.getCharacter();
+
+        if (character == null) {
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ErrorCode.USER_NOT_FOUND);
+        }
+
+        int characterType = character.getCharacterType();
+        int characterCloth = character.getCharacterCloth();
 
         String characterRarity = determineRarity(characterType); // 캐릭터의 Rarity 결정
         String clothRarity = determineRarity(characterCloth);    // 의상의 Rarity 결정
 
         // UserCharaterTypeResponseDTO 생성시, 세 개의 파라미터를 전달
-        return new UserCharacterResponseDTO(characterType*100 + characterCloth, characterRarity, clothRarity);
+        return new UserCharacterResponseDTO(characterType * 100 + characterCloth, characterRarity,
+            clothRarity);
     }
 
 
@@ -248,16 +257,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateCharacterCloth(Long memberId, int characterCloth) {
         Member member = userRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found with id: " + memberId));
+            .orElseThrow(
+                () -> new BusinessException(String.valueOf(memberId), "memberId",
+                    ErrorCode.USER_NOT_FOUND));
 
         Character character = member.getCharacter();
 
         if (character == null) {
-            throw new IllegalStateException("Character not found for member with id: " + memberId);
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ErrorCode.CHARACTER_NOT_FOUND);
         }
 
         if (character.getExp() < 500) {
-            throw new NotEnoughExperienceException("Not enough experience to update character cloth for member with id: " + memberId);
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ErrorCode.NOT_ENOUGH_EXPERIENCE);
         }
 
         character.setExp(character.getExp() - 500); // 경험치 갱신
@@ -268,16 +281,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateCharacterType(Long memberId, int characterType) {
         Member member = userRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found with id: " + memberId));
+            .orElseThrow(
+                () -> new BusinessException(String.valueOf(memberId), "memberId",
+                    ErrorCode.USER_NOT_FOUND));
 
         Character character = member.getCharacter();
 
         if (character == null) {
-            throw new IllegalStateException("Character not found for member with id: " + memberId);
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ErrorCode.CHARACTER_NOT_FOUND);
         }
 
         if (character.getExp() < 500) {
-            throw new NotEnoughExperienceException("Not enough experience to update character type for member with id: " + memberId);
+            throw new BusinessException(
+                String.valueOf(memberId), "memberId", ErrorCode.NOT_ENOUGH_EXPERIENCE);
         }
 
         character.setExp(character.getExp() - 500); // 경험치 갱신
