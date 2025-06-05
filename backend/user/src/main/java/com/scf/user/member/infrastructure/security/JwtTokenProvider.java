@@ -1,7 +1,6 @@
 package com.scf.user.member.infrastructure.security;
 
 
-import com.scf.user.member.application.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -38,17 +37,17 @@ public class JwtTokenProvider {
     private long refreshTokenExpiry;
 
     private static final String AUTHORITY_KEY = "auth";
-    private final UserService userService;
+
 
     private Key getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     // accessToken 생성
-    public String generateAccessToken(Long id) {
+    public String generateAccessToken(Long id, String name) {
 //        String authority = authentication.getAuthorities().toString();
         String authority = "USER";
-        String name = userService.getName(id);
+//        String name = userService.getName(id);
         long now = new Date().getTime();
 
         String accessToken = Jwts.builder()

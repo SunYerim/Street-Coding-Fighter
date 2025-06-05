@@ -73,7 +73,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("success   memberId: {}", memberId);
 
         // 토큰을 생성하고 발급
-        String accessToken = jwtTokenProvider.generateAccessToken(memberId);
+        String accessToken = jwtTokenProvider.generateAccessToken(memberId, member.getName());
         String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
         log.info("accessToken입니다: {}", accessToken);
 

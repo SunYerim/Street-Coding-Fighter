@@ -23,14 +23,13 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final AuthenticationProviderService authenticationProviderService;
@@ -41,19 +40,19 @@ public class UserServiceImpl implements UserService {
     private final ContentClient contentClient;
     private final GachaService gachaService;
 
-    @Autowired
-    public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
-        UserRepository userRepository, CharacterRepository characterRepository,
-        @Lazy JwtTokenProvider jwtTokenProvider,
-        RedisService redisService, ContentClient contentClient, GachaService gachaService) {
-        this.authenticationProviderService = authenticationProviderService;
-        this.userRepository = userRepository;
-        this.characterRepository = characterRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.redisService = redisService;
-        this.contentClient = contentClient;
-        this.gachaService = gachaService;
-    }
+//    @Autowired
+//    public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
+//        UserRepository userRepository, CharacterRepository characterRepository,
+//        @Lazy JwtTokenProvider jwtTokenProvider,
+//        RedisService redisService, ContentClient contentClient, GachaService gachaService) {
+//        this.authenticationProviderService = authenticationProviderService;
+//        this.userRepository = userRepository;
+//        this.characterRepository = characterRepository;
+//        this.jwtTokenProvider = jwtTokenProvider;
+//        this.redisService = redisService;
+//        this.contentClient = contentClient;
+//        this.gachaService = gachaService;
+//    }
 
     @Override
     @Transactional
@@ -93,7 +92,8 @@ public class UserServiceImpl implements UserService {
     public UserInfoResponseDto getUserInfo(Long memberId) {
         Member member = userRepository.findById(memberId)
             .orElseThrow(
-                () -> new BusinessException(String.valueOf(memberId), "memberId", ErrorCode.USER_NOT_FOUND));
+                () -> new BusinessException(String.valueOf(memberId), "memberId",
+                    ErrorCode.USER_NOT_FOUND));
 
         // User 엔티티를 UserInfoResponseDto로 변환
         return new UserInfoResponseDto(
@@ -110,7 +110,8 @@ public class UserServiceImpl implements UserService {
         // 사용자 확인
         Member member = userRepository.findById(memberId)
             .orElseThrow(
-                () -> new BusinessException(String.valueOf(memberId), "memberId", ErrorCode.USER_NOT_FOUND));
+                () -> new BusinessException(String.valueOf(memberId), "memberId",
+                    ErrorCode.USER_NOT_FOUND));
 
         // 사용자 삭제
         userRepository.delete(member);
@@ -157,7 +158,8 @@ public class UserServiceImpl implements UserService {
         jwtTokenProvider.validateToken(refresh);
 
         // 새로운 액세스 토큰 생성
-        String newAccessToken = jwtTokenProvider.generateAccessToken(Long.valueOf(memberId));
+        String newAccessToken = jwtTokenProvider.generateAccessToken(Long.valueOf(memberId),
+            getName(Long.valueOf(memberId)));
         String newRefreshToken = jwtTokenProvider.createRefreshToken(Long.valueOf(memberId));
 
         // Redis에 새로운 리프레시 토큰 저장

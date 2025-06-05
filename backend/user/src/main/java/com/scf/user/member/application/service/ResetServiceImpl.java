@@ -3,6 +3,8 @@ package com.scf.user.member.application.service;
 import com.scf.user.member.domain.dto.UserPasswordRequestDto;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
+import com.scf.user.member.global.error.ErrorCode;
+import com.scf.user.member.global.error.exception.BusinessException;
 import com.scf.user.member.infrastructure.security.AuthenticationProviderService;
 import java.security.SecureRandom;
 import java.time.Duration;
@@ -27,7 +29,7 @@ public class ResetServiceImpl implements ResetService {
     public UserPasswordRequestDto requestUserId(String userId) {
         // 사용자 정보 조회
         Member member = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND));
         UserPasswordRequestDto dto = new UserPasswordRequestDto();
         dto.setUserId(member.getUserId());
         return dto;
@@ -39,7 +41,7 @@ public class ResetServiceImpl implements ResetService {
     public void sendRestRandomNumber(String userId) {
         // 사용자 정보 조회
         Member member = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND));
 
         // 랜덤 6자리 숫자 생성
         String resetCode = generateRandomCode(6);
@@ -58,7 +60,7 @@ public class ResetServiceImpl implements ResetService {
     public void resetPassword(String userId, String newPassword) {
         // 사용자 조회
         Member member = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND));
 
         // 비밀번호 암호화
         String encodedPassword = authenticationProviderService.passwordEncoder()
@@ -75,15 +77,11 @@ public class ResetServiceImpl implements ResetService {
         // Redis에서 인증 코드를 가져온다.
         String storedCode = redisService.getValue(userId);
 
-        // 저장된 인증 코드와 입력한 인증 코드 비교
-        // 인증코드가 expired 안 됐거나 존재하는 경우
-        if (storedCode != null && storedCode.equals(inputCode)) {
-            // 인증 코드가 일치하는 경우
-            return true;
-        } else {
-            // 인증 코드가 일치하지 않는 경우
-            return false;
+        if (storedCode == null || !storedCode.equals(inputCode)) {
+            throw new BusinessException(userId, "authCode", ErrorCode.INVALID_AUTH_CODE);
         }
+
+        return true;
     }
 
     @Override
@@ -107,15 +105,11 @@ public class ResetServiceImpl implements ResetService {
         // Redis에서 가져옵니다.
         String storedCode = redisService.getValue(email);
 
-        // 저장된 인증 코드와 입력한 인증 코드 비교
-        // 인증코드가 expired 안 됐거나 존재하는 경우
-        if (storedCode != null && storedCode.equals(code)) {
-            // 인증 코드가 일치하는 경우
-            return true;
-        } else {
-            // 인증 코드가 일치하지 않는 경우
-            return false;
+        if (storedCode == null || !storedCode.equals(code)) {
+            throw new BusinessException(email, "authCode", ErrorCode.INVALID_AUTH_CODE);
         }
+
+        return true;
 
     }
 
