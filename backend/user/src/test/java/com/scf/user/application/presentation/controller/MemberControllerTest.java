@@ -111,7 +111,6 @@ public class MemberControllerTest {
     }
 
 
-
     // 로그아웃 테스트
     @Test
     @DisplayName("로그아웃이 정상적으로 되어야 합니다.")
@@ -180,15 +179,15 @@ public class MemberControllerTest {
     @Test
     @DisplayName("회원 탈퇴가 정상적으로 되어야 합니다.")
     void testQuitUser() throws Exception {
-        when(userService.quitMember("27")).thenReturn(true);
+        when(userService.quitMember(Long.parseLong("27"))).thenReturn(true);
 
         mockMvc.perform(delete("/user/quit")
-                .header("memberId", "27"))
+                .header("memberId", 27))
             .andExpect(status().isOk())
             .andExpect(content().string("회원 탈퇴가 완료되었습니다."))
             .andDo(print());
 
-        verify(userService, times(1)).quitMember(anyString());
+        verify(userService, times(1)).quitMember(Long.valueOf(anyString()));
         verify(redisService, times(1)).deleteValue("27");
     }
 }
