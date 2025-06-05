@@ -8,7 +8,8 @@ import com.scf.user.member.application.client.ContentClient;
 import com.scf.user.member.domain.dto.*;
 import com.scf.user.member.domain.dto.charater.CharacterType;
 import com.scf.user.member.domain.dto.charater.ClothingType;
-import com.scf.user.member.global.exception.NotEnoughExperienceException;
+import com.scf.user.member.global.error.ErrorCode;
+import com.scf.user.member.global.error.exception.BusinessException;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.profile.domain.entity.Character;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ContentClient contentClient;
     private final GachaService gachaService;
+
     @Autowired
     public UserServiceImpl(AuthenticationProviderService authenticationProviderService,
         UserRepository userRepository, CharacterRepository characterRepository,
@@ -220,7 +222,8 @@ public class UserServiceImpl implements UserService {
         String clothRarity = determineRarity(characterCloth);    // 의상의 Rarity 결정
 
         // UserCharaterTypeResponseDTO 생성시, 세 개의 파라미터를 전달
-        return new UserCharacterResponseDTO(characterType*100 + characterCloth, characterRarity, clothRarity);
+        return new UserCharacterResponseDTO(characterType * 100 + characterCloth, characterRarity,
+            clothRarity);
     }
 
 
@@ -248,7 +251,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateCharacterCloth(Long memberId, int characterCloth) {
         Member member = userRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found with id: " + memberId));
+            .orElseThrow(
+                () -> new UsernameNotFoundException("Member not found with id: " + memberId));
 
         Character character = member.getCharacter();
 
@@ -257,7 +261,8 @@ public class UserServiceImpl implements UserService {
         }
 
         if (character.getExp() < 500) {
-            throw new NotEnoughExperienceException("Not enough experience to update character cloth for member with id: " + memberId);
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ErrorCode.NOT_ENOUGH_EXPERIENCE);
         }
 
         character.setExp(character.getExp() - 500); // 경험치 갱신
@@ -268,7 +273,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateCharacterType(Long memberId, int characterType) {
         Member member = userRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found with id: " + memberId));
+            .orElseThrow(
+                () -> new UsernameNotFoundException("Member not found with id: " + memberId));
 
         Character character = member.getCharacter();
 
@@ -277,7 +283,8 @@ public class UserServiceImpl implements UserService {
         }
 
         if (character.getExp() < 500) {
-            throw new NotEnoughExperienceException("Not enough experience to update character type for member with id: " + memberId);
+            throw new BusinessException(
+                String.valueOf(memberId), "memberId", ErrorCode.NOT_ENOUGH_EXPERIENCE);
         }
 
         character.setExp(character.getExp() - 500); // 경험치 갱신
