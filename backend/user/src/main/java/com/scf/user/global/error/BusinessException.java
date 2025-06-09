@@ -1,6 +1,5 @@
-package com.scf.user.member.global.error.exception;
+package com.scf.user.global.error;
 
-import com.scf.user.member.global.error.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -12,6 +11,7 @@ public class BusinessException extends RuntimeException {
     private final String fieldName;
     private final HttpStatus httpStatus;
     private final String message;
+    private final ErrorCode errorCode;
 
     public BusinessException(String invalidValue, String fieldName, ErrorCode errorCode) {
         super(errorCode.getMessage());
@@ -19,6 +19,7 @@ public class BusinessException extends RuntimeException {
         this.fieldName = fieldName;
         this.httpStatus = errorCode.getHttpStatus();
         this.message = errorCode.getMessage();
+        this.errorCode = errorCode;
     }
 
 
