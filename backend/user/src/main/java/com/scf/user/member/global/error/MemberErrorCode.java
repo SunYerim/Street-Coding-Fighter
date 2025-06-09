@@ -1,10 +1,11 @@
 package com.scf.user.member.global.error;
 
+import com.scf.user.global.error.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum ErrorCode {
+public enum MemberErrorCode implements ErrorCode {
 
     // USER
     USER_NOT_FOUND("해당 사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
@@ -26,7 +27,7 @@ public enum ErrorCode {
     private final String message;
     private final HttpStatus httpStatus;
 
-    ErrorCode(String message, HttpStatus httpStatus) {
+    MemberErrorCode(String message, HttpStatus httpStatus) {
         this.message = message;
         this.httpStatus = httpStatus;
     }
