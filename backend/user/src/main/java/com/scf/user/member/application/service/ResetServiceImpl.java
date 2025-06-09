@@ -3,8 +3,8 @@ package com.scf.user.member.application.service;
 import com.scf.user.member.domain.dto.UserPasswordRequestDto;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
-import com.scf.user.member.global.error.ErrorCode;
-import com.scf.user.member.global.error.exception.BusinessException;
+import com.scf.user.member.global.error.MemberErrorCode;
+import com.scf.user.global.error.BusinessException;
 import com.scf.user.member.infrastructure.security.AuthenticationProviderService;
 import java.security.SecureRandom;
 import java.time.Duration;
@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +28,7 @@ public class ResetServiceImpl implements ResetService {
     public UserPasswordRequestDto requestUserId(String userId) {
         // 사용자 정보 조회
         Member member = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(userId, "userId", MemberErrorCode.USER_NOT_FOUND));
         UserPasswordRequestDto dto = new UserPasswordRequestDto();
         dto.setUserId(member.getUserId());
         return dto;
@@ -41,7 +40,7 @@ public class ResetServiceImpl implements ResetService {
     public void sendRestRandomNumber(String userId) {
         // 사용자 정보 조회
         Member member = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(userId, "userId", MemberErrorCode.USER_NOT_FOUND));
 
         // 랜덤 6자리 숫자 생성
         String resetCode = generateRandomCode(6);
@@ -60,7 +59,7 @@ public class ResetServiceImpl implements ResetService {
     public void resetPassword(String userId, String newPassword) {
         // 사용자 조회
         Member member = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new BusinessException(userId, "userId", ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(userId, "userId", MemberErrorCode.USER_NOT_FOUND));
 
         // 비밀번호 암호화
         String encodedPassword = authenticationProviderService.passwordEncoder()
@@ -78,7 +77,7 @@ public class ResetServiceImpl implements ResetService {
         String storedCode = redisService.getValue(userId);
 
         if (storedCode == null || !storedCode.equals(inputCode)) {
-            throw new BusinessException(userId, "authCode", ErrorCode.INVALID_AUTH_CODE);
+            throw new BusinessException(userId, "authCode", MemberErrorCode.INVALID_AUTH_CODE);
         }
 
         return true;
@@ -106,7 +105,7 @@ public class ResetServiceImpl implements ResetService {
         String storedCode = redisService.getValue(email);
 
         if (storedCode == null || !storedCode.equals(code)) {
-            throw new BusinessException(email, "authCode", ErrorCode.INVALID_AUTH_CODE);
+            throw new BusinessException(email, "authCode", MemberErrorCode.INVALID_AUTH_CODE);
         }
 
         return true;

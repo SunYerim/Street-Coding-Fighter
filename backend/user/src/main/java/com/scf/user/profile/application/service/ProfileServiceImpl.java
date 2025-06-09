@@ -3,6 +3,7 @@ package com.scf.user.profile.application.service;
 import com.scf.user.member.domain.dto.UserCharacterResponseDTO;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.member.domain.repository.UserRepository;
+import com.scf.user.global.error.BusinessException;
 import com.scf.user.profile.application.client.ProblemClient;
 import com.scf.user.profile.domain.dto.ChoiceTextConverter;
 import com.scf.user.profile.domain.dto.DjangoResponseDto;
@@ -23,7 +24,7 @@ import com.scf.user.profile.domain.entity.Solved;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.profile.domain.repository.SolvedRepository;
 import com.scf.user.profile.domain.repository.RecordReposiotry;
-import com.scf.user.profile.global.exception.ProblemNotFoundException;
+import com.scf.user.profile.global.error.ProfileErrorCode;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,7 +49,8 @@ public class ProfileServiceImpl implements ProfileService {
     // 멤버 조회 메소드 추가
     private Member getMemberById(Long memberId) {
         return userRepository.findById(memberId)
-            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다. ID: " + memberId));
+            .orElseThrow(() -> new BusinessException(String.valueOf(memberId), "memberId",
+                ProfileErrorCode.PROFILE_USER_NOT_FOUND));
     }
 
     // 프로필 정보 조회
@@ -69,7 +71,8 @@ public class ProfileServiceImpl implements ProfileService {
             .name(member.getName())
             .birth(member.getBirth())
             .exp(character.getExp())
-            .UserCharacter(new UserCharacterResponseDTO(characterValue, characterType, characterClothType)) // 계산된 값 설정 및
+            .UserCharacter(new UserCharacterResponseDTO(characterValue, characterType,
+                characterClothType)) // 계산된 값 설정 및
             .school(member.getSchoolName())
             .build();
     }
@@ -77,18 +80,18 @@ public class ProfileServiceImpl implements ProfileService {
     // Rarity를 가져오는 헬퍼 메소드들 추가
     private String getRarityFromCharacterType(int type) {
         return characterTypes.stream()
-                .filter(ct -> ct.getType() == type)
-                .map(ct -> ct.getRarity().name())
-                .findFirst()
-                .orElse("UNKNOWN");
+            .filter(ct -> ct.getType() == type)
+            .map(ct -> ct.getRarity().name())
+            .findFirst()
+            .orElse("UNKNOWN");
     }
 
     private String getRarityFromClothType(int type) {
         return clothingTypes.stream()
-                .filter(ct -> ct.getType() == type)
-                .map(ct -> ct.getRarity().name())
-                .findFirst()
-                .orElse("UNKNOWN");
+            .filter(ct -> ct.getType() == type)
+            .map(ct -> ct.getRarity().name())
+            .findFirst()
+            .orElse("UNKNOWN");
     }
 
     // 전체 전적 조회
@@ -144,8 +147,8 @@ public class ProfileServiceImpl implements ProfileService {
                         .build();
                 } else {
                     // 문제 정보를 가져오지 못했을 때 예외 발생
-                    throw new ProblemNotFoundException(
-                        "문제 정보를 가져올 수 없습니다. 문제 ID: " + solvedProblem.getProblemId());
+                    throw new BusinessException(String.valueOf(solvedProblem.getProblemId()),
+                        "problemId", ProfileErrorCode.PROBLEM_NOT_FOUND);
                 }
             })
             .collect(Collectors.toList());
@@ -201,7 +204,7 @@ public class ProfileServiceImpl implements ProfileService {
         // 변경사항을 저장
         userRepository.save(member);
 
-        System.out.println("경험치가 업데이트 되었습니다. " + memberId + ": " + newExp);
+//        System.out.println("경험치가 업데이트 되었습니다. " + memberId + ": " + newExp);
     }
 
     @Override
@@ -427,7 +430,8 @@ public class ProfileServiceImpl implements ProfileService {
             // 변경된 값 저장
             characterRepository.save(character);
         } else {
-            throw new IllegalArgumentException("해당 memberId를 가진 캐릭터가 존재하지 않습니다.");
+            throw new BusinessException(String.valueOf(memberId), "memberId",
+                ProfileErrorCode.CHARACTER_NOT_FOUND);
         }
 
     }
