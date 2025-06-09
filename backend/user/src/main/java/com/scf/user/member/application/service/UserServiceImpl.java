@@ -8,8 +8,8 @@ import com.scf.user.member.application.client.ContentClient;
 import com.scf.user.member.domain.dto.*;
 import com.scf.user.member.domain.dto.charater.CharacterType;
 import com.scf.user.member.domain.dto.charater.ClothingType;
-import com.scf.user.member.global.error.ErrorCode;
-import com.scf.user.member.global.error.exception.BusinessException;
+import com.scf.user.member.global.error.MemberErrorCode;
+import com.scf.user.global.error.BusinessException;
 import com.scf.user.profile.domain.repository.CharacterRepository;
 import com.scf.user.member.domain.entity.Member;
 import com.scf.user.profile.domain.entity.Character;
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(
                 () -> new BusinessException(String.valueOf(memberId), "memberId",
-                    ErrorCode.USER_NOT_FOUND));
+                    MemberErrorCode.USER_NOT_FOUND));
 
         // User 엔티티를 UserInfoResponseDto로 변환
         return new UserInfoResponseDto(
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(
                 () -> new BusinessException(String.valueOf(memberId), "memberId",
-                    ErrorCode.USER_NOT_FOUND));
+                    MemberErrorCode.USER_NOT_FOUND));
 
         // 사용자 삭제
         userRepository.delete(member);
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         // 리프레시 토큰이 유효한지 확인
         if (storedRefreshToken == null || !storedRefreshToken.equals(refresh)) {
 //            log.debug("Invalid refresh token: " + storedRefreshToken);
-            throw new BusinessException(refresh, "refreshToken", ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new BusinessException(refresh, "refreshToken", MemberErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // 토큰 유효성 검사
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
             return member.getUsername();
         } else {
             throw new BusinessException(String.valueOf(memberId), "memberId",
-                ErrorCode.USER_NOT_FOUND);
+                MemberErrorCode.USER_NOT_FOUND);
         }
 
     }
@@ -220,7 +220,7 @@ public class UserServiceImpl implements UserService {
 
         if (character == null) {
             throw new BusinessException(String.valueOf(memberId), "memberId",
-                ErrorCode.USER_NOT_FOUND);
+                MemberErrorCode.USER_NOT_FOUND);
         }
 
         int characterType = character.getCharacterType();
@@ -261,18 +261,18 @@ public class UserServiceImpl implements UserService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(
                 () -> new BusinessException(String.valueOf(memberId), "memberId",
-                    ErrorCode.USER_NOT_FOUND));
+                    MemberErrorCode.USER_NOT_FOUND));
 
         Character character = member.getCharacter();
 
         if (character == null) {
             throw new BusinessException(String.valueOf(memberId), "memberId",
-                ErrorCode.CHARACTER_NOT_FOUND);
+                MemberErrorCode.CHARACTER_NOT_FOUND);
         }
 
         if (character.getExp() < 500) {
             throw new BusinessException(String.valueOf(memberId), "memberId",
-                ErrorCode.NOT_ENOUGH_EXPERIENCE);
+                MemberErrorCode.NOT_ENOUGH_EXPERIENCE);
         }
 
         character.setExp(character.getExp() - 500); // 경험치 갱신
@@ -285,18 +285,18 @@ public class UserServiceImpl implements UserService {
         Member member = userRepository.findById(memberId)
             .orElseThrow(
                 () -> new BusinessException(String.valueOf(memberId), "memberId",
-                    ErrorCode.USER_NOT_FOUND));
+                    MemberErrorCode.USER_NOT_FOUND));
 
         Character character = member.getCharacter();
 
         if (character == null) {
             throw new BusinessException(String.valueOf(memberId), "memberId",
-                ErrorCode.CHARACTER_NOT_FOUND);
+                MemberErrorCode.CHARACTER_NOT_FOUND);
         }
 
         if (character.getExp() < 500) {
             throw new BusinessException(
-                String.valueOf(memberId), "memberId", ErrorCode.NOT_ENOUGH_EXPERIENCE);
+                String.valueOf(memberId), "memberId", MemberErrorCode.NOT_ENOUGH_EXPERIENCE);
         }
 
         character.setExp(character.getExp() - 500); // 경험치 갱신
